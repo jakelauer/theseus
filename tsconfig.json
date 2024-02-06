@@ -1,0 +1,25 @@
+{
+    "compileOnSave": true,
+    "include": ["index.ts", "lib/**/*"],
+    "exclude": ["dist"],
+    "compilerOptions": {
+        "rootDir": ".",
+        "skipLibCheck": true,
+        "declaration": true,
+        "outDir": "dist",
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": ["es6"],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noEmit": false,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "removeComments": false,
+        "sourceMap": false,
+        "strictNullChecks": true,
+        "target": "es6"
+    }
+}
