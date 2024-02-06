@@ -1,8 +1,8 @@
+# Theseus
+
 <div style="text-align: center;">
 	<img src=".assets/logo.png" alt="drawing" style="margin:auto"/>
 </div>
-
-# Theseus
 
 Theseus offers fluent state manipulation and management for JavaScript applications, streamlining state changes with
 clarity and enforceable rules.
