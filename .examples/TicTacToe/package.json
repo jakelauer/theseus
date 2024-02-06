@@ -1,0 +1,11 @@
+{
+	"name": "@bad-cards/theseus",
+	"version": "1.0.0",
+	"description": "A fun tic-tac-toe game.",
+	"author": "Jake Lauer",
+	"license": "MIT",
+	"dependencies": {
+		"@bad-cards/theseus": "1.0.7"
+	},
+	"main": "index.ts"
+}
