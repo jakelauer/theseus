@@ -19,6 +19,9 @@ interface TypeAccess<
     returnData: SortaPromise<TData>;
 }
 
+/**
+ * Represents an evolver for data transformation and mutation, encapsulating the logic for mutating and evolving data structures.
+ */
 export class Evolver<
     TData,
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
@@ -35,6 +38,9 @@ export class Evolver<
      */
     public readonly __type__access__: TypeAccess<TData, TMutators, TEvolverName, TParamName>;
 
+    /**
+     * Constructor for Evolver. Initializes the evolver with a name, set of mutators, and optional configuration.
+     */
     protected constructor(name: TEvolverName, mutators: TMutators, options?: EvolverOptions<TParamName>) {
         const normalizedName = this.normalizeName(name);
         const mutableDataNoun: TParamName = options?.noun ?? ("input" as TParamName);
@@ -63,10 +69,15 @@ export class Evolver<
         }
     }
 
+    /**
+     * Retrieves the definitions of mutators associated with this evolver.
+     * @returns A collection of mutator definitions.
+     */
     public getMutatorDefinitions = () => this.mutators;
 
     /**
-     * The data upon which mutates will be performed
+     * Applies mutation operations to the input data, based on the configured mutators.
+     * @returns The mutated data.
      */
     public mutate(input: TData) {
         // Create the actions which will be available when `for()` is called.
@@ -89,6 +100,10 @@ export class Evolver<
         return result;
     }
 
+    /**
+     * Applies mutation operations to the input data, based on the configured mutators.
+     * @returns An object allowing further mutation or chaining operations.
+     */
     public evolve(input: TData) {
         // Create the actions which will be available when `for()` is called.
         const mutatorSet = ChainableMutatorSet.createChainable<TData, Mutable<TParamName>, TMutators>(
@@ -109,10 +124,18 @@ export class Evolver<
         });
     }
 
+    /**
+     * Accessor for retrieving the mutators directly.
+     * @returns The configured mutators for this evolver.
+     */
     public getMutators() {
         return this.mutators;
     }
 
+    /**
+     * Factory method for creating an Evolver instance, facilitating a fluent API for defining evolvers.
+     * @returns A fluent interface for constructing an Evolver with specified data and mutators.
+     */
     public static create = <_TEvolverName extends string, _TParamName extends string>(
         name: _TEvolverName,
         options?: EvolverOptions<_TParamName>,
@@ -135,7 +158,8 @@ export class Evolver<
     });
 
     /**
-     * Creates a creator for an evolver.
+     * Provides a builder function to simplify the creation of Evolver instances, supporting a fluent configuration API.
+     * @returns A function for fluently configuring and creating an Evolver instance.
      */
     public static buildCreator = <_TParamName extends string>(options?: EvolverOptions<_TParamName>) => ({
         toEvolve: <_TData>() => ({

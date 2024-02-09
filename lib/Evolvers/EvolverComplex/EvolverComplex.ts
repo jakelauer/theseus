@@ -3,18 +3,30 @@ import { EvolveObject, MutateObject } from "../Types/EvolverTypes";
 import { Mutable, MutatorDefs } from "../Types/MutatorTypes";
 import { EvolverRenamedForComplex, renameEvolverForComplex } from "./renameEvolverForComplex";
 
+/**
+ * Utility type for extracting string keys from a type.
+ */
 type StringKeyOf<T> = {
     [K in keyof T]: K extends string ? K : never;
 }[keyof T];
 
+/**
+ * Type utility for removing 'Evolver' prefix from type names.
+ */
 type RemoveEvolverFromName<T> = {
     [K in keyof T as EvolverRenamedForComplex<Extract<K, string>>]: T[K];
 };
 
+/**
+ * Facilitates complex data transformations by combining multiple Evolvers.
+ */
 export class EvolverComplex {
+    /**
+     * Initializes the creation process for a new EvolverComplex instance.
+     */
     public static create = <TData>() => ({
         /**
-         * Creates a new EvolverComplex with the given evolvers.
+         * Specifies evolvers to be used with the EvolverComplex.
          */
         withEvolvers: <
             TEvolvers extends Record<string, Evolver<TData, any, TEvolverName, TParamName>>,
@@ -53,6 +65,9 @@ export class EvolverComplex {
     });
 
     private static mutate = <TData>(input: TData) => ({
+        /**
+         * Configures the mutation process with specific evolvers.
+         */
         withEvolvers: <
             TEvolvers extends Record<string, Evolver<TData, TMutators, TEvolverName, TParamName>>,
             TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
@@ -66,6 +81,9 @@ export class EvolverComplex {
     });
 
     private static evolve = <TData>(input: TData) => ({
+        /**
+         * Sets up the evolution process with specified evolvers for chained mutations.
+         */
         withEvolvers: <
             TEvolvers extends Record<string, Evolver<TData, TMutators, TEvolverName, TParamName>>,
             TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
