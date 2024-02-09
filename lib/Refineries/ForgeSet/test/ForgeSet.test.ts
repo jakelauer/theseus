@@ -1,14 +1,9 @@
 import { expect } from "chai";
 
-import { suite } from "@testdeck/mocha";
-
 import { ForgeSet } from "../ForgeSet";
 
-@suite("ForgeSet tests")
-class ForgeSetTest {
-    constructor() {}
-
-    createForgeSet() {
+describe("ForgeSet", function () {
+    it("createForgeSet", function () {
         const forgeSet = ForgeSet.create({}, "immutableTest", {
             foo: () => {},
             bar: () => {},
@@ -16,5 +11,5 @@ class ForgeSetTest {
 
         expect(forgeSet).to.have.property("foo");
         expect(forgeSet).to.have.property("bar");
-    }
-}
+    });
+});

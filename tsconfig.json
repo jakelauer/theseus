@@ -18,8 +18,10 @@
         "noImplicitAny": true,
         "noImplicitOverride": true,
         "removeComments": false,
+        "esModuleInterop": true,
         "sourceMap": false,
         "strictNullChecks": true,
-        "target": "ES2018"
+        "target": "ES2018",
+        "types": ["chai", "mocha", "node", "sinon"]
     }
 }
