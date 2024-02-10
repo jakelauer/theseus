@@ -1,4 +1,4 @@
-import { Evolver } from "@bad-cards/theseus";
+import { Evolver } from "theseus-js";
 
 import { GameState, MarkType } from "./GameState";
 

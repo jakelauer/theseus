@@ -1,4 +1,4 @@
-import { Refinery } from "@bad-cards/theseus";
+import { Refinery } from "theseus-js";
 
 import { GameState } from "./GameState";
 

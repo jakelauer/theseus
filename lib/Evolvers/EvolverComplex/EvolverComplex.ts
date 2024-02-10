@@ -96,6 +96,25 @@ export class EvolverComplex {
         },
     });
 
+    /**
+     * Dynamically generates evolution methods for the provided evolvers, based on the input data and a flag indicating whether to use macro mutators.
+     *
+     * This method iterates over each evolver provided, using either the `evolve` or `mutate` method based on the `macro` flag. It then retrieves
+     * the mutators from each evolver and formats the evolver names to align with the complex's naming conventions. The result is a collection
+     * of mutators keyed by the formatted evolver names, allowing for dynamic and flexible state evolution.
+     *
+     * @template TEvolvers - A type representing the evolvers passed to the method.
+     * @template TData - The type of the input data upon which the evolvers will operate.
+     * @template TIsMacro - A boolean type indicating whether to use macro mutators.
+     * @param {TEvolvers} evolvers - An object containing evolvers, which are entities capable of evolving or mutating the application state.
+     * @param {TData} input - The initial state or input data that the evolvers will use to generate new states or mutations.
+     * @param {TIsMacro} macro - A flag indicating whether to use macro mutators (true) or regular mutators (false).
+     * @returns {MutatorsFormatted} A collection of mutators, keyed by the formatted names of the evolvers, ready for application to the state.
+     *
+     * The method leverages TypeScript's advanced typing features to ensure type safety and to facilitate automatic typing based on the input parameters.
+     * It uses utility types to extract and remap mutators for each evolver, and then reduces this information into a single object that represents
+     * the cumulative mutations available.
+     */
     private static generateEvolveMethods<
         TData,
         TIsMacro extends boolean,
@@ -106,11 +125,13 @@ export class EvolverComplex {
          */
         type TEvolverPassedNames = StringKeyOf<TEvolvers>;
 
+        // Utility type for accessing specific types within an evolver, such as data, mutators, and mutable parameter names.
         type TypeAccess<
             TEvolver extends keyof TEvolvers,
             TTypeName extends keyof TEvolvers[TEvolver]["__type__access__"],
         > = TEvolvers[TEvolver]["__type__access__"][TTypeName];
 
+        // Determines the mutators for a given evolver by returning the types of mutators available for the evolver's data.
         type MutatorsForEvolver<T extends TEvolverPassedNames> = ReturnType<
             MutateObject<
                 TypeAccess<T, "data">,
@@ -118,6 +139,8 @@ export class EvolverComplex {
                 TypeAccess<T, "mutableParamName">
             >["getMutators"]
         >;
+
+        // Similar to MutatorsForEvolver but for macro mutators, determining the mutators for evolving the state on a larger scale.
         type MacroMutatorsForEvolver<T extends TEvolverPassedNames> = ReturnType<
             EvolveObject<
                 TypeAccess<T, "data">,
@@ -126,20 +149,27 @@ export class EvolverComplex {
             >["getMutators"]
         >;
 
+        // Maps each evolver name to its corresponding set of mutators, facilitating direct access to the mutators by name.
         type MutatorsRemapped = {
             [KEvolverName in TEvolverPassedNames]: MutatorsForEvolver<KEvolverName>;
         };
 
+        // Similar to MutatorsRemapped but for macro mutators, mapping each evolver name to its set of macro mutators.
         type MacroMutatorsRemapped = {
             [KEvolverName in TEvolverPassedNames]: MacroMutatorsForEvolver<KEvolverName>;
         };
 
+        // Conditional type that selects between MutatorsRemapped and MacroMutatorsRemapped based on the TIsMacro flag.
         type MutatorsResult = TIsMacro extends true ? MacroMutatorsRemapped : MutatorsRemapped;
 
+        // Applies a transformation to the names of the mutators, removing the 'Evolver' prefix to match the naming conventions of the complex.
         type MutatorsFormatted = RemoveEvolverFromName<MutatorsResult>;
 
         const keys = Object.keys(evolvers) as TEvolverPassedNames[];
 
+        // Iterates over each evolver name, reducing the collection of evolvers into a single object (result)
+        // that maps formatted evolver names to their mutators. This object is then returned as the final result
+        // of the method, representing the cumulative mutations available for application to the state.
         const result = keys.reduce((acc, key: TEvolverPassedNames) => {
             const evolver = evolvers[key];
             const mutators = macro ? evolver.evolve(input).getMutators() : evolver.mutate(input).getMutators();
