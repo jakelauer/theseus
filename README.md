@@ -82,7 +82,7 @@ flag enumerations, offering methods for manipulation, testing, and querying of f
 Show a real-world example of using `Evolver` for state management.
 
 ```typescript
-import { Evolver } from "@bad-cards/theseus";
+import { Evolver } from "theseus-js";
 
 // Evolver for managing a single ToDo
 const ToDoEvolver = Evolver.as<ToDo>().withParamName("list").withMutators({

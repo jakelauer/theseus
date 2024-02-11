@@ -10,23 +10,28 @@
 
 ## Introduction
 
-Evolvers are a specialized component of the Theseus library designed for evolving game state objects. It
-leverages the power of Evolver to mutate game states efficiently and intuitively.
-
+Evolvers are a specialized component of the Theseus library designed for evolving game state objects. It leverages the
+power of Evolver to mutate game states efficiently and intuitively.
 
 ### Creating an Evolver
 
 #### Naming the Evolver
-When creating an Evolver, it's important to give it a specific name. This name is used to reference the Evolver as it is returned inside an object with the same name. For example:
+
+When creating an Evolver, it's important to give it a specific name. This name is used to reference the Evolver as it is
+returned inside an object with the same name. For example:
 
 ```typescript
 const { MyEvolver } = Evolver.create("MyEvolver");
 ```
 
-In this code, `MyEvolver` is both the name given to the Evolver and the key used to retrieve it from the object returned by `Evolver.create`.
+In this code, `MyEvolver` is both the name given to the Evolver and the key used to retrieve it from the object returned
+by `Evolver.create`.
 
 #### Creating Mutators
-Mutators are functions defined to evolve the data. They always take the data as the first argument. You can specify any number of additional arguments for each mutator. When you use the mutator, only the additional arguments need to be provided. Mutators always return the same data type they take in. 
+
+Mutators are functions defined to evolve the data. They always take the data as the first argument. You can specify any
+number of additional arguments for each mutator. When you use the mutator, only the additional arguments need to be
+provided. Mutators always return the same data type they take in.
 
 Example:
 
@@ -41,24 +46,23 @@ const { MyEvolver } = Evolver.create("MyEvolver")
         mutator2: (mutableData, arg1) => {
             // Mutation logic here
             return mutableData;
-        }
+        },
     });
 ```
 
-Here, `mutator1` is a mutator for `MyEvolver` that takes `mutableData` along with additional arguments `arg1` and `arg2`. 
+Here, `mutator1` is a mutator for `MyEvolver` that takes `mutableData` along with additional arguments `arg1` and
+`arg2`.
 
 When we use `MyEvolver` later, we don't need to pass in the mutableData for every mutator; we only do that once:
 
 ```typescript
-MyEvolver.evolveMacro(data)
-	.using.mutator1("first arg", "second arg")
-	.and.mutator2("just one arg")
+MyEvolver.evolveMacro(data).using.mutator1("first arg", "second arg").and.mutator2("just one arg");
 ```
 
 ## Usage
 
 ```typescript
-import { Evolver } from "@bad-cards/theseus";
+import { Evolver } from "theseus-js";
 
 // Assuming GameState structure
 interface GameState {
@@ -116,10 +120,7 @@ console.log(initialGameState.board);
         Example:
 
 ```typescript
-    MyEvolver.evolveMacro(initialState)
-		.using.mutator1() 
-		.and.mutator2() 
-		.and.mutator3(); // Continue chaining as needed
+MyEvolver.evolveMacro(initialState).using.mutator1().and.mutator2().and.mutator3(); // Continue chaining as needed
 ```
 
 ## Chaining Methods
@@ -168,4 +169,3 @@ console.log(initialGameState.board);
     ```typescript
     GameStateEvolver.evolve(initialGameState).startingWith.setSquare([0, 0], "X").setSquare([1, 1], "O").getFinalForm(); // Use after async operations
     ```
-

@@ -10,7 +10,7 @@ if (gitHasPendingTheseusChanges) {
     throw new Error("Git has pending changes in this package. Commit or stash them before updating the version");
 }
 
-const existingNpmVersion = execSync("npm view @bad-cards/theseus version").toString().trim();
+const existingNpmVersion = execSync("npm view theseus-js version").toString().trim();
 
 if (existingNpmVersion === packageJson.version) {
     console.log(chalk.red(`Version ${packageJson.version} already published to npm.`));
