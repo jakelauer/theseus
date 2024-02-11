@@ -1,7 +1,7 @@
 import { Evolver } from "../Evolver/Evolver";
 import { EvolveObject, MutateObject } from "../Types/EvolverTypes";
 import { Mutable, MutatorDefs } from "../Types/MutatorTypes";
-import { EvolverRenamedForComplex, renameEvolverForComplex } from "./renameEvolverForComplex";
+import { NormalizedEvolverName, normalizeEvolverName } from "./normalizeEvolverName";
 
 /**
  * Utility type for extracting string keys from a type.
@@ -14,7 +14,7 @@ type StringKeyOf<T> = {
  * Type utility for removing 'Evolver' prefix from type names.
  */
 type RemoveEvolverFromName<T> = {
-    [K in keyof T as EvolverRenamedForComplex<Extract<K, string>>]: T[K];
+    [K in keyof T as NormalizedEvolverName<Extract<K, string>>]: T[K];
 };
 
 /**
@@ -173,9 +173,9 @@ export class EvolverComplex {
         const result = keys.reduce((acc, key: TEvolverPassedNames) => {
             const evolver = evolvers[key];
             const mutators = macro ? evolver.evolve(input).getMutators() : evolver.mutate(input).getMutators();
-            const formattedEvolverName = renameEvolverForComplex(key);
+            const formattedEvolverName = normalizeEvolverName(key);
 
-            (acc as Record<EvolverRenamedForComplex<string>, any>)[formattedEvolverName] = mutators;
+            (acc as Record<NormalizedEvolverName<string>, any>)[formattedEvolverName] = mutators;
 
             return acc;
         }, {} as MutatorsFormatted);

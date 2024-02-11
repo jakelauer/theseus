@@ -1,5 +1,5 @@
 import { makeMutable } from "../../Utils/StringUtils";
-import { RemoveEvolverFromName } from "../EvolverComplex/renameEvolverForComplex";
+import { NormalizedEvolverName } from "../EvolverComplex/normalizeEvolverName";
 import { ChainableMutatorSet } from "../MutatorSet/ChainableMutatorSet";
 import { MutatorSet } from "../MutatorSet/MutatorSet";
 import { EvolveObject, EvolverOptions, MutateObject, SortaPromise } from "../Types/EvolverTypes";
@@ -28,7 +28,7 @@ export class Evolver<
     TEvolverName extends string,
     TParamName extends string,
 > {
-    public readonly evolverName: RemoveEvolverFromName<TEvolverName>;
+    public readonly evolverName: NormalizedEvolverName<TEvolverName>;
     protected readonly mutableArgName: Mutable<TParamName>;
     protected readonly mutators: TMutators;
 
@@ -55,7 +55,7 @@ export class Evolver<
 
         this.assertValidName(trimmed, "Name cannot be empty, nor only the word 'refinery'");
 
-        return name as RemoveEvolverFromName<TEvolverName>;
+        return name as NormalizedEvolverName<TEvolverName>;
     }
 
     private trimEvolverFromName(name: string) {

@@ -1,13 +1,14 @@
+import { NormalizedEvolverName } from "../../Evolvers/EvolverComplex/normalizeEvolverName";
 import { Refinery } from "../Refinery/Refinery";
 import { ForgeDefs, Immutable } from "../Types/RefineryTypes";
-import { RefineryRenamedForComplex, renameRefineryForComplex } from "./renameRefineryForComplex";
+import { NormalizedRefineryName, normalizeRefineryName } from "./normalizeRefineryName";
 
 /**
  * Transforms the keys of an input type T by removing 'refinery' from their names.
  * This is particularly useful for avoiding name collisions and simplifying property names in the context of multiple refineries.
  */
-type RemoveRefineryFromName<T> = {
-    [K in keyof T as RefineryRenamedForComplex<Extract<K, string>>]: T[K];
+type AllRefineriesNormalized<T> = {
+    [K in keyof T as NormalizedEvolverName<Extract<K, string>>]: T[K];
 };
 
 /**
@@ -73,16 +74,16 @@ export class RefineryComplex {
              * After remapping the outputs of each refinery's functions, this type removes 'Refinery' from their names.
              * This avoids naming conflicts and simplifies the use of these functions in the application.
              */
-            type RefineriesFormatted = RemoveRefineryFromName<RefineriesRemapped>;
+            type RefineriesFormatted = AllRefineriesNormalized<RefineriesRemapped>;
 
             const keys = Object.keys(refineries) as TRefineryPassedNames[];
 
             const result = keys.reduce((acc, key: string) => {
                 const refinery = refineries[key];
                 const forges = refinery.refine(input).getForges() as OneForgeSet<typeof key>;
-                const formattedRefineryName = renameRefineryForComplex(key) as RefineryRenamedForComplex<string>;
+                const formattedRefineryName = normalizeRefineryName(key) as NormalizedRefineryName<string>;
 
-                (acc as Record<RefineryRenamedForComplex<string>, any>)[formattedRefineryName] = forges;
+                (acc as Record<NormalizedRefineryName<string>, any>)[formattedRefineryName] = forges;
 
                 return acc;
             }, {} as RefineriesFormatted);

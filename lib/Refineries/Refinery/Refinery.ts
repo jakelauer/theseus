@@ -1,15 +1,27 @@
+import deepFreeze from "deep-freeze-strict";
+
 import { makeImmutable } from "../../Utils/StringUtils";
 import { ForgeSet } from "../ForgeSet/ForgeSet";
-import { RemoveRefineryFromName } from "../RefineryComplex/renameRefineryForComplex";
+import { NormalizedRefineryName } from "../RefineryComplex/normalizeRefineryName";
 import { ForgeDefs, Immutable, RefineObject, RefineryDefinition } from "../Types/RefineryTypes";
 
+/**
+ * Represents a refinery for transforming data using a set of forge functions.
+ * A refinery encapsulates the logic for applying these transformations, offering
+ * a fluent API for defining and executing data refinements.
+ *
+ * @template TForgeableData The type of data being refined.
+ * @template TForges The definitions of forge functions applicable to the forgeable data.
+ * @template TRefineryName The name of the refinery, affecting how it's referenced and used.
+ * @template TParamNoun The name of the parameter representing the forgeable part of the data.
+ */
 export class Refinery<
     TForgeableData,
     TForges extends ForgeDefs<TForgeableData, Immutable<TParamNoun>>,
     TRefineryName extends string,
     TParamNoun extends string,
 > {
-    public readonly refineryName: RemoveRefineryFromName<TRefineryName>;
+    public readonly refineryName: NormalizedRefineryName<TRefineryName>;
     public readonly immutableArgName: Immutable<TParamNoun>;
     private readonly forges: TForges;
 
@@ -22,12 +34,16 @@ export class Refinery<
         this.forges = forges;
     }
 
+    /**
+     * Normalizes the refinery name by removing any 'refinery' prefix or suffix, ensuring
+     * a clean, user-friendly name for the refinery instance.
+     */
     private normalizeName(name: TRefineryName) {
         const trimmed = this.trimRefineryFromName(name);
 
         this.assertValidName(trimmed, "Name cannot be empty, nor only the word 'refinery'");
 
-        return name as RemoveRefineryFromName<TRefineryName>;
+        return name as NormalizedRefineryName<TRefineryName>;
     }
 
     private trimRefineryFromName(name: string) {
@@ -42,9 +58,12 @@ export class Refinery<
     }
 
     /**
-     * The data upon which mutates will be performed
+     * Initiates the refinement process on the input data using the defined set of forges.
+     * This method returns an object allowing further specification of how the data should be refined.
      */
     public refine(input: TForgeableData) {
+        deepFreeze(input);
+
         // Create the actions which will be available when `for()` is called.
         const forgeSet = ForgeSet.create<TForgeableData, Immutable<TParamNoun>, TForges>(
             input,
@@ -76,10 +95,36 @@ export class Refinery<
         return result as RefineObject<TForgeableData, TForges, TParamNoun>;
     }
 
+    /**
+     * Retrieves the definitions of forges associated with this refinery.
+     */
     public getForgeDefinitions() {
         return this.forges;
     }
-
+    /**
+     * Factory method for creating a new refinery instance. This method initiates the refinery configuration process,
+     * allowing the caller to specify the data type to be refined and the forge functions to be used for the refinement.
+     * It employs a fluent API design, enabling a step-by-step specification of the refinery's configuration in a clear and intuitive manner.
+     *
+     * The method returns an object with a `toRefine` method, marking the beginning of the refinery configuration. The `toRefine` method,
+     * in turn, expects a callback to define the data type for the refinery. This callback provides another method, `withForges`, which is used
+     * to specify the forge functions applicable to the data type. Finally, `withForges` returns the configured refinery instance, ready for use.
+     *
+     * Usage example:
+     * ```typescript
+     * const {MyRefinery} = Refinery.create("MyRefinery", "theData")
+     *   .toRefine<{ myDataType: number }>() // Specify the data type to be refined
+     *   .withForges({ // Define the forge functions
+     *     forgeFunction1: (immutableTheData) => { ... },
+     *     forgeFunction2: (immutableTheData) => { ... },
+     *   });
+     * ```
+     *
+     * @template _TRefineryName The name of the refinery, affecting how it's referenced and used.
+     * @template _TParamNoun The name of the parameter representing the forgeable part of the data.
+     * @param definitions An object containing the refinery's name and optionally the data noun. The data noun specifies the name of the parameter that represents the forgeable data within the forge functions.
+     * @returns An object with a `toRefine` method, marking the start of the refinery configuration process.
+     */
     public static create = <_TRefineryName extends string, _TParamNoun extends string>(
         definitions: RefineryDefinition<_TRefineryName, _TParamNoun>,
     ) => ({
