@@ -1,3 +1,5 @@
+import log from "loglevel";
+
 import { Func } from "../../Types/Modifiers";
 import { Mutable, MutatorDefs } from "../Types/MutatorTypes";
 import { MutatorSet } from "./MutatorSet";
@@ -33,6 +35,8 @@ export class AsyncChainableMutatorSet<
                 return this;
             },
         });
+
+        log.trace(`Added async function to self at path: ${selfPath} for context: `, context);
     }
 
     /**
@@ -41,6 +45,7 @@ export class AsyncChainableMutatorSet<
      * @returns The final mutated state.
      */
     public getFinalForm() {
+        log.trace(`Retrieving final form of mutated data`);
         return this.mutableData[this.argName];
     }
 
@@ -57,6 +62,7 @@ export class AsyncChainableMutatorSet<
         argName: TParamName,
         mutators: TMutators,
     ): AsyncChainableMutatorSet<TEvolverData, TParamName, TMutators> {
+        log.trace(`Creating async chainable mutator set with initial data and mutators`);
         return new AsyncChainableMutatorSet(data, argName, mutators);
     }
 
@@ -65,6 +71,7 @@ export class AsyncChainableMutatorSet<
      * does not support the creation of non-chained mutators, enforcing its use for asynchronous operations only.
      */
     public static override create(): MutatorSet<any, any, any> {
+        log.error("AsyncChainableMutatorSet does not support non-chained mutators.");
         throw new Error("AsyncChainableMutatorSet does not support non-chained mutators.");
     }
 }

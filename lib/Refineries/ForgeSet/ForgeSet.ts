@@ -1,3 +1,5 @@
+import log from "loglevel";
+
 import { Func } from "../../Types/Modifiers";
 import { ExposeForges, ForgeDefs, Immutable } from "../Types/RefineryTypes";
 
@@ -15,6 +17,7 @@ export class ForgeSet<
     protected mutableData: { [key in TParamName]: TForgeableData };
 
     constructor(inputData: TForgeableData, argName: TParamName, forges: TForges) {
+        log.trace(`Creating forge set with argument name: ${argName}`, inputData, forges);
         this.argName = argName;
         this.mutableData = this.inputToObject(inputData);
 
@@ -31,6 +34,7 @@ export class ForgeSet<
             const newPath = [...path, key];
 
             if (typeof item === "function") {
+                log.trace(`Forge at path: ${newPath.join(".")} is a function; adding to instance`);
                 // Use reduce to traverse and/or build the nested structure
                 const lastKey = newPath.pop() as string;
                 const context = newPath.reduce((obj, key) => {
@@ -41,6 +45,7 @@ export class ForgeSet<
                 // Assign the function
                 this.addFunctionToSelf(context, lastKey, item);
             } else if (typeof item === "object" && item !== null) {
+                log.trace(`Forge at path: ${newPath.join(".")} is an object; recursively extending instance`);
                 // Recursive call for nested objects
                 this.extendSelfWithForges(item as TForges, newPath);
             }
@@ -52,6 +57,7 @@ export class ForgeSet<
      * by `extendSelfWithForges` to attach forge functions to the instance.
      */
     protected addFunctionToSelf(context: any, selfPath: string, func: Func) {
+        log.trace(`Adding function to self at path: ${selfPath}`);
         Object.assign(context, {
             [selfPath]: (...args: any[]) => func(this.mutableData, ...args),
         });
@@ -83,6 +89,7 @@ export class ForgeSet<
         TParamName extends Immutable,
         TForges extends ForgeDefs<TForgeableData, TParamName>,
     >(data: TForgeableData, argName: TParamName, forges: TForges): ExposeForges<TForgeableData, TParamName, TForges> {
+        log.trace(`Creating forge set with initial data and forges`);
         return new ForgeSet(data, argName, forges) as ExposeForges<TForgeableData, TParamName, TForges>;
     }
 

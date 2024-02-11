@@ -1,3 +1,5 @@
+import log from "loglevel";
+
 import { Func } from "../../Types/Modifiers";
 import { Mutable, MutatorDefs } from "../Types/MutatorTypes";
 
@@ -21,6 +23,7 @@ export class MutatorSet<
         protected readonly argName: TParamName,
         protected readonly mutators: TMutators,
     ) {
+        log.trace(`Creating mutator set with argument name: ${argName}`, inputData, mutators);
         this.mutableData = this.inputToObject(inputData);
         this.extendSelfWithMutators(mutators);
     }
@@ -31,6 +34,7 @@ export class MutatorSet<
      * structures.
      */
     private extendSelfWithMutators(mutators: TMutators, path: string[] = []) {
+        log.trace(`Extending self with mutators at path: ${path}`, mutators);
         Object.keys(mutators).forEach((mutatorKey) => {
             const item = mutators[mutatorKey];
             const newPath = [...path, mutatorKey];
@@ -43,8 +47,10 @@ export class MutatorSet<
                 }, this as any);
 
                 this.addFunctionToSelf(context, lastKey, item);
+                log.trace(`Mutator "${mutatorKey}" is a function, added to self at path: ${newPath}`);
             } else if (typeof item === "object" && item !== null) {
                 this.extendSelfWithMutators(item as TMutators, newPath);
+                log.trace(`Mutator "${mutatorKey}" is an object, recursing at path: ${newPath}`);
             }
         });
     }
@@ -54,6 +60,7 @@ export class MutatorSet<
      * by extendSelfWithMutators to attach mutator functions to the instance.
      */
     protected addFunctionToSelf(context: any, selfPath: string, func: Func) {
+        log.trace(`Adding function to self at path: ${selfPath} for context: `, context);
         Object.assign(context, {
             [selfPath]: (...args: any[]) => func(this.mutableData, ...args),
         });
@@ -65,6 +72,7 @@ export class MutatorSet<
     protected inputToObject<_TEvolverData, _TParamName extends Mutable<string>>(
         input: _TEvolverData,
     ): { [key in _TParamName]: _TEvolverData } {
+        log.trace(`Transform input to object with key name: ${this.argName}`, input);
         return { [this.argName]: input } as {
             [key in _TParamName]: _TEvolverData;
         };

@@ -1,4 +1,3 @@
-const chalk = require("chalk");
 const { execSync } = require("child_process");
 const getPackageJson = require("./get-package-json");
 
@@ -13,5 +12,5 @@ if (gitHasPendingTheseusChanges) {
 const existingNpmVersion = execSync("npm view theseus-js version").toString().trim();
 
 if (existingNpmVersion === packageJson.version) {
-    console.log(chalk.red(`Version ${packageJson.version} already published to npm.`));
+    console.log(`Version ${packageJson.version} already published to npm.`);
 }

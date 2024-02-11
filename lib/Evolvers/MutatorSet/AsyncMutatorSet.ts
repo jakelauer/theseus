@@ -1,3 +1,5 @@
+import log from "loglevel";
+
 import { Func } from "../../Types/Modifiers";
 import { Mutable, MutatorDefs } from "../Types/MutatorTypes";
 import { MutatorSet } from "./MutatorSet";
@@ -25,6 +27,8 @@ export class AsyncMutatorSet<
     ) {
         super(inputData, argName, functionObject);
         this.mutableData = this.inputToObject(inputData);
+
+        log.trace(`Creating async mutator set with argument name: ${argName}`, inputData, functionObject);
     }
 
     /**
@@ -35,6 +39,8 @@ export class AsyncMutatorSet<
         Object.assign(context, {
             [selfPath]: async (...args: any[]) => await func(this.mutableData, ...args),
         });
+
+        log.trace(`Added async function to self at path: ${selfPath} for context: `, context);
     }
 
     /**
@@ -46,6 +52,7 @@ export class AsyncMutatorSet<
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TEvolverData, TParamName>,
     >(data: TEvolverData, argName: TParamName, mutators: TMutators): MutatorSet<TEvolverData, TParamName, TMutators> {
+        log.trace(`Creating async mutator set with initial data and mutators`);
         return new AsyncMutatorSet(data, argName, mutators);
     }
 
@@ -54,6 +61,7 @@ export class AsyncMutatorSet<
      * and it does not support the creation of non-async mutators.
      */
     public static override create(): MutatorSet<any, any, any> {
+        log.error("AsyncMutatorSet does not support non-async mutators.");
         throw new Error("AsyncMutatorSet does not support non-async mutators.");
     }
 }

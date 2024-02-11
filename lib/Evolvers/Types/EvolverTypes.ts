@@ -1,5 +1,5 @@
 import type { ChainableMutators } from "./ChainableTypes";
-import { Mutable, MutatorDefs } from "./MutatorTypes";
+import type { Mutable, MutatorDefs } from "./MutatorTypes";
 
 /**
  * Represents an instance of an evolver, providing methods to mutate or evolve the state.

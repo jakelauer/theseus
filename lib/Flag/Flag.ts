@@ -1,3 +1,5 @@
+import log from "loglevel";
+
 import { capitalizeFirstLetter } from "../Utils/StringUtils";
 
 /**
@@ -25,16 +27,21 @@ class FlagWrapper<TEnum extends FlagEnumType> {
                     [key]: enumDeclaration[key],
                     [`is${capitalized}`]: (value: number) => this.matches(value, enumDeclaration[key] as number),
                 });
+
+                log.trace(`Added enumeration key: ${key} with value: ${enumDeclaration[key]}`);
+            } else {
+                log.warn(
+                    `Skipping non-string key: ${ambiguousKey}. Only string keys are supported for flag enumerations.`,
+                );
             }
         });
+
+        log.trace(`Created FlagWrapper for enumeration: ${enumKeys.join(", ")}`);
     }
 
     /**
      * Checks if the provided value matches against a specific flag value.
      * @private
-     * @param {number} value - The value to check.
-     * @param {number} against - The flag value to match against.
-     * @returns {boolean} True if the value matches against the flag value.
      */
     private matches(value: number, against: number) {
         return value === (value & against);
@@ -47,6 +54,7 @@ class FlagWrapper<TEnum extends FlagEnumType> {
      * @returns {FlagWithEnumProps<TEnum>} An instance of FlagWrapper with additional enumeration properties.
      */
     public static fromEnum<TEnum extends FlagEnumType>(enumDeclaration: TEnum): FlagWithEnumProps<TEnum> {
+        log.trace(`Creating FlagWrapper from enumeration: ${Object.keys(enumDeclaration).join(", ")}`);
         return new FlagWrapper<TEnum>(enumDeclaration) as unknown as FlagWithEnumProps<TEnum>;
     }
 }

@@ -1,3 +1,5 @@
+import log from "loglevel";
+
 import { NormalizedEvolverName } from "../../Evolvers/EvolverComplex/normalizeEvolverName";
 import { Refinery } from "../Refinery/Refinery";
 import { ForgeDefs, Immutable } from "../Types/RefineryTypes";
@@ -24,10 +26,15 @@ export class RefineryComplex {
             TRefineryName extends string,
         >(
             refineries: TRefineries,
-        ) =>
-            ({
+        ) => {
+            const result = {
                 refine: (input: TForgeableData) => RefineryComplex.refine(input).withRefineries(refineries),
-            }) as const,
+            } as const;
+
+            log.trace("Creating refinery complex with refineries", refineries);
+
+            return result;
+        },
     });
 
     /**
@@ -43,6 +50,8 @@ export class RefineryComplex {
         withRefineries: <TRefineries extends Record<string, Refinery<TForgeableData, any, string, string>>>(
             refineries: TRefineries,
         ) => {
+            log.trace("Refining data with refineries", refineries);
+
             /**
              * Represents the names of the refineries as provided in the withRefineries argument.
              */
@@ -85,8 +94,12 @@ export class RefineryComplex {
 
                 (acc as Record<NormalizedRefineryName<string>, any>)[formattedRefineryName] = forges;
 
+                log.trace(`Refinery ${key} processed with forges`, forges);
+
                 return acc;
             }, {} as RefineriesFormatted);
+
+            log.trace(`Refinery complex created with refineries: ${keys.join(", ")}`);
 
             return result;
         },

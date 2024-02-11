@@ -1,3 +1,5 @@
+import log from "loglevel";
+
 import { Evolver } from "../Evolver/Evolver";
 import { EvolveObject, MutateObject } from "../Types/EvolverTypes";
 import { Mutable, MutatorDefs } from "../Types/MutatorTypes";
@@ -34,67 +36,79 @@ export class EvolverComplex {
             TParamName extends string,
         >(
             evolvers: TEvolvers,
-        ) => ({
-            /**
-             * Performs a single mutation on the given input, and returns the resulting transformed data.
-             *
-             * Examples:
-             * ```
-             * const {BoxScore} = BaseballEvolverComplex.mutate(myData);
-             * const result = BoxScore.setRuns(5);
-             * ```
-             */
-            mutate: (input: TData) => EvolverComplex.mutate(input).withEvolvers(evolvers),
-            /**
-             * Performs multiple mutations on the given input, chained together. The final result is available via
-             * the `finish` method, or by preceding the final chained call with `.lastly`.
-             *
-             * Examples:
-             * ```
-             * const {BoxScore} = BaseballEvolverComplex.evolve(myData);
-             * const result = BoxScore.setRuns(5).and.setHits(10).and.setErrors(0).finish(); // option 1
-             * const result = BoxScore.setRuns(5).and.setHits(10).and.lastly.setErrors(0); // option 2
-             * ```
-             */
-            evolve: (input: TData) => EvolverComplex.evolve(input).withEvolvers(evolvers),
-            use: (input: TData) => ({
-                Mutate: EvolverComplex.mutate(input).withEvolvers(evolvers),
-                Evolve: EvolverComplex.evolve(input).withEvolvers(evolvers),
-            }),
-        }),
-    });
-
-    private static mutate = <TData>(input: TData) => ({
-        /**
-         * Configures the mutation process with specific evolvers.
-         */
-        withEvolvers: <
-            TEvolvers extends Record<string, Evolver<TData, TMutators, TEvolverName, TParamName>>,
-            TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-            TEvolverName extends string,
-            TParamName extends string,
-        >(
-            evolvers: TEvolvers,
         ) => {
-            return this.generateEvolveMethods(evolvers, input, false);
+            log.trace(`Creating evolver complex with evolvers: ${Object.keys(evolvers).join(", ")}`);
+
+            return {
+                /**
+                 * Performs a single mutation on the given input, and returns the resulting transformed data.
+                 *
+                 * Examples:
+                 * ```
+                 * const {BoxScore} = BaseballEvolverComplex.mutate(myData);
+                 * const result = BoxScore.setRuns(5);
+                 * ```
+                 */
+                mutate: (input: TData) => EvolverComplex.mutate(input).withEvolvers(evolvers),
+                /**
+                 * Performs multiple mutations on the given input, chained together. The final result is available via
+                 * the `finish` method, or by preceding the final chained call with `.lastly`.
+                 *
+                 * Examples:
+                 * ```
+                 * const {BoxScore} = BaseballEvolverComplex.evolve(myData);
+                 * const result = BoxScore.setRuns(5).and.setHits(10).and.setErrors(0).finish(); // option 1
+                 * const result = BoxScore.setRuns(5).and.setHits(10).and.lastly.setErrors(0); // option 2
+                 * ```
+                 */
+                evolve: (input: TData) => EvolverComplex.evolve(input).withEvolvers(evolvers),
+                use: (input: TData) => ({
+                    Mutate: EvolverComplex.mutate(input).withEvolvers(evolvers),
+                    Evolve: EvolverComplex.evolve(input).withEvolvers(evolvers),
+                }),
+            };
         },
     });
 
-    private static evolve = <TData>(input: TData) => ({
-        /**
-         * Sets up the evolution process with specified evolvers for chained mutations.
-         */
-        withEvolvers: <
-            TEvolvers extends Record<string, Evolver<TData, TMutators, TEvolverName, TParamName>>,
-            TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-            TEvolverName extends string,
-            TParamName extends string,
-        >(
-            evolvers: TEvolvers,
-        ) => {
-            return this.generateEvolveMethods(evolvers, input, true);
-        },
-    });
+    private static mutate = <TData>(input: TData) => {
+        log.trace(`Mutating data using evolver complex`, input);
+
+        return {
+            /**
+             * Configures the mutation process with specific evolvers.
+             */
+            withEvolvers: <
+                TEvolvers extends Record<string, Evolver<TData, TMutators, TEvolverName, TParamName>>,
+                TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
+                TEvolverName extends string,
+                TParamName extends string,
+            >(
+                evolvers: TEvolvers,
+            ) => {
+                return this.generateEvolveMethods(evolvers, input, false);
+            },
+        };
+    };
+
+    private static evolve = <TData>(input: TData) => {
+        log.trace(`Evolving data using evolver complex`, input);
+
+        return {
+            /**
+             * Sets up the evolution process with specified evolvers for chained mutations.
+             */
+            withEvolvers: <
+                TEvolvers extends Record<string, Evolver<TData, TMutators, TEvolverName, TParamName>>,
+                TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
+                TEvolverName extends string,
+                TParamName extends string,
+            >(
+                evolvers: TEvolvers,
+            ) => {
+                return this.generateEvolveMethods(evolvers, input, true);
+            },
+        };
+    };
 
     /**
      * Dynamically generates evolution methods for the provided evolvers, based on the input data and a flag indicating whether to use macro mutators.
@@ -120,6 +134,8 @@ export class EvolverComplex {
         TIsMacro extends boolean,
         TEvolvers extends Record<string, Evolver<TData, any, any, any>>,
     >(evolvers: TEvolvers, input: TData, macro: TIsMacro) {
+        log.trace(`Generating evolve methods for evolvers: ${Object.keys(evolvers).join(", ")}`);
+
         /**
          * Represents the names of the refineries as provided in the withRefineries argument.
          */
@@ -171,9 +187,11 @@ export class EvolverComplex {
         // that maps formatted evolver names to their mutators. This object is then returned as the final result
         // of the method, representing the cumulative mutations available for application to the state.
         const result = keys.reduce((acc, key: TEvolverPassedNames) => {
+            log.trace(`Generating mutators for evolver: ${key}`);
             const evolver = evolvers[key];
             const mutators = macro ? evolver.evolve(input).getMutators() : evolver.mutate(input).getMutators();
             const formattedEvolverName = normalizeEvolverName(key);
+            log.trace(`Formatted evolver name for complex: ${formattedEvolverName}`);
 
             (acc as Record<NormalizedEvolverName<string>, any>)[formattedEvolverName] = mutators;
 

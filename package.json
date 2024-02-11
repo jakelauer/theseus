@@ -6,36 +6,49 @@
 	"description": "Functionality to create and modify data fluently and narratively",
 	"author": "Jake Lauer",
 	"license": "MIT",
+	"dependencies": {
+		"clone-deep": "^4.0.1",
+		"deep-freeze-strict": "^1.1.1",
+		"loglevel": "^1.9.1",
+		"theseus-js": "link:"
+	},
 	"devDependencies": {
 		"@babel/register": "^7.23.7",
 		"@types/chai": "^4.3.11",
+		"@types/chai-as-promised": "^7.1.8",
 		"@types/clone-deep": "^4.0.4",
 		"@types/deep-freeze-strict": "^1.1.2",
 		"@types/mocha": "^10.0.6",
 		"@types/node": "^20.11.17",
-		"@types/prompts": "2.4.9",
+		"@types/prompts": "^2.4.9",
 		"@types/sinon": "^17.0.3",
 		"@typescript-eslint/eslint-plugin": "^6.20.0",
 		"@typescript-eslint/parser": "^6.20.0",
 		"arg": "^5.0.1",
-		"chai": "5.0.3",
-		"chalk": "4.1.0",
-		"eslint": "7.32.0",
+		"chai": "^4.4.1",
+		"chai-as-promised": "^7.1.1",
+		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-mocha": "^10.2.0",
 		"husky": "^8.0.3",
 		"lint-staged": "^14.0.1",
-		"mocha": "10.3.0",
+		"mocha": "^10.3.0",
 		"mocha-suppress-logs": "^0.4.1",
-		"prettier": "3.1.0",
-		"prompts": "2.4.2",
+		"prettier": "^3.1.0",
+		"prompts": "^2.4.2",
+		"sinon": "^17.0.1",
 		"ts-node": "^10.9.1",
-		"tsconfig-paths": "4.2.0",
-		"typescript": "5.3.3"
+		"tsconfig-paths": "^4.2.0",
+		"typescript": "^5.3.3"
 	},
 	"scripts": {
 		"prepare": "husky install",
-		"build": "tsc --project ./tsconfig.json",
+		"// ==== TESTING ==== //": "",
+		"lint": "git add . && pnpm lint-staged",
 		"test": "mocha --exit --config ./.mocharc.cjs",
+		"// ==== BUILD ==== //": "",
+		"build": "tsc --project ./tsconfig.json",
+		"// ==== PUBLISH ==== //": "",
 		"update": "pnpm build && node ./.scripts/update-version.js",
 		"pub": "node ./.scripts/publish.js"
 	},
@@ -51,9 +64,5 @@
 	},
 	"engines": {
 		"node": ">=16.x"
-	},
-	"dependencies": {
-		"clone-deep": "^4.0.1",
-		"deep-freeze-strict": "^1.1.1"
 	}
 }

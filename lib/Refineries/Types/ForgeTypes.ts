@@ -1,4 +1,4 @@
-import { Immutable } from "./RefineryTypes";
+import type { Immutable } from "./RefineryTypes";
 
 /**
  * The required shape of a Forge. Forges must be a function which is passed an object with one key,

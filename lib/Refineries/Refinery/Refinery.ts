@@ -1,4 +1,6 @@
+import cloneDeep from "clone-deep";
 import deepFreeze from "deep-freeze-strict";
+import log from "loglevel";
 
 import { makeImmutable } from "../../Utils/StringUtils";
 import { ForgeSet } from "../ForgeSet/ForgeSet";
@@ -26,6 +28,7 @@ export class Refinery<
     private readonly forges: TForges;
 
     private constructor(definitions: RefineryDefinition<TRefineryName, TParamNoun>, forges: TForges) {
+        log.trace(`Creating refinery with name: ${definitions.name}`, forges);
         const normalizedName = this.normalizeName(definitions.name);
         const immutableDataNoun: TParamNoun = definitions.dataNoun ?? ("input" as TParamNoun);
 
@@ -43,6 +46,8 @@ export class Refinery<
 
         this.assertValidName(trimmed, "Name cannot be empty, nor only the word 'refinery'");
 
+        log.trace(`Normalizing refinery name: ${name} -> ${trimmed}`);
+
         return name as NormalizedRefineryName<TRefineryName>;
     }
 
@@ -53,7 +58,8 @@ export class Refinery<
 
     private assertValidName(name: string, errorMessage: string) {
         if (!name || name.trim().length === 0) {
-            throw new Error(`Refinery name cannot be empty. ${errorMessage}`);
+            log.error(`Refinery name is invalid. ${errorMessage}`);
+            throw new Error(`Refinery name is invalid. ${errorMessage}`);
         }
     }
 
@@ -62,7 +68,11 @@ export class Refinery<
      * This method returns an object allowing further specification of how the data should be refined.
      */
     public refine(input: TForgeableData) {
-        deepFreeze(input);
+        const inputClone = cloneDeep(input);
+        log.trace(`Cloned input data for refinery: `, inputClone);
+
+        deepFreeze(inputClone);
+        log.trace(`Ensured input data is immutable for refinery "${this.refineryName}" via deep-freeze`);
 
         // Create the actions which will be available when `for()` is called.
         const forgeSet = ForgeSet.create<TForgeableData, Immutable<TParamNoun>, TForges>(
@@ -70,6 +80,8 @@ export class Refinery<
             this.immutableArgName,
             this.forges,
         );
+
+        log.trace(`Created forge set for refinery "${this.refineryName}"`);
 
         /**
          * Save memory by not duplicating forgeSet on both `into` and `forges`.
@@ -134,6 +146,8 @@ export class Refinery<
          */
         toRefine: <_TForgeableData>() => ({
             withForges: <_TForges extends ForgeDefs<_TForgeableData, Immutable<_TParamNoun>>>(forges: _TForges) => {
+                log.trace(`Creating refinery with name: ${definitions.name}`, forges);
+
                 // This is a trick to force the type of the return value to be the name of the refinery.
                 type ForceReturnVariableName = Record<
                     _TRefineryName,
@@ -144,6 +158,8 @@ export class Refinery<
                     definitions,
                     forges,
                 );
+
+                log.trace(`Created refinery with name: ${refinery.refineryName}`);
 
                 return {
                     [definitions.name]: refinery,

@@ -1,5 +1,5 @@
-import { FuncMinusFirstArg } from "../../Types/Modifiers";
-import { Mutable, MutatorDefChild } from "./MutatorTypes";
+import type { FuncMinusFirstArg } from "../../Types/Modifiers";
+import type { Mutable, MutatorDefChild } from "./MutatorTypes";
 
 type AsyncTracker = "sync" | "async";
 type FinalTracker = "final" | "notFinal";

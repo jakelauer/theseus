@@ -6,18 +6,13 @@ module.exports = {
         sourceType: "module",
         tsconfigRootDir: __dirname,
     },
-    extends: [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:react/recommended",
-        "plugin:mocha/recommended",
-        "prettier",
-    ],
+    extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:mocha/recommended", "prettier"],
     plugins: [],
     rules: {
         "no-async-promise-executor": "off",
         "@typescript-eslint/no-floating-promises": ["error"],
         "@typescript-eslint/no-explicit-any": "off",
+        "mocha/no-setup-in-describe": "off",
     },
     overrides: [
         {

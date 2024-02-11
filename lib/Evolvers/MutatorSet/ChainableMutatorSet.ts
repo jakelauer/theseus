@@ -1,3 +1,5 @@
+import log from "loglevel";
+
 import { Func } from "../../Types/Modifiers";
 import { Mutable, MutatorDefs } from "../Types/MutatorTypes";
 import { MutatorSet } from "./MutatorSet";
@@ -30,8 +32,12 @@ export class ChainableMutatorSet<
      * @param value The value to check.
      * @returns True if the value is a Promise, false otherwise.
      */
-    private isPromise(value: any): value is Promise<any> {
-        return Boolean(value && typeof value.then === "function");
+    private isPromise(path: string, value: any): value is Promise<any> {
+        const result = Boolean(value && typeof value.then === "function");
+
+        if (result) log.trace(`Function at path "${path}" returns a Promise`);
+
+        return result;
     }
 
     /**
@@ -48,7 +54,7 @@ export class ChainableMutatorSet<
                 const output = func(this.mutableData, ...args);
                 this.mutableData = this.inputToObject<TEvolverData, TParamName>(output);
 
-                return this.isPromise(output) ? output : (
+                return this.isPromise(selfPath, output) ? output : (
                         {
                             and: this,
                         }
@@ -60,14 +66,17 @@ export class ChainableMutatorSet<
                 this.mutators,
             ),
         });
+
+        log.trace(`Added function to self at path: ${selfPath}, accessible via "and" and "lastly" properties`);
     }
 
-    /**
+    /**x
      * Retrieves the final form of the mutated data after all chainable mutations have been applied.
      *
      * @returns The final mutated state.
      */
     public getFinalForm() {
+        log.trace(`Retrieving final form of mutated data`);
         return this.mutableData[this.argName];
     }
 
@@ -85,6 +94,7 @@ export class ChainableMutatorSet<
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TEvolverData, TParamName>,
     >(data: TEvolverData, argName: TParamName, mutators: TMutators) {
+        log.trace(`Creating chainable mutator set with initial data and mutators`);
         return new ChainableMutatorSet(data, argName, mutators);
     }
 
@@ -93,6 +103,7 @@ export class ChainableMutatorSet<
      * and does not support the creation of non-chainable mutators.
      */
     public static override create(): MutatorSet<any, any, any> {
+        log.error("ChainableMutatorSet does not support non-chained mutators.");
         throw new Error("ChainableMutatorSet does not support non-chained mutators.");
     }
 }

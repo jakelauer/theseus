@@ -1,3 +1,5 @@
+import log from "loglevel";
+
 import { makeMutable } from "../../Utils/StringUtils";
 import { NormalizedEvolverName } from "../EvolverComplex/normalizeEvolverName";
 import { ChainableMutatorSet } from "../MutatorSet/ChainableMutatorSet";
@@ -17,6 +19,7 @@ interface TypeAccess<
     paramName: TParamName;
     mutableParamName: Mutable<TParamName>;
     returnData: SortaPromise<TData>;
+    evolver: Evolver<TData, TMutators, TEvolverName, TParamName>;
 }
 
 /**
@@ -47,7 +50,27 @@ export class Evolver<
 
         this.evolverName = normalizedName;
         this.mutableArgName = makeMutable(mutableDataNoun);
+
+        this.assertValidMutators(mutators);
         this.mutators = mutators;
+
+        log.trace(`Created evolver: ${this.evolverName}`);
+    }
+
+    private assertValidMutators(mutators: TMutators) {
+        if (!mutators || Object.keys(mutators).length === 0) {
+            log.error("Mutators cannot be empty.");
+            throw new Error("Mutators cannot be empty.");
+        }
+
+        for (const key in mutators) {
+            if (!mutators[key]) {
+                log.error(`Mutator '${key}' cannot be empty.`);
+                throw new Error(`Mutator '${key}' cannot be empty.`);
+            }
+        }
+
+        log.trace(`Evolver '${this.evolverName}' has ${Object.keys(mutators).length} mutators.`);
     }
 
     private normalizeName(name: TEvolverName) {
@@ -97,6 +120,8 @@ export class Evolver<
             },
         });
 
+        log.trace(`Mutating data using evolver: ${this.evolverName}`, input);
+
         return result;
     }
 
@@ -114,7 +139,7 @@ export class Evolver<
 
         const mutatorSetGetter = () => mutatorSet;
 
-        return Object.defineProperties<EvolveObject<TData, TMutators, Mutable<TParamName>>>({} as any, {
+        const result = Object.defineProperties<EvolveObject<TData, TMutators, Mutable<TParamName>>>({} as any, {
             getMutators: {
                 get: () => mutatorSetGetter,
             },
@@ -122,6 +147,10 @@ export class Evolver<
                 get: mutatorSetGetter,
             },
         });
+
+        log.trace(`Evolving data using evolver: ${this.evolverName}`, input);
+
+        return result;
     }
 
     /**
@@ -150,6 +179,10 @@ export class Evolver<
 
                 const refinery = new Evolver<_TData, _TMutators, _TEvolverName, _TParamName>(name, mutators, options);
 
+                log.trace(
+                    `Created evolver: ${refinery.evolverName} with mutators: ${Object.keys(mutators).join(", ")}`,
+                );
+
                 return {
                     [name]: refinery,
                 } as ForceReturnVariableName;
@@ -164,6 +197,8 @@ export class Evolver<
     public static buildCreator = <_TParamName extends string>(options?: EvolverOptions<_TParamName>) => ({
         toEvolve: <_TData>() => ({
             named: <_TEvolverName extends string>(name: _TEvolverName) => {
+                log.trace(`Creating evolver: ${name} with options: ${JSON.stringify(options)}`);
+
                 return this.create<_TEvolverName, _TParamName>(name, options).toEvolve<_TData>();
             },
         }),
