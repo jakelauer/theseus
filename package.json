@@ -9,7 +9,7 @@
 	"dependencies": {
 		"clone-deep": "^4.0.1",
 		"deep-freeze-strict": "^1.1.1",
-		"loglevel": "^1.9.1",
+		"@Shared/Log/log": "^1.9.1",
 		"theseus-js": "link:"
 	},
 	"devDependencies": {
@@ -39,6 +39,7 @@
 		"sinon": "^17.0.1",
 		"ts-node": "^10.9.1",
 		"tsconfig-paths": "^4.2.0",
+		"tsx": "^4.7.1",
 		"typescript": "^5.3.3"
 	},
 	"scripts": {

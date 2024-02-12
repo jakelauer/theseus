@@ -3,16 +3,15 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 module.exports = {
     // Use ts-node rather than node, so we get TypeScript support
-    require: ["@babel/register", "ts-node/register", "tsconfig-paths/register", "mocha-suppress-logs"],
+    require: ["@babel/register"],
     // Search the whole tree
     recursive: true,
     // Match the following extensions
     extension: ["ts", "tsx"],
     // Skip over shit
-    ignore: ["**/node_modules/**/*", "dist/**/*"],
+    ignore: ["**/node_modules/**/*", "**/dist/**/*"],
     // TBH I don't know why this is required, but removing it breaks things and it's not in the docs for Mocha.
     // Seems as though this determines the search pattern, but then why do I also have to specify extensions?
     spec: ["**/*.test.js", "**/*.test.ts", "**/*.test.tsx"],
-
-    "node-option": ["experimental-specifier-resolution=node", "loader=ts-node/esm"],
+    "node-option": ["loader=tsx/esm"],
 };

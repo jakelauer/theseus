@@ -4,9 +4,14 @@ module.exports = {
         project: "./tsconfig.json",
         ecmaVersion: 2018,
         sourceType: "module",
-        tsconfigRootDir: __dirname,
+        tsconfigRootDir: "./",
     },
-    extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:mocha/recommended", "prettier"],
+    extends: [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:mocha/recommended",
+        "prettier",
+    ],
     plugins: [],
     rules: {
         "no-async-promise-executor": "off",
