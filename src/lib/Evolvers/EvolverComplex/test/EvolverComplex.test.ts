@@ -9,9 +9,12 @@ const IncrementEvolverCreator = () =>
     })
         .toEvolve<{ count: number }>()
         .withMutators({
-            increment: ({ mutableAmount }, amount: number) => ({
-                count: mutableAmount.count + amount,
-            }),
+            increment: ({ mutableAmount }, amount: number) => {
+                console.log(mutableAmount.count, amount);
+                return {
+                    count: mutableAmount.count + amount,
+                };
+            },
         });
 
 type IncrementEvolver = ReturnType<typeof IncrementEvolverCreator>["IncrementEvolver"];

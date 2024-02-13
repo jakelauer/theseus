@@ -178,7 +178,7 @@ export class Evolver<
      * Factory method for creating an Evolver instance, facilitating a fluent API for defining evolvers.
      * @returns A fluent interface for constructing an Evolver with specified data and mutators.
      */
-    public static create = <_TEvolverName extends string, _TParamName extends string>(
+    public static create = <_TEvolverName extends string, _TParamName extends string = "input">(
         name: _TEvolverName,
         options?: EvolverOptions<_TParamName>,
     ) => ({

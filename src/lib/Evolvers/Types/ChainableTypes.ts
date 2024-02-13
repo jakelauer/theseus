@@ -44,14 +44,15 @@ type SyncChainable<
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefChild<TData, TParamName>,
     TMutator extends (...args: any[]) => any,
+    IsAsync extends AsyncTracker,
     IsFinal extends FinalTracker = "notFinal",
 > = MutatorCallable<
     TMutator,
     IsFinal extends "final" ? TData
     :   Record<
             "and",
-            ChainableMutators<TData, TParamName, TMutators, IsFinal> &
-                Record<"finally", ChainableMutators<TData, TParamName, TMutators, "final">>
+            ChainableMutators<TData, TParamName, TMutators, IsFinal, IsAsync> &
+                Record<"finally", ChainableMutators<TData, TParamName, TMutators, "final", IsAsync>>
         > &
             Record<"getFinalForm", () => TData>
 >;
@@ -61,14 +62,15 @@ type AsyncChainable<
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefChild<TData, TParamName>,
     TMutator extends (...args: any[]) => any,
+    IsAsync extends AsyncTracker,
     IsFinal extends FinalTracker = "notFinal",
 > = MutatorCallable<
     TMutator,
     IsFinal extends "final" ? TData
     :   Record<
             "then",
-            ChainableMutators<TData, TParamName, TMutators, IsFinal> &
-                Record<"finally", ChainableMutators<TData, TParamName, TMutators, "final">>
+            ChainableMutators<TData, TParamName, TMutators, IsFinal, IsAsync> &
+                Record<"finally", ChainableMutators<TData, TParamName, TMutators, "final", IsAsync>>
         > &
             Record<"awaitFinalForm", () => TData>
 >;
@@ -77,7 +79,7 @@ type AsyncChainable<
  * Determines if a set of mutators includes any asynchronous operations,
  * affecting whether the chain is treated as async.
  */
-type IsChainAsync<TMutators, PrevAsync extends AsyncTracker = "sync"> = {
+type IsChainAsync<TMutators, PrevAsync extends AsyncTracker> = {
     [K in keyof TMutators]: TMutators[K] extends (...args: any[]) => Promise<any> ? "async"
     :   PrevAsync;
 }[keyof TMutators];
@@ -110,23 +112,24 @@ export type ChainableMutators<
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefChild<TData, TParamName>,
     IsFinal extends FinalTracker = "notFinal",
+    IsAsync extends AsyncTracker = IsChainAsync<TMutators, "sync">,
 > = {
     [K in keyof TMutators]: TMutators[K] extends (...args: any[]) => Promise<any> ?
         IsFinal extends "final" ?
             FuncMinusFirstArg<(...args: Parameters<TMutators[K]>) => Promise<TData>>
         :   // For async mutators, return a function type that expects the mutator's parameters (minus the first one)
             // and returns a Promise of the mutated data type.
-            AsyncChainable<TData, TParamName, TMutators, TMutators[K], "notFinal">
+            AsyncChainable<TData, TParamName, TMutators, TMutators[K], "async", "notFinal">
     : TMutators[K] extends (...args: any[]) => any ?
         // For sync mutators, if it's the final operation, determine if the entire chain is async and adjust the return type accordingly.
         // Otherwise, return a SyncChainable type allowing further chaining or finalization.
         IsFinal extends "final" ?
-            IsChainAsync<TMutators> extends "async" ?
+            IsChainAsync<TMutators, IsAsync> extends "async" ?
                 FuncMinusFirstArg<(...args: Parameters<TMutators[K]>) => Promise<TData>>
             :   FuncMinusFirstArg<(...args: Parameters<TMutators[K]>) => TData>
-        :   SyncChainable<TData, TParamName, TMutators, TMutators[K], "notFinal">
+        :   SyncChainable<TData, TParamName, TMutators, TMutators[K], IsAsync, "notFinal">
     : TMutators[K] extends { [key: string]: any } ?
         // For nested mutator objects, recursively apply ChainableMutators to enable deep chaining.
-        ChainableMutators<TData, TParamName, TMutators[K], IsFinal>
+        ChainableMutators<TData, TParamName, TMutators[K], IsFinal, IsAsync>
     :   never;
 };

@@ -13,14 +13,16 @@ describe("Evolver", () => {
     type TestEvolverMutators = Parameters<(typeof _evolver)["withMutators"]>;
 
     const testMutators: TestEvolverMutators[0] = {
-        increment: ({ mutableData }) => ({ value: mutableData.value + 1 }),
+        increment: ({ mutableInput }) => ({ value: mutableInput.value + 1 }),
     };
 
     describe("Factory Method and Initialization", () => {
         const evolverName = "testEvolver";
 
         it("should create an Evolver instance with the correct name and mutators", () => {
-            const evolver = Evolver.create(evolverName).toEvolve<TestData>().withMutators(testMutators)[evolverName];
+            const evolver = Evolver.create(evolverName)
+                .toEvolve<TestData>()
+                .withMutators(testMutators)[evolverName];
 
             expect(evolver).to.be.an.instanceof(Evolver);
             expect(evolver.getMutators()).to.deep.equal(testMutators);
@@ -30,9 +32,10 @@ describe("Evolver", () => {
     describe("Builder Function", () => {
         it("should support fluent configuration and creation of an Evolver instance", () => {
             const evolverName = "testEvolver";
-            const evolver = Evolver.buildCreator().toEvolve<TestData>().named(evolverName).withMutators(testMutators)[
-                evolverName
-            ];
+            const evolver = Evolver.buildCreator()
+                .toEvolve<TestData>()
+                .named(evolverName)
+                .withMutators(testMutators)[evolverName];
 
             expect(evolver).to.be.an.instanceof(Evolver);
         });
@@ -41,7 +44,9 @@ describe("Evolver", () => {
     describe("Mutator Access", () => {
         it("should return the correct set of mutators", () => {
             const evolverName = "testEvolver";
-            const evolver = Evolver.create(evolverName).toEvolve<TestData>().withMutators(testMutators)[evolverName];
+            const evolver = Evolver.create(evolverName)
+                .toEvolve<TestData>()
+                .withMutators(testMutators)[evolverName];
             expect(evolver.getMutators()).to.deep.equal(testMutators);
         });
     });
@@ -56,7 +61,7 @@ describe("Evolver", () => {
         type TestEvolverMutators = Parameters<(typeof _evolver)["withMutators"]>;
 
         const anotherTestMutators: TestEvolverMutators[0] = {
-            rename: ({ mutableData }) => ({ name: `New ${mutableData.name}` }),
+            rename: ({ mutableInput }) => ({ name: `New ${mutableInput.name}` }),
         };
 
         describe("Error Handling", () => {
@@ -67,9 +72,9 @@ describe("Evolver", () => {
 
                 expect(
                     () =>
-                        Evolver.create(evolverName).toEvolve<AnotherTestData>().withMutators(invalidMutators)[
-                            evolverName
-                        ],
+                        Evolver.create(evolverName)
+                            .toEvolve<AnotherTestData>()
+                            .withMutators(invalidMutators)[evolverName],
                 ).to.throw(); // Specify the expected error or message
             });
         });
@@ -102,7 +107,7 @@ describe("Evolver", () => {
             it("should support complex mutator definitions", async () => {
                 // Example of an async mutator, if supported by the design
                 const asyncMutators: TestEvolverMutators[0] = {
-                    asyncIncrement: async ({ mutableData }) => ({ name: mutableData.name + "1" }),
+                    asyncIncrement: async ({ mutableInput }) => ({ name: mutableInput.name + "1" }),
                 };
 
                 const evolver = Evolver.create("asyncEvolver")
@@ -111,6 +116,65 @@ describe("Evolver", () => {
 
                 // Assuming Evolver or mutators can handle async operations, use async/await or promises as needed
                 expect(evolver).to.be.an.instanceof(Evolver);
+            });
+        });
+
+        describe("Evolver with async chained mutators", () => {
+            it("should support async chained mutators", async () => {
+                const { AsyncEvolver } = Evolver.create("AsyncEvolver")
+                    .toEvolve<AnotherTestData>()
+                    .withMutators({
+                        asyncMakeNameUpperCase: async ({ mutableInput }) => {
+                            const result = await new Promise<AnotherTestData>((resolve) => {
+                                setTimeout(() => {
+                                    mutableInput.name = mutableInput.name.toUpperCase();
+                                    resolve(mutableInput);
+                                }, 100);
+                            });
+
+                            return result;
+                        },
+                        asyncMakeNameLowerCase: async ({ mutableInput }) => {
+                            const result = await new Promise<AnotherTestData>((resolve) => {
+                                setTimeout(() => {
+                                    mutableInput.name = mutableInput.name.toLowerCase();
+                                    resolve(mutableInput);
+                                }, 100);
+                            });
+
+                            return result;
+                        },
+                        asyncReverseName: async ({ mutableInput }) => {
+                            const result = await new Promise<AnotherTestData>((resolve) => {
+                                setTimeout(() => {
+                                    mutableInput.name = mutableInput.name
+                                        .split("")
+                                        .reverse()
+                                        .join("");
+                                    resolve(mutableInput);
+                                }, 100);
+                            });
+
+                            return result;
+                        },
+                        syncReplaceVowels: ({ mutableInput }) => ({
+                            name: mutableInput.name.replace(/[aeiou]/gi, "*"),
+                        }),
+                    });
+
+                const resultA = await AsyncEvolver.evolve({ name: "test" })
+                    .using.asyncMakeNameLowerCase()
+                    .then.asyncMakeNameUpperCase()
+                    .then.asyncReverseName()
+                    .then.finally.syncReplaceVowels();
+
+                const resultB = await AsyncEvolver.evolve({ name: "test" })
+                    .using.syncReplaceVowels()
+                    .and.asyncMakeNameUpperCase()
+                    .then.finally.asyncReverseName();
+
+                expect(resultA.name).to.equal("TS*T");
+                expect(resultB.name).to.equal("TS*T");
             });
         });
     });

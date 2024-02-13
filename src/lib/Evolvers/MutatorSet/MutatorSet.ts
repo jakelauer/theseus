@@ -58,10 +58,28 @@ export class MutatorSet<
     }
 
     /**
+     * Utility method to determine if a given value is a Promise.
+     *
+     * @param value The value to check.
+     * @returns True if the value is a Promise, false otherwise.
+     */
+    protected isPromise(path: string, value: any): value is Promise<any> {
+        const result = Boolean(value && typeof value.then === "function");
+
+        if (result) log.debug(`Function "${path}" returns a Promise`);
+
+        return result;
+    }
+
+    /**
      * Adds a function to the instance at the specified path. This method is used internally
      * by extendSelfWithMutators to attach mutator functions to the instance.
      */
-    protected addFunctionToSelf(context: any, selfPath: string, func: Func) {
+    protected addFunctionToSelf(
+        context: any,
+        selfPath: string,
+        func: Func<any, TEvolverData | Promise<TEvolverData>>,
+    ) {
         Object.assign(context, {
             [selfPath]: (...args: any[]) => {
                 log.debug(

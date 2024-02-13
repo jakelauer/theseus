@@ -9,11 +9,11 @@
 	"dependencies": {
 		"clone-deep": "^4.0.1",
 		"deep-freeze-strict": "^1.1.1",
-		"@Shared/Log/log": "^1.9.1",
+		"loglevel": "^1.9.1",
+		"loglevel-plugin-prefix": "^0.8.4",
 		"theseus-js": "link:"
 	},
 	"devDependencies": {
-		"@babel/register": "^7.23.7",
 		"@types/chai": "^4.3.11",
 		"@types/chai-as-promised": "^7.1.8",
 		"@types/clone-deep": "^4.0.4",

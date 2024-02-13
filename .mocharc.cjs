@@ -2,8 +2,6 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 module.exports = {
-    // Use ts-node rather than node, so we get TypeScript support
-    require: ["@babel/register"],
     // Search the whole tree
     recursive: true,
     // Match the following extensions

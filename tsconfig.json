@@ -19,7 +19,7 @@
         "noImplicitOverride": true,
         "removeComments": false,
         "esModuleInterop": true,
-        "sourceMap": false,
+        "sourceMap": true,
         "strictNullChecks": true,
         "target": "ES2018",
         "types": ["chai", "mocha", "node", "sinon"],
