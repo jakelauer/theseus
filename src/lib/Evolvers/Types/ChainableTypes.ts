@@ -31,7 +31,7 @@ type MutatorCallable<TMutator extends (...args: any[]) => any, TReturn> = FuncMi
  * The `SyncChainable` type dynamically adjusts its return type based on whether the chain is marked as final:
  * - If not final (`IsFinal` is "notFinal"), it continues the chain by returning an object with `.and` for chaining
  *   further synchronous operations, and `.finally` for transitioning to the final operation. It also includes
- *   `.getFinalForm` to retrieve the current state at any point in the chain.
+ *   `.finalForm` to retrieve the current state at any point in the chain.
  * - If marked as final (`IsFinal` is "final"), it simplifies the return type to directly return the mutated data
  *   type `TData`, indicating that no further chaining is possible and the chain must be concluded.
  *
@@ -50,11 +50,11 @@ type SyncChainable<
     TMutator,
     IsFinal extends "final" ? TData
     :   Record<
-            "and",
+            "then",
             ChainableMutators<TData, TParamName, TMutators, IsFinal, IsAsync> &
                 Record<"finally", ChainableMutators<TData, TParamName, TMutators, "final", IsAsync>>
         > &
-            Record<"getFinalForm", () => TData>
+            Record<"finalForm", TData>
 >;
 
 type AsyncChainable<
@@ -67,12 +67,9 @@ type AsyncChainable<
 > = MutatorCallable<
     TMutator,
     IsFinal extends "final" ? TData
-    :   Record<
-            "then",
-            ChainableMutators<TData, TParamName, TMutators, IsFinal, IsAsync> &
-                Record<"finally", ChainableMutators<TData, TParamName, TMutators, "final", IsAsync>>
-        > &
-            Record<"awaitFinalForm", () => TData>
+    :   Record<"then", ChainableMutators<TData, TParamName, TMutators, IsFinal, IsAsync>> &
+            Record<"finalFormAsync", Promise<TData>> &
+            Record<"finally", ChainableMutators<TData, TParamName, TMutators, "final", IsAsync>>
 >;
 
 /**
@@ -96,7 +93,7 @@ type IsChainAsync<TMutators, PrevAsync extends AsyncTracker> = {
  *
  * The type dynamically constructs an object where each key corresponds to a mutator operation.
  * Depending on the mutator function's return type (Promise or direct value), the structure adjusts to
- * either continue the chain with `.and` and `.finally` properties or to provide a method `.getFinalForm`
+ * either continue the chain with `.and` and `.finally` properties or to provide a method `.finalForm`
  * for retrieving the final mutated state.
  *
  * If a mutator returns a Promise, the chain is marked as async, and subsequent operations must handle
@@ -127,6 +124,8 @@ export type ChainableMutators<
             IsChainAsync<TMutators, IsAsync> extends "async" ?
                 FuncMinusFirstArg<(...args: Parameters<TMutators[K]>) => Promise<TData>>
             :   FuncMinusFirstArg<(...args: Parameters<TMutators[K]>) => TData>
+        : IsChainAsync<TMutators, IsAsync> extends "async" ?
+            AsyncChainable<TData, TParamName, TMutators, TMutators[K], "async", "notFinal">
         :   SyncChainable<TData, TParamName, TMutators, TMutators[K], IsAsync, "notFinal">
     : TMutators[K] extends { [key: string]: any } ?
         // For nested mutator objects, recursively apply ChainableMutators to enable deep chaining.

@@ -1,4 +1,5 @@
-import { createChainableProxy } from "@Evolvers/MutatorSet/ChainableMutatorSet/createChainableProxy";
+import { createChainableProxy } from "@Evolvers/MutatorSet/ChainableMutatorBuilder/createChainableProxy";
+import { ChainableMutators } from "@Evolvers/Types";
 import log from "@Shared/Log/log";
 import { Mutable } from "@Shared/String/makeMutable";
 
@@ -8,8 +9,11 @@ import { MutatorSet } from "../MutatorSet";
 
 // Interface defining the capability to retrieve the final form of the mutated data.
 interface Chainable<TData> {
-    getFinalForm: () => TData;
+    finalForm: TData;
+    finalFormAsync: Promise<TData>;
 }
+
+type MutableData<TData, TParamName extends Mutable<string>> = { [key in TParamName]: TData };
 
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data.
@@ -20,7 +24,7 @@ interface Chainable<TData> {
  * @template TParamName The type representing the names of mutable parameters within the evolver data.
  * @template TMutators The type representing the definitions of mutators applicable to the evolver data.
  */
-export class ChainableMutatorSet<
+export class ChainableMutatorBuilder<
         TEvolverData,
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TEvolverData, TParamName>,
@@ -28,9 +32,6 @@ export class ChainableMutatorSet<
     extends MutatorSet<TEvolverData, TParamName, TMutators>
     implements Chainable<TEvolverData>
 {
-    // This allows the Proxy to be used to dynamically access functions for the methods called
-    [key: string]: any;
-
     private finallyMode = false;
     private queue: Promise<any>;
     private isAsyncEncountered: boolean;
@@ -43,89 +44,64 @@ export class ChainableMutatorSet<
         this.isAsyncEncountered = false;
     }
 
-    /**
-     * Executes a mutator function with the specified arguments, updating the mutable data and queue as needed.
-     */
-    private executeMutator(funcPropPath: string, func: Func, args: any[]) {
-        console.debug(`Executing function "${funcPropPath}" with args: `, args);
-        const funcResult = func(this.mutableData, ...args);
-        if (funcResult === undefined) {
-            log.error(`Function "${funcPropPath}" returned undefined. This is likely an error.`);
-        }
-        return funcResult;
-    }
+    private queueMutatorExecution(
+        selfPath: string,
+        func: Func<MutableData<TEvolverData, TParamName>, TEvolverData | Promise<TEvolverData>>,
+        args: any[],
+    ) {
+        const operation = () => {
+            log.debug(`[Operation] Executing "${selfPath}()" with args: `, args);
+            const funcResult = func(this.mutableData, ...args);
 
-    /**
-     * Ensures that the result of a function execution is handled correctly, updating the mutable data and queue as needed.
-     */
-    private handleMutatorResult(funcPropPath: string, funcResult: any) {
-        if (funcResult instanceof Promise) {
-            return this.handlePromiseResult(funcPropPath, funcResult);
-        } else {
-            return this.handleSyncResult(funcPropPath, funcResult);
-        }
-    }
+            if (funcResult === undefined) {
+                log.error(
+                    `[Operation] "${selfPath}()" returned undefined. This is likely an error.`,
+                );
+            } else {
+                log.debug(`[Operation] "${selfPath}()" returned: `, funcResult);
+            }
 
-    /**
-     * Updates the mutable data with the result of an asynchronous function execution.
-     */
-    private handlePromiseResult(funcPropPath: string, funcResult: any) {
-        log.debug(`Function "${funcPropPath}" encountered an async operation`);
-        this.isAsyncEncountered = true;
-        return funcResult.then((result: any) => {
-            log.debug(`Function "${funcPropPath}" async operation completed`, result);
-            this.mutableData = this.inputToObject(result);
-            return result;
-        });
-    }
+            if (funcResult instanceof Promise) {
+                log.debug(`[Operation] "${selfPath}()" encountered an async operation`);
+                // Async operation encountered, switch to queuing mode
+                this.isAsyncEncountered = true;
+                return funcResult.then((result) => {
+                    log.debug(
+                        `[Operation] "${selfPath}()" completed, updating mutable data`,
+                        result,
+                    );
+                    this.mutableData = this.inputToObject(result); // Assuming funcResult updates mutableData
+                    return result;
+                });
+            } else {
+                log.debug(
+                    `[Operation] "${selfPath}()" completed, updating mutable data`,
+                    funcResult,
+                );
+                this.mutableData = this.inputToObject(funcResult); // Assuming funcResult updates mutableData
+                return funcResult;
+            }
+        };
 
-    /**
-     * Updates the mutable data with the result of a synchronous function execution.
-     */
-    private handleSyncResult(funcPropPath: string, funcResult: any) {
-        log.debug(`Function "${funcPropPath}" completed`, funcResult);
-        this.mutableData = this.inputToObject(funcResult);
-        return funcResult;
-    }
-
-    /**
-     * Updates the queue with a new operation, ensuring that it is executed in sequence with other operations.
-     */
-    private updateQueue(operation: () => any) {
         if (this.isAsyncEncountered) {
-            log.debug(`[updateQueue] Function encountered an async operation`);
+            // Queue all operations after the first async is encountered
             this.queue = this.queue.then(operation);
         } else {
             const result = operation();
-            log.debug(`[updateQueue] Function completed with result: `, result);
             if (result instanceof Promise) {
-                log.debug(`[updateQueue] Function returned a promise`);
                 this.queue = result;
-            } else {
-                return result;
             }
+
+            return result;
         }
 
         return this.queue;
-    }
-
-    /**
-     * Queues a mutator function for execution, ensuring that it is executed in sequence with other operations.
-     */
-    private queueMutatorExecution(funcPropPath: string, func: Func, args: any[]) {
-        const operation = () => {
-            const funcResult = this.executeMutator(funcPropPath, func, args);
-            return this.handleMutatorResult(funcPropPath, funcResult);
-        };
-
-        return this.updateQueue(operation);
     }
 
     private getOperationProxy() {
         return createChainableProxy({
             target: this,
             queueMutatorExecution: this.queueMutatorExecution.bind(this),
-            isAsyncEncountered: () => this.isAsyncEncountered,
             setFinallyMode: (mode: boolean) => {
                 this.finallyMode = mode;
             },
@@ -133,40 +109,42 @@ export class ChainableMutatorSet<
         });
     }
 
+    public get finalForm() {
+        return this.mutableData[this.argName];
+    }
+
+    public get finalFormAsync() {
+        return this.queueMutatorExecution(
+            "finalForm",
+            () => this.finalForm,
+            [],
+        ) as Promise<TEvolverData>;
+    }
+
     /**
      * Overrides addFunctionToSelf to support chainable operations. If the operation is asynchronous (returns a Promise),
      * it returns the Promise directly. Otherwise, it enhances the returned object with a chainable interface.
      *
      * @param context The object context to which the mutator function is added.
-     * @param funcPropPath The path (name) under which the mutator function is stored in the context.
+     * @param selfPath The path (name) under which the mutator function is stored in the context.
      * @param func The mutator function to be executed.
      */
     protected override addFunctionToSelf(
         context: any,
-        funcPropPath: string,
+        selfPath: string,
         func: Func<any, TEvolverData | Promise<TEvolverData>>,
     ) {
         Object.assign(context, {
-            [funcPropPath]: (...args: any[]) => {
+            [selfPath]: (...args: any[]) => {
                 this.calls++;
                 log.debug(
-                    `[SelfFunc] Call #${this.calls} to function "${funcPropPath}" with args: `,
+                    `[SelfFunc] Call #${this.calls} to function "${selfPath}" with args: `,
                     args,
                 );
 
                 return func(...args);
             },
         });
-    }
-
-    /**x
-     * Retrieves the final form of the mutated data after all chainable mutations have been applied.
-     *
-     * @returns The final mutated state.
-     */
-    public getFinalForm() {
-        log.debug(`Retrieving final form of mutated data`);
-        return this.mutableData[this.argName];
     }
 
     /**
@@ -182,10 +160,22 @@ export class ChainableMutatorSet<
         TEvolverData,
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TEvolverData, TParamName>,
-    >(data: TEvolverData, argName: TParamName, mutators: TMutators) {
+    >(
+        data: TEvolverData,
+        argName: TParamName,
+        mutators: TMutators,
+    ): ChainableMutators<TEvolverData, TParamName, TMutators> {
         log.debug(`Creating chainable mutator set with initial data and mutators`);
-        const chain = new ChainableMutatorSet(data, argName, mutators);
-        return chain.getOperationProxy();
+        const chain = new ChainableMutatorBuilder(data, argName, mutators).getOperationProxy();
+        return this.castToChainableMutators(chain);
+    }
+
+    private static castToChainableMutators<
+        TEvolverData,
+        TParamName extends Mutable<string>,
+        TMutators extends MutatorDefs<TEvolverData, TParamName>,
+    >(chainableMutatorSet: ChainableMutatorBuilder<TEvolverData, TParamName, TMutators>) {
+        return chainableMutatorSet as ChainableMutators<TEvolverData, TParamName, TMutators>;
     }
 
     /**

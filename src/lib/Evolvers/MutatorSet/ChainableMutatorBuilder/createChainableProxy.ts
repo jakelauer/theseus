@@ -4,19 +4,25 @@ import { Func } from "@Types/Modifiers";
 export function createChainableProxy<T>(params: {
     target: T;
     queueMutatorExecution: (selfPath: string, func: Func, args: any[]) => any;
-    isAsyncEncountered: () => boolean;
     setFinallyMode: (mode: boolean) => void;
     getFinallyMode: () => boolean;
 }): T {
-    const { queueMutatorExecution, isAsyncEncountered, getFinallyMode, setFinallyMode, target } =
-        params;
+    const { queueMutatorExecution, getFinallyMode, setFinallyMode, target } = params;
 
     const proxy: any = new Proxy(target as any, {
-        get: (target, prop: string) => {
+        get: function (target: any, rawProp: string | symbol) {
+            const prop = typeof rawProp === "symbol" ? rawProp.toString() : rawProp;
             log.debug(`[Proxy] Getting property "${prop}"`);
-            if (prop === "finally") {
-                log.debug(`[Proxy] .finally encountered, switching to finally mode`);
+
+            if (["finally", "finalForm", "finalFormAsync"].includes(prop)) {
+                log.debug(`[Proxy] Setting finally mode to true for "${prop}"`);
+
                 setFinallyMode(true);
+            }
+
+            if (["finally", "then"].includes(prop)) {
+                log.debug(`[Proxy] Returning proxy for chaining operator "${prop}"`);
+
                 return proxy;
             }
 
@@ -24,6 +30,8 @@ export function createChainableProxy<T>(params: {
                 return (...args: any[]) => {
                     log.debug(`[Proxy] Executing function "${prop}" with: `, { args });
                     const execResult = queueMutatorExecution(prop, target[prop], args);
+
+                    log.debug(`[Proxy] queueMutatorExecution result: `, execResult);
 
                     if (getFinallyMode()) {
                         log.debug(
@@ -33,15 +41,13 @@ export function createChainableProxy<T>(params: {
                         return execResult;
                     }
 
-                    const chainer = isAsyncEncountered() ? "then" : "and";
-                    log.debug(`[Proxy] Returning chainer "${chainer}" for function "${prop}"`);
-
-                    return {
-                        [chainer]: proxy,
-                    };
+                    return proxy;
                 };
-            } else {
+            } else if (prop in target) {
                 return target[prop];
+            } else {
+                log.error(`[Proxy] Property "${prop}" not found in target`);
+                throw new Error(`Property "${prop}" not found in target`);
             }
         },
     });

@@ -4,16 +4,16 @@
 	<img src=".assets/logo.png" alt="drawing" style="margin:auto"/>
 </div>
 
-Theseus offers fluent state manipulation and management for JavaScript applications, streamlining state changes with
-clarity and enforceable rules.
+Theseus offers fluent state manipulation and management for JavaScript applications, streamlining
+state changes with clarity and enforceable rules.
 
 ## Goals
 
 -   **Clarity in State Management**: Ensure that state changes are transparent and understandable.
--   **Ease of Compliance**: Encourage adherence to best practices with a design that makes it easier to follow rules
-    than to break them.
--   **Smart, Automatic Typing**: Leverage intelligent data typing detection to reduce boilerplate and increase
-    efficiency.
+-   **Ease of Compliance**: Encourage adherence to best practices with a design that makes it easier
+    to follow rules than to break them.
+-   **Smart, Automatic Typing**: Leverage intelligent data typing detection to reduce boilerplate
+    and increase efficiency.
 
 ## Installation
 
@@ -43,37 +43,42 @@ const myAsyncEvolver = AsyncEvolver.build<MyAsyncDataType>()
 
 ### Evolvers
 
-Evolvers in Theseus enable flexible state evolution in JavaScript applications, suitable for complex or asynchronous
-state manipulation. They follow a one-to-many relationship, where one Evolver applies many Mutators. Evolvers always use
-mutable data and return the same data type, ensuring consistency and predictability in state changes.
+Evolvers in Theseus enable flexible state evolution in JavaScript applications, suitable for complex
+or asynchronous state manipulation. They follow a one-to-many relationship, where one Evolver
+applies many Mutators. Evolvers always use mutable data and return the same data type, ensuring
+consistency and predictability in state changes.
 
--   **`Evolver`**: An Evolver manages synchronous state evolution, integrating multiple Mutators for different aspects
-    of state transformation. It uses mutable data as input and returns the same data type, maintaining state integrity.
+-   **`Evolver`**: An Evolver manages synchronous state evolution, integrating multiple Mutators for
+    different aspects of state transformation. It uses mutable data as input and returns the same
+    data type, maintaining state integrity.
 
-    -   **AsyncEvolver**: Asynchronous version of `Evolver`, containing mutators which always return a promise of the
-        Evolver's data type.
+    -   **AsyncEvolver**: Asynchronous version of `Evolver`, containing mutators which always return
+        a promise of the Evolver's data type.
 
--   **`Mutator`**: Mutators are functions within an Evolver, each specifying a unique rule for how the state evolves.
-    They define the logic for state changes, ensuring that each modification is controlled and deliberate.
+-   **`Mutator`**: Mutators are functions within an Evolver, each specifying a unique rule for how
+    the state evolves. They define the logic for state changes, ensuring that each modification is
+    controlled and deliberate.
 
 ### Refineries
 
-Refineries in Theseus offer structured data transformation, following a one-to-many relationship where one Refinery
-manages many Forges. Refineries always use immutable data as input, and output any other type.
+Refineries in Theseus offer structured data transformation, following a one-to-many relationship
+where one Refinery manages many Forges. Refineries always use immutable data as input, and output
+any other type.
 
--   **`RefineryComplex`**: A RefineryComplex manages multiple Refineries, each with their own Forges, enabling
-    interconnected data transformation workflows.
+-   **`RefineryComplex`**: A RefineryComplex manages multiple Refineries, each with their own
+    Forges, enabling interconnected data transformation workflows.
 
--   **`Refinery`**: A Refinery orchestrates data transformation, using multiple Forges to handle complex data processing
-    tasks.
+-   **`Refinery`**: A Refinery orchestrates data transformation, using multiple Forges to handle
+    complex data processing tasks.
 
--   **`Forge`**: Each Forge in a Refinery performs a specific data transformation with **immutable input**, returning
-    data of **some other type**.
+-   **`Forge`**: Each Forge in a Refinery performs a specific data transformation with **immutable
+    input**, returning data of **some other type**.
 
 ### Flags
 
-Flags in Theseus provide an efficient way to manage binary state representations like bitwise flags or toggles, handling
-flag enumerations, offering methods for manipulation, testing, and querying of flag values.
+Flags in Theseus provide an efficient way to manage binary state representations like bitwise flags
+or toggles, handling flag enumerations, offering methods for manipulation, testing, and querying of
+flag values.
 
 ## Examples - To Do Application
 
@@ -143,7 +148,7 @@ const todo: ToDo = async fetchToDoById(todoId); // Fetch a list from the server
 const updatedToDo = ToDoEvolver.mutate(myToDo)
     .setTitle('New Title')
     .togglePinned()
-    .getFinalForm();
+    .finalForm;
 
 ```
 
@@ -173,12 +178,13 @@ Provide an example of creating and using a `Refinery`.
 
 ## API Documentation
 
-Link to detailed API documentation or include a section that covers the main API methods and their usage.
+Link to detailed API documentation or include a section that covers the main API methods and their
+usage.
 
 ## Contributing
 
-Instructions for contributing to the Theseus project, including coding standards, testing practices, and how to submit
-pull requests.
+Instructions for contributing to the Theseus project, including coding standards, testing practices,
+and how to submit pull requests.
 
 ## License
 

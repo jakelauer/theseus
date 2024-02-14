@@ -1,2 +1,2 @@
-export * from "./ChainableMutatorSet/ChainableMutatorSet";
+export * from "./ChainableMutatorBuilder/ChainableMutatorBuilder";
 export * from "./MutatorSet";

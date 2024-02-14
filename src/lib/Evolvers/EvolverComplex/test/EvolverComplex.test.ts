@@ -10,7 +10,6 @@ const IncrementEvolverCreator = () =>
         .toEvolve<{ count: number }>()
         .withMutators({
             increment: ({ mutableAmount }, amount: number) => {
-                console.log(mutableAmount.count, amount);
                 return {
                     count: mutableAmount.count + amount,
                 };
@@ -57,8 +56,8 @@ describe("EvolverComplex", () => {
             // Chained execution: Demonstrates the use of the same setup for multiple operations
             const evolvedResult = IncrementEvolver.evolve(initialData)
                 .using.increment(5)
-                .and.increment(10)
-                .and.finally.increment(10);
+                .then.increment(10)
+                .then.finally.increment(10);
 
             expect(evolvedResult.count).to.equal(35);
         });

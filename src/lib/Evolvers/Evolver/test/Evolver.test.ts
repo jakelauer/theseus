@@ -166,12 +166,12 @@ describe("Evolver", () => {
                     .using.asyncMakeNameLowerCase()
                     .then.asyncMakeNameUpperCase()
                     .then.asyncReverseName()
-                    .then.finally.syncReplaceVowels();
+                    .finally.syncReplaceVowels();
 
                 const resultB = await AsyncEvolver.evolve({ name: "test" })
                     .using.syncReplaceVowels()
-                    .and.asyncMakeNameUpperCase()
-                    .then.finally.asyncReverseName();
+                    .then.asyncMakeNameUpperCase()
+                    .finally.asyncReverseName();
 
                 expect(resultA.name).to.equal("TS*T");
                 expect(resultB.name).to.equal("TS*T");

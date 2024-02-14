@@ -1,5 +1,5 @@
 import { NormalizedEvolverName } from "@Evolvers/EvolverComplex/Util/normalizeEvolverName";
-import { ChainableMutatorSet, MutatorSet } from "@Evolvers/MutatorSet";
+import { ChainableMutatorBuilder, MutatorSet } from "@Evolvers/MutatorSet";
 import {
     EvolveObject,
     EvolverOptions,
@@ -141,7 +141,7 @@ export class Evolver<
      */
     public evolve(input: TData) {
         // Create the actions which will be available when `for()` is called.
-        const mutatorSet = ChainableMutatorSet.createChainable<
+        const mutatorSet = ChainableMutatorBuilder.createChainable<
             TData,
             Mutable<TParamName>,
             TMutators

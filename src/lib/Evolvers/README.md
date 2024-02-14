@@ -10,28 +10,29 @@
 
 ## Introduction
 
-Evolvers are a specialized component of the Theseus library designed for evolving game state objects. It leverages the
-power of Evolver to mutate game states efficiently and intuitively.
+Evolvers are a specialized component of the Theseus library designed for evolving game state
+objects. It leverages the power of Evolver to mutate game states efficiently and intuitively.
 
 ### Creating an Evolver
 
 #### Naming the Evolver
 
-When creating an Evolver, it's important to give it a specific name. This name is used to reference the Evolver as it is
-returned inside an object with the same name. For example:
+When creating an Evolver, it's important to give it a specific name. This name is used to reference
+the Evolver as it is returned inside an object with the same name. For example:
 
 ```typescript
 const { MyEvolver } = Evolver.create("MyEvolver");
 ```
 
-In this code, `MyEvolver` is both the name given to the Evolver and the key used to retrieve it from the object returned
-by `Evolver.create`.
+In this code, `MyEvolver` is both the name given to the Evolver and the key used to retrieve it from
+the object returned by `Evolver.create`.
 
 #### Creating Mutators
 
-Mutators are functions defined to evolve the data. They always take the data as the first argument. You can specify any
-number of additional arguments for each mutator. When you use the mutator, only the additional arguments need to be
-provided. Mutators always return the same data type they take in.
+Mutators are functions defined to evolve the data. They always take the data as the first argument.
+You can specify any number of additional arguments for each mutator. When you use the mutator, only
+the additional arguments need to be provided. Mutators always return the same data type they take
+in.
 
 Example:
 
@@ -50,10 +51,11 @@ const { MyEvolver } = Evolver.create("MyEvolver")
     });
 ```
 
-Here, `mutator1` is a mutator for `MyEvolver` that takes `mutableData` along with additional arguments `arg1` and
-`arg2`.
+Here, `mutator1` is a mutator for `MyEvolver` that takes `mutableData` along with additional
+arguments `arg1` and `arg2`.
 
-When we use `MyEvolver` later, we don't need to pass in the mutableData for every mutator; we only do that once:
+When we use `MyEvolver` later, we don't need to pass in the mutableData for every mutator; we only
+do that once:
 
 ```typescript
 MyEvolver.evolveMacro(data).using.mutator1("first arg", "second arg").and.mutator2("just one arg");
@@ -108,14 +110,15 @@ console.log(initialGameState.board);
 #### `evolve`
 
 -   **Purpose**: Used for single, straightforward evolutions.
--   **Description**: The `evolve` method is ideal for simple, one-step mutations where only a single mutator is applied
-    to the data.
+-   **Description**: The `evolve` method is ideal for simple, one-step mutations where only a single
+    mutator is applied to the data.
 
 #### `evolveMacro`
 
 -   **Purpose**: Enables chained, multiple evolutions.
--   **Description**: The `evolveMacro` method is designed for more complex scenarios where multiple mutations need to be
-    applied in sequence. This method provides a fluent interface to chain multiple mutators together.
+-   **Description**: The `evolveMacro` method is designed for more complex scenarios where multiple
+    mutations need to be applied in sequence. This method provides a fluent interface to chain
+    multiple mutators together.
 
         Example:
 
@@ -125,14 +128,15 @@ MyEvolver.evolveMacro(initialState).using.mutator1().and.mutator2().and.mutator3
 
 ## Chaining Methods
 
--   **using**: This method applies specific mutations to the game state, allowing for concise and readable state
-    transformations.
+-   **using**: This method applies specific mutations to the game state, allowing for concise and
+    readable state transformations.
 
     ```typescript
     GameStateEvolver.evolve(initialGameState).using.setSquare([0, 0], "X");
     ```
 
--   **startingWith**: Begins a chain of transformations, allowing multiple operations to be applied in sequence.
+-   **startingWith**: Begins a chain of transformations, allowing multiple operations to be applied
+    in sequence.
 
     ```typescript
     GameStateEvolver.evolve(initialGameState)
@@ -141,8 +145,8 @@ MyEvolver.evolveMacro(initialState).using.mutator1().and.mutator2().and.mutator3
         .setSquare([2, 2], "X");
     ```
 
--   **and**: Utilized for chaining multiple operations in sequence within the game evolution process. It allows for
-    sequential mutations to be applied to the game state.
+-   **and**: Utilized for chaining multiple operations in sequence within the game evolution
+    process. It allows for sequential mutations to be applied to the game state.
 
     ```typescript
     GameStateEvolver.evolve(initialGameState)
@@ -153,8 +157,8 @@ MyEvolver.evolveMacro(initialState).using.mutator1().and.mutator2().and.mutator3
         .endingWith.setSquare([2, 2], "X");
     ```
 
--   **endingWith**: Concludes a chain of transformations with a specific operation or a set of operations, following the
-    initial and intermediate operations.
+-   **endingWith**: Concludes a chain of transformations with a specific operation or a set of
+    operations, following the initial and intermediate operations.
 
     ```typescript
     GameStateEvolver.evolve(initialGameState)
@@ -163,9 +167,18 @@ MyEvolver.evolveMacro(initialState).using.mutator1().and.mutator2().and.mutator3
         .endingWith.setSquare([2, 2], "O");
     ```
 
--   **getFinalForm**: Finalizes a chain and returns the evolved value, particularly useful after asynchronous
-    operations.
+-   **finalForm**: Finalizes a chain and returns the evolved value.
 
     ```typescript
-    GameStateEvolver.evolve(initialGameState).startingWith.setSquare([0, 0], "X").setSquare([1, 1], "O").getFinalForm(); // Use after async operations
+    const outcome = GameStateEvolver.evolve(initialGameState)
+        .startingWith.setSquare([0, 0], "X")
+        .setSquare([1, 1], "O").finalForm; // Use after async operations
+    ```
+
+-   **finalFormAsync**: Finalizes a chain and returns the evolved value via Promise;
+
+    ```typescript
+    const outcome = await GameStateEvolver.evolve(initialGameState)
+        .startingWith.setSquare([0, 0], "X")
+        .setSquare([1, 1], "O").finalFormAsync; // Use after async operations
     ```
