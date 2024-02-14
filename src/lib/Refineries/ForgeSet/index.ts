@@ -1,7 +1,6 @@
 import log from "@Shared/Log/log";
 import { Immutable } from "@Shared/String/makeImmutable";
 
-import { Func } from "../../Types/Modifiers";
 import { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
 
 /**
@@ -59,7 +58,7 @@ export class ForgeSet<
      * Adds a forge function to the instance at the specified path. This method is used internally
      * by `extendSelfWithForges` to attach forge functions to the instance.
      */
-    protected addFunctionToSelf(context: any, selfPath: string, func: Func) {
+    protected addFunctionToSelf(context: any, selfPath: string, func: (...args: any[]) => any) {
         log.debug(`Adding function "${selfPath}"`);
         Object.assign(context, {
             [selfPath]: (...args: any[]) => func(this.mutableData, ...args),

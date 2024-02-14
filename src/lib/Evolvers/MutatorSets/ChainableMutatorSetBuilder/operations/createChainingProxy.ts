@@ -1,39 +1,37 @@
 import log from "@Shared/Log/log";
-import { Func } from "@Types/Modifiers";
 
-export function createChainableProxy<T>(params: {
+export function createChainingProxy<T>(params: {
     target: T;
-    queueMutatorExecution: (selfPath: string, func: Func, args: any[]) => any;
-    setFinallyMode: (mode: boolean) => void;
-    getFinallyMode: () => boolean;
+    queueMutation: (selfPath: string, func: () => any, args: any[]) => any;
 }): T {
-    const { queueMutatorExecution, getFinallyMode, setFinallyMode, target } = params;
+    const { queueMutation, target } = params;
+
+    let isFinalChainLink = false;
 
     const proxy: any = new Proxy(target as any, {
         get: function (target: any, rawProp: string | symbol) {
+            // Ensure that prop is a string
             const prop = typeof rawProp === "symbol" ? rawProp.toString() : rawProp;
-            log.debug(`[Proxy] Getting property "${prop}"`);
 
+            // These properties always indicate the end of the chain has been reached
             if (["finally", "finalForm", "finalFormAsync"].includes(prop)) {
-                log.debug(`[Proxy] Setting finally mode to true for "${prop}"`);
+                log.debug(`[Proxy] Chain end reached via "${prop}"`);
 
-                setFinallyMode(true);
+                isFinalChainLink = true;
             }
 
+            // These properties are used to chain operations
             if (["finally", "then"].includes(prop)) {
-                log.debug(`[Proxy] Returning proxy for chaining operator "${prop}"`);
+                log.debug(`[Proxy] Chained via "${prop}"`);
 
                 return proxy;
             }
 
             if (typeof target[prop] === "function") {
                 return (...args: any[]) => {
-                    log.debug(`[Proxy] Executing function "${prop}" with: `, { args });
-                    const execResult = queueMutatorExecution(prop, target[prop], args);
+                    const execResult = queueMutation(prop, target[prop], args);
 
-                    log.debug(`[Proxy] queueMutatorExecution result: `, execResult);
-
-                    if (getFinallyMode()) {
+                    if (isFinalChainLink) {
                         log.debug(
                             `[Proxy] .finally mode active, returning result of queued operations`,
                             execResult,

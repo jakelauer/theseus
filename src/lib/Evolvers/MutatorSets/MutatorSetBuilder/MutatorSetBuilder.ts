@@ -1,8 +1,8 @@
+import { SortaPromise } from "@Evolvers/Types";
 import log from "@Shared/Log/log";
 import { Mutable } from "@Shared/String/makeMutable";
-import { Func } from "@Types/Modifiers";
 
-import { MutatorDefs } from "../Types/MutatorTypes";
+import { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
 
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
@@ -12,7 +12,7 @@ import { MutatorDefs } from "../Types/MutatorTypes";
  * @template TParamName The type representing the names of mutable parameters within the evolver data.
  * @template TMutators The type representing the definitions of mutators applicable to the evolver data.
  */
-export class MutatorSet<
+export class MutatorSetBuilder<
     TEvolverData,
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefs<TEvolverData, TParamName>,
@@ -78,7 +78,7 @@ export class MutatorSet<
     protected addFunctionToSelf(
         context: any,
         selfPath: string,
-        func: Func<any, TEvolverData | Promise<TEvolverData>>,
+        mutator: GenericMutator<TEvolverData, SortaPromise<TEvolverData>>,
     ) {
         Object.assign(context, {
             [selfPath]: (...args: any[]) => {
@@ -88,7 +88,7 @@ export class MutatorSet<
                     { mutableData: this.mutableData },
                 );
 
-                const funcResult = func(this.mutableData, ...args);
+                const funcResult = mutator(this.mutableData, ...args);
 
                 if (funcResult === undefined) {
                     log.error(
@@ -131,7 +131,7 @@ export class MutatorSet<
         data: TEvolverData,
         argName: TParamName,
         mutators: TMutators,
-    ): MutatorSet<TEvolverData, TParamName, TMutators> {
-        return new MutatorSet(data, argName, mutators);
+    ): MutatorSetBuilder<TEvolverData, TParamName, TMutators> {
+        return new MutatorSetBuilder(data, argName, mutators);
     }
 }

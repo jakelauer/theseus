@@ -1,8 +1,6 @@
-export type Func<TParams = any, TOutput = any> = (...args: TParams[]) => TOutput;
-
 export type ParametersMinusFirst<T extends (...args: any) => any> = DropFirst<Parameters<T>>;
 
-export type FuncMinusFirstArg<TFunc extends Func, TOutput = ReturnType<TFunc>> = (
+export type FuncMinusFirstArg<TFunc extends (...args: any) => any, TOutput = ReturnType<TFunc>> = (
     ...args: ParametersMinusFirst<TFunc>
 ) => TOutput;
 
@@ -46,7 +44,8 @@ type DisallowExactMatch<TCheckIfDisallowed, DisallowedType, TOtherwise> =
  * @template DisallowedType - The return type that is disallowed.
  */
 type FunctionReturnsDisallowedType<TPotentialFunction, DisallowedType> =
-    TPotentialFunction extends (...args: any[]) => infer R ? DisallowMatch<R, DisallowedType, TPotentialFunction>
+    TPotentialFunction extends (...args: any[]) => infer R ?
+        DisallowMatch<R, DisallowedType, TPotentialFunction>
     :   TPotentialFunction;
 
 /**
@@ -67,7 +66,10 @@ export type BlockFunctionsWithDisallowedType<TPotentialFunction, DisallowedType>
  * @template T - The object type with function properties.
  * @template DisallowedType - The return type that is disallowed for the functions.
  */
-export type FuncDict_DisallowReturnType<T extends Record<string, (...args: any[]) => any>, DisallowedType> = {
+export type FuncDict_DisallowReturnType<
+    T extends Record<string, (...args: any[]) => any>,
+    DisallowedType,
+> = {
     [K in keyof T]: BlockFunctionsWithDisallowedType<T[K], DisallowedType>;
 };
 
@@ -76,7 +78,9 @@ export type FuncDict_DisallowReturnType<T extends Record<string, (...args: any[]
  * @description Intermediate type that applies the Readonly wrapper to the return type of a function, if the return type is an object.
  */
 export type ReadonlyReturnType<TOutput extends (...args: any[]) => any> =
-    ReturnType<TOutput> extends object ? (...args: Parameters<TOutput>) => Readonly<ReturnType<TOutput>> : TOutput;
+    ReturnType<TOutput> extends object ?
+        (...args: Parameters<TOutput>) => Readonly<ReturnType<TOutput>>
+    :   TOutput;
 
 /**
  * @template TOutput - Function type to be processed.
@@ -88,7 +92,10 @@ export type ForceReadonlyReturnType<TOutput> =
 
 // Utility type to remove a specified word from the start or end of a string type,
 // supporting both capitalized and non-capitalized forms.
-export type RemoveWordFromTypeStr<T extends string, Word extends string> = T extends `${Word}${infer Rest}` ? Rest
+export type RemoveWordFromTypeStr<T extends string, Word extends string> = T extends (
+    `${Word}${infer Rest}`
+) ?
+    Rest
 : T extends `${Capitalize<Word>}${infer Rest}` ? Rest
 : T extends `${infer Rest}${Word}` ? Rest
 : T extends `${infer Rest}${Capitalize<Word>}` ? Rest

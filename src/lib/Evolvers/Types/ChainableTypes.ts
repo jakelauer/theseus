@@ -132,3 +132,9 @@ export type ChainableMutators<
         ChainableMutators<TData, TParamName, TMutators[K], IsFinal, IsAsync>
     :   never;
 };
+
+// Interface defining the capability to retrieve the final form of the mutated data.
+export interface Chainable<TData> {
+    finalForm: TData;
+    finalFormAsync: Promise<TData>;
+}

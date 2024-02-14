@@ -3,7 +3,7 @@ import chaiAsPromised from "chai-as-promised";
 
 import { resetTheseusLogLevel, setTheseusLogLevel } from "@Shared/Log/log";
 
-import { ChainableMutatorBuilder } from "../ChainableMutatorBuilder";
+import { ChainableMutatorSetBuilder } from "../ChainableMutatorSetBuilder";
 
 chai.use(chaiAsPromised);
 
@@ -12,7 +12,7 @@ interface TestData {
 }
 
 const buildChainableMutatorSet = (testData: TestData) =>
-    ChainableMutatorBuilder.createChainable(testData, "mutableTestData", {
+    ChainableMutatorSetBuilder.createChainable(testData, "mutableTestData", {
         increment: ({ mutableTestData }, amount: number) => {
             mutableTestData.value += amount;
             return mutableTestData;
@@ -75,13 +75,13 @@ describe("ChainableMutatorSet", function () {
     // Testing the factory method's successful creation of a ChainableMutatorSet instance
     it("should correctly create a chainable mutator set with initial data and mutators", function () {
         // The instance has already been created in the beforeEach hook. This test verifies its correctness post-creation.
-        expect(chainableMutatorSet).to.be.an.instanceof(ChainableMutatorBuilder);
+        expect(chainableMutatorSet).to.be.an.instanceof(ChainableMutatorSetBuilder);
         expect(chainableMutatorSet.increment(5).finalForm.value).to.equal(5);
     });
 
     // Testing the overridden create method to ensure it throws an error for non-chainable mutator sets
     it("should throw an error when attempting to create non-chainable mutators", function () {
-        expect(() => ChainableMutatorBuilder.create()).to.throw(
+        expect(() => ChainableMutatorSetBuilder.create()).to.throw(
             "ChainableMutatorSet does not support non-chained mutators.",
         );
     });

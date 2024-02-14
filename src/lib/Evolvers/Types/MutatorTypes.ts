@@ -12,7 +12,18 @@ export type Mutator<
     TEvolverData,
     TParamName extends Mutable<string>,
     TReturnData extends SortaPromise<TEvolverData>,
-> = (input: { [key in TParamName]: TEvolverData }, ...args: any[]) => TReturnData;
+> = (input: MutableData<TEvolverData, TParamName>, ...args: any[]) => TReturnData;
+
+/**
+ * Matches the signature of a mutator function, without requiring specific arguments. This is useful for
+ * dynamically adding mutators to an evolver instance, passing the arguments through at the time of invocation
+ * as-is.
+ */
+export type GenericMutator<TEvolverData, TReturnData extends SortaPromise<TEvolverData>> = (
+    ...args: any[]
+) => TReturnData;
+
+export type MutableData<TData, TParamName extends Mutable<string>> = { [key in TParamName]: TData };
 
 /**
  * Represents a collection of definitions for mutators applicable to a piece of evolver data.

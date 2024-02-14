@@ -1,6 +1,6 @@
 import { Immutable } from "@Shared/String/makeImmutable";
 
-import type { Func, FuncMinusFirstArg } from "@Types/Modifiers";
+import type { FuncMinusFirstArg } from "@Types/Modifiers";
 import type { NormalizedRefineryName } from "../RefineryComplex/Util/normalizeRefineryName";
 
 import type { Forge } from "./ForgeTypes";
@@ -11,7 +11,7 @@ import type { Forge } from "./ForgeTypes";
  *
  * @template TDict A record of named forge functions.
  */
-export type ForgeDict<TDict extends Record<string, Func>> = {
+export type ForgeDict<TDict extends Record<string, () => any>> = {
     [K in keyof TDict]: FuncMinusFirstArg<TDict[K], ReturnType<TDict[K]>>;
 };
 
