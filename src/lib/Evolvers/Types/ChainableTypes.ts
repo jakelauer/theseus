@@ -138,3 +138,9 @@ export interface Chainable<TData> {
     finalForm: TData;
     finalFormAsync: Promise<TData>;
 }
+
+export type FinalMutators<
+    TData,
+    TParamName extends Mutable<string>,
+    TMutators extends MutatorDefChild<TData, TParamName>,
+> = ChainableMutators<TData, TParamName, TMutators, "final">;

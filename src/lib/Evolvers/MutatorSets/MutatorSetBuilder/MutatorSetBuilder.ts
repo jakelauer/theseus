@@ -1,4 +1,4 @@
-import { SortaPromise } from "@Evolvers/Types";
+import { FinalMutators, SortaPromise } from "@Evolvers/Types";
 import getLogger from "@Shared/Log/getLogger";
 import { Mutable } from "@Shared/String/makeMutable";
 
@@ -131,7 +131,21 @@ export class MutatorSetBuilder<
         data: TEvolverData,
         argName: TParamName,
         mutators: TMutators,
-    ): MutatorSetBuilder<TEvolverData, TParamName, TMutators> {
-        return new MutatorSetBuilder(data, argName, mutators);
+    ): FinalMutators<TEvolverData, TParamName, TMutators> {
+        const builder = new MutatorSetBuilder(data, argName, mutators);
+
+        return this.castToMutators(builder);
+    }
+
+    /**
+     * Casts the provided ChainableMutatorBuilder instance to a ChainableMutators instance.
+     * This is a workaround to avoid TypeScript's inability to infer the correct type of the returned object.
+     */
+    private static castToMutators<
+        TEvolverData,
+        TParamName extends Mutable<string>,
+        TMutators extends MutatorDefs<TEvolverData, TParamName>,
+    >(chainableMutatorSet: MutatorSetBuilder<TEvolverData, TParamName, TMutators>) {
+        return chainableMutatorSet as unknown as FinalMutators<TEvolverData, TParamName, TMutators>;
     }
 }

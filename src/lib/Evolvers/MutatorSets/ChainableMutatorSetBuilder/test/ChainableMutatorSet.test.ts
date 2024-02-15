@@ -1,8 +1,6 @@
 import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
-import { resetTheseusLogLevel, setTheseusLogLevel } from "@Shared/Log/getLogger";
-
 import { ChainableMutatorSetBuilder } from "../ChainableMutatorSetBuilder";
 
 chai.use(chaiAsPromised);
@@ -51,15 +49,8 @@ describe("ChainableMutatorSet", function () {
 
     // Assuming an asynchronous mutator has been added to the TestMutators
     it("should handle asynchronous mutations correctly", async function () {
-        setTheseusLogLevel({
-            level: "debug",
-            persist: true,
-        });
-
         try {
             await chainableMutatorSet.asyncIncrement(1).then.increment(2).finalFormAsync;
-
-            resetTheseusLogLevel();
         } catch (e) {
             console.error(e);
         }
