@@ -1,4 +1,6 @@
-import log from "@Shared/Log/log";
+import getLogger from "@Shared/Log/getLogger";
+
+const log = getLogger("Queue");
 
 export function createChainingProxy<T>(params: {
     target: T;
@@ -15,15 +17,13 @@ export function createChainingProxy<T>(params: {
 
             // These properties always indicate the end of the chain has been reached
             if (["finally", "finalForm", "finalFormAsync"].includes(prop)) {
-                log.debug(`[Proxy] Chain end reached via "${prop}"`);
+                log.debug(`[Proxy] [=== Chain end reached ===] via "${prop}"`);
 
                 isFinalChainLink = true;
             }
 
             // These properties are used to chain operations
             if (["finally", "then"].includes(prop)) {
-                log.debug(`[Proxy] Chained via "${prop}"`);
-
                 return proxy;
             }
 

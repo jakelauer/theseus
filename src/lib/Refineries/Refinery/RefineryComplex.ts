@@ -1,10 +1,12 @@
-import log from "@Shared/Log/log";
+import getLogger from "@Shared/Log/getLogger";
 import { Immutable } from "@Shared/String/makeImmutable";
 
-import { NormalizedEvolverName } from "../../Evolvers/EvolverComplex/Util/normalizeEvolverName";
-import { Refinery } from "../Refinery";
+import { NormalizedEvolverName } from "../../Evolvers/Evolver/Util/normalizeEvolverName";
 import { ForgeDefs } from "../Types/RefineryTypes";
+import { Refinery } from "./";
 import { NormalizedRefineryName, normalizeRefineryName } from "./Util/normalizeRefineryName";
+
+const log = getLogger("RefineryComplex");
 
 /**
  * Transforms the keys of an input type T by removing 'refinery' from their names.

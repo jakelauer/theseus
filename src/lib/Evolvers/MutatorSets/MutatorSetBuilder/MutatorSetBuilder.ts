@@ -1,5 +1,5 @@
 import { SortaPromise } from "@Evolvers/Types";
-import log from "@Shared/Log/log";
+import getLogger from "@Shared/Log/getLogger";
 import { Mutable } from "@Shared/String/makeMutable";
 
 import { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
@@ -12,6 +12,9 @@ import { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
  * @template TParamName The type representing the names of mutable parameters within the evolver data.
  * @template TMutators The type representing the definitions of mutators applicable to the evolver data.
  */
+
+const log = getLogger("MutatorSetBuilder");
+
 export class MutatorSetBuilder<
     TEvolverData,
     TParamName extends Mutable<string>,
@@ -24,7 +27,6 @@ export class MutatorSetBuilder<
         protected readonly argName: TParamName,
         protected readonly mutators: TMutators,
     ) {
-        log.debug(`Creating mutator set with: argName(${argName}), mutators(${mutators})`);
         this.mutableData = this.inputToObject(inputData);
         this.extendSelfWithMutators(mutators);
     }
@@ -35,9 +37,7 @@ export class MutatorSetBuilder<
      * structures.
      */
     private extendSelfWithMutators(mutators: TMutators, path: string[] = []) {
-        log.debug(`Extending self with mutators: ${Object.keys(mutators)}`);
         Object.keys(mutators).forEach((mutatorKey) => {
-            log.debug(`Processing mutator: ${mutatorKey}`);
             const item = mutators[mutatorKey];
             const newPath = [...path, mutatorKey];
 
@@ -49,7 +49,7 @@ export class MutatorSetBuilder<
                 }, this as any);
 
                 this.addFunctionToSelf(context, lastKey, item);
-                log.debug(`Added Mutator function "${mutatorKey}" to self.`);
+                log.debug(`Added mutator "${mutatorKey}"`);
             } else if (typeof item === "object" && item !== null) {
                 this.extendSelfWithMutators(item as TMutators, newPath);
                 log.debug(`Mutator "${mutatorKey}" is an object, recursing.`);

@@ -1,0 +1,146 @@
+import chai, { expect } from "chai";
+import chaiAsPromised from "chai-as-promised";
+import sinon from "sinon";
+
+import { MutableData, Mutator } from "@Evolvers/Types";
+import { Mutable } from "@Shared/String/makeMutable";
+
+import { buildChainableMutatorQueue } from "../buildChainableMutatorQueue";
+
+chai.use(chaiAsPromised);
+
+describe("buildChainableMutatorQueue", function () {
+    let sandbox: sinon.SinonSandbox;
+
+    beforeEach(function () {
+        sandbox = sinon.createSandbox();
+    });
+
+    afterEach(function () {
+        sandbox.restore();
+    });
+
+    it("should process synchronous mutators in sequence", function () {
+        const argName = "mutableTestArg" as Mutable<`testArg`>;
+        let testData: MutableData<number, "mutableTestArg"> = { [argName]: 1 };
+        type TMutableData = typeof testData;
+        type TEvolverData = (typeof testData)[typeof argName];
+
+        const setMutableData = (data: any) => {
+            testData = data;
+        };
+        const getMutableData = () => testData;
+        const syncMutator: Mutator<any, any, TEvolverData> = (
+            { mutableTestArg }: TMutableData,
+            increment: number,
+        ) => {
+            mutableTestArg += increment;
+
+            return mutableTestArg;
+        };
+
+        const queueMutation = buildChainableMutatorQueue({
+            argName,
+            getMutableData,
+            setMutableData,
+        });
+
+        queueMutation("syncMutatorPath", syncMutator, [1]);
+        queueMutation("syncMutatorPath", syncMutator, [2]);
+
+        expect(testData[argName]).to.equal(4);
+    });
+
+    it("should handle asynchronous mutators correctly", async function () {
+        const argName = "mutableTestArg" as Mutable<`testArg`>;
+        let testData: MutableData<number, "mutableTestArg"> = { [argName]: 1 };
+        type TMutableData = typeof testData;
+        type TEvolverData = (typeof testData)[typeof argName];
+
+        const setMutableData = (data: any) => {
+            testData = data;
+        };
+        const getMutableData = () => testData;
+        const asyncMutator: Mutator<any, any, Promise<TEvolverData>> = async (
+            { mutableTestArg }: TMutableData,
+            increment: number,
+        ) => {
+            return new Promise((resolve) => {
+                mutableTestArg += increment;
+                setTimeout(() => resolve(mutableTestArg), 50);
+            });
+        };
+
+        const queueMutation = buildChainableMutatorQueue({
+            argName,
+            getMutableData,
+            setMutableData,
+        });
+
+        await queueMutation("asyncMutatorPath", asyncMutator, [1]);
+        await queueMutation("asyncMutatorPath", asyncMutator, [2]);
+
+        expect(testData[argName]).to.equal(4);
+    });
+
+    it("should log an error if a mutator returns undefined", function () {
+        const argName = "undefinedReturnArg" as Mutable<string>;
+        const setMutableData = sinon.stub();
+        const getMutableData = sinon.stub().returns({ [argName]: 0 });
+        const undefinedMutator = () => undefined;
+
+        const queueMutation = buildChainableMutatorQueue({
+            argName,
+            getMutableData,
+            setMutableData,
+        });
+
+        expect(() => queueMutation("undefinedMutatorPath", undefinedMutator, [])).to.throw(
+            `Mutator undefinedMutatorPath returned undefined. Mutators must return a value compatible with the mutable data type.`,
+        );
+    });
+
+    it("should log an error if a mutator returns the wrong type", function () {
+        const argName = "undefinedReturnArg" as Mutable<string>;
+        const setMutableData = sinon.stub();
+        const getMutableData = sinon.stub().returns({ [argName]: 0 });
+        const numberToStringMutator = () => "not a number";
+
+        const queueMutation = buildChainableMutatorQueue({
+            argName,
+            getMutableData,
+            setMutableData,
+        });
+
+        expect(() =>
+            queueMutation("numberToStringMutatorPath", numberToStringMutator, []),
+        ).to.throw(
+            `Mutator numberToStringMutatorPath returned a value of type string which is not compatible with the mutable data type of number.`,
+        );
+    });
+
+    it("should log an error if a mutator returns the wrong type async", async function () {
+        const argName = "undefinedReturnArg" as Mutable<string>;
+        const setMutableData = sinon.stub();
+        const getMutableData = sinon.stub().returns({ [argName]: 0 });
+        const numberToStringMutator = () => Promise.resolve("not a number");
+
+        const queueMutation = buildChainableMutatorQueue({
+            argName,
+            getMutableData,
+            setMutableData,
+        });
+
+        try {
+            await queueMutation("numberToStringMutatorPath", numberToStringMutator, []);
+
+            expect.fail("Expected an error to be thrown");
+        } catch (e) {
+            expect(e.message).to.equal(
+                `Mutator numberToStringMutatorPath returned a value of type string which is not compatible with the mutable data type of number.`,
+            );
+        }
+
+        return;
+    });
+});

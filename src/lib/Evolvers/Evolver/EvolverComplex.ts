@@ -1,10 +1,13 @@
-import log from "@Shared/Log/log";
+import { getLogger } from "loglevel";
+
 import { Mutable } from "@Shared/String/makeMutable";
 
-import { Evolver } from "../Evolver";
 import { EvolveObject, MutateObject } from "../Types/EvolverTypes";
 import { MutatorDefs } from "../Types/MutatorTypes";
+import { Evolver } from "./";
 import { NormalizedEvolverName, normalizeEvolverName } from "./Util/normalizeEvolverName";
+
+const log = getLogger("EvolverComplex");
 
 /**
  * Utility type for extracting string keys from a type.

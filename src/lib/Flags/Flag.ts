@@ -1,5 +1,8 @@
-import log from "@Shared/Log/log";
+import getLogger from "@Shared/Log/getLogger";
 import { capitalizeFirstLetter } from "@Shared/String/capitalizeFirstLetter";
+
+const log = getLogger("FlagWrapper");
+export const _logger_test_access = log;
 
 /**
  * Represents a wrapper around a flag enumeration, providing utility methods
@@ -35,8 +38,6 @@ class FlagWrapper<TEnum extends FlagEnumType> {
                 );
             }
         });
-
-        log.debug(`Created FlagWrapper for enumeration: ${enumKeys.join(", ")}`);
     }
 
     /**
@@ -44,7 +45,7 @@ class FlagWrapper<TEnum extends FlagEnumType> {
      * @private
      */
     private matches(value: number, against: number) {
-        return value === (value & against);
+        return (value & against) === against;
     }
 
     /**
@@ -56,9 +57,6 @@ class FlagWrapper<TEnum extends FlagEnumType> {
     public static fromEnum<TEnum extends FlagEnumType>(
         enumDeclaration: TEnum,
     ): FlagWithEnumProps<TEnum> {
-        log.debug(
-            `Creating FlagWrapper from enumeration: ${Object.keys(enumDeclaration).join(", ")}`,
-        );
         return new FlagWrapper<TEnum>(enumDeclaration) as unknown as FlagWithEnumProps<TEnum>;
     }
 }

@@ -1,4 +1,4 @@
-import { NormalizedEvolverName } from "@Evolvers/EvolverComplex/Util/normalizeEvolverName";
+import { NormalizedEvolverName } from "@Evolvers/Evolver/Util/normalizeEvolverName";
 import { ChainableMutatorSetBuilder, MutatorSetBuilder } from "@Evolvers/MutatorSets";
 import {
     EvolveObject,
@@ -7,8 +7,10 @@ import {
     MutatorDefs,
     SortaPromise,
 } from "@Evolvers/Types";
-import log from "@Shared/Log/log";
+import getLogger from "@Shared/Log/getLogger";
 import { makeMutable, Mutable } from "@Shared/String/makeMutable";
+
+const log = getLogger("Evolver");
 
 interface TypeAccess<
     TData,

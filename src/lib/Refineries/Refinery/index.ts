@@ -1,12 +1,14 @@
 import cloneDeep from "clone-deep";
 import deepFreeze from "deep-freeze-strict";
 
-import log from "@Shared/Log/log";
+import getLogger from "@Shared/Log/getLogger";
 import { Immutable, makeImmutable } from "@Shared/String/makeImmutable";
 
 import { ForgeSet } from "../ForgeSet";
-import { NormalizedRefineryName } from "../RefineryComplex/Util/normalizeRefineryName";
 import { ForgeDefs, RefineObject, RefineryDefinition } from "../Types/RefineryTypes";
+import { NormalizedRefineryName } from "./Util/normalizeRefineryName";
+
+const log = getLogger("Refinery");
 
 /**
  * Represents a refinery for transforming data using a set of forge functions.

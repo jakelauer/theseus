@@ -1,6 +1,8 @@
 import log, { LogLevelDesc } from "loglevel";
 import prefix from "loglevel-plugin-prefix";
 
+import { isTestMode } from "@Shared/Test/isTestMode";
+
 interface TheseusLogLevelParams {
     level: LogLevelDesc;
     persist: boolean;
@@ -12,7 +14,7 @@ export const resetTheseusLogLevel = () => {
 
 export const setTheseusLogLevel = (params?: Partial<TheseusLogLevelParams>) => {
     const argsWithDefaults: TheseusLogLevelParams = {
-        level: "silent",
+        level: isTestMode() ? "debug" : "info",
         persist: false,
         ...params,
     };
@@ -21,7 +23,7 @@ export const setTheseusLogLevel = (params?: Partial<TheseusLogLevelParams>) => {
 
     prefix.reg(log);
     prefix.apply(log, {
-        template: "[%t] %l:",
+        template: "[%t] {{%n}} %l:",
         format(level, _, timestamp) {
             return `[${timestamp}] [${level}]`;
         },
@@ -40,4 +42,4 @@ export const setTheseusLogLevel = (params?: Partial<TheseusLogLevelParams>) => {
 
 setTheseusLogLevel();
 
-export default log;
+export default log.getLogger;

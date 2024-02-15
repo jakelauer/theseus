@@ -1,7 +1,7 @@
 import { buildChainableMutatorQueue } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue";
 import { createChainingProxy } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy";
 import { Chainable, ChainableMutators, MutableData, SortaPromise } from "@Evolvers/Types";
-import log from "@Shared/Log/log";
+import getLogger from "@Shared/Log/getLogger";
 import { Mutable } from "@Shared/String/makeMutable";
 
 import { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
@@ -18,6 +18,8 @@ import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
  */
 
 type QueueMutation = ReturnType<typeof buildChainableMutatorQueue>;
+
+const mutatorLog = getLogger("Mutator");
 
 export class ChainableMutatorSetBuilder<
         TEvolverData,
@@ -81,10 +83,7 @@ export class ChainableMutatorSetBuilder<
         Object.assign(context, {
             [selfPath]: (...args: any[]) => {
                 this.calls++;
-                log.debug(
-                    `[SelfFunc] Call #${this.calls} to function "${selfPath}" with args: `,
-                    args,
-                );
+                mutatorLog.debug(`[#${this.calls}] ${selfPath}`);
 
                 return mutator(...args);
             },
@@ -109,7 +108,6 @@ export class ChainableMutatorSetBuilder<
         argName: TParamName,
         mutators: TMutators,
     ): ChainableMutators<TEvolverData, TParamName, TMutators> {
-        log.debug(`Creating chainable mutator set with initial data and mutators`);
         const chain = new ChainableMutatorSetBuilder(data, argName, mutators).chainingProxy;
         return this.castToChainableMutators(chain);
     }
@@ -131,7 +129,6 @@ export class ChainableMutatorSetBuilder<
      * and does not support the creation of non-chainable mutators.
      */
     public static override create(): MutatorSetBuilder<any, any, any> {
-        log.error("ChainableMutatorSet does not support non-chained mutators.");
         throw new Error("ChainableMutatorSet does not support non-chained mutators.");
     }
 }

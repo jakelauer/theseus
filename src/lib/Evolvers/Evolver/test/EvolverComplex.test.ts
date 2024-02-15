@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
 
-import { Evolver } from "../../Evolver";
+import { Evolver } from "../";
 
 const IncrementEvolverCreator = () =>
     Evolver.create("IncrementEvolver", {

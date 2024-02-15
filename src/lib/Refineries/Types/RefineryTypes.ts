@@ -1,7 +1,7 @@
 import { Immutable } from "@Shared/String/makeImmutable";
 
 import type { FuncMinusFirstArg } from "@Types/Modifiers";
-import type { NormalizedRefineryName } from "../RefineryComplex/Util/normalizeRefineryName";
+import type { NormalizedRefineryName } from "../Refinery/Util/normalizeRefineryName";
 
 import type { Forge } from "./ForgeTypes";
 

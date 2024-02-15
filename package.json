@@ -46,6 +46,7 @@
 		"prepare": "husky install",
 		"// ==== TESTING ==== //": "",
 		"lint": "git add . && pnpm lint-staged",
+		"test:debug": "mocha --exit --config ./.mocharc.cjs --debug-mode",
 		"test": "mocha --exit --config ./.mocharc.cjs",
 		"// ==== BUILD ==== //": "",
 		"build": "tsc --project ./tsconfig.json",

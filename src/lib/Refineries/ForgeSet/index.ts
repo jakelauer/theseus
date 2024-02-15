@@ -1,7 +1,9 @@
-import log from "@Shared/Log/log";
+import getLogger from "@Shared/Log/getLogger";
 import { Immutable } from "@Shared/String/makeImmutable";
 
 import { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
+
+const log = getLogger("ForgeSet");
 
 /**
  * Represents a set of forge functions applied to forgeable data. Forge functions are responsible for
@@ -17,7 +19,6 @@ export class ForgeSet<
     protected mutableData: { [key in TParamName]: TForgeableData };
 
     constructor(inputData: TForgeableData, argName: TParamName, forges: TForges) {
-        log.debug(`Creating forge set with argument name: ${argName}`, inputData, forges);
         this.argName = argName;
         this.mutableData = this.inputToObject(inputData);
 
@@ -34,7 +35,6 @@ export class ForgeSet<
             const newPath = [...path, key];
 
             if (typeof item === "function") {
-                log.debug(`Forge "${newPath.join(".")}" is a function; adding to instance`);
                 // Use reduce to traverse and/or build the nested structure
                 const lastKey = newPath.pop() as string;
                 const context = newPath.reduce((obj, key) => {
@@ -44,10 +44,8 @@ export class ForgeSet<
 
                 // Assign the function
                 this.addFunctionToSelf(context, lastKey, item);
+                log.debug(`Added forge function to instance at "${newPath.join(".")}"`);
             } else if (typeof item === "object" && item !== null) {
-                log.debug(
-                    `Forge "${newPath.join(".")}" is an object; recursively extending instance`,
-                );
                 // Recursive call for nested objects
                 this.extendSelfWithForges(item as TForges, newPath);
             }
@@ -59,7 +57,6 @@ export class ForgeSet<
      * by `extendSelfWithForges` to attach forge functions to the instance.
      */
     protected addFunctionToSelf(context: any, selfPath: string, func: (...args: any[]) => any) {
-        log.debug(`Adding function "${selfPath}"`);
         Object.assign(context, {
             [selfPath]: (...args: any[]) => func(this.mutableData, ...args),
         });
