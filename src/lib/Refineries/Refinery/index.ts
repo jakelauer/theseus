@@ -84,7 +84,7 @@ export class Refinery<
 
         // Create the actions which will be available when `for()` is called.
         const forgeSet = ForgeSet.create<TForgeableData, Immutable<TParamNoun>, TForges>(
-            input,
+            inputClone,
             this.immutableArgName,
             this.forges,
         );

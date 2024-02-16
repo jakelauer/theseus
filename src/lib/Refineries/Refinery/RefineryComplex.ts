@@ -1,7 +1,6 @@
 import getLogger from "@Shared/Log/getLogger";
 import { Immutable } from "@Shared/String/makeImmutable";
 
-import { NormalizedEvolverName } from "../../Evolvers/Evolver/Util/normalizeEvolverName";
 import { ForgeDefs } from "../Types/RefineryTypes";
 import { Refinery } from "./";
 import { NormalizedRefineryName, normalizeRefineryName } from "./Util/normalizeRefineryName";
@@ -13,7 +12,7 @@ const log = getLogger("RefineryComplex");
  * This is particularly useful for avoiding name collisions and simplifying property names in the context of multiple refineries.
  */
 type AllRefineriesNormalized<T> = {
-    [K in keyof T as NormalizedEvolverName<Extract<K, string>>]: T[K];
+    [K in keyof T as NormalizedRefineryName<Extract<K, string>>]: T[K];
 };
 
 /**

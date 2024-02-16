@@ -44,7 +44,7 @@ export class ForgeSet<
 
                 // Assign the function
                 this.addFunctionToSelf(context, lastKey, item);
-                log.debug(`Added forge function to instance at "${newPath.join(".")}"`);
+                log.debug(`Added forge function to instance at "${lastKey}"`);
             } else if (typeof item === "object" && item !== null) {
                 // Recursive call for nested objects
                 this.extendSelfWithForges(item as TForges, newPath);
