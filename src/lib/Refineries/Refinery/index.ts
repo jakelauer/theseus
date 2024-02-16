@@ -4,7 +4,7 @@ import deepFreeze from "deep-freeze-strict";
 import getLogger from "@Shared/Log/getLogger";
 import { Immutable, makeImmutable } from "@Shared/String/makeImmutable";
 
-import { ForgeSet } from "../ForgeSet";
+import { ForgeSet } from "../ForgeSets/ForgeSet";
 import { ForgeDefs, RefineObject, RefineryDefinition } from "../Types/RefineryTypes";
 import { NormalizedRefineryName } from "./Util/normalizeRefineryName";
 

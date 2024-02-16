@@ -1,4 +1,4 @@
-import type { RemoveWordFromTypeStr } from "../../../Types/Modifiers";
+import type { RemoveWordFromTypeStr } from "@Types/Modifiers";
 
 export type NormalizedRefineryName<T extends string> = RemoveWordFromTypeStr<T, "refinery">;
 export const normalizeRefineryName = <T extends string>(name: T): NormalizedRefineryName<T> => {
