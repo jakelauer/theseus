@@ -14,17 +14,17 @@
 		"theseus-js": "link:"
 	},
 	"devDependencies": {
+		"@theseus/publisher": "workspace:latest",
 		"@types/chai": "^4.3.11",
 		"@types/chai-as-promised": "^7.1.8",
 		"@types/clone-deep": "^4.0.4",
 		"@types/deep-freeze-strict": "^1.1.2",
 		"@types/mocha": "^10.0.6",
 		"@types/node": "^20.11.17",
-		"@types/prompts": "^2.4.9",
 		"@types/sinon": "^17.0.3",
+		"@types/sinon-chai": "^3.2.12",
 		"@typescript-eslint/eslint-plugin": "^6.20.0",
 		"@typescript-eslint/parser": "^6.20.0",
-		"arg": "^5.0.1",
 		"chai": "^4.4.1",
 		"chai-as-promised": "^7.1.1",
 		"eslint": "^7.32.0",
@@ -35,8 +35,9 @@
 		"mocha": "^10.3.0",
 		"mocha-suppress-logs": "^0.4.1",
 		"prettier": "^3.1.0",
-		"prompts": "^2.4.2",
+		"prettier-plugin-jsdoc": "^1.3.0",
 		"sinon": "^17.0.1",
+		"sinon-chai": "^3.7.0",
 		"ts-node": "^10.9.1",
 		"tsconfig-paths": "^4.2.0",
 		"tsx": "^4.7.1",
@@ -49,10 +50,7 @@
 		"test:debug": "mocha --exit --config ./.mocharc.cjs --debug-mode",
 		"test": "mocha --exit --config ./.mocharc.cjs",
 		"// ==== BUILD ==== //": "",
-		"build": "tsc --project ./tsconfig.json",
-		"// ==== PUBLISH ==== //": "",
-		"update": "pnpm build && node ./.scripts/update-version.js",
-		"pub": "node ./.scripts/publish.js"
+		"build": "tsc --project ./tsconfig.json"
 	},
 	"lint-staged": {
 		"*.ts": [

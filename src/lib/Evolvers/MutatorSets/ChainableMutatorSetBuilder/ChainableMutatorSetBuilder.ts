@@ -7,25 +7,27 @@ import {
     MutableData,
     SortaPromise,
 } from "@Evolvers/Types";
-import getLogger from "@Shared/Log/getLogger";
+import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 import { Mutable } from "@Shared/String/makeMutable";
 
 import { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
 import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
 
 /**
- * Extends MutatorSet to provide chainable mutation operations on evolver data.
- * This class allows mutations to be chained together in a fluent manner, enhancing the clarity and expressiveness
- * of state evolution logic.
+ * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows
+ * mutations to be chained together in a fluent manner, enhancing the clarity and expressiveness of
+ * state evolution logic.
  *
  * @template TEvolverData The type of data the evolver operates on.
- * @template TParamName The type representing the names of mutable parameters within the evolver data.
- * @template TMutators The type representing the definitions of mutators applicable to the evolver data.
+ * @template TParamName The type representing the names of mutable parameters within the evolver
+ *   data.
+ * @template TMutators The type representing the definitions of mutators applicable to the evolver
+ *   data.
  */
 
 type QueueMutation = ReturnType<typeof buildChainableMutatorQueue>;
 
-const mutatorLog = getLogger("Mutator");
+const mutatorLog = getTheseusLogger("Mutator");
 
 export class ChainableMutatorSetBuilder<
         TEvolverData,
@@ -74,8 +76,9 @@ export class ChainableMutatorSetBuilder<
     }
 
     /**
-     * Overrides addFunctionToSelf to support chainable operations. If the operation is asynchronous (returns a Promise),
-     * it returns the Promise directly. Otherwise, it enhances the returned object with a chainable interface.
+     * Overrides addFunctionToSelf to support chainable operations. If the operation is asynchronous
+     * (returns a Promise), it returns the Promise directly. Otherwise, it enhances the returned
+     * object with a chainable interface.
      *
      * @param context The object context to which the mutator function is added.
      * @param selfPath The path (name) under which the mutator function is stored in the context.
@@ -97,8 +100,8 @@ export class ChainableMutatorSetBuilder<
     }
 
     /**
-     * Factory method to create an instance of ChainableMutatorSet with specified initial data, argument name,
-     * and mutator definitions. Facilitates the creation of chainable mutators.
+     * Factory method to create an instance of ChainableMutatorSet with specified initial data,
+     * argument name, and mutator definitions. Facilitates the creation of chainable mutators.
      *
      * @param data Initial state data.
      * @param argName Name of the argument representing the mutable part of the state.
@@ -119,8 +122,9 @@ export class ChainableMutatorSetBuilder<
     }
 
     /**
-     * Casts the provided ChainableMutatorBuilder instance to a ChainableMutators instance.
-     * This is a workaround to avoid TypeScript's inability to infer the correct type of the returned object.
+     * Casts the provided ChainableMutatorBuilder instance to a ChainableMutators instance. This is
+     * a workaround to avoid TypeScript's inability to infer the correct type of the returned
+     * object.
      */
     private static castToChainableMutators<
         TEvolverData,
@@ -131,8 +135,8 @@ export class ChainableMutatorSetBuilder<
     }
 
     /**
-     * Overrides the create method to indicate that ChainableMutatorSet is specifically designed for chainable operations,
-     * and does not support the creation of non-chainable mutators.
+     * Overrides the create method to indicate that ChainableMutatorSet is specifically designed for
+     * chainable operations, and does not support the creation of non-chainable mutators.
      */
     public static override create<
         TEvolverData,

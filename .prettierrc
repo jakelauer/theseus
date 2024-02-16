@@ -9,5 +9,6 @@
 	"bracketSpacing": true,
 	"bracketSameLine": false,
 	"proseWrap": "always",
-	"experimentalTernaries": true
+	"experimentalTernaries": true,
+	"plugins": [ "prettier-plugin-jsdoc" ]
 }

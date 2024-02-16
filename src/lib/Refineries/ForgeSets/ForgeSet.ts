@@ -1,13 +1,13 @@
-import getLogger from "@Shared/Log/getLogger";
+import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 import { Immutable } from "@Shared/String/makeImmutable";
 
 import { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
 
-const log = getLogger("ForgeSet");
+const log = getTheseusLogger("ForgeSet");
 
 /**
- * Represents a set of forge functions applied to forgeable data. Forge functions are responsible for
- * refining or transforming the data in a specific way. This class facilitates the organizati
+ * Represents a set of forge functions applied to forgeable data. Forge functions are responsible
+ * for refining or transforming the data in a specific way. This class facilitates the organizati
  * execution of these forge functions.
  */
 export class ForgeSet<
@@ -26,8 +26,8 @@ export class ForgeSet<
     }
 
     /**
-     * Extends the ForgeSet instance with forge functions defined in the `forges` parameter.
-     * It recursively traverses the forges object, adding each function to the instance.
+     * Extends the ForgeSet instance with forge functions defined in the `forges` parameter. It
+     * recursively traverses the forges object, adding each function to the instance.
      */
     private extendSelfWithForges(forges: TForges, path: string[] = []) {
         Object.keys(forges).forEach((key) => {
@@ -63,8 +63,8 @@ export class ForgeSet<
     }
 
     /**
-     * Transforms the input data into the structured format expected by the forge functions,
-     * keyed by the parameter name.
+     * Transforms the input data into the structured format expected by the forge functions, keyed
+     * by the parameter name.
      */
     protected inputToObject<TForgeableData, TParamName extends string>(
         input: TForgeableData,
@@ -75,8 +75,9 @@ export class ForgeSet<
     }
 
     /**
-     * Factory method to create an instance of `ForgeSet` with specified initial data, argument name,
-     * and forge definitions. This method facilitates the easy setup of a ForgeSet with a specific set of forges.
+     * Factory method to create an instance of `ForgeSet` with specified initial data, argument
+     * name, and forge definitions. This method facilitates the easy setup of a ForgeSet with a
+     * specific set of forges.
      *
      * @param data The initial forgeable data.
      * @param argName The name of the argument representing the forgeable part of the data.

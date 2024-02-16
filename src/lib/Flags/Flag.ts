@@ -1,17 +1,19 @@
-import getLogger from "@Shared/Log/getLogger";
+import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 import { capitalizeFirstLetter } from "@Shared/String/capitalizeFirstLetter";
 
-const log = getLogger("FlagWrapper");
+const log = getTheseusLogger("FlagWrapper");
 export const _logger_test_access = log;
 
 /**
- * Represents a wrapper around a flag enumeration, providing utility methods
- * for working with flag values and their corresponding enumeration keys.
+ * Represents a wrapper around a flag enumeration, providing utility methods for working with flag
+ * values and their corresponding enumeration keys.
+ *
  * @template TEnum - The enumeration type that this class will wrap.
  */
 class FlagWrapper<TEnum extends FlagEnumType> {
     /**
      * Creates an instance of FlagWrapper.
+     *
      * @param {TEnum} enumDeclaration - The enumeration declaration to be wrapped.
      */
     private constructor(enumDeclaration: TEnum) {
@@ -42,6 +44,7 @@ class FlagWrapper<TEnum extends FlagEnumType> {
 
     /**
      * Checks if the provided value matches against a specific flag value.
+     *
      * @private
      */
     private matches(value: number, against: number) {
@@ -50,9 +53,11 @@ class FlagWrapper<TEnum extends FlagEnumType> {
 
     /**
      * Creates a new FlagWrapper instance from a given enumeration.
-     * @static
+     *
      * @param {TEnum} enumDeclaration - The enumeration declaration to be wrapped.
-     * @returns {FlagWithEnumProps<TEnum>} An instance of FlagWrapper with additional enumeration properties.
+     * @returns {FlagWithEnumProps<TEnum>} An instance of FlagWrapper with additional enumeration
+     *   properties.
+     * @static
      */
     public static fromEnum<TEnum extends FlagEnumType>(
         enumDeclaration: TEnum,
@@ -61,26 +66,18 @@ class FlagWrapper<TEnum extends FlagEnumType> {
     }
 }
 
-/**
- * Represents the type for flag enumerations.
- */
+/** Represents the type for flag enumerations. */
 type FlagEnumType = { [s: string]: number | string };
 
-/**
- * Represents a utility type to construct flag test method names.
- */
+/** Represents a utility type to construct flag test method names. */
 type FlagTest<T extends string> = `is${Capitalize<T>}`;
 
-/**
- * Represents an object type with flag test methods.
- */
+/** Represents an object type with flag test methods. */
 type FlagTestObj<T extends Record<string, any>> = {
     [K in keyof T as FlagTest<K & string>]: (value: number) => boolean;
 };
 
-/**
- * Represents the type for a FlagWrapper instance with additional enumeration properties.
- */
+/** Represents the type for a FlagWrapper instance with additional enumeration properties. */
 type FlagWithEnumProps<TEnum extends FlagEnumType> = FlagWrapper<TEnum> & {
     [K in keyof TEnum]: TEnum[K];
 } & FlagTestObj<TEnum>;

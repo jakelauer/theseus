@@ -1,6 +1,6 @@
-import getLogger from "@Shared/Log/getLogger";
+import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 
-const log = getLogger("Queue");
+const log = getTheseusLogger("Queue");
 
 export function createChainingProxy<T>(params: {
     target: T;

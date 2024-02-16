@@ -1,8 +1,8 @@
 import { MutableData, Mutator, SortaPromise } from "@Evolvers/Types";
-import getLogger from "@Shared/Log/getLogger";
+import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 import { Mutable } from "@Shared/String/makeMutable";
 
-const log = getLogger("Queue");
+const log = getTheseusLogger("Queue");
 
 interface Params<TEvolverData, TParamName extends Mutable<string>> {
     argName: TParamName;

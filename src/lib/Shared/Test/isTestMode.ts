@@ -1,4 +1,4 @@
 const isBrowserContext = typeof window !== "undefined";
-const debugFlagExists = !isBrowserContext && process.argv.includes("--debug-mode");
+const debugFlagExists = () => !isBrowserContext && process.argv.includes("--debug-mode");
 
-export const isTestMode = () => debugFlagExists;
+export const isTestMode = () => debugFlagExists();

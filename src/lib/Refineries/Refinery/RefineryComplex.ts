@@ -1,23 +1,24 @@
-import getLogger from "@Shared/Log/getLogger";
+import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 import { Immutable } from "@Shared/String/makeImmutable";
 
 import { ForgeDefs } from "../Types/RefineryTypes";
 import { Refinery } from "./";
 import { NormalizedRefineryName, normalizeRefineryName } from "./Util/normalizeRefineryName";
 
-const log = getLogger("RefineryComplex");
+const log = getTheseusLogger("RefineryComplex");
 
 /**
- * Transforms the keys of an input type T by removing 'refinery' from their names.
- * This is particularly useful for avoiding name collisions and simplifying property names in the context of multiple refineries.
+ * Transforms the keys of an input type T by removing 'refinery' from their names. This is
+ * particularly useful for avoiding name collisions and simplifying property names in the context of
+ * multiple refineries.
  */
 type AllRefineriesNormalized<T> = {
     [K in keyof T as NormalizedRefineryName<Extract<K, string>>]: T[K];
 };
 
 /**
- * Manages a complex of refineries, providing a structured way to process data.
- * This class facilitates a fluent interface for refining data, akin to constructing a sentence:
+ * Manages a complex of refineries, providing a structured way to process data. This class
+ * facilitates a fluent interface for refining data, akin to constructing a sentence:
  * `RefineryComplex.refine(myData).withRefineries({ ... })`.
  */
 export class RefineryComplex {
@@ -44,14 +45,14 @@ export class RefineryComplex {
     });
 
     /**
-     * Begins the data refinement process in a fluid, sentence-like pattern.
-     * Allows the specification of refineries to process the input data.
+     * Begins the data refinement process in a fluid, sentence-like pattern. Allows the
+     * specification of refineries to process the input data.
      */
     private static refine = <TForgeableData>(input: TForgeableData) => ({
         /**
-         * Specifies the set of refineries to be used for processing the input data.
-         * Each property in the provided object should be a Refinery whose data matches TForgeableData.
-         * Follows a fluent pattern, allowing for intuitive and clear data processing steps.
+         * Specifies the set of refineries to be used for processing the input data. Each property
+         * in the provided object should be a Refinery whose data matches TForgeableData. Follows a
+         * fluent pattern, allowing for intuitive and clear data processing steps.
          */
         withRefineries: <
             TRefineries extends Record<string, Refinery<TForgeableData, any, string, string>>,
@@ -60,14 +61,12 @@ export class RefineryComplex {
         ) => {
             log.debug("Refining data with refineries", refineries);
 
-            /**
-             * Represents the names of the refineries as provided in the withRefineries argument.
-             */
+            /** Represents the names of the refineries as provided in the withRefineries argument. */
             type TRefineryPassedNames = keyof TRefineries;
 
             /**
-             * Maps each provided refinery to its output as determined by the getForges method.
-             * The getForges method represents the core functionality of each refinery.
+             * Maps each provided refinery to its output as determined by the getForges method. The
+             * getForges method represents the core functionality of each refinery.
              */
             type RefineriesRemapped = {
                 [K in TRefineryPassedNames]: ReturnType<
@@ -75,23 +74,23 @@ export class RefineryComplex {
                 >;
             };
 
-            /**
-             * Represents an individual refinery within the provided collection.
-             */
+            /** Represents an individual refinery within the provided collection. */
             type OneRefinery<TRefineryName extends TRefineryPassedNames> = ReturnType<
                 TRefineries[TRefineryName]["refine"]
             >;
 
             /**
-             * Represents the set of functions responsible for the forging/refining process within each refinery.
+             * Represents the set of functions responsible for the forging/refining process within
+             * each refinery.
              */
             type OneForgeSet<TRefineryName extends TRefineryPassedNames> = ReturnType<
                 OneRefinery<TRefineryName>["getForges"]
             >;
 
             /**
-             * After remapping the outputs of each refinery's functions, this type removes 'Refinery' from their names.
-             * This avoids naming conflicts and simplifies the use of these functions in the application.
+             * After remapping the outputs of each refinery's functions, this type removes
+             * 'Refinery' from their names. This avoids naming conflicts and simplifies the use of
+             * these functions in the application.
              */
             type RefineriesFormatted = AllRefineriesNormalized<RefineriesRemapped>;
 
