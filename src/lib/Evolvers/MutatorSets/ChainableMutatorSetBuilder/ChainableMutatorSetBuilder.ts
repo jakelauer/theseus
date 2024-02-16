@@ -1,6 +1,12 @@
 import { buildChainableMutatorQueue } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue";
 import { createChainingProxy } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy";
-import { Chainable, ChainableMutators, MutableData, SortaPromise } from "@Evolvers/Types";
+import {
+    Chainable,
+    ChainableMutators,
+    FinalMutators,
+    MutableData,
+    SortaPromise,
+} from "@Evolvers/Types";
 import getLogger from "@Shared/Log/getLogger";
 import { Mutable } from "@Shared/String/makeMutable";
 
@@ -128,7 +134,11 @@ export class ChainableMutatorSetBuilder<
      * Overrides the create method to indicate that ChainableMutatorSet is specifically designed for chainable operations,
      * and does not support the creation of non-chainable mutators.
      */
-    public static override create(): MutatorSetBuilder<any, any, any> {
+    public static override create<
+        TEvolverData,
+        TParamName extends Mutable<string>,
+        TMutators extends MutatorDefs<TEvolverData, TParamName>,
+    >(): FinalMutators<TEvolverData, TParamName, TMutators> {
         throw new Error("ChainableMutatorSet does not support non-chained mutators.");
     }
 }

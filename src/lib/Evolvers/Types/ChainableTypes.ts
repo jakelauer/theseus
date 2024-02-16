@@ -104,6 +104,7 @@ type IsChainAsync<TMutators, PrevAsync extends AsyncTracker> = {
  * and those that conclude it, enabling type-safe access to the `.finally` property only when no further
  * chaining is possible.
  */
+
 export type ChainableMutators<
     TData,
     TParamName extends Mutable<string>,

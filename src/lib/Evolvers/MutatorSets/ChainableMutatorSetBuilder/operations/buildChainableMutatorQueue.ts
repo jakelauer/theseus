@@ -68,6 +68,7 @@ export const buildChainableMutatorQueue = <TEvolverData, TParamName extends Muta
             [key in TParamName]: TEvolverData;
         };
     };
+
     function queueMutation<TFuncReturn extends Promise<TEvolverData>>(
         mutatorPath: string,
         func: Mutator<TEvolverData, TParamName, TFuncReturn>,
@@ -78,11 +79,11 @@ export const buildChainableMutatorQueue = <TEvolverData, TParamName extends Muta
         func: Mutator<TEvolverData, TParamName, TFuncReturn>,
         args: any[],
     ): TEvolverData;
-    function queueMutation(
+    function queueMutation<TFuncReturn extends SortaPromise<TEvolverData>>(
         mutatorPath: string,
-        func: Mutator<TEvolverData, TParamName, SortaPromise<TEvolverData>>,
+        func: Mutator<TEvolverData, TParamName, TFuncReturn>,
         args: any[],
-    ) {
+    ): SortaPromise<TEvolverData> {
         log.debug(`${mutatorPath}(${args}) queued`);
 
         const operation = buildQueueOperation(mutatorPath, func, args);
