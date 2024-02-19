@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { makeImmutable } from "@Shared/String/makeImmutable";
 
-import { Refinery } from "../index";
+import { Refinery } from "../Refinery";
 
 describe("Refinery", function () {
     interface TestData {

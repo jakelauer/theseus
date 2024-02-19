@@ -1,8 +1,8 @@
 import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 import { Immutable } from "@Shared/String/makeImmutable";
 
-import { ForgeDefs } from "../Types/RefineryTypes";
-import { Refinery } from "./";
+import { Refinery } from "./Refinery";
+import { ForgeDefs } from "./Types/RefineryTypes";
 import { NormalizedRefineryName, normalizeRefineryName } from "./Util/normalizeRefineryName";
 
 const log = getTheseusLogger("RefineryComplex");

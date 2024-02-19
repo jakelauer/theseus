@@ -1,4 +1,4 @@
-import type { RemoveWordFromTypeStr } from "../../../Types/Modifiers";
+import type { RemoveWordFromTypeStr } from "../../Types/Modifiers";
 
 export type NormalizedEvolverName<T extends string> = RemoveWordFromTypeStr<T, "evolver">;
 export const normalizeEvolverName = <T extends string>(name: T): NormalizedEvolverName<T> => {

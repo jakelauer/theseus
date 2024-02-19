@@ -1,31 +1,17 @@
-import { NormalizedEvolverName } from "@Evolvers/Evolver/Util/normalizeEvolverName";
 import { ChainableMutatorSetBuilder, MutatorSetBuilder } from "@Evolvers/MutatorSets";
 import {
     EvolveObject,
+    EvolverInstance,
     EvolverOptions,
     MutateObject,
     MutatorDefs,
-    SortaPromise,
+    TypeAccess,
 } from "@Evolvers/Types";
+import { NormalizedEvolverName } from "@Evolvers/Util/normalizeEvolverName";
 import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 import { makeMutable, Mutable } from "@Shared/String/makeMutable";
 
 const log = getTheseusLogger("Evolver");
-
-interface TypeAccess<
-    TData,
-    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-    TEvolverName extends string,
-    TParamName extends string,
-> {
-    data: TData;
-    mutators: TMutators;
-    evolverName: TEvolverName;
-    paramName: TParamName;
-    mutableParamName: Mutable<TParamName>;
-    returnData: SortaPromise<TData>;
-    evolver: Evolver<TData, TMutators, TEvolverName, TParamName>;
-}
 
 /**
  * Represents an evolver for data transformation and mutation, encapsulating the logic for mutating
@@ -45,7 +31,12 @@ export class Evolver<
      * This only exists to provide outside access to the type parameters of evolvers nested within
      * an EvolverComplex. It doesn't need a value.
      */
-    public readonly __type__access__: TypeAccess<TData, TMutators, TEvolverName, TParamName>;
+    public readonly __type__access__: TypeAccess<
+        TData,
+        TMutators,
+        TEvolverName,
+        Mutable<TParamName>
+    >;
 
     /**
      * Constructor for Evolver. Initializes the evolver with a name, set of mutators, and optional
@@ -124,17 +115,16 @@ export class Evolver<
         );
 
         const mutatorSetGetter = () => mutatorSet;
-        const result = Object.defineProperties<MutateObject<TData, TMutators, Mutable<TParamName>>>(
-            {} as any,
-            {
-                getMutators: {
-                    get: () => mutatorSetGetter,
-                },
-                using: {
-                    get: mutatorSetGetter,
-                },
+        const result = Object.defineProperties<
+            MutateObject<TData, TMutators, TEvolverName, Mutable<TParamName>>
+        >({} as any, {
+            getMutators: {
+                get: () => mutatorSetGetter,
             },
-        );
+            using: {
+                get: mutatorSetGetter,
+            },
+        });
 
         log.debug(`Mutating data using evolver: ${this.evolverName}`, input);
 
@@ -156,17 +146,16 @@ export class Evolver<
 
         const mutatorSetGetter = () => mutatorSet;
 
-        const result = Object.defineProperties<EvolveObject<TData, TMutators, Mutable<TParamName>>>(
-            {} as any,
-            {
-                getMutators: {
-                    get: () => mutatorSetGetter,
-                },
-                using: {
-                    get: mutatorSetGetter,
-                },
+        const result = Object.defineProperties<
+            EvolveObject<TData, TMutators, TEvolverName, Mutable<TParamName>>
+        >({} as any, {
+            getMutators: {
+                get: () => mutatorSetGetter,
             },
-        );
+            using: {
+                get: mutatorSetGetter,
+            },
+        });
 
         log.debug(`Evolving data using evolver: ${this.evolverName}`, { input });
 
@@ -199,24 +188,24 @@ export class Evolver<
                 // This is a trick to force the type of the return value to be the name of the refinery.
                 type ForceReturnVariableName = Record<
                     _TEvolverName,
-                    Evolver<_TData, _TMutators, _TEvolverName, _TParamName>
+                    EvolverInstance<_TData, _TMutators, _TEvolverName, Mutable<_TParamName>>
                 >;
 
-                const refinery = new Evolver<_TData, _TMutators, _TEvolverName, _TParamName>(
+                const evolver = new Evolver<_TData, _TMutators, _TEvolverName, _TParamName>(
                     name,
                     mutators,
                     options,
                 );
 
                 log.debug(
-                    `Created evolver: ${refinery.evolverName} with mutators: ${Object.keys(
+                    `Created evolver: ${evolver.evolverName} with mutators: ${Object.keys(
                         mutators,
                     ).join(", ")}`,
                 );
 
                 return {
-                    [name]: refinery,
-                } as ForceReturnVariableName;
+                    [name]: evolver,
+                } as unknown as ForceReturnVariableName;
             },
         }),
     });

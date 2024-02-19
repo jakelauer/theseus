@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
 
-import { Evolver } from "../";
+import { Evolver } from "../Evolver";
 
 describe("Evolver", () => {
     // Mock data and types for testing
@@ -9,23 +9,22 @@ describe("Evolver", () => {
         value: number;
     }
 
-    const _evolver = Evolver.create("testEvolver").toEvolve<TestData>();
-    type TestEvolverMutators = Parameters<(typeof _evolver)["withMutators"]>;
+    const preMutatorTestEvolver = Evolver.create("testEvolver").toEvolve<TestData>();
+    type MutatorType = Parameters<(typeof preMutatorTestEvolver)["withMutators"]>[0];
 
-    const testMutators: TestEvolverMutators[0] = {
+    const testMutators = {
         increment: ({ mutableInput }) => ({ value: mutableInput.value + 1 }),
-    };
+        decrement: ({ mutableInput }) => ({ value: mutableInput.value - 1 }),
+    } satisfies MutatorType;
 
     describe("Factory Method and Initialization", () => {
         const evolverName = "testEvolver";
 
         it("should create an Evolver instance with the correct name and mutators", () => {
-            const evolver = Evolver.create(evolverName)
-                .toEvolve<TestData>()
-                .withMutators(testMutators)[evolverName];
+            const { testEvolver } = preMutatorTestEvolver.withMutators(testMutators);
 
-            expect(evolver).to.be.an.instanceof(Evolver);
-            expect(evolver.getMutators()).to.deep.equal(testMutators);
+            expect(testEvolver).to.be.an.instanceof(Evolver);
+            expect(testEvolver.getMutatorDefinitions()).to.deep.equal(testMutators);
         });
     });
 
@@ -43,11 +42,8 @@ describe("Evolver", () => {
 
     describe("Mutator Access", () => {
         it("should return the correct set of mutators", () => {
-            const evolverName = "testEvolver";
-            const evolver = Evolver.create(evolverName)
-                .toEvolve<TestData>()
-                .withMutators(testMutators)[evolverName];
-            expect(evolver.getMutators()).to.deep.equal(testMutators);
+            const { testEvolver } = preMutatorTestEvolver.withMutators(testMutators);
+            expect(testEvolver.getMutatorDefinitions()).to.deep.equal(testMutators);
         });
     });
 
@@ -57,24 +53,16 @@ describe("Evolver", () => {
             name: string;
         }
 
-        const _evolver = Evolver.create("testEvolver").toEvolve<AnotherTestData>();
-        type TestEvolverMutators = Parameters<(typeof _evolver)["withMutators"]>;
-
-        const anotherTestMutators: TestEvolverMutators[0] = {
-            rename: ({ mutableInput }) => ({ name: `New ${mutableInput.name}` }),
-        };
-
         describe("Error Handling", () => {
             it("should handle invalid mutator definitions gracefully", () => {
                 // Assuming there's some form of validation on mutators, which there might not be.
                 // This is speculative and should be adapted to the actual error handling strategy of Evolver.
                 const invalidMutators: any = { brokenMutator: null }; // Intentionally incorrect
 
-                expect(
-                    () =>
-                        Evolver.create(evolverName)
-                            .toEvolve<AnotherTestData>()
-                            .withMutators(invalidMutators)[evolverName],
+                expect(() =>
+                    Evolver.create("testEvolver")
+                        .toEvolve<AnotherTestData>()
+                        .withMutators(invalidMutators),
                 ).to.throw(); // Specify the expected error or message
             });
         });
@@ -83,22 +71,11 @@ describe("Evolver", () => {
             it("should work with different data structures", () => {
                 const { stringEvolver } = Evolver.create("stringEvolver")
                     .toEvolve<AnotherTestData>()
-                    .withMutators(anotherTestMutators);
+                    .withMutators({
+                        rename: ({ mutableInput }) => ({ name: `New ${mutableInput.name}` }),
+                    });
 
                 expect(stringEvolver).to.be.an.instanceof(Evolver);
-            });
-        });
-
-        describe("Fluent API Integration", () => {
-            it("should allow for chaining of configurations and methods seamlessly", () => {
-                // Demonstrates chaining beyond simple creation, assuming such capabilities exist or make sense for the Evolver design
-                const chainedEvolver = Evolver.create(evolverName)
-                    .toEvolve<AnotherTestData>()
-                    .withMutators(anotherTestMutators)[evolverName];
-                // Further chaining could include method calls that configure or use the Evolver instance
-
-                expect(chainedEvolver).to.be.an.instanceof(Evolver);
-                // Assertions to verify the results of the chained calls
             });
         });
 
@@ -106,13 +83,13 @@ describe("Evolver", () => {
             // Testing with more complex mutator functions that might involve asynchronous operations, side effects, etc.
             it("should support complex mutator definitions", async () => {
                 // Example of an async mutator, if supported by the design
-                const asyncMutators: TestEvolverMutators[0] = {
-                    asyncIncrement: async ({ mutableInput }) => ({ name: mutableInput.name + "1" }),
-                };
-
                 const evolver = Evolver.create("asyncEvolver")
                     .toEvolve<AnotherTestData>()
-                    .withMutators(asyncMutators).asyncEvolver;
+                    .withMutators({
+                        asyncIncrement: async ({ mutableInput }) => ({
+                            name: mutableInput.name + "1",
+                        }),
+                    }).asyncEvolver;
 
                 // Assuming Evolver or mutators can handle async operations, use async/await or promises as needed
                 expect(evolver).to.be.an.instanceof(Evolver);

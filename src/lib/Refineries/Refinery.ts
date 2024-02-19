@@ -4,8 +4,8 @@ import deepFreeze from "deep-freeze-strict";
 import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 import { Immutable, makeImmutable } from "@Shared/String/makeImmutable";
 
-import { ForgeSet } from "../ForgeSets/ForgeSet";
-import { ForgeDefs, RefineObject, RefineryDefinition } from "../Types/RefineryTypes";
+import { ForgeSet } from "./ForgeSets/ForgeSet";
+import { ForgeDefs, RefineObject, RefineryDefinition } from "./Types/RefineryTypes";
 import { NormalizedRefineryName } from "./Util/normalizeRefineryName";
 
 const log = getTheseusLogger("Refinery");

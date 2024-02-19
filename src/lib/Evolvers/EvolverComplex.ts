@@ -2,38 +2,28 @@ import { getLogger } from "loglevel";
 
 import { Mutable } from "@Shared/String/makeMutable";
 
-import { EvolveObject, MutateObject } from "../Types/EvolverTypes";
-import { MutatorDefs } from "../Types/MutatorTypes";
-import { Evolver } from "./";
+import { Evolver } from "./Evolver";
+import { EvolveObject, MutateObject } from "./Types/EvolverTypes";
+import { MutatorDefs } from "./Types/MutatorTypes";
 import { NormalizedEvolverName, normalizeEvolverName } from "./Util/normalizeEvolverName";
 
 const log = getLogger("EvolverComplex");
 
-/**
- * Utility type for extracting string keys from a type.
- */
+/** Utility type for extracting string keys from a type. */
 type StringKeyOf<T> = {
     [K in keyof T]: K extends string ? K : never;
 }[keyof T];
 
-/**
- * Type utility for removing 'Evolver' prefix from type names.
- */
+/** Type utility for removing 'Evolver' prefix from type names. */
 type RemoveEvolverFromName<T> = {
     [K in keyof T as NormalizedEvolverName<Extract<K, string>>]: T[K];
 };
 
-/**
- * Facilitates complex data transformations by combining multiple Evolvers.
- */
+/** Facilitates complex data transformations by combining multiple Evolvers. */
 export class EvolverComplex {
-    /**
-     * Initializes the creation process for a new EvolverComplex instance.
-     */
+    /** Initializes the creation process for a new EvolverComplex instance. */
     public static create = <TData>() => ({
-        /**
-         * Specifies evolvers to be used with the EvolverComplex.
-         */
+        /** Specifies evolvers to be used with the EvolverComplex. */
         withEvolvers: <
             TEvolvers extends Record<string, Evolver<TData, any, TEvolverName, TParamName>>,
             TEvolverName extends string,
@@ -47,25 +37,25 @@ export class EvolverComplex {
 
             return {
                 /**
-                 * Performs a single mutation on the given input, and returns the resulting transformed data.
+                 * Performs a single mutation on the given input, and returns the resulting
+                 * transformed data.
                  *
                  * Examples:
-                 * ```
-                 * const {BoxScore} = BaseballEvolverComplex.mutate(myData);
-                 * const result = BoxScore.setRuns(5);
-                 * ```
+                 *
+                 *     const { BoxScore } = BaseballEvolverComplex.mutate(myData);
+                 *     const result = BoxScore.setRuns(5);
                  */
                 mutate: (input: TData) => EvolverComplex.mutate(input).withEvolvers(evolvers),
                 /**
-                 * Performs multiple mutations on the given input, chained together. The final result is available via
-                 * the `finish` method, or by preceding the final chained call with `.finally`.
+                 * Performs multiple mutations on the given input, chained together. The final
+                 * result is available via the `finish` method, or by preceding the final chained
+                 * call with `.finally`.
                  *
                  * Examples:
-                 * ```
-                 * const {BoxScore} = BaseballEvolverComplex.evolve(myData);
-                 * const result = BoxScore.setRuns(5).and.setHits(10).and.setErrors(0).finish(); // option 1
-                 * const result = BoxScore.setRuns(5).and.setHits(10).and.finally.setErrors(0); // option 2
-                 * ```
+                 *
+                 *     const { BoxScore } = BaseballEvolverComplex.evolve(myData);
+                 *     const result = BoxScore.setRuns(5).and.setHits(10).and.setErrors(0).finish(); // option 1
+                 *     const result = BoxScore.setRuns(5).and.setHits(10).and.finally.setErrors(0); // option 2
                  */
                 evolve: (input: TData) => EvolverComplex.evolve(input).withEvolvers(evolvers),
                 use: (input: TData) => ({
@@ -80,9 +70,7 @@ export class EvolverComplex {
         log.debug(`Mutating data using evolver complex`, input);
 
         return {
-            /**
-             * Configures the mutation process with specific evolvers.
-             */
+            /** Configures the mutation process with specific evolvers. */
             withEvolvers: <
                 TEvolvers extends Record<
                     string,
@@ -103,9 +91,7 @@ export class EvolverComplex {
         log.debug(`Evolving data using evolver complex`, input);
 
         return {
-            /**
-             * Sets up the evolution process with specified evolvers for chained mutations.
-             */
+            /** Sets up the evolution process with specified evolvers for chained mutations. */
             withEvolvers: <
                 TEvolvers extends Record<
                     string,
@@ -123,23 +109,31 @@ export class EvolverComplex {
     };
 
     /**
-     * Dynamically generates evolution methods for the provided evolvers, based on the input data and a flag indicating whether to use macro mutators.
+     * Dynamically generates evolution methods for the provided evolvers, based on the input data
+     * and a flag indicating whether to use macro mutators.
      *
-     * This method iterates over each evolver provided, using either the `evolve` or `mutate` method based on the `macro` flag. It then retrieves
-     * the mutators from each evolver and formats the evolver names to align with the complex's naming conventions. The result is a collection
-     * of mutators keyed by the formatted evolver names, allowing for dynamic and flexible state evolution.
+     * This method iterates over each evolver provided, using either the `evolve` or `mutate` method
+     * based on the `macro` flag. It then retrieves the mutators from each evolver and formats the
+     * evolver names to align with the complex's naming conventions. The result is a collection of
+     * mutators keyed by the formatted evolver names, allowing for dynamic and flexible state
+     * evolution.
      *
      * @template TEvolvers - A type representing the evolvers passed to the method.
      * @template TData - The type of the input data upon which the evolvers will operate.
      * @template TIsMacro - A boolean type indicating whether to use macro mutators.
-     * @param {TEvolvers} evolvers - An object containing evolvers, which are entities capable of evolving or mutating the application state.
-     * @param {TData} input - The initial state or input data that the evolvers will use to generate new states or mutations.
-     * @param {TIsMacro} macro - A flag indicating whether to use macro mutators (true) or regular mutators (false).
-     * @returns {MutatorsFormatted} A collection of mutators, keyed by the formatted names of the evolvers, ready for application to the state.
+     * @param {TEvolvers} evolvers - An object containing evolvers, which are entities capable of
+     *   evolving or mutating the application state.
+     * @param {TData} input - The initial state or input data that the evolvers will use to generate
+     *   new states or mutations.
+     * @param {TIsMacro} macro - A flag indicating whether to use macro mutators (true) or regular
+     *   mutators (false).
+     * @returns {MutatorsFormatted} A collection of mutators, keyed by the formatted names of the
+     *   evolvers, ready for application to the state.
      *
-     * The method leverages TypeScript's advanced typing features to ensure type safety and to facilitate automatic typing based on the input parameters.
-     * It uses utility types to extract and remap mutators for each evolver, and then reduces this information into a single object that represents
-     * the cumulative mutations available.
+     *   The method leverages TypeScript's advanced typing features to ensure type safety and to
+     *   facilitate automatic typing based on the input parameters. It uses utility types to extract
+     *   and remap mutators for each evolver, and then reduces this information into a single object
+     *   that represents the cumulative mutations available.
      */
     private static generateEvolveMethods<
         TData,
@@ -148,32 +142,30 @@ export class EvolverComplex {
     >(evolvers: TEvolvers, input: TData, macro: TIsMacro) {
         log.debug(`Generating evolve methods for evolvers: ${Object.keys(evolvers).join(", ")}`);
 
-        /**
-         * Represents the names of the refineries as provided in the withRefineries argument.
-         */
+        /** Represents the names of the refineries as provided in the withRefineries argument. */
         type TEvolverPassedNames = StringKeyOf<TEvolvers>;
 
         // Utility type for accessing specific types within an evolver, such as data, mutators, and mutable parameter names.
-        type TypeAccess<
-            TEvolver extends keyof TEvolvers,
-            TTypeName extends keyof TEvolvers[TEvolver]["__type__access__"],
-        > = TEvolvers[TEvolver]["__type__access__"][TTypeName];
+        type InnerType<TEvolverName extends keyof TEvolvers> =
+            TEvolvers[TEvolverName]["__type__access__"];
 
         // Determines the mutators for a given evolver by returning the types of mutators available for the evolver's data.
-        type MutatorsForEvolver<T extends TEvolverPassedNames> = ReturnType<
+        type MutatorsForEvolver<TEvolverName extends TEvolverPassedNames> = ReturnType<
             MutateObject<
-                TypeAccess<T, "data">,
-                TypeAccess<T, "mutators">,
-                TypeAccess<T, "mutableParamName">
+                InnerType<TEvolverName>["data"],
+                InnerType<TEvolverName>["mutators"],
+                InnerType<TEvolverName>["evolverName"],
+                InnerType<TEvolverName>["mutableParamName"]
             >["getMutators"]
         >;
 
         // Similar to MutatorsForEvolver but for macro mutators, determining the mutators for evolving the state on a larger scale.
-        type MacroMutatorsForEvolver<T extends TEvolverPassedNames> = ReturnType<
+        type MacroMutatorsForEvolver<TEvolverName extends TEvolverPassedNames> = ReturnType<
             EvolveObject<
-                TypeAccess<T, "data">,
-                TypeAccess<T, "mutators">,
-                TypeAccess<T, "mutableParamName">
+                InnerType<TEvolverName>["data"],
+                InnerType<TEvolverName>["mutators"],
+                InnerType<TEvolverName>["evolverName"],
+                InnerType<TEvolverName>["mutableParamName"]
             >["getMutators"]
         >;
 
