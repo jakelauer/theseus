@@ -10,6 +10,6 @@ export const GameMoves = {
         const gameState = getCurrentGameState();
         await GameStateEvolver.evolve(gameState)
             .using.delayedClearSquares()
-            .then.finally.delayedSetSquare([0, 0], "X");
+            .finally.delayedSetSquare([0, 0], "X");
     },
 };

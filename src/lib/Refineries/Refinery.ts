@@ -5,7 +5,11 @@ import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 import { Immutable, makeImmutable } from "@Shared/String/makeImmutable";
 
 import { ForgeSet } from "./ForgeSets/ForgeSet";
-import { ForgeDefs, RefineObject, RefineryDefinition } from "./Types/RefineryTypes";
+import {
+    ForgeDefs,
+    RefineObject,
+    RefineryDefinition as RefineryOptions,
+} from "./Types/RefineryTypes";
 import { NormalizedRefineryName } from "./Util/normalizeRefineryName";
 
 const log = getTheseusLogger("Refinery");
@@ -20,23 +24,32 @@ const log = getTheseusLogger("Refinery");
  * @template TRefineryName The name of the refinery, affecting how it's referenced and used.
  * @template TParamNoun The name of the parameter representing the forgeable part of the data.
  */
-export class Refinery<
-    TForgeableData,
-    TForges extends ForgeDefs<TForgeableData, Immutable<TParamNoun>>,
+
+export type RefineryResult<
     TRefineryName extends string,
     TParamNoun extends string,
+    TForgeableData,
+    TForges extends ForgeDefs<TForgeableData, Immutable<TParamNoun>>,
+> = Record<TRefineryName, Refinery<TRefineryName, TParamNoun, TForgeableData, TForges>>;
+
+export class Refinery<
+    TRefineryName extends string,
+    TParamNoun extends string,
+    TForgeableData,
+    TForges extends ForgeDefs<TForgeableData, Immutable<TParamNoun>>,
 > {
     public readonly refineryName: NormalizedRefineryName<TRefineryName>;
     public readonly immutableArgName: Immutable<TParamNoun>;
     private readonly forges: TForges;
 
     private constructor(
-        definitions: RefineryDefinition<TRefineryName, TParamNoun>,
+        name: TRefineryName,
         forges: TForges,
+        options: RefineryOptions<TParamNoun>,
     ) {
-        log.debug(`Creating refinery with name: ${definitions.name}`, forges);
-        const normalizedName = this.normalizeName(definitions.name);
-        const immutableDataNoun: TParamNoun = definitions.dataNoun ?? ("input" as TParamNoun);
+        log.debug(`Creating refinery with name: ${name}`, forges);
+        const normalizedName = this.normalizeName(name);
+        const immutableDataNoun: TParamNoun = options.noun ?? ("input" as TParamNoun);
 
         this.refineryName = normalizedName;
         this.immutableArgName = makeImmutable(immutableDataNoun);
@@ -154,7 +167,12 @@ export class Refinery<
      *   process.
      */
     public static create = <_TRefineryName extends string, _TParamNoun extends string>(
-        definitions: RefineryDefinition<_TRefineryName, _TParamNoun>,
+        /**
+         * The name of the refinery. This will be used to refer to the refinery in the forge set,
+         * and is also the name of the refinery when it is returned from the `create` method.
+         */
+        name: _TRefineryName,
+        options: RefineryOptions<_TParamNoun>,
     ) => ({
         /**
          * Name the evolver. This name will affect the argument passed in to each evolver action.
@@ -165,26 +183,43 @@ export class Refinery<
             withForges: <_TForges extends ForgeDefs<_TForgeableData, Immutable<_TParamNoun>>>(
                 forges: _TForges,
             ) => {
-                log.debug(`Creating refinery with name: ${definitions.name}`, forges);
-
-                // This is a trick to force the type of the return value to be the name of the refinery.
-                type ForceReturnVariableName = Record<
-                    _TRefineryName,
-                    Refinery<_TForgeableData, _TForges, _TRefineryName, _TParamNoun>
-                >;
+                log.debug(`Creating refinery with name: ${name}`, forges);
 
                 const refinery = new Refinery<
-                    _TForgeableData,
-                    _TForges,
                     _TRefineryName,
-                    _TParamNoun
-                >(definitions, forges);
+                    _TParamNoun,
+                    _TForgeableData,
+                    _TForges
+                >(name, forges, options);
 
                 log.debug(`Created refinery with name: ${refinery.refineryName}`);
 
                 return {
-                    [definitions.name]: refinery,
-                } as ForceReturnVariableName;
+                    [name]: refinery,
+                } as RefineryResult<_TRefineryName, _TParamNoun, _TForgeableData, _TForges>;
+            },
+        }),
+    });
+
+    /**
+     * Provides a builder function to simplify the creation of Evolver instances, supporting a
+     * fluent configuration API.
+     *
+     * @returns A function for fluently configuring and creating an Evolver instance.
+     */
+    public static buildCreator = <_TParamNoun extends string>(
+        options: RefineryOptions<_TParamNoun>,
+    ) => ({
+        toRefine: <_TData>() => ({
+            named: <_TRefineryName extends string>(name: _TRefineryName) => {
+                log.debug(`Creating refinery: ${name} with options: ${JSON.stringify(options)}`);
+
+                const nameHasWhitespace = name.match(/\s/);
+                if (nameHasWhitespace) {
+                    throw new Error(`Refinery name cannot contain whitespace: ${name}`);
+                }
+
+                return this.create<_TRefineryName, _TParamNoun>(name, options).toRefine<_TData>();
             },
         }),
     });

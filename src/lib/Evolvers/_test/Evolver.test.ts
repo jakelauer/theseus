@@ -9,6 +9,13 @@ describe("Evolver", () => {
         value: number;
     }
 
+    const { testEvolver } = Evolver.create("testEvolver")
+        .toEvolve<TestData>()
+        .withMutators({
+            increment: ({ mutableInput }) => ({ value: mutableInput.value + 1 }),
+            decrement: ({ mutableInput }) => ({ value: mutableInput.value - 1 }),
+        });
+
     const preMutatorTestEvolver = Evolver.create("testEvolver").toEvolve<TestData>();
     type MutatorType = Parameters<(typeof preMutatorTestEvolver)["withMutators"]>[0];
 

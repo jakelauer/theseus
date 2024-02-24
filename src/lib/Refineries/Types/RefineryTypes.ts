@@ -130,7 +130,7 @@ export type RefineObject<
  * @template TParamNoun The name of the parameter, defaulting to "input", used to refer to the input
  *   data.
  */
-export interface RefineryDefinition<TName extends string, TParamNoun extends string = "input"> {
+export interface RefineryDefinition<TParamNoun extends string = "input"> {
     /**
      * The name of the variable which will be used to refer to the input data. This will be
      * prepended with "immutable", so if the name is "user", the variable will be "immutableUser".
@@ -139,10 +139,5 @@ export interface RefineryDefinition<TName extends string, TParamNoun extends str
      *
      * If you want to mutate the original object, use an Evolver instead.
      */
-    dataNoun?: TParamNoun;
-    /**
-     * The name of the refinery. This will be used to refer to the refinery in the forge set, and is
-     * also the name of the refinery when it is returned from the `create` method.
-     */
-    name: TName;
+    noun?: TParamNoun;
 }

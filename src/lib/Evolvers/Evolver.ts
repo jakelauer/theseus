@@ -13,15 +13,22 @@ import { makeMutable, Mutable } from "@Shared/String/makeMutable";
 
 const log = getTheseusLogger("Evolver");
 
+export type EvolverResult<
+    TEvolverName extends string,
+    TParamName extends string,
+    TData,
+    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
+> = Record<TEvolverName, EvolverInstance<TEvolverName, Mutable<TParamName>, TData, TMutators>>;
+
 /**
  * Represents an evolver for data transformation and mutation, encapsulating the logic for mutating
  * and evolving data structures.
  */
 export class Evolver<
-    TData,
-    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
     TEvolverName extends string,
     TParamName extends string,
+    TData,
+    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
 > {
     public readonly evolverName: NormalizedEvolverName<TEvolverName>;
     protected readonly mutableArgName: Mutable<TParamName>;
@@ -32,10 +39,10 @@ export class Evolver<
      * an EvolverComplex. It doesn't need a value.
      */
     public readonly __type__access__: TypeAccess<
-        TData,
-        TMutators,
         TEvolverName,
-        Mutable<TParamName>
+        Mutable<TParamName>,
+        TData,
+        TMutators
     >;
 
     /**
@@ -116,7 +123,7 @@ export class Evolver<
 
         const mutatorSetGetter = () => mutatorSet;
         const result = Object.defineProperties<
-            MutateObject<TData, TMutators, TEvolverName, Mutable<TParamName>>
+            MutateObject<TEvolverName, Mutable<TParamName>, TData, TMutators>
         >({} as any, {
             getMutators: {
                 get: () => mutatorSetGetter,
@@ -147,7 +154,7 @@ export class Evolver<
         const mutatorSetGetter = () => mutatorSet;
 
         const result = Object.defineProperties<
-            EvolveObject<TData, TMutators, TEvolverName, Mutable<TParamName>>
+            EvolveObject<TEvolverName, Mutable<TParamName>, TData, TMutators>
         >({} as any, {
             getMutators: {
                 get: () => mutatorSetGetter,
@@ -188,10 +195,10 @@ export class Evolver<
                 // This is a trick to force the type of the return value to be the name of the refinery.
                 type ForceReturnVariableName = Record<
                     _TEvolverName,
-                    EvolverInstance<_TData, _TMutators, _TEvolverName, Mutable<_TParamName>>
+                    EvolverInstance<_TEvolverName, Mutable<_TParamName>, _TData, _TMutators>
                 >;
 
-                const evolver = new Evolver<_TData, _TMutators, _TEvolverName, _TParamName>(
+                const evolver = new Evolver<_TEvolverName, _TParamName, _TData, _TMutators>(
                     name,
                     mutators,
                     options,
@@ -222,6 +229,11 @@ export class Evolver<
         toEvolve: <_TData>() => ({
             named: <_TEvolverName extends string>(name: _TEvolverName) => {
                 log.debug(`Creating evolver: ${name} with options: ${JSON.stringify(options)}`);
+
+                const nameHasWhitespace = name.match(/\s/);
+                if (nameHasWhitespace) {
+                    throw new Error(`Evolver name cannot contain whitespace: ${name}`);
+                }
 
                 return this.create<_TEvolverName, _TParamName>(name, options).toEvolve<_TData>();
             },

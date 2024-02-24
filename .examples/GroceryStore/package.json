@@ -1,10 +1,13 @@
 {
-	"name": "examples-tic-tac-toe",
+	"name": "examples-grocery-store",
 	"private": true,
 	"version": "1.0.0",
-	"description": "A fun tic-tac-toe game.",
+	"description": "A grocery store",
 	"author": "Jake Lauer",
 	"license": "MIT",
+	"scripts": {
+		"build": "tsc --project ./src/tsconfig.json"
+	},
 	"dependencies": {
 		"theseus-js": "workspace:latest"
 	},

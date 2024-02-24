@@ -25,7 +25,7 @@ export class EvolverComplex {
     public static create = <TData>() => ({
         /** Specifies evolvers to be used with the EvolverComplex. */
         withEvolvers: <
-            TEvolvers extends Record<string, Evolver<TData, any, TEvolverName, TParamName>>,
+            TEvolvers extends Record<string, Evolver<TEvolverName, TParamName, TData, any>>,
             TEvolverName extends string,
             TParamName extends string,
         >(
@@ -74,7 +74,7 @@ export class EvolverComplex {
             withEvolvers: <
                 TEvolvers extends Record<
                     string,
-                    Evolver<TData, TMutators, TEvolverName, TParamName>
+                    Evolver<TEvolverName, TParamName, TData, TMutators>
                 >,
                 TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
                 TEvolverName extends string,
@@ -95,7 +95,7 @@ export class EvolverComplex {
             withEvolvers: <
                 TEvolvers extends Record<
                     string,
-                    Evolver<TData, TMutators, TEvolverName, TParamName>
+                    Evolver<TEvolverName, TParamName, TData, TMutators>
                 >,
                 TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
                 TEvolverName extends string,
@@ -138,7 +138,7 @@ export class EvolverComplex {
     private static generateEvolveMethods<
         TData,
         TIsMacro extends boolean,
-        TEvolvers extends Record<string, Evolver<TData, any, any, any>>,
+        TEvolvers extends Record<string, Evolver<string, string, TData, any>>,
     >(evolvers: TEvolvers, input: TData, macro: TIsMacro) {
         log.debug(`Generating evolve methods for evolvers: ${Object.keys(evolvers).join(", ")}`);
 
@@ -152,20 +152,20 @@ export class EvolverComplex {
         // Determines the mutators for a given evolver by returning the types of mutators available for the evolver's data.
         type MutatorsForEvolver<TEvolverName extends TEvolverPassedNames> = ReturnType<
             MutateObject<
-                InnerType<TEvolverName>["data"],
-                InnerType<TEvolverName>["mutators"],
                 InnerType<TEvolverName>["evolverName"],
-                InnerType<TEvolverName>["mutableParamName"]
+                InnerType<TEvolverName>["mutableParamName"],
+                InnerType<TEvolverName>["data"],
+                InnerType<TEvolverName>["mutators"]
             >["getMutators"]
         >;
 
         // Similar to MutatorsForEvolver but for macro mutators, determining the mutators for evolving the state on a larger scale.
         type MacroMutatorsForEvolver<TEvolverName extends TEvolverPassedNames> = ReturnType<
             EvolveObject<
-                InnerType<TEvolverName>["data"],
-                InnerType<TEvolverName>["mutators"],
                 InnerType<TEvolverName>["evolverName"],
-                InnerType<TEvolverName>["mutableParamName"]
+                InnerType<TEvolverName>["mutableParamName"],
+                InnerType<TEvolverName>["data"],
+                InnerType<TEvolverName>["mutators"]
             >["getMutators"]
         >;
 

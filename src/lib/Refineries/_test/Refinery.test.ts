@@ -10,12 +10,11 @@ describe("Refinery", function () {
     }
 
     const refineryDefinition = {
-        name: "testRefinery",
-        dataNoun: "testData",
+        noun: "testData",
     } as const;
 
     it("should create a refinery with the correct name", function () {
-        const { testRefinery } = Refinery.create(refineryDefinition)
+        const { testRefinery } = Refinery.create("testRefinery", refineryDefinition)
             .toRefine<TestData>()
             .withForges({
                 forge1: ({ immutableTestData }) => ({
@@ -27,7 +26,7 @@ describe("Refinery", function () {
     });
 
     it("should apply forge functions correctly", function () {
-        const { testRefinery } = Refinery.create(refineryDefinition)
+        const { testRefinery } = Refinery.create("testRefinery", refineryDefinition)
             .toRefine<TestData>()
             .withForges({
                 forge1: ({ immutableTestData }) => ({
@@ -41,7 +40,7 @@ describe("Refinery", function () {
     });
 
     it("should make the data noun immutable", function () {
-        const { testRefinery } = Refinery.create(refineryDefinition)
+        const { testRefinery } = Refinery.create("testRefinery", refineryDefinition)
             .toRefine<TestData>()
             .withForges({
                 forge1: ({ immutableTestData }) => ({
@@ -53,7 +52,7 @@ describe("Refinery", function () {
     });
 
     it("should throw an error if a forge function modifies the immutable data", function () {
-        const { testRefinery } = Refinery.create(refineryDefinition)
+        const { testRefinery } = Refinery.create("testRefinery", refineryDefinition)
             .toRefine<TestData>()
             .withForges({
                 forge1: ({ immutableTestData }) => {

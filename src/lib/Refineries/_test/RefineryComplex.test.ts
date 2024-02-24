@@ -12,9 +12,8 @@ describe("RefineryComplex", function () {
 
     // Utility function to create a mock refinery that converts field to uppercase
     function createMockUpperCaseRefinery() {
-        const { mockUpperCaseRefinery } = Refinery.create({
-            name: "mockUpperCaseRefinery",
-            dataNoun: "testData",
+        const { mockUpperCaseRefinery } = Refinery.create("mockUpperCaseRefinery", {
+            noun: "testData",
         })
             .toRefine<TestData>()
             .withForges({
@@ -29,9 +28,8 @@ describe("RefineryComplex", function () {
 
     // Utility function to create a mock refinery that increments count
     function createMockIncrementCountRefinery() {
-        const { mockIncrementCountRefinery } = Refinery.create({
-            name: "mockIncrementCountRefinery",
-            dataNoun: "testData",
+        const { mockIncrementCountRefinery } = Refinery.create("mockIncrementCountRefinery", {
+            noun: "testData",
         })
             .toRefine<TestData>()
             .withForges({

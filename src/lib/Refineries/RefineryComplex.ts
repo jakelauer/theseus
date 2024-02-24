@@ -27,7 +27,7 @@ export class RefineryComplex {
             TForges extends ForgeDefs<TForgeableData, Immutable<TParamNoun>>,
             TRefineries extends Record<
                 TRefineryName,
-                Refinery<TForgeableData, TForges, TRefineryName, TParamNoun>
+                Refinery<TRefineryName, TParamNoun, TForgeableData, TForges>
             >,
             TRefineryName extends string,
         >(
@@ -55,7 +55,7 @@ export class RefineryComplex {
          * fluent pattern, allowing for intuitive and clear data processing steps.
          */
         withRefineries: <
-            TRefineries extends Record<string, Refinery<TForgeableData, any, string, string>>,
+            TRefineries extends Record<string, Refinery<string, string, TForgeableData, any>>,
         >(
             refineries: TRefineries,
         ) => {
