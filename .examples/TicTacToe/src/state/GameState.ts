@@ -8,6 +8,7 @@ export interface GameState {
     board: Board;
     lastPlayer: MarkType;
     lastPlayedCoords: [number, number]; // Row index, column index
+    winner?: MarkType;
 }
 
 export const initialGameState: GameState = {

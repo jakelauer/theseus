@@ -7,3 +7,6 @@ export * from "./Refineries/Refinery";
 export * from "./Refineries/RefineryComplex";
 export * from "./Refineries/Types";
 export * from "./Types/Modifiers";
+export * from "./Observable/Broadcaster";
+export * from "./Types/Observable";
+export * from "./Theseus";

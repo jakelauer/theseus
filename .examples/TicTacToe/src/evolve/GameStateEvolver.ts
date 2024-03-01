@@ -1,6 +1,6 @@
 import { Evolver } from "theseus-js";
 
-import { GameState, MarkType } from "../GameState";
+import { GameState, MarkType } from "../state/GameState";
 
 export const { GameStateEvolver } = Evolver.create("GameStateEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
@@ -13,11 +13,7 @@ export const { GameStateEvolver } = Evolver.create("GameStateEvolver", { noun: "
 
             return mutableGameState;
         },
-        delayedSetSquare: async (
-            { mutableGameState },
-            coords: [number, number],
-            mark: MarkType,
-        ) => {
+        delayedSetSquare: async ({ mutableGameState }, coords: [number, number], mark: MarkType) => {
             const [row, col] = coords;
             await new Promise((resolve) => setTimeout(resolve, 1000));
             mutableGameState.board[row][col] = mark;

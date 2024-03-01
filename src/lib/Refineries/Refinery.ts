@@ -25,12 +25,18 @@ const log = getTheseusLogger("Refinery");
  * @template TParamNoun The name of the parameter representing the forgeable part of the data.
  */
 
+export type RefineryInitializer<
+    TParamNoun extends string,
+    TForgeableData,
+    TForges extends ForgeDefs<TForgeableData, Immutable<TParamNoun>>,
+> = (data: TForgeableData) => RefineObject<TParamNoun, TForgeableData, TForges>;
+
 export type RefineryResult<
     TRefineryName extends string,
     TParamNoun extends string,
     TForgeableData,
     TForges extends ForgeDefs<TForgeableData, Immutable<TParamNoun>>,
-> = Record<TRefineryName, Refinery<TRefineryName, TParamNoun, TForgeableData, TForges>>;
+> = Record<TRefineryName, RefineryInitializer<TParamNoun, TForgeableData, TForges>>;
 
 export class Refinery<
     TRefineryName extends string,
@@ -116,19 +122,12 @@ export class Refinery<
          * FooRefinery.forge(fooData).into.bar();
          */
         const forgeSetGetter = () => forgeSet;
-        const result = Object.defineProperties<RefineObject<TForgeableData, TForges, TParamNoun>>(
-            {} as any,
-            {
-                getForges: {
-                    get: () => forgeSetGetter,
-                },
-                using: {
-                    get: forgeSetGetter,
-                },
-            },
-        );
+        const result = {
+            ...forgeSet,
+            getForges: () => forgeSetGetter,
+        };
 
-        return result as RefineObject<TForgeableData, TForges, TParamNoun>;
+        return result as RefineObject<TParamNoun, TForgeableData, TForges>;
     }
 
     /** Retrieves the definitions of forges associated with this refinery. */
@@ -195,7 +194,7 @@ export class Refinery<
                 log.debug(`Created refinery with name: ${refinery.refineryName}`);
 
                 return {
-                    [name]: refinery,
+                    [name]: (data: _TForgeableData) => refinery.refine(data),
                 } as RefineryResult<_TRefineryName, _TParamNoun, _TForgeableData, _TForges>;
             },
         }),

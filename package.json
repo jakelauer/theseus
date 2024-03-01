@@ -18,21 +18,27 @@
 	},
 	"dependencies": {
 		"clone-deep": "^4.0.1",
+		"deep-equal": "^2.2.3",
 		"deep-freeze-strict": "^1.1.1",
 		"loglevel": "^1.9.1",
 		"loglevel-plugin-prefix": "^0.8.4",
-		"theseus-js": "link:"
+		"promise.allsettled": "^1.0.7",
+		"theseus-js": "link:",
+		"uuid": "^9.0.1"
 	},
 	"devDependencies": {
 		"@theseus/publisher": "workspace:latest",
 		"@types/chai": "^4.3.11",
 		"@types/chai-as-promised": "^7.1.8",
 		"@types/clone-deep": "^4.0.4",
+		"@types/deep-equal": "^1.0.4",
 		"@types/deep-freeze-strict": "^1.1.2",
 		"@types/mocha": "^10.0.6",
 		"@types/node": "^20.11.17",
+		"@types/promise.allsettled": "^1.0.6",
 		"@types/sinon": "^17.0.3",
 		"@types/sinon-chai": "^3.2.12",
+		"@types/uuid": "^9.0.8",
 		"@typescript-eslint/eslint-plugin": "^6.20.0",
 		"@typescript-eslint/parser": "^6.20.0",
 		"chai": "^4.4.1",

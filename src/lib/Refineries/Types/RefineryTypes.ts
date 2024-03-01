@@ -114,13 +114,10 @@ export type RefineryInstance<
  *   transformation needs.
  */
 export type RefineObject<
+    TParamNoun extends string,
     TForgeableData,
     TForges extends ForgeDefs<TForgeableData, Immutable<TParamNoun>>,
-    TParamNoun extends string,
-> = {
-    using: ExposeForges<TForgeableData, Immutable<TParamNoun>, TForges>;
-    getForges: () => ExposeForges<TForgeableData, Immutable<TParamNoun>, TForges>;
-};
+> = ExposeForges<TForgeableData, Immutable<TParamNoun>, TForges>;
 
 /**
  * Describes the structure for defining a refinery, including its name and the data noun used to

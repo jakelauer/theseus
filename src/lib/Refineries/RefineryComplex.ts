@@ -1,7 +1,7 @@
 import getTheseusLogger from "@Shared/Log/getTheseusLogger";
 import { Immutable } from "@Shared/String/makeImmutable";
 
-import { Refinery } from "./Refinery";
+import { RefineryInitializer } from "./Refinery";
 import { ForgeDefs } from "./Types/RefineryTypes";
 import { NormalizedRefineryName, normalizeRefineryName } from "./Util/normalizeRefineryName";
 
@@ -27,7 +27,7 @@ export class RefineryComplex {
             TForges extends ForgeDefs<TForgeableData, Immutable<TParamNoun>>,
             TRefineries extends Record<
                 TRefineryName,
-                Refinery<TRefineryName, TParamNoun, TForgeableData, TForges>
+                RefineryInitializer<TParamNoun, TForgeableData, TForges>
             >,
             TRefineryName extends string,
         >(
@@ -55,7 +55,7 @@ export class RefineryComplex {
          * fluent pattern, allowing for intuitive and clear data processing steps.
          */
         withRefineries: <
-            TRefineries extends Record<string, Refinery<string, string, TForgeableData, any>>,
+            TRefineries extends Record<string, RefineryInitializer<string, TForgeableData, any>>,
         >(
             refineries: TRefineries,
         ) => {
@@ -69,22 +69,12 @@ export class RefineryComplex {
              * getForges method represents the core functionality of each refinery.
              */
             type RefineriesRemapped = {
-                [K in TRefineryPassedNames]: ReturnType<
-                    ReturnType<TRefineries[K]["refine"]>["getForges"]
-                >;
+                [K in TRefineryPassedNames]: ReturnType<TRefineries[K]>;
             };
 
             /** Represents an individual refinery within the provided collection. */
             type OneRefinery<TRefineryName extends TRefineryPassedNames> = ReturnType<
-                TRefineries[TRefineryName]["refine"]
-            >;
-
-            /**
-             * Represents the set of functions responsible for the forging/refining process within
-             * each refinery.
-             */
-            type OneForgeSet<TRefineryName extends TRefineryPassedNames> = ReturnType<
-                OneRefinery<TRefineryName>["getForges"]
+                TRefineries[TRefineryName]
             >;
 
             /**
@@ -98,7 +88,7 @@ export class RefineryComplex {
 
             const result = keys.reduce((acc, key: string) => {
                 const refinery = refineries[key];
-                const forges = refinery.refine(input).getForges() as OneForgeSet<typeof key>;
+                const forges = refinery(input) as OneRefinery<typeof key>;
                 const formattedRefineryName = normalizeRefineryName(
                     key,
                 ) as NormalizedRefineryName<string>;
