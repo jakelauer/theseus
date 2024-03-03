@@ -3,6 +3,4 @@ import { RefineryComplex } from "theseus-js";
 
 import * as Refineries from "./refineries";
 
-export const GameRefineryComplex = RefineryComplex.create<GameState, "GameState">().withRefineries(
-    Refineries,
-);
+export const GameRefineryComplex = RefineryComplex.create<GameState>().withRefineries(Refineries);

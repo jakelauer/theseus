@@ -2,7 +2,6 @@ import { Mutable } from "@Shared/String/makeMutable";
 
 import type { ChainableMutators } from "./ChainableTypes";
 import type { MutatorDefs } from "./MutatorTypes";
-
 export interface TypeAccess<
     TEvolverName extends string,
     TParamName extends Mutable<string>,

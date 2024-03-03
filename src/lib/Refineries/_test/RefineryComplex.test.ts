@@ -43,7 +43,7 @@ describe("RefineryComplex", function () {
     }
 
     it("should aggregate multiple refineries and process data correctly", function () {
-        const refineryComplex = RefineryComplex.create<TestData, "testData">().withRefineries({
+        const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
             UpperCaseRefinery: createMockUpperCaseRefinery(),
             IncrementCountRefinery: createMockIncrementCountRefinery(),
         });
@@ -58,7 +58,7 @@ describe("RefineryComplex", function () {
     });
 
     it("should maintain immutability of data across refineries", function () {
-        const refineryComplex = RefineryComplex.create<TestData, "testData">().withRefineries({
+        const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
             UpperCaseRefinery: createMockUpperCaseRefinery(),
         });
 
@@ -72,7 +72,7 @@ describe("RefineryComplex", function () {
     });
 
     it("should handle empty data correctly", function () {
-        const refineryComplex = RefineryComplex.create<TestData, "testData">().withRefineries({
+        const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
             uppercase: createMockUpperCaseRefinery(),
         });
 
@@ -84,7 +84,7 @@ describe("RefineryComplex", function () {
     });
 
     it("should apply refineries in sequence correctly", function () {
-        const refineryComplex = RefineryComplex.create<TestData, "testData">().withRefineries({
+        const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
             UpperCaseRefinery: createMockUpperCaseRefinery(),
             IncrementCountRefinery: createMockIncrementCountRefinery(),
         });
@@ -100,7 +100,7 @@ describe("RefineryComplex", function () {
     });
 
     it("should preserve data immutability when applying multiple refineries", function () {
-        const refineryComplex = RefineryComplex.create<TestData, "testData">().withRefineries({
+        const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
             UpperCaseRefinery: createMockUpperCaseRefinery(),
             IncrementCountRefinery: createMockIncrementCountRefinery(),
         });

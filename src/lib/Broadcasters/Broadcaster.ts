@@ -2,17 +2,15 @@ import { v4 as uuidv4 } from "uuid";
 
 export type DestroyCallback = () => void;
 
-export interface CustomObserverClass<ConstructorType, TDataType, TObserverProps> {
-    new (callback: (newData: TDataType) => void, input: TObserverProps): ConstructorType;
+export interface CustomObserverClass<ConstructorType, TDataType> {
+    new (callback: (newData: TDataType) => void): ConstructorType;
 }
 
-export class BroadcasterObserver<TDataType, TInputType = any> {
+export class BroadcasterObserver<TDataType> {
     public readonly callback: (newData: TDataType) => void;
-    public readonly params: TInputType;
 
-    constructor(callback: (newData: TDataType) => void, params: TInputType) {
+    constructor(callback: (newData: TDataType) => void) {
         this.callback = callback;
-        this.params = params;
     }
 
     public update(newData: TDataType) {
@@ -25,21 +23,15 @@ export class BroadcasterObserver<TDataType, TInputType = any> {
     }
 }
 
-export interface BroadcasterParams<TObserverType, TDataType, TObserverProps> {
-    observerClassConstructor?: CustomObserverClass<
-        TObserverType,
-        TDataType,
-        TObserverProps | undefined
-    > | null;
-    propsRequired?: boolean;
+export interface BroadcasterParams<TObserverType, TDataType> {
+    observerClassConstructor?: CustomObserverClass<TObserverType, TDataType> | null;
 }
 
 export class Broadcaster<
-    TDataType,
-    TObserverProps = any,
-    TObserverType extends BroadcasterObserver<TDataType, TObserverProps> = BroadcasterObserver<TDataType>,
+    TData,
+    TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
 > {
-    protected readonly params: BroadcasterParams<TObserverType, TDataType, TObserverProps>;
+    protected readonly params: BroadcasterParams<TObserverType, TData>;
     protected readonly observers: { [key: string]: TObserverType } = {};
 
     protected pendingUpdates: Record<string, Promise<any>> = {};
@@ -49,10 +41,9 @@ export class Broadcaster<
      *
      * @param params
      */
-    constructor(params?: BroadcasterParams<TObserverType, TDataType, TObserverProps>) {
+    constructor(params?: BroadcasterParams<TObserverType, TData>) {
         this.params = {
             observerClassConstructor: null,
-            propsRequired: false,
             ...(params ?? {}),
         };
     }
@@ -61,7 +52,7 @@ export class Broadcaster<
         return Object.values(this.observers);
     }
 
-    public async broadcast(data: TDataType) {
+    public async broadcast(data: TData) {
         const broadcastTo = this.getObserversToUpdate(data);
 
         // Assign a guid to this broadcast
@@ -80,28 +71,22 @@ export class Broadcaster<
         return this.pendingUpdates[updateGuid];
     }
 
-    protected buildObserver(callback: (newData: TDataType) => void, props?: TObserverProps) {
-        const { observerClassConstructor, propsRequired } = this.params;
-
-        if (propsRequired && props === undefined) {
-            throw new Error(
-                "Props cannot be null, this data store requires props parameters for each observer",
-            );
-        }
+    protected buildObserver(callback: (newData: TData) => void) {
+        const { observerClassConstructor } = this.params;
 
         const observer: TObserverType =
             observerClassConstructor ?
-                new observerClassConstructor(callback, props)
-            :   (new BroadcasterObserver(callback, props) as TObserverType);
+                new observerClassConstructor(callback)
+            :   (new BroadcasterObserver(callback) as TObserverType);
 
         return observer;
     }
 
-    protected saveObserver(
-        callback: (newData: TDataType) => void,
-        props?: TObserverProps,
-    ): { destroy: DestroyCallback; observer: TObserverType } {
-        const observer = this.buildObserver(callback, props);
+    protected saveObserver(callback: (newData: TData) => void): {
+        destroy: DestroyCallback;
+        observer: TObserverType;
+    } {
+        const observer = this.buildObserver(callback);
 
         const guid = Broadcaster.guid();
 
@@ -119,8 +104,8 @@ export class Broadcaster<
      * @param props The further input about the observer, if any
      * @param callback
      */
-    public observe(callback: (newData: TDataType) => void, props?: TObserverProps): DestroyCallback {
-        const { destroy } = this.saveObserver(callback, props);
+    public observe(callback: (newData: TData) => void): DestroyCallback {
+        const { destroy } = this.saveObserver(callback);
 
         return destroy;
     }
@@ -136,7 +121,7 @@ export class Broadcaster<
      * @protected
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Allow for override with access to data
-    protected getObserversToUpdate(data: TDataType) {
+    protected getObserversToUpdate(data: TData) {
         return this.allObservers;
     }
 

@@ -21,8 +21,8 @@ export type EvolverResult<
 > = Record<TEvolverName, EvolverInstance<TEvolverName, Mutable<TParamName>, TData, TMutators>>;
 
 /**
- * Represents an evolver for data transformation and mutation, encapsulating the logic for mutating
- * and evolving data structures.
+ * Represents an evolver for data transformation and mutation, encapsulating the logic for mutating and
+ * evolving data structures.
  */
 export class Evolver<
     TEvolverName extends string,
@@ -35,25 +35,16 @@ export class Evolver<
     protected readonly mutators: TMutators;
 
     /**
-     * This only exists to provide outside access to the type parameters of evolvers nested within
-     * an EvolverComplex. It doesn't need a value.
+     * This only exists to provide outside access to the type parameters of evolvers nested within an
+     * EvolverComplex. It doesn't need a value.
      */
-    public readonly __type__access__: TypeAccess<
-        TEvolverName,
-        Mutable<TParamName>,
-        TData,
-        TMutators
-    >;
+    public readonly __type__access__: TypeAccess<TEvolverName, Mutable<TParamName>, TData, TMutators>;
 
     /**
      * Constructor for Evolver. Initializes the evolver with a name, set of mutators, and optional
      * configuration.
      */
-    protected constructor(
-        name: TEvolverName,
-        mutators: TMutators,
-        options?: EvolverOptions<TParamName>,
-    ) {
+    protected constructor(name: TEvolverName, mutators: TMutators, options?: EvolverOptions<TParamName>) {
         const normalizedName = this.normalizeName(name);
         const mutableDataNoun: TParamName = options?.noun ?? ("input" as TParamName);
 
@@ -145,11 +136,11 @@ export class Evolver<
      */
     public evolve(input: TData) {
         // Create the actions which will be available when `for()` is called.
-        const mutatorSet = ChainableMutatorSetBuilder.createChainable<
-            TData,
-            Mutable<TParamName>,
-            TMutators
-        >(input, this.mutableArgName, this.mutators);
+        const mutatorSet = ChainableMutatorSetBuilder.createChainable<TData, Mutable<TParamName>, TMutators>(
+            input,
+            this.mutableArgName,
+            this.mutators,
+        );
 
         const mutatorSetGetter = () => mutatorSet;
 
@@ -179,8 +170,7 @@ export class Evolver<
     }
 
     /**
-     * Factory method for creating an Evolver instance, facilitating a fluent API for defining
-     * evolvers.
+     * Factory method for creating an Evolver instance, facilitating a fluent API for defining evolvers.
      *
      * @returns A fluent interface for constructing an Evolver with specified data and mutators.
      */
@@ -205,9 +195,9 @@ export class Evolver<
                 );
 
                 log.debug(
-                    `Created evolver: ${evolver.evolverName} with mutators: ${Object.keys(
-                        mutators,
-                    ).join(", ")}`,
+                    `Created evolver: ${evolver.evolverName} with mutators: ${Object.keys(mutators).join(
+                        ", ",
+                    )}`,
                 );
 
                 return {
@@ -218,14 +208,12 @@ export class Evolver<
     });
 
     /**
-     * Provides a builder function to simplify the creation of Evolver instances, supporting a
-     * fluent configuration API.
+     * Provides a builder function to simplify the creation of Evolver instances, supporting a fluent
+     * configuration API.
      *
      * @returns A function for fluently configuring and creating an Evolver instance.
      */
-    public static buildCreator = <_TParamName extends string>(
-        options?: EvolverOptions<_TParamName>,
-    ) => ({
+    public static buildCreator = <_TParamName extends string>(options?: EvolverOptions<_TParamName>) => ({
         toEvolve: <_TData>() => ({
             named: <_TEvolverName extends string>(name: _TEvolverName) => {
                 log.debug(`Creating evolver: ${name} with options: ${JSON.stringify(options)}`);
