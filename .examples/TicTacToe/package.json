@@ -1,5 +1,6 @@
 {
 	"name": "examples-tic-tac-toe",
+	"type": "module",
 	"private": true,
 	"version": "1.0.0",
 	"description": "A fun tic-tac-toe game.",
@@ -7,6 +8,14 @@
 	"license": "MIT",
 	"dependencies": {
 		"theseus-js": "workspace:latest"
+	},
+	"devDependencies": {
+		"ts-node": "10.9.2",
+		"pino-pretty": "5.0.0"
+	},
+	"scripts": {
+		"root-build": "cd ../../ && pnpm build && cd .examples/TicTacToe",
+		"start": "pnpm root-build && ts-node-esm ./src/Game.ts"
 	},
 	"main": "index.ts"
 }

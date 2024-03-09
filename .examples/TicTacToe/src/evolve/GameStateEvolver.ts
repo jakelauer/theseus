@@ -1,11 +1,21 @@
-import { Evolver } from "theseus-js";
+import { Evolver, getTheseusLogger } from "theseus-js";
 
-import { GameState, MarkType } from "../state/GameState";
+import { GameShip } from "../GameShip.js";
+import { GameState, MarkType } from "../state/GameState.js";
+
+const log = getTheseusLogger("GameStateEvolver");
 
 export const { GameStateEvolver } = Evolver.create("GameStateEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
         setSquare: ({ mutableGameState }, coords: [number, number], mark: MarkType) => {
+            log.info(`Received request to set square at ${coords} to ${mark}`);
+
+            const isAvailable = !GameShip.refine.GameBoard.getSquare(coords);
+            if (!isAvailable) {
+                throw new Error(`Square at ${coords} is already taken`);
+            }
+
             const [row, col] = coords;
             mutableGameState.board[row][col] = mark;
             mutableGameState.lastPlayer = mark;

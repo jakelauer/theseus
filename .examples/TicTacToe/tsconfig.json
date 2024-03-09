@@ -1,24 +1,28 @@
 {
     "compileOnSave": true,
+    "include": ["./src/**/*"],
+    "exclude": ["./*.js", "./*.cjs", "dist"],
     "compilerOptions": {
-        "rootDir": ".",
+        "rootDir": "./src",
         "baseUrl": ".",
         "skipLibCheck": true,
+        "declaration": true,
+        "outDir": "./dist",
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "forceConsistentCasingInFileNames": true,
         "lib": ["es6", "DOM"],
         "module": "ESNext",
         "moduleResolution": "node",
-        "noEmit": true,
+        "noEmit": false,
+        "noErrorTruncation": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitAny": true,
         "noImplicitOverride": true,
         "removeComments": false,
         "esModuleInterop": true,
-        "sourceMap": false,
+        "sourceMap": true,
         "strictNullChecks": true,
-        "target": "ES2018",
-        "types": ["node"]
+        "target": "ESNext"
     }
 }
