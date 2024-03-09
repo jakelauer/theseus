@@ -1,4 +1,4 @@
-export * from "./lib";
-import theseus from "./lib/Theseus";
+import theseus from "./lib/Observe/Observation";
 
+export * from "./lib";
 export default theseus;

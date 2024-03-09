@@ -1,37 +1,21 @@
 import { v4 as uuidv4 } from "uuid";
 
+import { BroadcasterObserver, CustomObserverClass } from "@Broadcast/BroadcasterObserver";
+import { getTheseusLogger } from "@Shared/index";
+
 export type DestroyCallback = () => void;
 
-export interface CustomObserverClass<ConstructorType, TDataType> {
-    new (callback: (newData: TDataType) => void): ConstructorType;
+export interface BroadcasterParams<TData extends object, TObserverType> {
+    observerClassConstructor?: CustomObserverClass<TData, TObserverType> | null;
 }
 
-export class BroadcasterObserver<TDataType> {
-    public readonly callback: (newData: TDataType) => void;
-
-    constructor(callback: (newData: TDataType) => void) {
-        this.callback = callback;
-    }
-
-    public update(newData: TDataType) {
-        return new Promise<void>((resolve) =>
-            requestAnimationFrame(() => {
-                this.callback(newData);
-                resolve();
-            }),
-        );
-    }
-}
-
-export interface BroadcasterParams<TObserverType, TDataType> {
-    observerClassConstructor?: CustomObserverClass<TObserverType, TDataType> | null;
-}
+const log = getTheseusLogger("Broadcaster");
 
 export class Broadcaster<
-    TData,
+    TData extends object,
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
 > {
-    protected readonly params: BroadcasterParams<TObserverType, TData>;
+    protected readonly params: BroadcasterParams<TData, TObserverType>;
     protected readonly observers: { [key: string]: TObserverType } = {};
 
     protected pendingUpdates: Record<string, Promise<any>> = {};
@@ -41,7 +25,7 @@ export class Broadcaster<
      *
      * @param params
      */
-    constructor(params?: BroadcasterParams<TObserverType, TData>) {
+    constructor(params?: BroadcasterParams<TData, TObserverType>) {
         this.params = {
             observerClassConstructor: null,
             ...(params ?? {}),
@@ -55,6 +39,8 @@ export class Broadcaster<
     public async broadcast(data: TData) {
         const broadcastTo = this.getObserversToUpdate(data);
 
+        log.verbose("Broadcasting data to observers", { count: broadcastTo.length });
+
         // Assign a guid to this broadcast
         const updateGuid = uuidv4();
 
@@ -63,9 +49,21 @@ export class Broadcaster<
         }
 
         // Store the broadcast in pending updates, and delete it when it's complete
-        this.pendingUpdates[updateGuid] = Promise.allSettled(
-            broadcastTo.map((observer) => observer.update(data)),
-        ).then(() => delete this.pendingUpdates[updateGuid]);
+        this.pendingUpdates[updateGuid] = Promise.all(
+            broadcastTo.map((observer) => {
+                log.verbose("Broadcasting to observer", { observer: observer.update });
+                return observer.update(data);
+            }),
+        )
+            .then((result) => {
+                log.verbose("Completed pending update", { updateGuid, result });
+                delete this.pendingUpdates[updateGuid];
+            })
+            .catch((error) => {
+                log.error(error);
+            });
+
+        log.verbose("Added pending update", { updateGuid });
 
         // Return the pending update Promise
         return this.pendingUpdates[updateGuid];

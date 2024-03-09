@@ -8,28 +8,29 @@ import {
     TypeAccess,
 } from "@Evolvers/Types";
 import { NormalizedEvolverName } from "@Evolvers/Util/normalizeEvolverName";
-import getTheseusLogger from "@Shared/Log/getTheseusLogger";
+import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 import { makeMutable, Mutable } from "@Shared/String/makeMutable";
 
 const log = getTheseusLogger("Evolver");
 
 export type EvolverResult<
+    TData extends object,
     TEvolverName extends string,
     TParamName extends string,
-    TData,
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-> = Record<TEvolverName, EvolverInstance<TEvolverName, Mutable<TParamName>, TData, TMutators>>;
+> = Record<TEvolverName, EvolverInstance<TData, TEvolverName, Mutable<TParamName>, TMutators>>;
 
 /**
  * Represents an evolver for data transformation and mutation, encapsulating the logic for mutating and
  * evolving data structures.
  */
 export class Evolver<
+    TData extends object,
     TEvolverName extends string,
     TParamName extends string,
-    TData,
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
 > {
+    #observationId?: string;
     public readonly evolverName: NormalizedEvolverName<TEvolverName>;
     protected readonly mutableArgName: Mutable<TParamName>;
     protected readonly mutators: TMutators;
@@ -38,7 +39,7 @@ export class Evolver<
      * This only exists to provide outside access to the type parameters of evolvers nested within an
      * EvolverComplex. It doesn't need a value.
      */
-    public readonly __type__access__: TypeAccess<TEvolverName, Mutable<TParamName>, TData, TMutators>;
+    public readonly __type__access__: TypeAccess<TData, TEvolverName, Mutable<TParamName>, TMutators>;
 
     /**
      * Constructor for Evolver. Initializes the evolver with a name, set of mutators, and optional
@@ -53,8 +54,10 @@ export class Evolver<
 
         this.assertValidMutators(mutators);
         this.mutators = mutators;
+    }
 
-        log.debug(`Created evolver: ${this.evolverName}`);
+    public __setObservationId(id: string) {
+        this.#observationId = id;
     }
 
     private assertValidMutators(mutators: TMutators) {
@@ -69,8 +72,6 @@ export class Evolver<
                 throw new Error(`Mutator '${key}' cannot be empty.`);
             }
         }
-
-        log.debug(`Evolver '${this.evolverName}' has ${Object.keys(mutators).length} mutators.`);
     }
 
     private normalizeName(name: TEvolverName) {
@@ -110,11 +111,12 @@ export class Evolver<
             input,
             this.mutableArgName,
             this.mutators,
+            this.#observationId,
         );
 
         const mutatorSetGetter = () => mutatorSet;
         const result = Object.defineProperties<
-            MutateObject<TEvolverName, Mutable<TParamName>, TData, TMutators>
+            MutateObject<TData, TEvolverName, Mutable<TParamName>, TMutators>
         >({} as any, {
             getMutators: {
                 get: () => mutatorSetGetter,
@@ -123,8 +125,6 @@ export class Evolver<
                 get: mutatorSetGetter,
             },
         });
-
-        log.debug(`Mutating data using evolver: ${this.evolverName}`, input);
 
         return result;
     }
@@ -145,7 +145,7 @@ export class Evolver<
         const mutatorSetGetter = () => mutatorSet;
 
         const result = Object.defineProperties<
-            EvolveObject<TEvolverName, Mutable<TParamName>, TData, TMutators>
+            EvolveObject<TData, TEvolverName, Mutable<TParamName>, TMutators>
         >({} as any, {
             getMutators: {
                 get: () => mutatorSetGetter,
@@ -154,8 +154,6 @@ export class Evolver<
                 get: mutatorSetGetter,
             },
         });
-
-        log.debug(`Evolving data using evolver: ${this.evolverName}`, { input });
 
         return result;
     }
@@ -178,27 +176,25 @@ export class Evolver<
         name: _TEvolverName,
         options?: EvolverOptions<_TParamName>,
     ) => ({
-        toEvolve: <_TData>() => ({
+        toEvolve: <_TData extends object>() => ({
             withMutators: <_TMutators extends MutatorDefs<_TData, Mutable<_TParamName>>>(
                 mutators: _TMutators,
             ) => {
                 // This is a trick to force the type of the return value to be the name of the refinery.
                 type ForceReturnVariableName = Record<
                     _TEvolverName,
-                    EvolverInstance<_TEvolverName, Mutable<_TParamName>, _TData, _TMutators>
+                    EvolverInstance<_TData, _TEvolverName, Mutable<_TParamName>, _TMutators>
                 >;
 
-                const evolver = new Evolver<_TEvolverName, _TParamName, _TData, _TMutators>(
+                const evolver = new Evolver<_TData, _TEvolverName, _TParamName, _TMutators>(
                     name,
                     mutators,
                     options,
                 );
 
-                log.debug(
-                    `Created evolver: ${evolver.evolverName} with mutators: ${Object.keys(mutators).join(
-                        ", ",
-                    )}`,
-                );
+                log.verbose(`Created evolver: ${evolver.evolverName} with mutators:`, {
+                    mutators: Object.keys(mutators),
+                });
 
                 return {
                     [name]: evolver,
@@ -214,9 +210,9 @@ export class Evolver<
      * @returns A function for fluently configuring and creating an Evolver instance.
      */
     public static buildCreator = <_TParamName extends string>(options?: EvolverOptions<_TParamName>) => ({
-        toEvolve: <_TData>() => ({
+        toEvolve: <_TData extends object>() => ({
             named: <_TEvolverName extends string>(name: _TEvolverName) => {
-                log.debug(`Creating evolver: ${name} with options: ${JSON.stringify(options)}`);
+                log.verbose(`Creating evolver: ${name} with options: ${JSON.stringify(options)}`);
 
                 const nameHasWhitespace = name.match(/\s/);
                 if (nameHasWhitespace) {

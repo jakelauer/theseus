@@ -3,10 +3,10 @@ import type { EvolverInstance } from "@Evolvers/Types";
 import type { Mutable } from "@Shared/String/makeMutable";
 
 export type BuildFromEvolvers<
+    TData extends object,
     TEvolverName extends string,
     TParamName extends string,
-    TData,
-    TEvolvers extends Record<string, EvolverInstance<TEvolverName, Mutable<TParamName>, TData, any>>,
+    TEvolvers extends Record<string, EvolverInstance<TData, TEvolverName, Mutable<TParamName>, any>>,
 > = {
     evolvers: TEvolvers;
     initialState: TData;

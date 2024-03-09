@@ -15,6 +15,7 @@
         "module": "ESNext",
         "moduleResolution": "node",
         "noEmit": false,
+        "noErrorTruncation": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitAny": true,
         "noImplicitOverride": true,
@@ -22,11 +23,12 @@
         "esModuleInterop": true,
         "sourceMap": true,
         "strictNullChecks": true,
-        "target": "ES2018",
+        "target": "ESNext",
         "types": ["chai", "mocha", "node", "sinon"],
         "paths": {
+            "@Broadcast/*": ["./src/lib/Broadcast/*"],
             "@Evolvers/*": ["./src/lib/Evolvers/*"],
-            "@Flags/*": ["./src/lib/Flags/*"],
+            "@Observe/*": ["./src/lib/Observe/*"],
             "@Refineries/*": ["./src/lib/Refineries/*"],
             "@Shared/*": ["./src/lib/Shared/*"],
             "@Types/*": ["./src/lib/Types/*"]

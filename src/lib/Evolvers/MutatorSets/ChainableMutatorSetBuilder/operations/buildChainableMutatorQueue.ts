@@ -1,26 +1,26 @@
 import { MutableData, Mutator, SortaPromise } from "@Evolvers/Types";
-import getTheseusLogger from "@Shared/Log/getTheseusLogger";
+import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 import { Mutable } from "@Shared/String/makeMutable";
 
 const log = getTheseusLogger("Queue");
 
-interface Params<TEvolverData, TParamName extends Mutable<string>> {
+interface Params<TData extends object, TParamName extends Mutable<string>> {
     argName: TParamName;
-    setMutableData: (data: MutableData<TEvolverData, TParamName>) => void;
-    getMutableData: () => MutableData<TEvolverData, TParamName>;
+    setMutableData: (data: MutableData<TData, TParamName>) => void;
+    getMutableData: () => MutableData<TData, TParamName>;
 }
 
-export const buildChainableMutatorQueue = <TEvolverData, TParamName extends Mutable>({
+export const buildChainableMutatorQueue = <TData extends object, TParamName extends Mutable>({
     argName,
     getMutableData,
     setMutableData,
-}: Params<TEvolverData, TParamName>) => {
+}: Params<TData, TParamName>) => {
     let isAsyncEncountered = false;
     let queue: Promise<any> = Promise.resolve();
 
     const buildQueueOperation = (
         selfPath: string,
-        mutator: Mutator<TEvolverData, TParamName, SortaPromise<TEvolverData>>,
+        mutator: Mutator<TData, TParamName, SortaPromise<TData>>,
         args: any[],
     ) => {
         return () => {
@@ -37,54 +37,54 @@ export const buildChainableMutatorQueue = <TEvolverData, TParamName extends Muta
                 // Async operation encountered, switch to queuing mode
                 isAsyncEncountered = true;
                 return mutatorResult.then((result) => {
-                    if (typeof result !== typeof mutableData[argName]) {
+                    if (typeof result !== "object") {
                         throw new Error(
-                            `Mutator ${selfPath} returned a value of type ${typeof result} which is not compatible with the mutable data type of ${typeof mutableData[
-                                argName
-                            ]}.`,
+                            `Expected mutator ${selfPath} to return an object, but got type "${typeof result}" from value ${JSON.stringify(
+                                result,
+                            )}.`,
                         );
                     }
-                    log.debug(`{ASYNC} ${selfPath} = `, result);
+                    log.verbose(`{ASYNC} ${selfPath} = `, result);
                     setMutableData(inputToObject(result)); // Assuming funcResult updates mutableData
                     return result;
                 });
             } else {
-                if (typeof mutatorResult !== typeof mutableData[argName]) {
+                if (typeof mutatorResult !== "object") {
                     throw new Error(
-                        `Mutator ${selfPath} returned a value of type ${typeof mutatorResult} which is not compatible with the mutable data type of ${typeof mutableData[
-                            argName
-                        ]}.`,
+                        `Expected mutator ${selfPath} to return an object, but got type "${typeof mutatorResult}" from value ${JSON.stringify(
+                            mutatorResult,
+                        )}.`,
                     );
                 }
-                log.debug(`{SYNC} ${selfPath} = `, mutatorResult);
+                log.verbose(`{SYNC} ${selfPath} = `, mutatorResult);
                 setMutableData(inputToObject(mutatorResult)); // Assuming funcResult updates mutableData
                 return mutatorResult;
             }
         };
     };
 
-    const inputToObject = (input: TEvolverData): { [key in TParamName]: TEvolverData } => {
+    const inputToObject = (input: TData): { [key in TParamName]: TData } => {
         return { [argName]: input } as {
-            [key in TParamName]: TEvolverData;
+            [key in TParamName]: TData;
         };
     };
 
-    function queueMutation<TFuncReturn extends Promise<TEvolverData>>(
+    function queueMutation<TFuncReturn extends Promise<TData>>(
         mutatorPath: string,
-        func: Mutator<TEvolverData, TParamName, TFuncReturn>,
+        func: Mutator<TData, TParamName, TFuncReturn>,
         args: any[],
-    ): Promise<TEvolverData>;
-    function queueMutation<TFuncReturn extends TEvolverData>(
+    ): Promise<TData>;
+    function queueMutation<TFuncReturn extends TData>(
         mutatorPath: string,
-        func: Mutator<TEvolverData, TParamName, TFuncReturn>,
+        func: Mutator<TData, TParamName, TFuncReturn>,
         args: any[],
-    ): TEvolverData;
-    function queueMutation<TFuncReturn extends SortaPromise<TEvolverData>>(
+    ): TData;
+    function queueMutation<TFuncReturn extends SortaPromise<TData>>(
         mutatorPath: string,
-        func: Mutator<TEvolverData, TParamName, TFuncReturn>,
+        func: Mutator<TData, TParamName, TFuncReturn>,
         args: any[],
-    ): SortaPromise<TEvolverData> {
-        log.debug(`${mutatorPath}(${args}) queued`);
+    ): SortaPromise<TData> {
+        log.verbose(`${mutatorPath}(${args}) queued`);
 
         const operation = buildQueueOperation(mutatorPath, func, args);
 

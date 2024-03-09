@@ -3,9 +3,9 @@ import { Mutable } from "@Shared/String/makeMutable";
 import type { ChainableMutators } from "./ChainableTypes";
 import type { MutatorDefs } from "./MutatorTypes";
 export interface TypeAccess<
+    TData extends object,
     TEvolverName extends string,
     TParamName extends Mutable<string>,
-    TData,
     TMutators extends MutatorDefs<TData, TParamName>,
 > {
     data: TData;
@@ -14,7 +14,7 @@ export interface TypeAccess<
     paramName: TParamName;
     mutableParamName: TParamName;
     returnData: SortaPromise<TData>;
-    evolver: EvolverInstance<TEvolverName, TParamName, TData, TMutators>;
+    evolver: EvolverInstance<TData, TEvolverName, TParamName, TMutators>;
 }
 
 /**
@@ -22,17 +22,18 @@ export interface TypeAccess<
  * interfaces for `mutate` and `evolve` operations, each returning a set of chainable mutators and a method to
  * retrieve these mutators directly.
  *
- * @template TEvolverData The type of data the evolver operates on.
+ * @template TData The type of data the evolver operates on.
  * @template TParamName The type representing the names of mutable parameters within the evolver data.
  * @template TMutators The type representing the definitions of mutators applicable to the evolver data.
  */
 export type EvolverInstance<
+    TData extends object,
     TEvolverName extends string,
     TParamName extends Mutable<string>,
-    TEvolverData,
-    TMutators extends MutatorDefs<TEvolverData, TParamName>,
+    TMutators extends MutatorDefs<TData, TParamName>,
 > = {
-    __type__access__: TypeAccess<TEvolverName, TParamName, TEvolverData, TMutators>;
+    __setObservationId: (id: string) => void;
+    __type__access__: TypeAccess<TData, TEvolverName, TParamName, TMutators>;
 
     /**
      * Initiates a mutation operation on the evolver's data. Unlike `evolve`, `mutate` is tailored for
@@ -46,9 +47,9 @@ export type EvolverInstance<
      *   to retrieve these mutators. The mutations applied through these mutators conclude the mutation
      *   process, returning the final state.
      */
-    mutate: (input: TEvolverData) => {
-        using: ChainableMutators<TEvolverData, TParamName, TMutators, "final">;
-        getMutators: () => ChainableMutators<TEvolverData, TParamName, TMutators, "final">;
+    mutate: (input: TData) => {
+        using: ChainableMutators<TData, TParamName, TMutators, "final">;
+        getMutators: () => ChainableMutators<TData, TParamName, TMutators, "final">;
     };
     /**
      * Initiates an evolution operation on the evolver's data, providing access to a set of chainable
@@ -59,9 +60,9 @@ export type EvolverInstance<
      * @returns An object containing a set of chainable mutators (`using`) and a method (`getMutators`) to
      *   directly retrieve these mutators.
      */
-    evolve: (input: TEvolverData) => {
-        using: ChainableMutators<TEvolverData, TParamName, TMutators>;
-        getMutators: () => ChainableMutators<TEvolverData, TParamName, TMutators>;
+    evolve: (input: TData) => {
+        using: ChainableMutators<TData, TParamName, TMutators>;
+        getMutators: () => ChainableMutators<TData, TParamName, TMutators>;
     };
     getMutatorDefinitions: () => TMutators;
 };
@@ -75,22 +76,22 @@ export type EvolverInstance<
  * @template TParamNoun The name of the mutable parameter within the data.
  */
 export type MutateObject<
+    TData extends object,
     TEvolverName extends string,
     TParamNoun extends Mutable,
-    TData,
     TMutators extends MutatorDefs<TData, TParamNoun>,
-> = ReturnType<EvolverInstance<TEvolverName, TParamNoun, TData, TMutators>["mutate"]>;
+> = ReturnType<EvolverInstance<TData, TEvolverName, TParamNoun, TMutators>["mutate"]>;
 
 /**
  * Similar to `MutateObject`, but for the evolve operation, providing a way to apply a series of mutations
  * that may include asynchronous operations.
  */
 export type EvolveObject<
+    TData extends object,
     TEvolverName extends string,
     TParamNoun extends Mutable,
-    TData,
     TMutators extends MutatorDefs<TData, TParamNoun>,
-> = ReturnType<EvolverInstance<TEvolverName, TParamNoun, TData, TMutators>["evolve"]>;
+> = ReturnType<EvolverInstance<TData, TEvolverName, TParamNoun, TMutators>["evolve"]>;
 
 /** Options for configuring an evolver, allowing customization of the mutable parameter's name. */
 export interface EvolverOptions<TParamNoun extends string = "input"> {

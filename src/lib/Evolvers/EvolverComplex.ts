@@ -1,12 +1,11 @@
-import { getLogger } from "loglevel";
-
+import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 import { Mutable } from "@Shared/String/makeMutable";
 
 import { EvolveObject, EvolverInstance, MutateObject } from "./Types/EvolverTypes";
 import { MutatorDefs } from "./Types/MutatorTypes";
 import { NormalizedEvolverName, normalizeEvolverName } from "./Util/normalizeEvolverName";
 
-const log = getLogger("EvolverComplex");
+const log = getTheseusLogger("EvolverComplex");
 
 /** Utility type for extracting string keys from a type. */
 type StringKeyOf<T> = {
@@ -19,16 +18,14 @@ type RemoveEvolverFromName<T> = {
 };
 
 export const generateEvolveMethods = <
-    TData,
+    TData extends object,
     TIsMacro extends boolean,
-    TEvolvers extends Record<string, EvolverInstance<string, Mutable<string>, TData, any>>,
+    TEvolvers extends Record<string, EvolverInstance<TData, string, Mutable<string>, any>>,
 >(
     evolvers: TEvolvers,
     input: TData,
     macro: TIsMacro,
 ) => {
-    log.debug(`Generating evolve methods for evolvers: ${Object.keys(evolvers).join(", ")}`);
-
     /** Represents the names of the refineries as provided in the withRefineries argument. */
     type TEvolverPassedNames = StringKeyOf<TEvolvers>;
 
@@ -38,9 +35,9 @@ export const generateEvolveMethods = <
     // Determines the mutators for a given evolver by returning the types of mutators available for the evolver's data.
     type MutatorsForEvolver<TEvolverName extends TEvolverPassedNames> = ReturnType<
         MutateObject<
+            InnerType<TEvolverName>["data"],
             InnerType<TEvolverName>["evolverName"],
             InnerType<TEvolverName>["mutableParamName"],
-            InnerType<TEvolverName>["data"],
             InnerType<TEvolverName>["mutators"]
         >["getMutators"]
     >;
@@ -48,9 +45,9 @@ export const generateEvolveMethods = <
     // Similar to MutatorsForEvolver but for macro mutators, determining the mutators for evolving the state on a larger scale.
     type MacroMutatorsForEvolver<TEvolverName extends TEvolverPassedNames> = ReturnType<
         EvolveObject<
+            InnerType<TEvolverName>["data"],
             InnerType<TEvolverName>["evolverName"],
             InnerType<TEvolverName>["mutableParamName"],
-            InnerType<TEvolverName>["data"],
             InnerType<TEvolverName>["mutators"]
         >["getMutators"]
     >;
@@ -77,11 +74,9 @@ export const generateEvolveMethods = <
     // that maps formatted evolver names to their mutators. This object is then returned as the final result
     // of the method, representing the cumulative mutations available for application to the state.
     const result = keys.reduce((acc, key: TEvolverPassedNames) => {
-        log.debug(`Generating mutators for evolver: ${key}`);
         const evolver = evolvers[key];
         const mutators = macro ? evolver.evolve(input).getMutators() : evolver.mutate(input).getMutators();
         const formattedEvolverName = normalizeEvolverName(key);
-        log.debug(`Formatted evolver name for complex: ${formattedEvolverName}`);
 
         (acc as Record<NormalizedEvolverName<string>, any>)[formattedEvolverName] = mutators;
 
@@ -92,15 +87,13 @@ export const generateEvolveMethods = <
 };
 
 const evolve = <
-    TData,
-    TEvolvers extends Record<string, EvolverInstance<string, Mutable<TParamName>, TData, TMutators>>,
+    TData extends object,
+    TEvolvers extends Record<string, EvolverInstance<TData, string, Mutable<TParamName>, TMutators>>,
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
     TParamName extends string,
 >(
     input: TData,
 ) => {
-    log.debug(`Evolving data using evolver complex`, input);
-
     return {
         /** Sets up the evolution process with specified evolvers for chained mutations. */
         withEvolvers: (evolvers: TEvolvers) => {
@@ -110,15 +103,13 @@ const evolve = <
 };
 
 const mutate = <
-    TData,
-    TEvolvers extends Record<string, EvolverInstance<string, Mutable<TParamName>, TData, TMutators>>,
+    TData extends object,
+    TEvolvers extends Record<string, EvolverInstance<TData, string, Mutable<TParamName>, TMutators>>,
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
     TParamName extends string,
 >(
     input: TData,
 ) => {
-    log.debug(`Mutating data using evolver complex`, input);
-
     return {
         /** Configures the mutation process with specific evolvers. */
         withEvolvers: (evolvers: TEvolvers) => {
@@ -127,16 +118,19 @@ const mutate = <
     };
 };
 
-export const create = <TData>() => ({
+export const create = <TData extends object>() => ({
     withEvolvers: <
-        TEvolvers extends Record<string, EvolverInstance<string, Mutable<TParamName>, TData, any>>,
+        TEvolvers extends Record<string, EvolverInstance<TData, string, Mutable<TParamName>, any>>,
         TParamName extends string,
     >(
         evolvers: TEvolvers,
     ) => {
-        log.debug(`Creating evolver complex with evolvers: ${Object.keys(evolvers).join(", ")}`);
+        log.verbose(`Creating evolver complex with evolvers:`, {
+            evolvers: Object.keys(evolvers),
+        });
 
         return {
+            __evolvers__: evolvers,
             /**
              * Performs a single mutation on the given input, and returns the resulting transformed data.
              *
@@ -172,17 +166,17 @@ export class EvolverComplex {
 }
 
 export type EvolverComplexInstance<
-    TData,
+    TData extends object,
     TParamName extends string,
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-    TEvolvers extends Record<string, EvolverInstance<string, Mutable<TParamName>, TData, TMutators>>,
+    TEvolvers extends Record<string, EvolverInstance<TData, string, Mutable<TParamName>, TMutators>>,
 > = ReturnType<typeof EvolverComplexInstanceTypeGen<TData, TParamName, TMutators, TEvolvers>>;
 
 const EvolverComplexInstanceTypeGen = <
-    TData,
+    TData extends object,
     TParamName extends string,
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-    TEvolvers extends Record<string, EvolverInstance<string, Mutable<TParamName>, TData, TMutators>>,
+    TEvolvers extends Record<string, EvolverInstance<TData, string, Mutable<TParamName>, TMutators>>,
 >() => {
     type MutateFunc = typeof mutate<TData, TEvolvers, TMutators, TParamName>;
     type EvolveFunc = typeof evolve<TData, TEvolvers, TMutators, TParamName>;
@@ -204,6 +198,7 @@ const EvolverComplexInstanceTypeGen = <
     }
 
     return {} as unknown as {
+        __evolvers__: TEvolvers;
         mutate: (data: TData) => MutateWithEvolversReturn;
         evolve: (data: TData) => EvolveWithEvolversReturn;
         use: (data: TData) => UseReturn;

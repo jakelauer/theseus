@@ -42,7 +42,7 @@ type MutatorCallable<TMutator extends (...args: any[]) => any, TReturn> = FuncMi
  *   nature.
  */
 type SyncChainable<
-    TData,
+    TData extends object,
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefChild<TData, TParamName>,
     TMutator extends (...args: any[]) => any,
@@ -60,7 +60,7 @@ type SyncChainable<
 >;
 
 type AsyncChainable<
-    TData,
+    TData extends object,
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefChild<TData, TParamName>,
     TMutator extends (...args: any[]) => any,
@@ -107,7 +107,7 @@ type IsChainAsync<TMutators, PrevAsync extends AsyncTracker> = {
  */
 
 export type ChainableMutators<
-    TData,
+    TData extends object,
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefChild<TData, TParamName>,
     IsFinal extends FinalTracker = "notFinal",
@@ -136,13 +136,13 @@ export type ChainableMutators<
 };
 
 // Interface defining the capability to retrieve the final form of the mutated data.
-export interface Chainable<TData> {
+export interface Chainable<TData extends object> {
     finalForm: TData;
     finalFormAsync: Promise<TData>;
 }
 
 export type FinalMutators<
-    TData,
+    TData extends object,
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefChild<TData, TParamName>,
 > = ChainableMutators<TData, TParamName, TMutators, "final">;
