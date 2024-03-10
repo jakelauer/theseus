@@ -133,3 +133,7 @@ dist
 # Local certs
 .cert
 .cert/*
+
+#other
+*.zip
+*.tgz
