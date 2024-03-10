@@ -10,7 +10,8 @@
 	},
 	"bin": {
 		"update-version": "./update-version.js",
-		"publish-theseus": "./publish.js"
+		"publish-theseus": "./publish.js",
+		"commit": "./commit.js"
 	},
 	"dependencies": {
 		"arg": "^5.0.1",
