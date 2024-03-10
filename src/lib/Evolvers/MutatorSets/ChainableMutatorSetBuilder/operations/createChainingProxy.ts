@@ -1,5 +1,5 @@
-import { Observation } from "@Observe/Observation";
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
+import { Observation } from '@Observe/Observation';
+import getTheseusLogger from '@Shared/Log/get-theseus-logger';
 
 const log = getTheseusLogger("Queue");
 
@@ -40,7 +40,7 @@ export function createChainingProxy<T>(params: {
                         );
 
                         if (params.observationId) {
-                            Observation.updateInstance(params.observationId, execResult);
+                            void Observation.updateInstance(params.observationId, execResult);
                         }
 
                         return execResult;

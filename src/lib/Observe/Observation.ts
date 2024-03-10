@@ -1,12 +1,12 @@
-import deepExtend from "deep-extend";
-import allSettled from "promise.allsettled";
-import { v4 as uuidv4 } from "uuid";
+import deepExtend from 'deep-extend';
+import allSettled from 'promise.allsettled';
+import { v4 as uuidv4 } from 'uuid';
 
-import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
-import extendObservation from "@Observe/ExtendObservation";
-import { getTheseusLogger } from "@Shared/index";
+import { BroadcasterObserver } from '@Broadcast/BroadcasterObserver';
+import extendObservation from '@Observe/ExtendObservation';
+import { getTheseusLogger } from '@Shared/index';
 
-import { Broadcaster, BroadcasterParams, DestroyCallback } from "../Broadcast/Broadcaster";
+import { Broadcaster, BroadcasterParams, DestroyCallback } from '../Broadcast/Broadcaster';
 
 const log = getTheseusLogger("Observation");
 
@@ -84,7 +84,9 @@ export class Observation<
 
         this.setData(newState);
 
+        log.verbose(`Updated state for instance ${this.__uuid}`);
         await this.broadcast(this.#internalState);
+        log.verbose(`Broadcasted state for instance ${this.__uuid}`);
 
         return true;
     }
@@ -120,10 +122,10 @@ export class Observation<
         return this.instancesById[observationId];
     }
 
-    public static updateInstance(observationId: string, data: any) {
+    public static async updateInstance(observationId: string, data: any) {
         log.verbose(`Updating instance ${observationId}`);
         const instance = Observation.getInstance(observationId);
-        void instance.update(data);
+        return await instance.update(data);
     }
 }
 

@@ -1,9 +1,9 @@
-import { FinalMutators, SortaPromise } from "@Evolvers/Types";
-import { Observation } from "@Observe/Observation";
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import { Mutable } from "@Shared/String/makeMutable";
+import { FinalMutators, SortaPromise } from '@Evolvers/Types';
+import { Observation } from '@Observe/Observation';
+import getTheseusLogger from '@Shared/Log/get-theseus-logger';
+import { Mutable } from '@Shared/String/makeMutable';
 
-import { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
+import { GenericMutator, MutatorDefs } from '../../Types/MutatorTypes';
 
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
@@ -106,7 +106,7 @@ export class MutatorSetBuilder<
                     .then((result) => {
                         if (this.__observationId && result) {
                             log.verbose(`Function "${selfPath}" completed, sending to Observation.`);
-                            Observation.updateInstance(this.__observationId, result);
+                            void Observation.updateInstance(this.__observationId, result);
                         }
                     })
                     .catch((e) => {

@@ -1,9 +1,12 @@
-import winston from "winston";
+import winston from 'winston';
 
-import { setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
-import winstonConfigBuilder from "@Shared/Log/winston-config-builder";
+import { setTheseusLogLevel } from '@Shared/Log/set-theseus-log-level';
+import winstonConfigBuilder from '@Shared/Log/winston-config-builder';
+import { isTestMode } from '@Shared/Test/isTestMode';
 
-setTheseusLogLevel("debug");
+const testMode = isTestMode();
+
+setTheseusLogLevel(testMode ? "debug" : "verbose");
 
 export type TheseusLogParams = Parameters<typeof winston.createLogger>[0];
 const buildLogger = (label: string, params: TheseusLogParams = {}) =>
