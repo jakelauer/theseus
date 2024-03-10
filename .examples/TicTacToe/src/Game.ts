@@ -1,7 +1,7 @@
-import { getTheseusLogger, setTheseusLogLevel } from "theseus-js";
+import { getTheseusLogger, setTheseusLogLevel } from 'theseus-js';
 
-import { GameShip } from "./GameShip.js";
-import { MarkType } from "./state/GameState.js";
+import { GameShip } from './GameShip.js';
+import { MarkType } from './state/GameState.js';
 
 setTheseusLogLevel("major");
 const gameLog = getTheseusLogger("Game");
@@ -9,7 +9,7 @@ const observeLog = getTheseusLogger("Observe");
 
 GameShip.observe((state) => {
     const rowsAsStrings = state.board.reduce((acc, row, index) => {
-        acc[`row${index + 1}`] = row.join(" ");
+        acc[`row${index + 1}`] = row.map(v => v ? v : "⬜️").join("").replace(/X/g, "❌").replace(/O/g, "⭕");
         return acc;
     }, {} as any);
     observeLog.info("Board state", rowsAsStrings);
@@ -23,7 +23,7 @@ GameShip.observe((state) => {
             : "diagonally";
         observeLog.major(`We have a winner! Three ${markType}s ${tripleTypePlainEnglish}!`);
     } else {
-        observeLog.info("Move detected!");
+        observeLog.major("Move detected! Taking next turn...");
         nextTurn();
     }
 }, false);
@@ -40,7 +40,7 @@ const playMove = ([row, col]: [number, number], markType: MarkType) => {
 let previousMarkType: MarkType = "X";
 let turns = 0;
 const nextTurn = () => {
-    gameLog.info(`Turn ${turns}`);
+    gameLog.major(`Turn ${turns}`);
     const nextMarkType = previousMarkType === "X" ? "O" : "X";
     const randomSquare = GameShip.refine.GameBoard.getRandomAvailableSquare();
     if (!randomSquare) {
