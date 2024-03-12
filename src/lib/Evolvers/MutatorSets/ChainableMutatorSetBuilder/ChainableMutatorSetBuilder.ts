@@ -1,11 +1,17 @@
-import { buildChainableMutatorQueue } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue";
-import { createChainingProxy } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy";
-import { Chainable, ChainableMutators, FinalMutators, MutableData, SortaPromise } from "@Evolvers/Types";
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import { Mutable } from "@Shared/String/makeMutable";
+import {
+	buildChainableMutatorQueue
+} from '@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue';
+import {
+	createChainingProxy
+} from '@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy';
+import {
+	Chainable, ChainableMutators, FinalMutators, MutableData, SortaPromise
+} from '@Evolvers/Types';
+import getTheseusLogger from '@Shared/Log/get-theseus-logger';
+import { Mutable } from '@Shared/String/makeMutable';
 
-import { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
-import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
+import { GenericMutator, MutatorDefs } from '../../Types/MutatorTypes';
+import { MutatorSetBuilder } from '../MutatorSetBuilder/MutatorSetBuilder';
 
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to

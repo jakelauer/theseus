@@ -1,4 +1,4 @@
-import { Mutable } from "@Shared/String/makeMutable";
+import { Mutable } from '@Shared/String/makeMutable';
 
 import type { FuncMinusFirstArg } from "../../Types/Modifiers";
 import type { MutatorDefChild } from "./MutatorTypes";
@@ -59,6 +59,14 @@ type SyncChainable<
             Record<"finalForm", TData>
 >;
 
+export type FinishChain<
+    TData extends object,
+    TParamName extends Mutable<string>,
+    TMutators extends MutatorDefChild<TData, TParamName>,
+    IsAsync extends AsyncTracker,
+> = Record<"finalFormAsync", Promise<TData>> &
+    Record<"finally", ChainableMutators<TData, TParamName, TMutators, "final", IsAsync>>;
+
 type AsyncChainable<
     TData extends object,
     TParamName extends Mutable<string>,
@@ -70,8 +78,7 @@ type AsyncChainable<
     TMutator,
     IsFinal extends "final" ? TData
     :   Record<"then", ChainableMutators<TData, TParamName, TMutators, IsFinal, IsAsync>> &
-            Record<"finalFormAsync", Promise<TData>> &
-            Record<"finally", ChainableMutators<TData, TParamName, TMutators, "final", IsAsync>>
+            FinishChain<TData, TParamName, TMutators, IsAsync>
 >;
 
 /**
