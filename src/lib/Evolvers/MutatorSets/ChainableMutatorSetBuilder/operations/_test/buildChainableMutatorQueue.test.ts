@@ -2,7 +2,7 @@ import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import sinon from "sinon";
 
-import { MutableData, Mutator } from "@Evolvers/Types";
+import { MutableData, Mutator } from "@Evolvers/Types/MutatorTypes";
 import { Mutable } from "@Shared/String/makeMutable";
 
 import { buildChainableMutatorQueue } from "../buildChainableMutatorQueue";

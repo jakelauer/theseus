@@ -4,13 +4,12 @@ import {
 import {
 	createChainingProxy
 } from '@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy';
-import {
-	Chainable, ChainableMutators, FinalMutators, MutableData, SortaPromise
-} from '@Evolvers/Types';
+import { Chainable, ChainableMutators, FinalMutators } from '@Evolvers/Types/ChainableTypes';
+import { SortaPromise } from '@Evolvers/Types/EvolverTypes';
 import getTheseusLogger from '@Shared/Log/get-theseus-logger';
 import { Mutable } from '@Shared/String/makeMutable';
 
-import { GenericMutator, MutatorDefs } from '../../Types/MutatorTypes';
+import { GenericMutator, MutableData, MutatorDefs } from '../../Types/MutatorTypes';
 import { MutatorSetBuilder } from '../MutatorSetBuilder/MutatorSetBuilder';
 
 /**
@@ -52,7 +51,7 @@ export class ChainableMutatorSetBuilder<
 
         this.chainingProxy = createChainingProxy({
             target: this,
-            observationId: this.__observationId as string,
+            observationId: this.__theseusId as string,
             queueMutation: this.queueMutation.bind(this),
         });
     }

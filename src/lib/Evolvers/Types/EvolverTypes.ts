@@ -1,4 +1,4 @@
-import { Mutable } from "@Shared/String/makeMutable";
+import { Mutable } from '@Shared/String/makeMutable';
 
 import type { ChainableMutators } from "./ChainableTypes";
 import type { MutatorDefs } from "./MutatorTypes";
@@ -32,7 +32,7 @@ export type EvolverInstance<
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefs<TData, TParamName>,
 > = {
-    __setObservationId: (id: string) => void;
+    __setTheseusId: (id: string) => void;
     __type__access__: TypeAccess<TData, TEvolverName, TParamName, TMutators>;
 
     /**

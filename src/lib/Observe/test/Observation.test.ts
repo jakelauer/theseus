@@ -3,15 +3,15 @@ import chaiAsPromised from 'chai-as-promised';
 import { beforeEach, describe, it } from 'mocha';
 import sinon from 'sinon';
 
-import { Observation } from '@Observe/Observation';
+import { Theseus } from '@Observe/Theseus';
 
 chai.use(chaiAsPromised);
 
 describe("Observation", () => {
-    let observation: Observation<{ test: string }>;
+    let observation: Theseus<{ test: string }>;
 
     beforeEach(() => {
-        observation = new Observation<{ test: string }>({ initialData: { test: "initial" } });
+        observation = new Theseus<{ test: string }>({ initialData: { test: "initial" } });
     });
 
     it("should initialize with provided initial data", () => {
@@ -65,7 +65,7 @@ describe("Observation", () => {
         observation.observe(callback);
 
         console.log("Starting update for uuid", id);
-        await Observation.updateInstance(id, { test: "static update" });
+        await Theseus.updateInstance(id, { test: "static update" });
         console.log("Finished update for uuid", id);
 
         // Since updateInstance is async, we may need to wait or use fake timers

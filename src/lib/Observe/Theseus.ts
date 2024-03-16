@@ -3,10 +3,10 @@ import allSettled from 'promise.allsettled';
 import { v4 as uuidv4 } from 'uuid';
 
 import { BroadcasterObserver } from '@Broadcast/BroadcasterObserver';
-import extendObservation from '@Observe/ExtendObservation';
 import { getTheseusLogger } from '@Shared/index';
 
 import { Broadcaster, BroadcasterParams, DestroyCallback } from '../Broadcast/Broadcaster';
+import TheseusBuilder from './TheseusBuilder';
 
 const log = getTheseusLogger("Observation");
 
@@ -20,33 +20,31 @@ type BaseParams<
     broadcasterParams?: BroadcasterParams<TData, TObserverType>;
 };
 
-export interface IObservation<TData> {
+export interface ITheseus<TData> {
     __uuid: string;
     state: TData;
     observe: (callback: (newData: TData) => void, updateImmediately?: boolean) => DestroyCallback;
 }
 
-export type ObservationExtendable<
+export type TheseusExtendable<
     TData extends object,
-    TObservation extends IObservation<TData>,
+    TObservation extends Theseus<TData>,
     Extension,
-> = TObservation & {
-    [K in keyof Extension]: Extension[K];
-};
+> = TObservation & Extension;
 
-export type ObservationParams<
+export type TheseusParams<
     TData extends object,
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
 > = BaseParams<TData, TObserverType>;
 
-export class Observation<
+export class Theseus<
     TData extends object,
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
 > extends Broadcaster<TData, TObserverType> {
     #internalState: TData;
     #uuid: string;
 
-    public static instancesById: Record<string, Observation<any, any>> = {};
+    public static instancesById: Record<string, Theseus<any, any>> = {};
 
     public get __uuid() {
         return this.#uuid;
@@ -71,7 +69,7 @@ export class Observation<
 
         this.#uuid = uuidv4();
         this.setData(params.initialData);
-        Observation.instancesById[this.#uuid] = this;
+        Theseus.instancesById[this.#uuid] = this;
     }
 
     /**
@@ -118,28 +116,15 @@ export class Observation<
         return destroy;
     }
 
-    public static getInstance(observationId: string) {
-        return this.instancesById[observationId];
+    public static getInstance(theseusId: string) {
+        return this.instancesById[theseusId];
     }
 
-    public static async updateInstance(observationId: string, data: any) {
-        log.verbose(`Updating instance ${observationId}`);
-        const instance = Observation.getInstance(observationId);
+    public static async updateInstance(theseusId: string, data: any) {
+        log.verbose(`Updating instance ${theseusId}`);
+        const instance = Theseus.getInstance(theseusId);
         return await instance.update(data);
     }
 }
 
-/** Create a new Observation instance */
-const builder = <
-    TData extends object,
-    TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
->(
-    params: ObservationParams<TData, TObserverType>,
-) => {
-    const observation: IObservation<TData> = new Observation<TData, TObserverType>(params);
-    const extendable = extendObservation(observation);
-
-    return extendable;
-};
-
-export default builder;
+export default TheseusBuilder;

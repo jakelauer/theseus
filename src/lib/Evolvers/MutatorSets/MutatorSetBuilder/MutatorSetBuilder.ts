@@ -1,5 +1,6 @@
-import { FinalMutators, SortaPromise } from '@Evolvers/Types';
-import { Observation } from '@Observe/Observation';
+import { FinalMutators } from '@Evolvers/Types/ChainableTypes';
+import { SortaPromise } from '@Evolvers/Types/EvolverTypes';
+import { Theseus } from '@Observe/Theseus';
 import getTheseusLogger from '@Shared/Log/get-theseus-logger';
 import { Mutable } from '@Shared/String/makeMutable';
 
@@ -21,7 +22,7 @@ export class MutatorSetBuilder<
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefs<TData, TParamName>,
 > {
-    protected __observationId?: string;
+    protected __theseusId?: string;
     protected mutableData: { [key in TParamName]: TData };
 
     constructor(
@@ -32,11 +33,11 @@ export class MutatorSetBuilder<
     ) {
         this.mutableData = this.inputToObject(inputData);
         this.extendSelfWithMutators(mutators);
-        this.__observationId = observationId;
+        this.__theseusId = observationId;
     }
 
-    public __setObservationId(id: string) {
-        this.__observationId = id;
+    public __setTheseusId(id: string) {
+        this.__theseusId = id;
     }
 
     /**
@@ -104,9 +105,9 @@ export class MutatorSetBuilder<
 
                 funcAsPromise
                     .then((result) => {
-                        if (this.__observationId && result) {
+                        if (this.__theseusId && result) {
                             log.verbose(`Function "${selfPath}" completed, sending to Observation.`);
-                            void Observation.updateInstance(this.__observationId, result);
+                            void Theseus.updateInstance(this.__theseusId, result);
                         }
                     })
                     .catch((e) => {

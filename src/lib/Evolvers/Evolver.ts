@@ -1,15 +1,11 @@
-import { ChainableMutatorSetBuilder, MutatorSetBuilder } from "@Evolvers/MutatorSets";
+import { ChainableMutatorSetBuilder, MutatorSetBuilder } from '@Evolvers/MutatorSets';
 import {
-    EvolveObject,
-    EvolverInstance,
-    EvolverOptions,
-    MutateObject,
-    MutatorDefs,
-    TypeAccess,
-} from "@Evolvers/Types";
-import { NormalizedEvolverName } from "@Evolvers/Util/normalizeEvolverName";
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import { makeMutable, Mutable } from "@Shared/String/makeMutable";
+	EvolveObject, EvolverInstance, EvolverOptions, MutateObject, TypeAccess
+} from '@Evolvers/Types/EvolverTypes';
+import { MutatorDefs } from '@Evolvers/Types/MutatorTypes';
+import { NormalizedEvolverName } from '@Evolvers/Util/normalizeEvolverName';
+import getTheseusLogger from '@Shared/Log/get-theseus-logger';
+import { makeMutable, Mutable } from '@Shared/String/makeMutable';
 
 const log = getTheseusLogger("Evolver");
 
@@ -56,7 +52,7 @@ export class Evolver<
         this.mutators = mutators;
     }
 
-    public __setObservationId(id: string) {
+    public __setTheseusId(id: string) {
         this.#observationId = id;
     }
 

@@ -43,6 +43,7 @@ const refine = <
 
         const result = keys.reduce(
             (acc, key: string) => {
+                console.log(key, refineries);
                 const refinery = refineries[key];
                 const forges = refinery(input) as OneRefinery<typeof key>;
                 const formattedRefineryName = normalizeRefineryName(key) as NormalizedRefineryName<string>;
