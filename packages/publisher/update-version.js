@@ -84,7 +84,7 @@ const getIncrement = (onContinue) => {
         fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 4));
         console.log(`Updated package.json to version ${newVersion}`);
 
-        import("./commit").then((commit) => {
+        import("./commit.js").then((commit) => {
             console.log("Committing to git...");
         });
     });

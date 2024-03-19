@@ -1,7 +1,7 @@
 {
     "compileOnSave": true,
     "include": ["./src/**/*"],
-    "exclude": ["./*.js", "./*.cjs", "dist"],
+    "exclude": ["./*.js", "./*.cjs", "dist", "**/test/**", "**/_test/**"],
     "compilerOptions": {
         "rootDir": "./src",
         "baseUrl": "./src",
