@@ -1,13 +1,47 @@
-import { BroadcasterObserver } from '@Broadcast/BroadcasterObserver';
-import { EvolverComplex, EvolverComplexInstance } from '@Evolvers/EvolverComplex';
-import { EvolverInstance } from '@Evolvers/Types/EvolverTypes';
-import { MutatorDefs } from '@Evolvers/Types/MutatorTypes';
-import { Theseus, TheseusParams } from '@Observe/Theseus';
-import { RefineryInitializer } from '@Refineries/Refinery';
-import { RefineryComplex, RefineryComplexInstance } from '@Refineries/RefineryComplex';
-import { ForgeDefs } from '@Refineries/Types';
-import { Immutable } from '@Shared/String/makeImmutable';
-import { Mutable } from '@Shared/String/makeMutable';
+import type { BroadcasterObserver } from '@Broadcast/BroadcasterObserver';
+import { EvolverComplex } from '@Evolvers/EvolverComplex';
+import { Theseus } from '@Observe/Theseus';
+import { RefineryComplex } from '@Refineries/RefineryComplex';
+
+import type { RefineryComplexInstance } from "@Refineries/RefineryComplex";
+import type { TheseusParams } from "@Observe/Theseus";
+import type { EvolverComplexInstance } from "@Evolvers/EvolverComplex";
+import type { EvolverInstance } from "@Evolvers/Types/EvolverTypes";
+import type { MutatorDefs } from "@Evolvers/Types/MutatorTypes";
+import type { RefineryInitializer } from "@Refineries/Refinery";
+import type { ForgeDefs } from "@Refineries/Types";
+import type { Immutable } from "@Shared/String/makeImmutable";
+import type { Mutable } from "@Shared/String/makeMutable";
+
+/** Create a new Theseus instance */
+export const builder2 = <
+    TData extends object,
+    TParamName extends string,
+    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
+    TEvolverNames extends string,
+    TEvolvers extends { [K in TEvolverNames]: EvolverInstance<TData, K, Mutable<TParamName>, TMutators> },
+    TForges extends ForgeDefs<TData, Immutable<TParamName>>,
+    TRefineries extends Record<string, RefineryInitializer<TData, TParamName, TForges>>,
+    TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
+>(
+    params: TheseusParams<TData, TObserverType>,
+    evolvers: TEvolvers,
+    refineries?: TRefineries | RefineryComplexInstance<TData, TParamName, TForges, TRefineries>,
+) => {
+    const theseusInstance = new Theseus<TData, TObserverType>(params);
+
+    type RefineryComplex = RefineryComplexInstance<TData, TParamName, TForges, TRefineries>;
+    type Extension = {
+        evolve: EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers>["__types__"]["evolveReturn"];
+        mutate: EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers>["__types__"]["mutateReturn"];
+        refine?: ReturnType<RefineryComplex["refine"]>;
+    };
+
+    console.log(evolvers);
+    console.log(refineries);
+
+    return theseusInstance as Theseus<TData, TObserverType> & Extension;
+};
 
 /** Create a new Theseus instance */
 const builder = <

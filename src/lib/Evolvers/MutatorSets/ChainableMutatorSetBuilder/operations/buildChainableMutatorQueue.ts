@@ -1,7 +1,8 @@
-import { SortaPromise } from "@Evolvers/Types/EvolverTypes";
-import { MutableData, Mutator } from "@Evolvers/Types/MutatorTypes";
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import { Mutable } from "@Shared/String/makeMutable";
+import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
+import type { MutableData, Mutator } from "@Evolvers/Types/MutatorTypes";
+import getTheseusLogger from '@Shared/Log/get-theseus-logger';
+
+import type { Mutable } from "@Shared/String/makeMutable";
 
 const log = getTheseusLogger("Queue");
 

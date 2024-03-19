@@ -1,12 +1,18 @@
 import { ChainableMutatorSetBuilder, MutatorSetBuilder } from '@Evolvers/MutatorSets';
-import {
-	EvolveObject, EvolverInstance, EvolverOptions, MutateObject, TypeAccess
-} from '@Evolvers/Types/EvolverTypes';
-import { MutatorDefs } from '@Evolvers/Types/MutatorTypes';
-import { NormalizedEvolverName } from '@Evolvers/Util/normalizeEvolverName';
 import getTheseusLogger from '@Shared/Log/get-theseus-logger';
-import { makeMutable, Mutable } from '@Shared/String/makeMutable';
+import { makeMutable } from '@Shared/String/makeMutable';
 
+import type { Mutable } from "@Shared/String/makeMutable";
+
+import type {
+    EvolveObject,
+    EvolverInstance,
+    EvolverOptions,
+    MutateObject,
+    TypeAccess,
+} from "@Evolvers/Types/EvolverTypes";
+import type { MutatorDefs } from "@Evolvers/Types/MutatorTypes";
+import type { NormalizedEvolverName } from "@Evolvers/Util/normalizeEvolverName";
 const log = getTheseusLogger("Evolver");
 
 export type EvolverResult<

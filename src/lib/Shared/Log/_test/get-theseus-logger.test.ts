@@ -2,9 +2,10 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import * as winston from 'winston';
 
-import getTheseusLogger, { MockLoggingLib } from '@Shared/Log/get-theseus-logger'; // Adjust the import path as necessary
+import getTheseusLogger from '@Shared/Log/get-theseus-logger'; // Adjust the import path as necessary
 import winstonConfigBuilder from '@Shared/Log/winston-config-builder';
 
+import type { MockLoggingLib } from "@Shared/Log/get-theseus-logger"; // Adjust the import path as necessary
 describe("getLogger", function () {
     let mockLoggingLib: sinon.SinonStub<[string], MockLoggingLib>;
 
@@ -37,13 +38,13 @@ describe("getLogger", function () {
     it("should return a logger instance with expected methods from the mock library", function () {
         const logger = getTheseusLogger("testLogger", undefined, mockLoggingLib);
 
-		const keys = ["debug", "info", "warn", "error", "major", "silly", "verbose"];
+        const keys = ["debug", "info", "warn", "error", "major", "silly", "verbose"];
 
         // Verify the returned logger has the expected methods
         expect(logger).to.have.all.keys([...keys, "format"]);
         // Optionally, verify that these methods are indeed spies
-		keys.forEach((key: any) => {
-			expect((logger as any)[key]).to.be.a("function");
-		});
+        keys.forEach((key: any) => {
+            expect((logger as any)[key]).to.be.a("function");
+        });
     });
 });

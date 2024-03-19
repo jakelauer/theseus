@@ -1,5 +1,5 @@
 import type { EvolverComplex } from "@Evolvers/EvolverComplex";
-import { EvolverInstance } from "@Evolvers/Types/EvolverTypes";
+import type { EvolverInstance } from "@Evolvers/Types/EvolverTypes";
 
 import type { Mutable } from "@Shared/String/makeMutable";
 

@@ -1,4 +1,4 @@
-import { Immutable } from "@Shared/String/makeImmutable";
+import type { Immutable } from "@Shared/String/makeImmutable";
 
 import type { FuncMinusFirstArg } from "@Types/Modifiers";
 import type { NormalizedRefineryName } from "../Util/normalizeRefineryName";

@@ -2,12 +2,13 @@ import deepExtend from 'deep-extend';
 import allSettled from 'promise.allsettled';
 import { v4 as uuidv4 } from 'uuid';
 
-import { BroadcasterObserver } from '@Broadcast/BroadcasterObserver';
+import type { BroadcasterObserver } from '@Broadcast/BroadcasterObserver';
 import { getTheseusLogger } from '@Shared/index';
 
-import { Broadcaster, BroadcasterParams, DestroyCallback } from '../Broadcast/Broadcaster';
+import { Broadcaster } from '../Broadcast/Broadcaster';
 import TheseusBuilder from './TheseusBuilder';
 
+import type { BroadcasterParams, DestroyCallback } from "../Broadcast/Broadcaster";
 const log = getTheseusLogger("Observation");
 
 allSettled.shim();

@@ -38,6 +38,7 @@ describe("MutatorSetBuilder", function () {
             .to.have.property("mutableData")
             .that.deep.equals({ [argName]: initialData });
     });
+
     it("create method returns a new instance with mutators applied", function () {
         // Assert the builder is correctly initialized
         expect(builder).to.be.an.instanceof(MutatorSetBuilder);

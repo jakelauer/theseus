@@ -11,6 +11,7 @@
 		"prepare": "husky install",
 		"// ==== TESTING ==== //": "",
 		"lint": "git add . && pnpm lint-staged",
+		"lint-fix": "eslint ./ --fix --resolve-plugins-relative-to=./",
 		"test:debug": "mocha --exit --config ./.mocharc.cjs --debug-mode",
 		"test": "mocha --exit --config ./.mocharc.cjs",
 		"// ==== BUILD ==== //": "",

@@ -1,10 +1,12 @@
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import { Mutable } from "@Shared/String/makeMutable";
+import getTheseusLogger from '@Shared/Log/get-theseus-logger';
 
-import { EvolveObject, EvolverInstance, MutateObject } from "./Types/EvolverTypes";
-import { MutatorDefs } from "./Types/MutatorTypes";
-import { NormalizedEvolverName, normalizeEvolverName } from "./Util/normalizeEvolverName";
+import { normalizeEvolverName } from './Util/normalizeEvolverName';
 
+import type { Mutable } from "@Shared/String/makeMutable";
+
+import type { EvolveObject, EvolverInstance, MutateObject } from "./Types/EvolverTypes";
+import type { MutatorDefs } from "./Types/MutatorTypes";
+import type { NormalizedEvolverName } from "./Util/normalizeEvolverName";
 const log = getTheseusLogger("EvolverComplex");
 
 /** Utility type for extracting string keys from a type. */
@@ -198,6 +200,10 @@ const EvolverComplexInstanceTypeGen = <
     }
 
     return {} as unknown as {
+        __types__: {
+            mutateReturn: MutateWithEvolversReturn;
+            evolveReturn: EvolveWithEvolversReturn;
+        };
         __evolvers__: TEvolvers;
         mutate: (data: TData) => MutateWithEvolversReturn;
         evolve: (data: TData) => EvolveWithEvolversReturn;

@@ -1,4 +1,4 @@
-import { Mutable } from '@Shared/String/makeMutable';
+import type { Mutable } from '@Shared/String/makeMutable';
 
 import type { FuncMinusFirstArg } from "../../Types/Modifiers";
 import type { MutatorDefChild } from "./MutatorTypes";

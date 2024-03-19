@@ -1,2 +1,6 @@
 .eslintrc.cjs
 packages/publisher
+dist
+node_modules
+.husky
+*.d.ts

@@ -1,7 +1,7 @@
 import { getTheseusLogger, Refinery } from "theseus-js";
 
-import { GameShip } from "../../GameShip.js";
 import { GameState } from "../../state/GameState.js";
+import { GameBoardRefinery } from "./GameBoardRefinery.js";
 
 type TripleType = "row" | "column" | "diagonalLR" | "diagonalRL";
 type Triple = {
@@ -15,9 +15,9 @@ const log = getTheseusLogger("GameOutcomeRefinery");
 export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { noun: "GameState" })
     .toRefine<GameState>()
     .withForges({
-        checkTriple: ({ immutableGameState }, triple: Triple) => {
+        checkTriple: ({ immutableGameState }, triple: Triple): boolean => {
             const [fromRow, fromCol] = triple.from;
-            const markTypeAtCoords = GameShip.refine.GameBoard.getSquare([fromRow, fromCol]);
+            const markTypeAtCoords = GameBoardRefinery(immutableGameState).getSquare([fromRow, fromCol]);
 
             // Immediately return if the first square is empty or undefined
             if (!markTypeAtCoords) return false;
@@ -58,7 +58,7 @@ export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { 
             triples.push({ type: "diagonalLR", from: [0, 0], to: [2, 2] });
             triples.push({ type: "diagonalRL", from: [0, 2], to: [2, 0] });
             for (const triple of triples) {
-                const winner = GameShip.refine.GameOutcome.checkTriple(triple);
+                const winner = GameOutcomeRefinery(immutableGameState).checkTriple(triple);
                 if (winner) {
                     return triple;
                 }

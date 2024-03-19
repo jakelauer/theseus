@@ -1,8 +1,9 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
-import { BroadcasterObserver, CustomObserverClass } from "@Broadcast/BroadcasterObserver";
-import { getTheseusLogger } from "@Shared/index";
+import { BroadcasterObserver } from '@Broadcast/BroadcasterObserver';
+import { getTheseusLogger } from '@Shared/index';
 
+import type { CustomObserverClass } from "@Broadcast/BroadcasterObserver";
 export type DestroyCallback = () => void;
 
 export interface BroadcasterParams<TData extends object, TObserverType> {

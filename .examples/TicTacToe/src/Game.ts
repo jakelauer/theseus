@@ -1,7 +1,7 @@
-import { getTheseusLogger, setTheseusLogLevel } from 'theseus-js';
+import { getTheseusLogger, setTheseusLogLevel } from "theseus-js";
 
-import { GameShip } from './GameShip.js';
-import { MarkType } from './state/GameState.js';
+import { GameShip } from "./GameShip.js";
+import { MarkType } from "./state/GameState.js";
 
 setTheseusLogLevel("major");
 const gameLog = getTheseusLogger("Game");
@@ -9,7 +9,11 @@ const observeLog = getTheseusLogger("Observe");
 
 GameShip.observe((state) => {
     const rowsAsStrings = state.board.reduce((acc, row, index) => {
-        acc[`row${index + 1}`] = row.map(v => v ? v : "⬜️").join("").replace(/X/g, "❌").replace(/O/g, "⭕");
+        acc[`row${index + 1}`] = row
+            .map((v) => (v ? v : "⬜️"))
+            .join("")
+            .replace(/X/g, "❌")
+            .replace(/O/g, "⭕");
         return acc;
     }, {} as any);
     observeLog.info("Board state", rowsAsStrings);

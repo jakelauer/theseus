@@ -1,9 +1,12 @@
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import { Immutable } from "@Shared/String/makeImmutable";
+import getTheseusLogger from '@Shared/Log/get-theseus-logger';
 
-import { RefineryInitializer } from "./Refinery";
-import { ForgeDefs } from "./Types/RefineryTypes";
-import { NormalizedRefineryName, normalizeRefineryName } from "./Util/normalizeRefineryName";
+import { normalizeRefineryName } from './Util/normalizeRefineryName';
+
+import type { Immutable } from "@Shared/String/makeImmutable";
+
+import type { RefineryInitializer } from "./Refinery";
+import type { ForgeDefs } from "./Types/RefineryTypes";
+import type { NormalizedRefineryName } from "./Util/normalizeRefineryName";
 
 const log = getTheseusLogger("RefineryComplex");
 
@@ -70,13 +73,8 @@ const create = <TData extends object>() => ({
         TRefineries extends Record<string, RefineryInitializer<TData, TParamNoun, TForges>>,
     >(
         refineries: TRefineries,
-    ) =>
-        innerWithRefineries<TData, TParamNoun, TForges, TRefineries>(refineries) as RefineryComplexInstance<
-            TData,
-            TParamNoun,
-            TForges,
-            TRefineries
-        >,
+    ): RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries> =>
+        innerWithRefineries<TData, TParamNoun, TForges, TRefineries>(refineries),
 });
 
 const innerWithRefineries = <

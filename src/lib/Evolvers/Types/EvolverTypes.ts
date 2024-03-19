@@ -1,4 +1,4 @@
-import { Mutable } from '@Shared/String/makeMutable';
+import type { Mutable } from '@Shared/String/makeMutable';
 
 import type { ChainableMutators } from "./ChainableTypes";
 import type { MutatorDefs } from "./MutatorTypes";

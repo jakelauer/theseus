@@ -1,7 +1,7 @@
 import { Evolver, getTheseusLogger } from "theseus-js";
 
-import { GameShip } from "../GameShip.js";
 import { GameState, MarkType } from "../state/GameState.js";
+import { GameBoardRefinery } from "../refine/refineries/GameBoardRefinery.js";
 
 const log = getTheseusLogger("GameStateEvolver");
 
@@ -11,7 +11,7 @@ export const { GameStateEvolver } = Evolver.create("GameStateEvolver", { noun: "
         setSquare: ({ mutableGameState }, coords: [number, number], mark: MarkType) => {
             log.info(`Received request to set square at ${coords} to ${mark}`);
 
-            const isAvailable = !GameShip.refine.GameBoard.getSquare(coords);
+            const isAvailable = !GameBoardRefinery(mutableGameState).getSquare(coords);
             if (!isAvailable) {
                 throw new Error(`Square at ${coords} is already taken`);
             }

@@ -1,7 +1,7 @@
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import { Immutable } from "@Shared/String/makeImmutable";
+import type { Immutable } from "@Shared/String/makeImmutable";
 
-import { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
+import type { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
 
 const log = getTheseusLogger("ForgeSet");
 
