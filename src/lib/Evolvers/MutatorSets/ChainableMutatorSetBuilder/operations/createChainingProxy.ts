@@ -1,5 +1,5 @@
-import { Theseus } from '@Observe/Theseus';
-import getTheseusLogger from '@Shared/Log/get-theseus-logger';
+import { Theseus } from "@/Theseus";
+import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 const log = getTheseusLogger("Queue");
 
@@ -35,7 +35,7 @@ export function createChainingProxy<T>(params: {
 
                     if (isFinalChainLink) {
                         log.info(
-                            `[Proxy] .finally mode active, returning result of queued operations`,
+                            "[Proxy] .finally mode active, returning result of queued operations",
                             execResult,
                         );
 
@@ -50,6 +50,13 @@ export function createChainingProxy<T>(params: {
                 };
             } else if (prop in target) {
                 return target[prop];
+            } else if (prop === "toJSON") {
+                return () => {
+                    const copy = { ...target };
+                    delete copy.chainingProxy; // Remove the circular reference when serializing
+
+                    return copy;
+                };
             } else {
                 log.info(`[Proxy] Property "${prop}" not found in target`);
                 throw new Error(`Property "${prop}" not found in target`);

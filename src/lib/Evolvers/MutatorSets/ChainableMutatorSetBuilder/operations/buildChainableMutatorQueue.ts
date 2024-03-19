@@ -1,6 +1,6 @@
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 import type { MutableData, Mutator } from "@Evolvers/Types/MutatorTypes";
-import getTheseusLogger from '@Shared/Log/get-theseus-logger';
+import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 import type { Mutable } from "@Shared/String/makeMutable";
 

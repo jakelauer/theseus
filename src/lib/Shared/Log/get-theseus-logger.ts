@@ -1,8 +1,8 @@
-import winston from 'winston';
+import winston from "winston";
 
-import { setTheseusLogLevel } from '@Shared/Log/set-theseus-log-level';
-import winstonConfigBuilder from '@Shared/Log/winston-config-builder';
-import { isTestMode } from '@Shared/Test/isTestMode';
+import { setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
+import winstonConfigBuilder from "@Shared/Log/winston-config-builder";
+import { isTestMode } from "@Shared/Test/isTestMode";
 
 const testMode = isTestMode();
 

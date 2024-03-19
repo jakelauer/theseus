@@ -1,7 +1,7 @@
 import { getTheseusLogger, Refinery } from "theseus-js";
 
-import { GameState } from "../../state/GameState.js";
-import { GameBoardRefinery } from "./GameBoardRefinery.js";
+import { GameState } from "../../state/GameState";
+import { GameBoardRefinery } from "./GameBoardRefinery";
 
 type TripleType = "row" | "column" | "diagonalLR" | "diagonalRL";
 type Triple = {
@@ -67,5 +67,17 @@ export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { 
             log.info(`Checked ${triples.length} triples and found no winner`);
 
             return undefined;
+        },
+        getTripleType: ({ immutableGameState }, triple: Triple) => {
+            const markType = immutableGameState.board[triple.from[0]][triple.from[1]];
+            const tripleTypePlainEnglish =
+                triple.type === "row" ? "across"
+                : triple.type === "column" ? "down"
+                : "diagonally";
+
+            return {
+                markType,
+                tripleTypePlainEnglish,
+            };
         },
     });

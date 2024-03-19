@@ -4,13 +4,16 @@ import { logLevels } from "@Shared/Log/set-theseus-log-level";
 import { stringifier } from "@Shared/Log/stringifier";
 
 const { format, addColors } = winston;
-const { combine, colorize, label, timestamp, printf, errors } = format;
+const { combine, colorize, label, timestamp, printf, errors, splat, prettyPrint, json } = format;
 
 export const theseusLogFormat = (loggerLabel?: string) =>
     combine(
         errors({ stack: true }),
         colorize({ all: true }),
         label({ label: loggerLabel }),
+        splat(),
+        json({ space: 2, circularValue: undefined }),
+        prettyPrint(),
         timestamp({ format: "HH:MM:SS:ss.sss" }),
         printf((info) => {
             const { label, level, timestamp, message, ...args } = info;

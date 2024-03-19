@@ -1,11 +1,11 @@
-import type { FinalMutators } from '@Evolvers/Types/ChainableTypes';
-import type { SortaPromise } from '@Evolvers/Types/EvolverTypes';
-import { Theseus } from '@Observe/Theseus';
-import getTheseusLogger from '@Shared/Log/get-theseus-logger';
-import type { Mutable } from '@Shared/String/makeMutable';
+import type { FinalMutators } from "@Evolvers/Types/ChainableTypes";
+import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
+import { Theseus } from "@/Theseus";
+import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
-import type { GenericMutator, MutatorDefs } from '../../Types/MutatorTypes';
+import type { Mutable } from "@Shared/String/makeMutable";
 
+import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
  * adding mutator functions to the evolver and executing these functions to mutate the evolver's state.

@@ -1,10 +1,10 @@
-import deepFreeze from 'deep-freeze-strict';
+import deepFreeze from "deep-freeze-strict";
 
-import getTheseusLogger from '@Shared/Log/get-theseus-logger';
-import { makeImmutable } from '@Shared/String/makeImmutable';
-import structuredClone from '@ungap/structured-clone';
+import getTheseusLogger from "@Shared/Log/get-theseus-logger";
+import { makeImmutable } from "@Shared/String/makeImmutable";
+import structuredClone from "@ungap/structured-clone";
 
-import { ForgeSet } from './ForgeSets/ForgeSet';
+import { ForgeSet } from "./ForgeSets/ForgeSet";
 
 import type { NormalizedRefineryName } from "./Util/normalizeRefineryName";
 import type { ForgeDefs, RefineObject, RefineryDefinition as RefineryOptions } from "./Types/RefineryTypes";

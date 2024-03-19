@@ -4,7 +4,7 @@
     "exclude": ["./*.js", "./*.cjs", "dist"],
     "compilerOptions": {
         "rootDir": "./src",
-        "baseUrl": ".",
+        "baseUrl": "./src",
         "skipLibCheck": true,
         "declaration": true,
         "allowUnusedLabels": true,
@@ -29,12 +29,13 @@
         "target": "ESNext",
         "types": ["chai", "mocha", "node", "sinon"],
         "paths": {
-            "@Broadcast/*": ["./src/lib/Broadcast/*"],
-            "@Evolvers/*": ["./src/lib/Evolvers/*"],
-            "@Observe/*": ["./src/lib/Observe/*"],
-            "@Refineries/*": ["./src/lib/Refineries/*"],
-            "@Shared/*": ["./src/lib/Shared/*"],
-            "@Types/*": ["./src/lib/Types/*"]
+            "@Broadcast/*": ["./lib/Broadcast/*"],
+            "@Evolvers/*": ["./lib/Evolvers/*"],
+            "@Observe/*": ["./lib/Observe/*"],
+            "@Refineries/*": ["./lib/Refineries/*"],
+            "@Shared/*": ["./lib/Shared/*"],
+            "@Types/*": ["./lib/Types/*"],
+            "@/*": ["./*"]
         }
     }
 }

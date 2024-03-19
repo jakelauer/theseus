@@ -76,7 +76,7 @@ describe("createChainingProxy", function () {
 
         expect(() => (proxy as any).undefinedProperty).to.throw(
             Error,
-            'Property "undefinedProperty" not found in target',
+            "Property \"undefinedProperty\" not found in target",
         );
     });
 });

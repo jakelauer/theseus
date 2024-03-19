@@ -1,8 +1,8 @@
-import chai, { expect } from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import sinon from 'sinon';
+import chai, { expect } from "chai";
+import chaiAsPromised from "chai-as-promised";
+import sinon from "sinon";
 
-import { buildChainableMutatorQueue } from '../buildChainableMutatorQueue';
+import { buildChainableMutatorQueue } from "../buildChainableMutatorQueue";
 
 import type { MutableData, Mutator } from "@Evolvers/Types/MutatorTypes";
 import type { Mutable } from "@Shared/String/makeMutable";
@@ -21,7 +21,7 @@ describe("buildChainableMutatorQueue", function () {
     });
 
     it("should process synchronous mutators in sequence", function () {
-        const argName = "mutableTestArg" as Mutable<`testArg`>;
+        const argName = "mutableTestArg" as Mutable<"testArg">;
         let testData: MutableData<{ value: number }, "mutableTestArg"> = { [argName]: { value: 1 } };
         type TMutableData = typeof testData;
         type TEvolverData = (typeof testData)[typeof argName];
@@ -52,7 +52,7 @@ describe("buildChainableMutatorQueue", function () {
     });
 
     it("should handle asynchronous mutators correctly", async function () {
-        const argName = "mutableTestArg" as Mutable<`testArg`>;
+        const argName = "mutableTestArg" as Mutable<"testArg">;
         let testData: MutableData<{ value: number }, "mutableTestArg"> = { [argName]: { value: 1 } };
         type TMutableData = typeof testData;
         type TEvolverData = (typeof testData)[typeof argName];
@@ -97,7 +97,7 @@ describe("buildChainableMutatorQueue", function () {
         });
 
         expect(() => queueMutation("undefinedMutatorPath", undefinedMutator as any, [])).to.throw(
-            `Mutator undefinedMutatorPath returned undefined. Mutators must return a value compatible with the mutable data type.`,
+            "Mutator undefinedMutatorPath returned undefined. Mutators must return a value compatible with the mutable data type.",
         );
     });
 
@@ -114,7 +114,7 @@ describe("buildChainableMutatorQueue", function () {
         });
 
         expect(() => queueMutation("numberToStringMutatorPath", stringMutator, [])).to.throw(
-            `Expected mutator numberToStringMutatorPath to return an object, but got type "string" from value "not an object".`,
+            "Expected mutator numberToStringMutatorPath to return an object, but got type \"string\" from value \"not an object\".",
         );
     });
 
@@ -136,7 +136,7 @@ describe("buildChainableMutatorQueue", function () {
             expect.fail("Expected an error to be thrown");
         } catch (e) {
             expect(e.message).to.equal(
-                `Expected mutator numberToStringMutatorPath to return an object, but got type "string" from value "not a number".`,
+                "Expected mutator numberToStringMutatorPath to return an object, but got type \"string\" from value \"not a number\".",
             );
         }
 

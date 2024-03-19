@@ -15,7 +15,7 @@
 	},
 	"scripts": {
 		"root-build": "cd ../../ && pnpm build && cd .examples/TicTacToe",
-		"start": "pnpm root-build && ts-node-esm ./src/Game.ts"
+		"start": "pnpm root-build && ts-node-esm --experimental-specifier-resolution=node ./src/Game.ts"
 	},
 	"main": "index.ts"
 }

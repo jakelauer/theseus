@@ -1,11 +1,11 @@
 import theseus from "theseus-js";
 
-import { GameStateEvolver } from "./evolve/GameStateEvolver.js";
-import { GameRefineryComplex } from "./refine/GameRefineryComplex.js";
-import { initialGameState } from "./state/GameState.js";
+import { GameRefineryComplex } from "./refine/GameRefineryComplex";
+import { initialGameState } from "./state/GameState";
+import { GameEvolverComplex } from "./evolve/GameEvolverComplex";
 
 export const GameShip = theseus({
     initialData: initialGameState,
-    evolvers: { GameStateEvolver },
+    evolvers: GameEvolverComplex,
     refineries: GameRefineryComplex,
 });

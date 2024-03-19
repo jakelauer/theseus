@@ -1,47 +1,26 @@
-import deepExtend from 'deep-extend';
-import allSettled from 'promise.allsettled';
-import { v4 as uuidv4 } from 'uuid';
+import deepExtend from "deep-extend";
+import allSettled from "promise.allsettled";
+import { v4 as uuidv4 } from "uuid";
 
-import type { BroadcasterObserver } from '@Broadcast/BroadcasterObserver';
-import { getTheseusLogger } from '@Shared/index';
+import { getTheseusLogger } from "@Shared/index";
 
-import { Broadcaster } from '../Broadcast/Broadcaster';
-import TheseusBuilder from './TheseusBuilder';
+import { Broadcaster } from "./lib/Broadcast/Broadcaster";
+import TheseusBuilder from "./TheseusBuilder";
 
-import type { BroadcasterParams, DestroyCallback } from "../Broadcast/Broadcaster";
+import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
+import type { DestroyCallback } from "./lib/Broadcast/Broadcaster";
+import type { BaseParams, ITheseus } from "@Types/Theseus";
 const log = getTheseusLogger("Observation");
 
 allSettled.shim();
 
-type BaseParams<
-    TData extends object,
-    TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
-> = {
-    initialData: TData;
-    broadcasterParams?: BroadcasterParams<TData, TObserverType>;
-};
-
-export interface ITheseus<TData> {
-    __uuid: string;
-    state: TData;
-    observe: (callback: (newData: TData) => void, updateImmediately?: boolean) => DestroyCallback;
-}
-
-export type TheseusExtendable<
-    TData extends object,
-    TObservation extends Theseus<TData>,
-    Extension,
-> = TObservation & Extension;
-
-export type TheseusParams<
-    TData extends object,
-    TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
-> = BaseParams<TData, TObserverType>;
-
 export class Theseus<
-    TData extends object,
-    TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
-> extends Broadcaster<TData, TObserverType> {
+        TData extends object,
+        TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
+    >
+    extends Broadcaster<TData, TObserverType>
+    implements ITheseus<TData>
+{
     #internalState: TData;
     #uuid: string;
 
@@ -127,5 +106,5 @@ export class Theseus<
         return await instance.update(data);
     }
 }
-
+export type TheseusInstance = typeof Theseus;
 export default TheseusBuilder;

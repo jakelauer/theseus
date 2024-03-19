@@ -14,6 +14,7 @@ module.exports = {
     ],
     plugins: [],
     rules: {
+        quotes: [2, "double", { avoidEscape: true }],
         "no-async-promise-executor": "off",
         "@typescript-eslint/no-floating-promises": ["error"],
         "@typescript-eslint/no-explicit-any": "off",

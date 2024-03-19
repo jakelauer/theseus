@@ -1,8 +1,8 @@
-import { expect } from 'chai';
-import { beforeEach, describe, it } from 'mocha';
-import sinon from 'sinon';
+import { expect } from "chai";
+import { beforeEach, describe, it } from "mocha";
+import sinon from "sinon";
 
-import { BroadcasterObserver } from '@Broadcast/BroadcasterObserver';
+import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 
 describe("BroadcasterObserver", () => {
     let observer: BroadcasterObserver<any>;

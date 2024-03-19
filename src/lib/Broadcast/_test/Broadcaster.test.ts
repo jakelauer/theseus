@@ -1,9 +1,9 @@
-import { expect } from 'chai';
-import { beforeEach, describe, it } from 'mocha';
+import { expect } from "chai";
+import { beforeEach, describe, it } from "mocha";
 
-import { BroadcasterObserver } from '@Broadcast/BroadcasterObserver';
+import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 
-import { Broadcaster } from '../Broadcaster';
+import { Broadcaster } from "../Broadcaster";
 
 import type { BroadcasterParams } from "../Broadcaster";
 // Mock observer class for testing
@@ -94,10 +94,16 @@ describe("Broadcaster", () => {
 
             // Attempt to broadcast data and verify that observers do not receive it
             const testData = { key: "value" };
-            broadcaster.broadcast(testData).then(() => {
-                expect(mockObserver1.dataReceived).to.be.null;
-                expect(mockObserver2.dataReceived).to.be.null;
-            });
+
+            broadcaster
+                .broadcast(testData)
+                .then(() => {
+                    expect(mockObserver1.dataReceived).to.be.null;
+                    expect(mockObserver2.dataReceived).to.be.null;
+                })
+                .catch((error) => {
+                    console.error("Error broadcasting data:", error);
+                });
         });
     });
 

@@ -1,10 +1,10 @@
 {
     "compileOnSave": true,
     "include": ["./src/**/*"],
-    "exclude": ["./*.js", "./*.cjs", "dist"],
+    "exclude": ["./*.js", "./*.cjs", "../../dist"],
     "compilerOptions": {
         "rootDir": "./src",
-        "baseUrl": ".",
+        "baseUrl": "./src",
         "skipLibCheck": true,
         "declaration": true,
         "outDir": "./dist",

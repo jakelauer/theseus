@@ -10,4 +10,13 @@ const replacer = (_key: any, value: any) => (isArrayOfPrimitive(value) ? format(
 const expand = (str: string) =>
     str.replace(/(?:"\^\^\^)(\[ .* \])(?:")/g, (_match, a) => a.replace(/\\"/g, '"'));
 
-export const stringifier = (obj: object) => expand(JSON.stringify(obj, replacer, 2));
+export const stringifier = (obj: object) => {
+    try {
+        return expand(JSON.stringify(obj, replacer, 2));
+    } catch (e) {
+        if (e instanceof Error) {
+            return `CANNOT_STRINGIFY: ${e.message} ${e.stack}`;
+        }
+        return `CANNOT_STRINGIFY: ${e}`;
+    }
+};

@@ -1,6 +1,6 @@
 import { getTheseusLogger, Refinery } from "theseus-js";
 
-import { GameState } from "../../state/GameState.js";
+import { Board, GameState } from "../../state/GameState";
 
 const log = getTheseusLogger("GameBoardRefinery");
 
@@ -37,5 +37,18 @@ export const { GameBoardRefinery } = Refinery.create("GameBoardRefinery", { noun
             log.info(`Getting random available square at ${randomAvailableSquare}`);
 
             return randomAvailableSquare;
+        },
+        renderToString: ({ immutableGameState: { board } }) => {
+            const reducer = (acc: string[], row: Board[number]) => {
+                const rowString = row
+                    .map((v) => (v ? v : "⬛"))
+                    .join("")
+                    .replace(/X/g, "❌")
+                    .replace(/O/g, "⭕");
+                acc.push(rowString);
+                return acc;
+            };
+
+            return board.reduce<string[]>(reducer, []).join("\r\n");
         },
     });

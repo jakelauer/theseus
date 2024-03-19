@@ -1,9 +1,8 @@
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 import type { Immutable } from "@Shared/String/makeImmutable";
 
 import type { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
 
-const log = getTheseusLogger("ForgeSet");
+//const log = getTheseusLogger("ForgeSet");
 
 /**
  * Represents a set of forge functions applied to forgeable data. Forge functions are responsible for refining

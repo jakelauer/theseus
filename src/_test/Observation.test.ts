@@ -1,9 +1,9 @@
-import chai, { expect } from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import { beforeEach, describe, it } from 'mocha';
-import sinon from 'sinon';
+import chai, { expect } from "chai";
+import chaiAsPromised from "chai-as-promised";
+import { beforeEach, describe, it } from "mocha";
+import sinon from "sinon";
 
-import { Theseus } from '@Observe/Theseus';
+import { Theseus } from "@/Theseus";
 
 chai.use(chaiAsPromised);
 
@@ -58,7 +58,7 @@ describe("Observation", () => {
         return;
     });
 
-    it(`should correctly handle instance retrieval and updates by ID`, async () => {
+    it("should correctly handle instance retrieval and updates by ID", async () => {
         console.log("observation.__uuid", observation.__uuid);
         const id = observation.__uuid;
         const callback = sinon.fake();

@@ -1,4 +1,4 @@
-import theseus from './lib/Observe/Theseus';
+import theseus from "./Theseus";
 
 export * from "./lib";
 export default theseus;

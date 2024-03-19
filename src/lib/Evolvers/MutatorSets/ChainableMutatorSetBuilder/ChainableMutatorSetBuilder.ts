@@ -1,12 +1,12 @@
 import {
 	buildChainableMutatorQueue
-} from '@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue';
+} from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue";
 import {
 	createChainingProxy
-} from '@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy';
-import getTheseusLogger from '@Shared/Log/get-theseus-logger';
+} from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy";
+import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
-import { MutatorSetBuilder } from '../MutatorSetBuilder/MutatorSetBuilder';
+import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
 
 import type { Chainable, ChainableMutators, FinalMutators } from "@Evolvers/Types/ChainableTypes";
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";

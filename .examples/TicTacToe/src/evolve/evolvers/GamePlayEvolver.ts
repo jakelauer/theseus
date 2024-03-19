@@ -1,14 +1,14 @@
 import { Evolver, getTheseusLogger } from "theseus-js";
 
-import { GameState, MarkType } from "../state/GameState.js";
-import { GameBoardRefinery } from "../refine/refineries/GameBoardRefinery.js";
+import { GameState, MarkType } from "../../state/GameState";
+import { GameBoardRefinery } from "../../refine/refineries/GameBoardRefinery";
 
 const log = getTheseusLogger("GameStateEvolver");
 
-export const { GameStateEvolver } = Evolver.create("GameStateEvolver", { noun: "gameState" })
+export const { GamePlayEvolver } = Evolver.create("GamePlayEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
-        setSquare: ({ mutableGameState }, coords: [number, number], mark: MarkType) => {
+        playMove: ({ mutableGameState }, coords: [number, number], mark: MarkType) => {
             log.info(`Received request to set square at ${coords} to ${mark}`);
 
             const isAvailable = !GameBoardRefinery(mutableGameState).getSquare(coords);
