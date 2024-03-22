@@ -2,7 +2,6 @@ import { Evolver, getTheseusLogger } from "theseus-js";
 import { GameState } from "../../state/GameState";
 import { GameBoardRefinery } from "../../refine/refineries/GameBoardRefinery";
 import { GamePlayEvolver } from "./GamePlayEvolver";
-import { GameOutcomeRefinery } from "../../refine/refineries/GameOutcomeRefinery";
 
 const log = getTheseusLogger("GameTurnEvolver");
 

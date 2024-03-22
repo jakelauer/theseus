@@ -15,7 +15,7 @@
         "experimentalDecorators": true,
         "forceConsistentCasingInFileNames": true,
         "lib": ["ESNext", "DOM"],
-        "module": "ESNext",
+        "module": "ES2020",
         "moduleResolution": "node",
         "noEmit": false,
         "noErrorTruncation": true,
@@ -26,7 +26,7 @@
         "esModuleInterop": true,
         "sourceMap": true,
         "strictNullChecks": true,
-        "target": "ESNext",
+        "target": "ES2020",
         "types": ["chai", "mocha", "node", "sinon"],
         "paths": {
             "@Broadcast/*": ["./lib/Broadcast/*"],
