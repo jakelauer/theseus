@@ -1,5 +1,5 @@
 .eslintrc.cjs
-packages/publisher
+packages/**/*
 dist
 node_modules
 .husky
