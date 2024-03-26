@@ -35,7 +35,6 @@ export type BaseParams<
     TData extends object,
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
 > = {
-    initialData: TData;
     broadcasterParams?: BroadcasterParams<TData, TObserverType>;
 };
 

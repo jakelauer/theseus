@@ -23,5 +23,8 @@
     "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
     "eslint.format.enable": true,
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "typescriptHero.imports.organizeOnSave": true
+    "typescriptHero.imports.organizeOnSave": true,
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

@@ -109,6 +109,7 @@ export class Evolver<
      */
     public mutate(input: TData) {
         // Create the actions which will be available when `for()` is called.
+        // todo $jlauer - cache this put pass new input
         const mutatorSet = MutatorSetBuilder.create<TData, Mutable<TParamName>, TMutators>(
             input,
             this.mutableArgName,
@@ -138,6 +139,7 @@ export class Evolver<
      */
     public evolve(input: TData) {
         // Create the actions which will be available when `for()` is called.
+        // todo $jlauer - cache this put pass new input
         const mutatorSet = ChainableMutatorSetBuilder.createChainable<TData, Mutable<TParamName>, TMutators>(
             input,
             this.mutableArgName,

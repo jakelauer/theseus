@@ -12,9 +12,10 @@ module.exports = {
         "plugin:mocha/recommended",
         "prettier",
     ],
-    plugins: [],
+    plugins: ["unused-imports"],
     rules: {
         quotes: [2, "double", { avoidEscape: true }],
+        "unused-imports/no-unused-imports": "error",
         "no-async-promise-executor": "off",
         "@typescript-eslint/no-floating-promises": ["error"],
         "@typescript-eslint/no-explicit-any": "off",

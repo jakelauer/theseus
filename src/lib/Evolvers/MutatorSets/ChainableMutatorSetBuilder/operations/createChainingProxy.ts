@@ -58,7 +58,7 @@ export function createChainingProxy<T>(params: {
                     return copy;
                 };
             } else {
-                log.info(`[Proxy] Property "${prop}" not found in target`);
+                log.error(`[Proxy] Property "${prop}" not found in target`);
                 throw new Error(`Property "${prop}" not found in target`);
             }
         },

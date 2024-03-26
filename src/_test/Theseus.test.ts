@@ -11,7 +11,7 @@ describe("Observation", () => {
     let observation: Theseus<{ test: string }>;
 
     beforeEach(() => {
-        observation = new Theseus<{ test: string }>({ initialData: { test: "initial" } });
+        observation = new Theseus<{ test: string }>({ test: "initial" });
     });
 
     it("should initialize with provided initial data", () => {

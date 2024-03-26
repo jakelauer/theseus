@@ -23,7 +23,10 @@ export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "ga
                 return GameTurnEvolver.mutate(mutableGameState).using.gameOver("stalemate");
             }
 
-            GamePlayEvolver.evolve(mutableGameState).using.playMove(randomSquare, nextMarkType);
+            GamePlayEvolver.evolve(mutableGameState)
+                .using.playMove(randomSquare, nextMarkType)
+                .then.delayedClearSquares()
+                .finally.delayedSetSquare(randomSquare, nextMarkType);
 
             log.info(`Played square: ${randomSquare}`);
 

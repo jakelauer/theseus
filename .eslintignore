@@ -4,5 +4,3 @@ dist
 node_modules
 .husky
 *.d.ts
-**/_test/**
-**/test/**

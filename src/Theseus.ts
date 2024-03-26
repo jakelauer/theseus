@@ -44,11 +44,11 @@ export class Theseus<
      * @param initialData The starting data (can be null)
      * @param params
      */
-    constructor(params: BaseParams<TData, TObserverType>) {
-        super(params.broadcasterParams);
+    constructor(data: TData, params?: BaseParams<TData, TObserverType>) {
+        super(params?.broadcasterParams);
 
         this.#uuid = uuidv4();
-        this.setData(params.initialData);
+        this.setData(data);
         Theseus.instancesById[this.#uuid] = this;
     }
 

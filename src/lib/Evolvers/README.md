@@ -1,31 +1,130 @@
-# Evolvers
+# Evolvers and EvolverComplexes
 
-At the heart of theseus-js lies the concept of Evolvers, a sophisticated mechanism designed to
-transform and manipulate data through a series of operations known as mutators. Evolvers encapsulate
-the essence of dynamic data handling, enabling developers to apply a sequence of transformations to
-mutable data, ensuring that the output remains within the same data type domain.`
+## Overview
 
-## Mutators: The Building Blocks
+The Theseus library introduces Evolvers and EvolverComplexes as foundational tools for state management.
+Evolvers facilitate data transformations through both singular mutations and sequential, chained
+transformations. EvolverComplexes enable grouping of these Evolvers for more complex and organized state
+evolution scenarios.
 
-Mutators serve as the foundational elements of an Evolver. Each mutator is a discrete function
-tasked with a specific transformation or mutation operation. These functions accept mutable data,
-alongside optional arguments, and work to either modify the existing data or generate new data of
-the same type. The design of mutators accommodates flexibility and adaptability, allowing them to be
-either synchronous, catering to immediate data transformations, or asynchronous, for operations that
-require awaiting external processes or fetches.
+## Evolvers
 
-## EvolverComplex: The Architect of Data Evolution
+Evolvers are designed to encapsulate specific transformations on data, offering a modular approach to state
+management.
 
-Diving deeper into the architecture of theseus-js, the EvolverComplex emerges as a pivotal
-component. It represents a conglomerate of Evolvers, each dedicated to operating on a specific type
-of data, yet collectively they maintain a uniformity in data handling. The EvolverComplex
-orchestrates the interaction between multiple Evolvers, leveraging their individual mutations to
-apply a comprehensive transformation strategy to the data. This conglomerate approach not only
-enhances the versatility of data manipulation within theseus-js but also aligns with the library's
-goal of providing a narrative and fluent data handling experience.
+### Example: Dungeons & Dragons Player Actions
 
-The integration of Evolvers, underpinned by Mutators and unified through the EvolverComplex,
-exemplifies theseus-js's commitment to offering a robust and intuitive framework for data evolution.
-Whether dealing with simple data structures or complex data ecosystems, the Evolver mechanism
-provides developers with the tools to craft precise and tailored data transformation pipelines,
-fostering a creative and efficient approach to data management.
+In a D&D game, managing a player's turn involves several steps, including pre-turn conditions, movement,
+actions, and reactions. An `Evolver` can manage these aspects efficiently:
+
+```typescript
+const { PlayerTurnEvolver } = Evolver.create("PlayerTurnEvolver", { noun: "gameState" })
+    .toEvolve<GameState>()
+    .withMutators({
+        setPreTurnCondition: ({ mutableGameState }, condition) => {
+            mutableGameState.preTurnCondition = condition;
+            return mutableGameState;
+        },
+        move: ({ mutableGameState }, movement) => {
+            mutableGameState.position += movement;
+            return mutableGameState;
+        },
+        takeAction: ({ mutableGameState }, action) => {
+            mutableGameState.lastAction = action;
+            return mutableGameState;
+        },
+    });
+```
+
+In this example, each mutator function receives an object containing `mutableGameState`, which is then updated
+with the new state resulting from the mutator's logic. This pattern is consistent with the correct usage of
+Evolvers in Theseus, focusing on the mutability and chainability of state transformations.
+
+To then use the Evolver (outside of Theseus), the code might look like this:
+
+```typescript
+interface GameState {
+    preTurnCondition: string | null;
+    position: number;
+    lastAction: string | null;
+}
+
+let gameState: GameState = {
+    preTurnCondition: null,
+    position: 0,
+    lastAction: null,
+};
+
+/**
+ * # ================
+ *
+ * Using evolve:
+ */
+
+// Set a pre-turn condition
+gameState = PlayerTurnEvolver.evolve(gameState)
+    .using.setPreTurnCondition("Stealth Mode")
+    .then.move(3)
+    .finally.takeAction("Attack");
+
+/**
+ * # ================
+ *
+ * Using mutate:
+ */
+
+// Set a pre-turn condition
+gameState = PlayerTurnEvolver.mutate(gameState).using.setPreTurnCondition("Stealth Mode");
+
+// Move the player by 3 units
+gameState = PlayerTurnEvolver.mutate(gameState).using.move(3);
+
+// Take an action, e.g., "Attack"
+gameState = PlayerTurnEvolver.mutate(gameState).using.takeAction("Attack");
+
+/**
+ * # ================
+ *
+ * Using deconstructed mutators:
+ */
+
+const { setPreTurnCondition, move, takeAction } = PlayerTurnEvolver.mutate(gameState).getMutators();
+
+// Set a pre-turn condition
+gameState = setPreTurnCondition("Stealth Mode");
+
+// Move the player by 3 units
+gameState = move(3);
+
+// Take an action, e.g., "Attack"
+gameState = takeAction("Attack");
+```
+
+## EvolverComplexes
+
+EvolverComplexes organize multiple related Evolvers, facilitating complex state evolution in a structured
+manner.
+
+### Example: Dungeons & Dragons Game Phases
+
+A game of D&D progresses through various phases, such as character creation, exploration, and combat. An
+`EvolverComplex` could blend multiple Evolvers to manage transitions between these phases:
+
+```typescript
+const PhaseEvolverComplex = EvolverComplex.create().withEvolvers({
+    PlayerTurnEvolver,
+    CharacterCreationEvolver,
+    ExplorationEvolver,
+    CombatEvolver,
+    // Additional phase-specific Evolvers as needed
+});
+```
+
+...and using the complex looks like this:
+
+```typescript
+const result = PhaseEvolverComplex.evolve(gameState)
+    .PlayerTurn.using.setPreTurnCondition("Stealth Mode")
+    .then.move(3)
+    .finally.takeAction("Attack");
+```
