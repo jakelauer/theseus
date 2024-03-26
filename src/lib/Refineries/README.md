@@ -12,6 +12,35 @@ evolution scenarios.
 Refineries are designed to encapsulate specific transformations on data, offering a modular approach to state
 management.
 
+### Forges
+
+Methods within a Refinery that are tasked with deriving new states or outcomes based on the current state are
+known as **Forges**.
+
+-   **Immutable data**: Each Forge receives a first argument that is a data object with a single key.
+
+    This key is named `immutable` concatenated with the value of `noun` provided in the `Refinery.create`
+    method.
+
+    If no `noun` is provided, the default key is `input`. Thus, if a `noun` of "state" is provided, the data
+    will be called `immutableState`.
+
+    Any attempt to mutate this object within a Forge will result in an error, as the object is deeply frozen
+    before any Forge runs.
+
+    As such, Refineries differ from Evolvers in that they should be used to create new data from the original
+    data, rather than modifying the input.
+
+-   **TypeScript Inference**: For TypeScript inference to work when Forges reference their own Refinery, the
+    Refinery must explicitly declare its return types. Circular references without explicit return type
+    declarations can break inference.
+-   **Usage in RefineryComplexes**: Similar to Evolvers in `EvolverComplexes`, the names of Refineries are
+    used directly within `RefineryComplexes` but with the term "Refinery" removed from either the beginning or
+    the end for brevity.
+
+    For example, if a RefineryComplex includes `OddNumberRefinery`, it will be accessible at
+    `MyRefineryComplex.refine(myData).OddNumber`.
+
 ### Example: Dungeons & Dragons Character Status Refinery
 
 This refinery processes aspects of a character's status, such as health and effects, to generate a descriptive

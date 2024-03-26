@@ -2,15 +2,60 @@
 
 ## Overview
 
-The Theseus library introduces Evolvers and EvolverComplexes as foundational tools for state management.
-Evolvers facilitate data transformations through both singular mutations and sequential, chained
-transformations. EvolverComplexes enable grouping of these Evolvers for more complex and organized state
-evolution scenarios.
+Theseus introduces Evolvers and EvolverComplexes as foundational tools for state management. Evolvers
+facilitate data transformations through both singular mutations and sequential, chained transformations.
+EvolverComplexes enable grouping of these Evolvers for more complex and organized state evolution scenarios.
+
+### Chaining behavior, queueing, and asynchrony
+
+Evolvers use a deterministic
+[queue](./MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue.ts) to execute chained
+mutators. This is achieved using a
+[proxy inside the evolver](./MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy.ts), which
+intercepts calls to the mutators.
+
+Because of this, asynchronous mutators can still run as chained operations, thanks to the proxy detecting
+whether each mutator in the chain returns a Promise instance. It _also_ means that mutators which are
+asynchronous and chained **cannot run in parallel**.
+
+In order to run mutations in parallel, you can run the mutations as single operations and merge the result:
+
+```typescript
+const { asyncFoo, asyncBar } = MyEvolver.mutate(myState).getMutators();
+
+const [stateFoo, stateBar] = Promise.all([asyncFoo(), asyncBar()]);
+
+return {
+    ...myState,
+    ...stateFoo,
+    ...stateBar,
+};
+```
 
 ## Evolvers
 
 Evolvers are designed to encapsulate specific transformations on data, offering a modular approach to state
 management.
+
+### Mutators
+
+Within an Evolver, individual methods responsible for applying specific mutations to the state are called
+**Mutators**.
+
+-   **Mutable data**: Every Mutator receives a first argument that is a data object with a single key.
+
+    This key is named `mutable` concatenated with the value of `noun` provided to the `Evolver.create` method.
+    If no `noun` is provided, the default noun is `input`. Thus, if a `noun` of "state" is provided, the data
+    will be called `mutableState`. Mutations to this object are retained across the Evolver's execution
+    because mutators return the resulting object.
+
+-   **TypeScript Inference**: Mutators can reference their own Evolver without losing TypeScript's type
+    inference capabilities.
+-   **Usage in EvolverComplexes**: When Evolvers are included in an `EvolverComplex`, their names are used
+    directly but with the term "Evolver" removed from either the beginning or the end for simplicity.
+
+    For example, if an EvolverComplex includes `OddNumberEvolver`, it will be accessible at
+    `MyEvolverComplex.evolve(myData).OddNumber`.
 
 ### Example: Dungeons & Dragons Player Actions
 
@@ -44,9 +89,9 @@ To then use the Evolver (outside of Theseus), the code might look like this:
 
 ```typescript
 interface GameState {
-    preTurnCondition: string | null;
+    preTurnCondition: string ` null;
     position: number;
-    lastAction: string | null;
+    lastAction: string ` null;
 }
 
 let gameState: GameState = {
@@ -128,3 +173,7 @@ const result = PhaseEvolverComplex.evolve(gameState)
     .then.move(3)
     .finally.takeAction("Attack");
 ```
+
+## Async Mutators
+
+Mutators can be asynchronous, and

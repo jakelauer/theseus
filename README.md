@@ -1,79 +1,110 @@
-# `theseus-js`
+# Theseus Library
 
-Functionality to create and modify data fluently and narratively.
+Welcome to the Theseus library, a robust solution for managing application state with clarity and efficiency.
+Designed with modern JavaScript applications in mind, Theseus stands out for its fluent state manipulation,
+ease of compliance, and intelligent typing capabilities.
 
-`theseus-js` is a TypeScript library designed to offer developers a robust set of tools for
-manipulating and managing data with precision and narrative clarity. Through its well-defined
-interfaces and components like Refineries and Evolvers, `theseus-js` facilitates complex data
-processing and mutation operations in a fluent and intuitive manner.
+## Key Concepts
 
-## Table of Contents
+Theseus is built around several core concepts that differentiate it from other state management libraries:
 
--   [Installation](#installation)
--   [Getting Started](#getting-started)
--   [Features](#features)
--   [Usage](#usage)
--   [API Overview](#api-overview)
--   [Testing](#testing)
--   [Contributing](#contributing)
--   [License](#license)
+-   **Evolvers:** Inspired by the idea of evolving application state, Evolvers in Theseus provide a structured
+    way to define how state changes in response to actions. They encourage a deterministic and predictable
+    state transition model, making state management more intuitive and less error-prone.
 
-## Features
+-   **Refineries:** Complementing Evolvers, Refineries allow for the transformation and validation of state
+    transitions. They ensure that state changes are not only predictable but also conform to defined
+    constraints and validations, enhancing the robustness of your application.
 
-`theseus-js` encapsulates its functionality through various classes and utilities, prominently:
+-   **Fluent State Management:** Theseus introduces a fluent interface for state management, making the code
+    more readable and expressive. This approach allows developers to chain state operations in a clear and
+    logical sequence.
 
--   **Refineries**: Modules dedicated to refining or processing data.
--   **Evolvers**: Components focused on evolving or mutating data structures.
--   **Utilities**: A collection of utilities supporting core functionalities, such as logging
-    enhancements and string manipulations.
+## Why Theseus?
 
-## Installation
+Compared to other state management libraries, Theseus offers:
 
-To install `theseus-js`, run the following command:
+-   **Automatic Type Inference:** Theseus smartly infers types, reducing the boilerplate code typically
+    associated with maintaining types for application state, actions, and reducers.
 
+-   **Modular Architecture:** The library's design encourages a modular approach to state management, making
+    it easier to scale and maintain large applications.
+
+-   **Enhanced Debugging:** With built-in support for logging and state transition tracing, Theseus simplifies
+    the debugging process, helping developers identify and fix issues faster.
+
+## Getting Started
+
+### Installation
+
+```shell
+npm install theseus-js
 ```
-pnpm add theseus-js
+
+```shell
+yarn add theseus-js
 ```
 
-## Usage
+```shell
+pnpm install theseus-js
+```
 
-theseus-js is designed to be intuitive and flexible, allowing developers to easily integrate its
-functionalities into their projects. Below are examples demonstrating the use of key components:
+### Usage
 
-### Show TicTacToe example from files:
+```typescript
+import theseus from "theseus-js";
+import { ScheduleEvolver } from "./evolvers/ScheduleEvolver";
+import { ShiftEvolver } from "./evolvers/ShiftEvolver";
+import { MenuEvolver } from "./evolvers/MenuEvolver";
+import { OrderStatusRefinery } from "./refineries/OrderStatusRefinery";
+import { DiscountRefinery } from "./refineries/DiscountRefinery";
 
-### .examples/TicTacToe/src/evolve/GameStateEvolver.ts
+const cafeState = {
+    //...
+};
 
-### .examples/TicTacToe/src/refine/GameStateRefinery.ts
+export const StarbucksShip = theseus(cafeState).maintainWith({
+    evolvers: {
+        ScheduleEvolver,
+        ShiftEvolver,
+        MenuEvolver,
+    },
+    refineries: {
+        OrderStatusRefinery,
+        DiscountRefinery,
+    },
+});
+```
 
-### .examples/TicTacToe/src/GameMoves.ts
+## Documentation
 
-### .examples/TicTacToe/src/GameState.ts
+For more detailed information on specific Theseus concepts, refer to the following documentation sections:
 
-## Concepts
+-   [Evolvers Documentation](src/lib/Evolvers)
+-   [Refineries Documentation](src/lib/Refineries)
 
-`theseus-js` is designed with modularity and extensibility in mind, offering a comprehensive suite
-of tools for data manipulation. Below is an overview of the primary APIs provided by the library:
+## Examples
 
-### Evolvers
+Check out our TicTacToe example:
 
-##### Mutator
+[Link to TicTacToe Example](.examples/TicTacToe/)
 
-##### Evolver
+This example demonstrates the practical implementation of Theseus concepts in a familiar game format, making
+it easier to grasp the library's capabilities.
 
-##### EvolverComplex
+## Building and Contributing
 
-### Refineries
+Theseus is an open-source project, and we welcome contributions from the community. Whether it's adding new
+features, fixing bugs, or improving documentation, your contributions are invaluable to making Theseus better
+for everyone.
 
-##### Forge
+### Setting Up for Development
 
-##### Refinery
-
-##### RefineryComplex
-
-### Flags
+1. Clone the repository.
+2. Run `pnpm install && pnpm prepare` to install dependencies and prepare development.
+3. Use `pnpm test` to test the library.
+4. Use `pnpm build` to compile the library.
 
 ## License
 
-`theseus-js` is licensed under the MIT License. See the
-[LICENSE](https://chat.openai.com/g/g-wpMtgVmzG-readme-generator/c/LICENSE) file for more details.
+Theseus is MIT licensed. For more details, see the [LICENSE](LICENSE) file.
