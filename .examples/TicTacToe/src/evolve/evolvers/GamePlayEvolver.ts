@@ -5,6 +5,24 @@ import { GameBoardRefinery } from "../../refine/refineries/GameBoardRefinery";
 
 const log = getTheseusLogger("GameStateEvolver");
 
+const { internal } = Evolver.create("internal", { noun: "gameState" })
+    .toEvolve<GameState>()
+    .withMutators({
+        setMark: ({ mutableGameState }, coords: [number, number], mark: MarkType): GameState => {
+            const [row, col] = coords;
+            mutableGameState.board[row][col] = mark;
+            return mutableGameState;
+        },
+        updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => {
+            mutableGameState.lastPlayer = mark;
+            return mutableGameState;
+        },
+        updateLastPlayedCoords: ({ mutableGameState }, coords: [number, number]): GameState => {
+            mutableGameState.lastPlayedCoords = coords;
+            return mutableGameState;
+        },
+    });
+
 export const { GamePlayEvolver } = Evolver.create("GamePlayEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
@@ -16,19 +34,22 @@ export const { GamePlayEvolver } = Evolver.create("GamePlayEvolver", { noun: "ga
                 throw new Error(`Square at ${coords} is already taken`);
             }
 
-            const [row, col] = coords;
-            mutableGameState.board[row][col] = mark;
-            mutableGameState.lastPlayer = mark;
-            mutableGameState.lastPlayedCoords = coords;
+            internal
+                .evolve(mutableGameState)
+                .using.setMark(coords, mark)
+                .then.updateLastPlayer(mark)
+                .then.updateLastPlayedCoords(coords);
 
             return mutableGameState;
         },
         delayedSetSquare: async ({ mutableGameState }, coords: [number, number], mark: MarkType) => {
-            const [row, col] = coords;
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            mutableGameState.board[row][col] = mark;
-            mutableGameState.lastPlayer = mark;
-            mutableGameState.lastPlayedCoords = coords;
+
+            internal
+                .evolve(mutableGameState)
+                .using.setMark(coords, mark)
+                .then.updateLastPlayer(mark)
+                .then.updateLastPlayedCoords(coords);
 
             return mutableGameState;
         },
