@@ -21,7 +21,7 @@ describe("getLogger", function () {
             major: sinon.spy(),
             trace: sinon.spy(),
             format:
-                winstonConfigBuilder("test").config.format ??
+                winstonConfigBuilder().config.format ??
                 winston.format(() => {
                     return true;
                 })(),
@@ -30,14 +30,14 @@ describe("getLogger", function () {
 
     it("should create a logger with the specified name using the mock logging library", function () {
         const loggerName = "testLogger";
-        getTheseusLogger(loggerName, undefined, mockLoggingLib);
+        getTheseusLogger(loggerName, mockLoggingLib);
 
         // Verify getLogger was called with the correct name on the mock
         sinon.assert.calledWith(mockLoggingLib, loggerName);
     });
 
     it("should return a logger instance with expected methods from the mock library", function () {
-        const logger = getTheseusLogger("testLogger", undefined, mockLoggingLib);
+        const logger = getTheseusLogger("testLogger", mockLoggingLib);
 
         const keys = ["debug", "info", "warn", "error", "major", "silly", "verbose", "trace"];
 

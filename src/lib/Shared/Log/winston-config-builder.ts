@@ -4,13 +4,12 @@ import { logLevels } from "@Shared/Log/set-theseus-log-level";
 import { stringifier } from "@Shared/Log/stringifier";
 
 const { format, addColors } = winston;
-const { combine, colorize, label, timestamp, printf, errors, splat, prettyPrint, json } = format;
+const { combine, colorize, timestamp, printf, errors, splat, prettyPrint, json } = format;
 
-export const theseusLogFormat = (loggerLabel?: string) =>
+export const theseusLogFormat = () =>
     combine(
         errors({ stack: true }),
         colorize({ all: true }),
-        label({ label: loggerLabel }),
         splat(),
         json({ space: 2, circularValue: undefined }),
         prettyPrint(),
@@ -57,10 +56,10 @@ export const setAllTransportsLevel = (level: keyof typeof logLevels | "silent") 
 };
 
 const devMode = process.env.NODE_ENV === "development";
-export default (label: string) => ({
+export default () => ({
     config: {
         levels: logLevels,
-        format: theseusLogFormat(label),
+        format: theseusLogFormat(),
         exitOnError: false,
         transports: [makeTransport()],
         level: devMode ? "info" : "major",

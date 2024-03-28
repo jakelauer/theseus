@@ -8,12 +8,12 @@ const testMode = isTestMode();
 
 setTheseusLogLevel(testMode ? "debug" : "major");
 
+const rootLogger = winston.createLogger({
+    ...winstonConfigBuilder().config,
+});
+
 export type TheseusLogParams = Parameters<typeof winston.createLogger>[0];
-const buildLogger = (label: string, params: TheseusLogParams = {}) =>
-    winston.createLogger({
-        ...winstonConfigBuilder(label).config,
-        ...params,
-    });
+const buildLogger = (label: string) => rootLogger.child({ label });
 
 /**
  * Returns a logger with the given name.
@@ -24,10 +24,9 @@ const buildLogger = (label: string, params: TheseusLogParams = {}) =>
  */
 export function getTheseusLogger(
     label: string,
-    params: TheseusLogParams = {},
     _mockLoggingLib?: (label: string) => MockLoggingLib,
 ): TheseusLogger {
-    const logger: winston.Logger = (_mockLoggingLib?.(label) as any) ?? buildLogger(label, params);
+    const logger: winston.Logger = (_mockLoggingLib?.(label) as any) ?? buildLogger(label);
 
     Object.defineProperties(logger, {
         major: {
