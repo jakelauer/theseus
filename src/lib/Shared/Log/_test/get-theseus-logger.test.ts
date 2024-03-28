@@ -19,6 +19,7 @@ describe("getLogger", function () {
             verbose: sinon.spy(),
             silly: sinon.spy(),
             major: sinon.spy(),
+            trace: sinon.spy(),
             format:
                 winstonConfigBuilder("test").config.format ??
                 winston.format(() => {
@@ -38,7 +39,7 @@ describe("getLogger", function () {
     it("should return a logger instance with expected methods from the mock library", function () {
         const logger = getTheseusLogger("testLogger", undefined, mockLoggingLib);
 
-        const keys = ["debug", "info", "warn", "error", "major", "silly", "verbose"];
+        const keys = ["debug", "info", "warn", "error", "major", "silly", "verbose", "trace"];
 
         // Verify the returned logger has the expected methods
         expect(logger).to.have.all.keys([...keys, "format"]);

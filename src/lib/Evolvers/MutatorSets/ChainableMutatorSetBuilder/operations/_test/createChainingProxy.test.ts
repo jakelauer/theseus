@@ -9,7 +9,7 @@ describe("createChainingProxy", function () {
         };
         const proxy = createChainingProxy({
             target,
-            queueMutation: () => {},
+            queueMutation: () => ({}),
         });
 
         expect(proxy.chainableMethod()).to.equal(proxy);
@@ -28,6 +28,7 @@ describe("createChainingProxy", function () {
                 if (selfPath === "finalForm") {
                     func.apply(target, args);
                 }
+                return {};
             },
         });
 
@@ -48,6 +49,7 @@ describe("createChainingProxy", function () {
                 if (selfPath === "toBeQueued") {
                     func.apply(target, args);
                 }
+                return {};
             },
         });
 
@@ -61,7 +63,7 @@ describe("createChainingProxy", function () {
         };
         const proxy = createChainingProxy({
             target,
-            queueMutation: () => {},
+            queueMutation: () => ({}),
         });
 
         expect(proxy.someProperty).to.equal("value");
@@ -71,12 +73,12 @@ describe("createChainingProxy", function () {
         const target = {};
         const proxy = createChainingProxy({
             target,
-            queueMutation: () => {},
+            queueMutation: () => ({}),
         });
 
         expect(() => (proxy as any).undefinedProperty).to.throw(
             Error,
-            "Property \"undefinedProperty\" not found in target",
+            'Property "undefinedProperty" not found in target',
         );
     });
 });

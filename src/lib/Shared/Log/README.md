@@ -1,9 +1,9 @@
 # Theseus Logger Usage Guide
 
-The Theseus logging utility, part of the Theseus library, offers a flexible and convenient way to implement
-logging in your JavaScript applications. It leverages popular tools and best practices to ensure that logging
-is both informative and manageable. This guide focuses on the `get-theseus-logger.ts` utility, which is
-central to acquiring and using the logger.
+The Theseus logging utility, part of Theseus, offers a flexible and convenient way to implement logging in
+your JavaScript applications. It leverages popular tools and best practices to ensure that logging is both
+informative and manageable. This guide focuses on the `get-theseus-logger.ts` utility, which is central to
+acquiring and using the logger.
 
 ### Importing the Logger
 

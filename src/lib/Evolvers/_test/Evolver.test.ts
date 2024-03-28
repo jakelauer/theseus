@@ -3,7 +3,7 @@ import { describe, it } from "mocha";
 
 import { Evolver } from "../Evolver";
 
-describe("Evolver", () => {
+describe("Evolvers", () => {
     // Mock data and types for testing
     interface TestData {
         value: number;
@@ -67,10 +67,42 @@ describe("Evolver", () => {
                 const invalidMutators: any = { brokenMutator: null }; // Intentionally incorrect
 
                 expect(() =>
-                    Evolver.create("testEvolver")
-                        .toEvolve<AnotherTestData>()
-                        .withMutators(invalidMutators),
+                    Evolver.create("testEvolver").toEvolve<AnotherTestData>().withMutators(invalidMutators),
                 ).to.throw(); // Specify the expected error or message
+            });
+        });
+
+        describe("Immutable return", () => {
+            it("should return a new object copy that won't change after further evolutions", () => {
+                const { testEvolver } = Evolver.create("testEvolver")
+                    .toEvolve<TestData>()
+                    .withMutators({
+                        increment: ({ mutableInput }) => ({ value: mutableInput.value + 1 }),
+                    });
+
+                const initialData = { value: 1 };
+
+                const initialDataEvolver = testEvolver.evolve(initialData);
+
+                console.log("Evolving first time");
+
+                // Evolve the initial data from 1 to 2
+                const evolvedData = initialDataEvolver.using.increment().finalForm;
+                expect(evolvedData.value).to.equal(2); // The evolved data should be 2
+
+                console.log("Evolving second time");
+
+                // Create a second copy of the evolved data and evolve it again
+                const reEvolvedData = initialDataEvolver.using.increment().finalForm;
+                console.log("Re-evolved data", reEvolvedData);
+                expect(evolvedData.value).to.equal(2); // The original evolved data should remain unchanged
+                expect(reEvolvedData.value).to.equal(3); // The new evolved data should be 3
+
+                console.log("Evolving third time");
+                // Directly edit the evolved data manually
+                evolvedData.value = 5;
+                expect(evolvedData.value).to.equal(5); // The evolved data should be 5 after manual editing
+                expect(reEvolvedData.value).to.equal(3); // The new evolved data should remain 3
             });
         });
 
@@ -131,10 +163,7 @@ describe("Evolver", () => {
                         asyncReverseName: async ({ mutableInput }) => {
                             const result = await new Promise<AnotherTestData>((resolve) => {
                                 setTimeout(() => {
-                                    mutableInput.name = mutableInput.name
-                                        .split("")
-                                        .reverse()
-                                        .join("");
+                                    mutableInput.name = mutableInput.name.split("").reverse().join("");
                                     resolve(mutableInput);
                                 }, 100);
                             });
@@ -146,12 +175,14 @@ describe("Evolver", () => {
                         }),
                     });
 
+                console.log("Result A");
                 const resultA = await AsyncEvolver.evolve({ name: "test" })
                     .using.asyncMakeNameLowerCase()
                     .then.asyncMakeNameUpperCase()
                     .then.asyncReverseName()
                     .finally.syncReplaceVowels();
 
+                console.log("Result B");
                 const resultB = await AsyncEvolver.evolve({ name: "test" })
                     .using.syncReplaceVowels()
                     .then.asyncMakeNameUpperCase()

@@ -2,10 +2,10 @@
 
 ## Overview
 
-The Theseus library introduces Refineries and RefineryComplexes as foundational tools for state management.
-Refineries facilitate data transformations through both singular mutations and sequential, chained
-transformations. RefineryComplexes enable grouping of these Refineries for more complex and organized state
-evolution scenarios.
+Theseus introduces Refineries and RefineryComplexes as foundational tools for state management. Refineries
+facilitate data transformations through both singular mutations and sequential, chained transformations.
+RefineryComplexes enable grouping of these Refineries for more complex and organized state evolution
+scenarios.
 
 ## Refineries
 

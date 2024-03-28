@@ -1,8 +1,8 @@
-# Theseus Library
+# Theseus
 
-Welcome to the Theseus library, a robust solution for managing application state with clarity and efficiency.
-Designed with modern JavaScript applications in mind, Theseus stands out for its fluent state manipulation,
-ease of compliance, and intelligent typing capabilities.
+Welcome to Theseus, a robust solution for managing application state with clarity and efficiency. Designed
+with modern JavaScript applications in mind, Theseus stands out for its fluent state manipulation, ease of
+compliance, and intelligent typing capabilities.
 
 ## Key Concepts
 

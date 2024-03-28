@@ -8,7 +8,7 @@ export const logLevels = {
     http: 40,
     verbose: 50,
     debug: 60,
-    trace: 70,
+    trace: 60,
     silly: 80,
 } as const;
 

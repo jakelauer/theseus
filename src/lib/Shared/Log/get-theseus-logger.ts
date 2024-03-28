@@ -6,7 +6,7 @@ import { isTestMode } from "@Shared/Test/isTestMode";
 
 const testMode = isTestMode();
 
-setTheseusLogLevel(testMode ? "debug" : "verbose");
+setTheseusLogLevel(testMode ? "debug" : "major");
 
 export type TheseusLogParams = Parameters<typeof winston.createLogger>[0];
 const buildLogger = (label: string, params: TheseusLogParams = {}) =>
@@ -29,21 +29,34 @@ export function getTheseusLogger(
 ): TheseusLogger {
     const logger: winston.Logger = (_mockLoggingLib?.(label) as any) ?? buildLogger(label, params);
 
-    Object.defineProperty(logger, "major", {
-        get() {
-            return (...args: Parameters<typeof logger.info>) => logger.log("major", ...args);
+    Object.defineProperties(logger, {
+        major: {
+            get() {
+                return (...args: Parameters<typeof logger.info>) => logger.log("major", ...args);
+            },
+        },
+        trace: {
+            get() {
+                return (message: string, ...args: []) => {
+                    const stack = new Error(message).stack?.replace(/Error: /gi, "Trace: ");
+                    return logger.log("debug", stack, ...args);
+                };
+            },
         },
     });
 
     return logger as TheseusLogger;
 }
 
-type TheseusLogger = winston.Logger & { major: winston.LeveledLogMethod };
+type TheseusLogLevelMethods = { major: winston.LeveledLogMethod; trace: winston.LeveledLogMethod };
+
+type TheseusLogger = winston.Logger & TheseusLogLevelMethods;
 
 /** Mock type for the logging library. */
 export type MockLoggingLib = Pick<
     winston.Logger,
     "info" | "error" | "warn" | "debug" | "format" | "silly" | "verbose"
-> & { major: winston.LeveledLogMethod };
+> &
+    TheseusLogLevelMethods;
 
 export default getTheseusLogger;
