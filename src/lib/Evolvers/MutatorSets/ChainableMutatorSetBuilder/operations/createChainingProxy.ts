@@ -5,23 +5,40 @@ import { v4 as uuidv4 } from "uuid";
 
 type ProxyAction = "function" | "toJSON" | "property" | "chainTermination" | "chainHelper" | undefined;
 
+type TTargetBase = { [key: string]: any };
+export type TTargetChained<TTarget extends TTargetBase> = {
+    [K in keyof TTarget]: TTarget[K] extends () => any ?
+        (
+            ...args: Parameters<TTarget[K]>
+        ) => ReturnType<TTarget[K]> extends Promise<any> ? Promise<TTargetChained<TTarget>>
+        :   TTargetChained<TTarget>
+    :   TTarget[K];
+} & {
+    toJSON: any;
+    finalForm: any;
+    finalFormAsync: any;
+    finally: any;
+    using: any;
+    then: any;
+};
+
 /**
  * ChainingProxy is a class that enables method chaining and queueing of operations on a proxied object. It
  * allows for the queueing of mutations and supports asynchronous operation handling, including Promises. This
  * functionality is particularly useful for managing sequences of operations that should be executed in a
  * specific order.
  */
-class ChainingProxy<T> {
+class ChainingProxy<TTarget extends TTargetBase> {
     private proxyUuid: string;
     private log: any;
     private isFinalChainLink: boolean;
     private queueMutation: (selfPath: string, func: () => any, args: any[]) => SortaPromise<object>;
-    private target: T;
+    private target: TTarget;
 
     /** Creates an instance of ChainingProxy. */
     constructor(
         private readonly params: {
-            target: T;
+            target: TTarget;
             observationId?: string;
             queueMutation: (selfPath: string, func: () => any, args: any[]) => SortaPromise<object>;
         },
@@ -41,14 +58,15 @@ class ChainingProxy<T> {
 
     /** Handles the finalization of operations and resets the chain if necessary. */
     private finalizeAndReset(execResult: any) {
-        if (execResult instanceof Promise) {
+        const isAsync = execResult instanceof Promise;
+        if (isAsync) {
             this.log.verbose("Promise detected, executing .finally operation asynchronously");
             void execResult.finally(() => this.setChainTerminated(false));
         } else {
             this.setChainTerminated(false);
         }
 
-        this.log.verbose("Returning result of queued operations", execResult);
+        this.log.verbose(`Returning ${isAsync ? "async" : "sync"} result of queued operations`, execResult);
         return execResult;
     }
 
@@ -94,6 +112,8 @@ class ChainingProxy<T> {
 
         let requestType: ProxyAction;
 
+        this.log.debug("Determining action", { prop });
+
         if (prop === "toJSON") {
             requestType = "toJSON";
         } else if (typeof target[prop] === "function") {
@@ -128,7 +148,7 @@ class ChainingProxy<T> {
                 toReturn = proxy;
                 break;
             case "chainHelper":
-                this.log.verbose(`Chain operation used: "${prop}"`);
+                this.log.trace(`Chain operation used: "${prop}"`);
                 toReturn = proxy;
                 break;
             default:
@@ -141,7 +161,7 @@ class ChainingProxy<T> {
 
     /** Intercepts get operations on the proxy object to enable method chaining, queuing, and more. */
     private getProperty(proxy: any, target: any, rawProp: string | symbol) {
-        this.log.verbose(`Getting property "${rawProp.toString()}"`);
+        this.log.verbose("Getting property", { rawProp });
         const prop = typeof rawProp === "symbol" ? rawProp.toString() : rawProp;
 
         const requestType = this.determineAction(target, rawProp);
@@ -153,7 +173,7 @@ class ChainingProxy<T> {
      * Creates a proxied instance of the target object with enhanced functionality for method chaining and
      * operation queuing.
      */
-    public create(): T {
+    public create(): TTargetChained<TTarget> {
         const proxy: any = new Proxy(this.target as any, {
             get: (target: any, rawProp: string | symbol) => this.getProperty(proxy, target, rawProp),
         });
@@ -163,11 +183,11 @@ class ChainingProxy<T> {
 }
 
 /** Creates a chaining proxy for the provided target object. */
-export function createChainingProxy<T>(params: {
-    target: T;
+export function createChainingProxy<TTarget extends TTargetBase>(params: {
+    target: TTarget;
     observationId?: string;
     queueMutation: (selfPath: string, func: () => any, args: any[]) => SortaPromise<object>;
-}): T {
+}): TTargetChained<TTarget> {
     const chainingProxy = new ChainingProxy(params);
     return chainingProxy.create();
 }

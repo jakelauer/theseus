@@ -35,20 +35,34 @@ addColors({
     silly: "magenta",
 });
 
-export const theseusTransports = {
-    console: new winston.transports.Console(),
+const allTransports: winston.transports.ConsoleTransportInstance[] = [];
+
+const makeTransport = () => {
+    const transport = new winston.transports.Console();
+    transport.level = "debug";
+
+    allTransports.push(transport);
+
+    return transport;
 };
 
-theseusTransports.console.level = "debug";
+export const setAllTransportsLevel = (level: keyof typeof logLevels | "silent") => {
+    allTransports.forEach((transport) => {
+        if (level === "silent") {
+            transport.silent = true;
+        } else {
+            transport.level = level;
+        }
+    });
+};
 
 const devMode = process.env.NODE_ENV === "development";
 export default (label: string) => ({
-    theseusTransports,
     config: {
         levels: logLevels,
         format: theseusLogFormat(label),
         exitOnError: false,
-        transports: [theseusTransports.console],
+        transports: [makeTransport()],
         level: devMode ? "info" : "major",
     } as winston.LoggerOptions,
 });

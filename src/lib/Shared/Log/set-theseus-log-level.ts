@@ -1,4 +1,4 @@
-import { theseusTransports } from "@Shared/Log/winston-config-builder";
+import { setAllTransportsLevel } from "@Shared/Log/winston-config-builder";
 
 export const logLevels = {
     error: 0,
@@ -20,9 +20,5 @@ export const logLevels = {
  */
 
 export const setTheseusLogLevel = (level: keyof typeof logLevels | "silent") => {
-    if (level === "silent") {
-        theseusTransports.console.silent = true;
-    } else {
-        theseusTransports.console.level = level;
-    }
+    setAllTransportsLevel(level);
 };

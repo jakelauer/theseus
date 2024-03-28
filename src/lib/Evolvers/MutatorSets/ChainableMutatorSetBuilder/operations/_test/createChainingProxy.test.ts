@@ -81,4 +81,76 @@ describe("createChainingProxy", function () {
             'Property "undefinedProperty" not found in target',
         );
     });
+
+    it("should correctly handle exceptions thrown in queued functions", function () {
+        const errorMessage = "Error in queued function";
+        const target = {
+            throwError: () => {
+                throw new Error(errorMessage);
+            },
+        };
+        const proxy = createChainingProxy({
+            target,
+            queueMutation: (selfPath, func, args) => {
+                return func.apply(target, args);
+            },
+        });
+
+        expect(() => proxy.throwError()).to.throw(Error, errorMessage);
+    });
+
+    it("should maintain the order of queued mutations", function () {
+        const order: number[] = [];
+        const target = {
+            first: () => {
+                order.push(1);
+            },
+            second: () => {
+                order.push(2);
+            },
+        };
+        const proxy = createChainingProxy({
+            target,
+            queueMutation: (selfPath, func) => {
+                return func();
+            },
+        });
+
+        proxy.first().second();
+        expect(order).to.deep.equal([1, 2]);
+    });
+
+    it("should return correct result from a queued function not meant for further chaining", function () {
+        const expectedResult = 42;
+        const target = {
+            calculate: () => expectedResult,
+        };
+        const proxy = createChainingProxy({
+            target,
+            queueMutation: (selfPath, func) => func(),
+        });
+
+        const result = proxy.finally.calculate();
+        expect(result).to.equal(expectedResult);
+    });
+
+    it("should handle asynchronous method calls correctly", async function () {
+        let asyncOperationCompleted = false;
+        const target = {
+            asyncMethod: () =>
+                new Promise((resolve) =>
+                    setTimeout(() => {
+                        asyncOperationCompleted = true;
+                        resolve(true);
+                    }, 10),
+                ),
+        };
+        const proxy = createChainingProxy({
+            target,
+            queueMutation: (selfPath, func) => func(),
+        });
+
+        await proxy.finally.asyncMethod();
+        expect(asyncOperationCompleted).to.be.true;
+    });
 });

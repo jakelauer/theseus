@@ -39,7 +39,11 @@ export function getTheseusLogger(
             get() {
                 return (message: string, ...args: []) => {
                     const stack = new Error(message).stack?.replace(/Error: /gi, "Trace: ");
-                    return logger.log("debug", stack, ...args);
+                    const filtered = stack
+                        ?.split("\n")
+                        .filter((line) => !line.includes("theseus-logger"))
+                        .join("\n");
+                    return logger.log("debug", filtered, ...args);
                 };
             },
         },

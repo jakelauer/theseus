@@ -1,9 +1,5 @@
-import {
-	buildChainableMutatorQueue
-} from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue";
-import {
-	createChainingProxy
-} from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy";
+import { buildChainableMutatorQueue } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue";
+import { createChainingProxy } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy";
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
@@ -13,6 +9,7 @@ import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 import type { Mutable } from "@Shared/String/makeMutable";
 
 import type { GenericMutator, MutableData, MutatorDefs } from "../../Types/MutatorTypes";
+import type { TTargetChained } from "./operations/createChainingProxy";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
@@ -39,7 +36,7 @@ export class ChainableMutatorSetBuilder<
     private queueMutation: QueueMutation;
 
     // Created by createChainingProxy; always matches the type of the current instance
-    private chainingProxy: typeof this;
+    private chainingProxy: TTargetChained<typeof this>;
 
     constructor(inputData: TData, argName: TParamName, mutators: TMutators) {
         super(inputData, argName, mutators);
@@ -128,7 +125,7 @@ export class ChainableMutatorSetBuilder<
         TData extends object,
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TData, TParamName>,
-    >(chainableMutatorSet: ChainableMutatorSetBuilder<TData, TParamName, TMutators>) {
+    >(chainableMutatorSet: TTargetChained<ChainableMutatorSetBuilder<TData, TParamName, TMutators>>) {
         return chainableMutatorSet as ChainableMutators<TData, TParamName, TMutators>;
     }
 
