@@ -9,7 +9,7 @@ EvolverComplexes enable grouping of these Evolvers for more complex and organize
 ### Chaining behavior, queueing, and asynchrony
 
 Evolvers use a deterministic
-[queue](./MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue.ts) to execute chained
+[queue](./MutatorSets/ChainableMutatorSetBuilder/operations/ChainableMutatorQueue.ts) to execute chained
 mutators. This is achieved using a
 [proxy inside the evolver](./MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy.ts), which
 intercepts calls to the mutators.
@@ -108,9 +108,9 @@ let gameState: GameState = {
 
 // Set a pre-turn condition
 gameState = PlayerTurnEvolver.evolve(gameState)
-    .using.setPreTurnCondition("Stealth Mode")
-    .then.move(3)
-    .finally.takeAction("Attack");
+    .via.setPreTurnCondition("Stealth Mode")
+    .and.move(3)
+    .lastly.takeAction("Attack");
 
 /**
  * # ================
@@ -119,13 +119,13 @@ gameState = PlayerTurnEvolver.evolve(gameState)
  */
 
 // Set a pre-turn condition
-gameState = PlayerTurnEvolver.mutate(gameState).using.setPreTurnCondition("Stealth Mode");
+gameState = PlayerTurnEvolver.mutate(gameState).via.setPreTurnCondition("Stealth Mode");
 
 // Move the player by 3 units
-gameState = PlayerTurnEvolver.mutate(gameState).using.move(3);
+gameState = PlayerTurnEvolver.mutate(gameState).via.move(3);
 
 // Take an action, e.g., "Attack"
-gameState = PlayerTurnEvolver.mutate(gameState).using.takeAction("Attack");
+gameState = PlayerTurnEvolver.mutate(gameState).via.takeAction("Attack");
 
 /**
  * # ================
@@ -169,9 +169,9 @@ const PhaseEvolverComplex = EvolverComplex.create().withEvolvers({
 
 ```typescript
 const result = PhaseEvolverComplex.evolve(gameState)
-    .PlayerTurn.using.setPreTurnCondition("Stealth Mode")
-    .then.move(3)
-    .finally.takeAction("Attack");
+    .PlayerTurn.via.setPreTurnCondition("Stealth Mode")
+    .and.move(3)
+    .lastly.takeAction("Attack");
 ```
 
 ## Async Mutators

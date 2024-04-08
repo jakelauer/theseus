@@ -68,7 +68,7 @@ export const { CharacterStatusRefinery } = Refinery.create("CharacterStatusRefin
         },
         // Make the return type explicit to avoid TypeScript inference circular references
         generateStatusReport: ({ immutableCharacterState }): StatusReport => {
-            const health = CharacterStatusRefinery.refine(immutableCharacterState).using.calculateHealth();
+            const health = CharacterStatusRefinery.refine(immutableCharacterState).via.calculateHealth();
             const effects = immutableCharacterState.activeEffects.join(", ");
             return {
                 health,
@@ -111,7 +111,7 @@ let characterState: CharacterState = {
     // Other character state attributes...
 };
 
-const statusReport = CharacterStatusRefinery.refine(characterState).using.generateStatusReport();
+const statusReport = CharacterStatusRefinery.refine(characterState).via.generateStatusReport();
 
 const {
 	CharacterStatus,

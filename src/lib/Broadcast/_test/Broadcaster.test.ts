@@ -7,33 +7,41 @@ import { Broadcaster } from "../Broadcaster";
 
 import type { BroadcasterParams } from "../Broadcaster";
 // Mock observer class for testing
-class MockObserver extends BroadcasterObserver<any> {
+class MockObserver extends BroadcasterObserver<any> 
+{
     public dataReceived: any = null;
 
-    constructor(public override callback: (data: any) => void) {
+    constructor(public override callback: (data: any) => void) 
+    {
         super(callback);
     }
 
-    override update(data: any): Promise<void> {
+    override update(data: any): Promise<void> 
+    {
         this.dataReceived = data;
         return Promise.resolve();
     }
 }
 
-describe("Broadcaster", () => {
+describe("Broadcaster", () => 
+{
     let broadcaster: Broadcaster<any>;
 
-    beforeEach(() => {
+    beforeEach(() => 
+    {
         broadcaster = new Broadcaster();
     });
 
-    describe("constructor", () => {
-        it("initializes with default parameters when none are provided", () => {
+    describe("constructor", () => 
+    {
+        it("initializes with default parameters when none are provided", () => 
+        {
             expect(broadcaster).to.be.an.instanceOf(Broadcaster);
             // Assert default parameters if necessary
         });
 
-        it("initializes with custom parameters when provided", () => {
+        it("initializes with custom parameters when provided", () => 
+        {
             const customParams: BroadcasterParams<any, any> = {
                 observerClassConstructor: MockObserver,
             };
@@ -42,8 +50,10 @@ describe("Broadcaster", () => {
         });
     });
 
-    describe("broadcast", () => {
-        it("broadcasts data to all registered observers", async () => {
+    describe("broadcast", () => 
+    {
+        it("broadcasts data to all registered observers", async () => 
+        {
             const mockObserver = new MockObserver(() => {});
             broadcaster.observe(mockObserver.update.bind(mockObserver));
             const testData = { key: "value" };
@@ -52,14 +62,17 @@ describe("Broadcaster", () => {
             expect(mockObserver.dataReceived).to.deep.equal(testData);
         });
 
-        it("completes broadcast with no observers without error", async () => {
+        it("completes broadcast with no observers without error", async () => 
+        {
             const broadcastPromise = broadcaster.broadcast({ key: "value" });
             await expect(broadcastPromise).to.be.fulfilled;
         });
     });
 
-    describe("observer management", () => {
-        it("adds observers and receives updates", async () => {
+    describe("observer management", () => 
+    {
+        it("adds observers and receives updates", async () => 
+        {
             const mockObserver = new MockObserver(() => {});
             broadcaster.observe(mockObserver.update.bind(mockObserver));
 
@@ -69,7 +82,8 @@ describe("Broadcaster", () => {
             expect(mockObserver.dataReceived).to.deep.equal(testData);
         });
 
-        it("removes observers correctly using destroy callback", async () => {
+        it("removes observers correctly using destroy callback", async () => 
+        {
             const mockObserver = new MockObserver(() => {});
             const destroy = broadcaster.observe(mockObserver.update.bind(mockObserver));
 
@@ -82,8 +96,10 @@ describe("Broadcaster", () => {
         });
     });
 
-    describe("static methods", () => {
-        it("destroyAll removes all observers correctly", () => {
+    describe("static methods", () => 
+    {
+        it("destroyAll removes all observers correctly", () => 
+        {
             const mockObserver1 = new MockObserver(() => {});
             const destroy1 = broadcaster.observe(mockObserver1.update.bind(mockObserver1));
 
@@ -97,11 +113,13 @@ describe("Broadcaster", () => {
 
             broadcaster
                 .broadcast(testData)
-                .then(() => {
+                .then(() => 
+                {
                     expect(mockObserver1.dataReceived).to.be.null;
                     expect(mockObserver2.dataReceived).to.be.null;
                 })
-                .catch((error) => {
+                .catch((error) => 
+                {
                     console.error("Error broadcasting data:", error);
                 });
         });

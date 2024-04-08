@@ -35,12 +35,14 @@ export class Refinery<
     TRefineryName extends string,
     TParamNoun extends string,
     TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
-> {
+> 
+{
     public readonly refineryName: NormalizedRefineryName<TRefineryName>;
     public readonly immutableArgName: Immutable<TParamNoun>;
     private readonly forges: TForges;
 
-    private constructor(name: TRefineryName, forges: TForges, options: RefineryOptions<TParamNoun>) {
+    private constructor(name: TRefineryName, forges: TForges, options: RefineryOptions<TParamNoun>) 
+    {
         const normalizedName = this.normalizeName(name);
         const immutableDataNoun: TParamNoun = options.noun ?? ("input" as TParamNoun);
 
@@ -53,7 +55,8 @@ export class Refinery<
      * Normalizes the refinery name by removing any 'refinery' prefix or suffix, ensuring a clean,
      * user-friendly name for the refinery instance.
      */
-    private normalizeName(name: TRefineryName) {
+    private normalizeName(name: TRefineryName) 
+    {
         const trimmed = this.trimRefineryFromName(name);
 
         this.assertValidName(trimmed, "Name cannot be empty, nor only the word 'refinery'");
@@ -61,13 +64,16 @@ export class Refinery<
         return name as NormalizedRefineryName<TRefineryName>;
     }
 
-    private trimRefineryFromName(name: string) {
+    private trimRefineryFromName(name: string) 
+    {
         const ensureName = name ?? "";
         return ensureName.replace(/^(refinery\s+|\s+refinery)$/gi, "");
     }
 
-    private assertValidName(name: string, errorMessage: string) {
-        if (!name || name.trim().length === 0) {
+    private assertValidName(name: string, errorMessage: string) 
+    {
+        if (!name || name.trim().length === 0) 
+        {
             log.error(`Refinery name is invalid. ${errorMessage}`);
             throw new Error(`Refinery name is invalid. ${errorMessage}`);
         }
@@ -77,7 +83,8 @@ export class Refinery<
      * Initiates the refinement process on the input data using the defined set of forges. This method returns
      * an object allowing further specification of how the data should be refined.
      */
-    public refine(input: TData) {
+    public refine(input: TData) 
+    {
         const inputClone = structuredClone(input);
 
         deepFreeze(inputClone);
@@ -109,7 +116,8 @@ export class Refinery<
     }
 
     /** Retrieves the definitions of forges associated with this refinery. */
-    public getForgeDefinitions() {
+    public getForgeDefinitions() 
+    {
         return this.forges;
     }
     /**
@@ -154,7 +162,8 @@ export class Refinery<
          * if the name is "shoppingCart", each action will receive an argument entitled "mutableShoppingCart"
          */
         toRefine: <_TData extends object>() => ({
-            withForges: <_TForges extends ForgeDefs<_TData, Immutable<_TParamNoun>>>(forges: _TForges) => {
+            withForges: <_TForges extends ForgeDefs<_TData, Immutable<_TParamNoun>>>(forges: _TForges) => 
+            {
                 const refinery = new Refinery<_TData, _TRefineryName, _TParamNoun, _TForges>(
                     name,
                     forges,
@@ -176,9 +185,11 @@ export class Refinery<
      */
     public static buildCreator = <_TParamNoun extends string>(options: RefineryOptions<_TParamNoun>) => ({
         toRefine: <_TData extends object>() => ({
-            named: <_TRefineryName extends string>(name: _TRefineryName) => {
+            named: <_TRefineryName extends string>(name: _TRefineryName) => 
+            {
                 const nameHasWhitespace = name.match(/\s/);
-                if (nameHasWhitespace) {
+                if (nameHasWhitespace) 
+                {
                     throw new Error(`Refinery name cannot contain whitespace: ${name}`);
                 }
 

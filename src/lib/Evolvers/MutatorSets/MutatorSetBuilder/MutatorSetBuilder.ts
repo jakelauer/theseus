@@ -21,43 +21,63 @@ export class MutatorSetBuilder<
     TData extends object,
     TParamName extends Mutable<string>,
     TMutators extends MutatorDefs<TData, TParamName>,
-> {
+> 
+{
     protected __theseusId?: string;
     protected mutableData: { [key in TParamName]: TData };
+    public fixedMutators: TMutators = {} as TMutators;
 
     constructor(
         inputData: TData,
         protected readonly argName: TParamName,
         protected readonly mutators: TMutators,
         observationId?: string,
-    ) {
+    ) 
+    {
         this.mutableData = this.inputToObject(inputData);
         this.extendSelfWithMutators(mutators);
         this.__theseusId = observationId;
     }
 
-    public __setTheseusId(id: string) {
+    public __setTheseusId(id: string) 
+    {
         this.__theseusId = id;
+    }
+
+    public setData(data: TData) 
+    {
+        this.mutableData = this.inputToObject(data);
+    }
+
+    protected getSelfExtensionPoint(): any 
+    {
+        return this;
     }
 
     /**
      * Extends the instance with mutator functions defined in the mutators parameter. It recursively traverses
      * the mutators object, adding each function to the instance, allowing for nested mutator structures.
      */
-    private extendSelfWithMutators(mutators: TMutators, path: string[] = []) {
-        Object.keys(mutators).forEach((mutatorKey) => {
+    private extendSelfWithMutators(mutators: TMutators, path: string[] = []) 
+    {
+        Object.keys(mutators).forEach((mutatorKey) => 
+        {
             const item = mutators[mutatorKey];
             const newPath = [...path, mutatorKey];
 
-            if (typeof item === "function") {
+            if (typeof item === "function") 
+            {
                 const lastKey = newPath.pop() as string;
-                const context = newPath.reduce((obj, key) => {
+                const context = newPath.reduce((obj, key) => 
+                {
                     if (!obj[key]) obj[key] = {};
                     return obj[key];
-                }, this as any);
+                }, this.getSelfExtensionPoint() as any);
 
                 this.addFunctionToSelf(context, lastKey, item);
-            } else if (typeof item === "object" && item !== null) {
+            }
+            else if (typeof item === "object" && item !== null) 
+            {
                 this.extendSelfWithMutators(item as TMutators, newPath);
             }
         });
@@ -69,7 +89,8 @@ export class MutatorSetBuilder<
      * @param value The value to check.
      * @returns True if the value is a Promise, false otherwise.
      */
-    protected isPromise(path: string, value: any): value is Promise<any> {
+    protected isPromise(path: string, value: any): value is Promise<any> 
+    {
         const result = Boolean(value && typeof value.then === "function");
 
         if (result) log.verbose(`Function "${path}" returns a Promise`);
@@ -85,18 +106,25 @@ export class MutatorSetBuilder<
         context: any,
         selfPath: string,
         mutator: GenericMutator<TData, SortaPromise<TData>>,
-    ) {
+    ) 
+    {
         Object.assign(context, {
-            [selfPath]: (...args: any[]) => {
+            [selfPath]: (...args: any[]) => 
+            {
+
                 let funcResult: SortaPromise<TData>;
-                try {
+                try 
+                {
                     funcResult = mutator(this.mutableData, ...args);
-                } catch (e) {
+                }
+                catch (e) 
+                {
                     log.error(`Error in mutator function "${selfPath}"`, e);
                     throw e;
                 }
 
-                if (funcResult === undefined) {
+                if (funcResult === undefined) 
+                {
                     log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
                 }
 
@@ -104,13 +132,16 @@ export class MutatorSetBuilder<
                     funcResult instanceof Promise ? funcResult : Promise.resolve(funcResult);
 
                 funcAsPromise
-                    .then((result) => {
-                        if (this.__theseusId && result) {
+                    .then((result) => 
+                    {
+                        if (this.__theseusId && result) 
+                        {
                             log.verbose(`Function "${selfPath}" completed, sending to Observation.`);
                             void Theseus.updateInstance(this.__theseusId, result);
                         }
                     })
-                    .catch((e) => {
+                    .catch((e) => 
+                    {
                         throw e;
                     });
 
@@ -125,7 +156,8 @@ export class MutatorSetBuilder<
      */
     protected inputToObject<_TData, _TParamName extends Mutable<string>>(
         input: _TData,
-    ): { [key in _TParamName]: _TData } {
+    ): { [key in _TParamName]: _TData } 
+    {
         return { [this.argName]: input } as {
             [key in _TParamName]: _TData;
         };
@@ -144,12 +176,8 @@ export class MutatorSetBuilder<
         TData extends object,
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TData, TParamName>,
-    >(
-        data: TData,
-        argName: TParamName,
-        mutators: TMutators,
-        observationId?: string,
-    ): FinalMutators<TData, TParamName, TMutators> {
+    >(data: TData, argName: TParamName, mutators: TMutators, observationId?: string) 
+    {
         const builder = new MutatorSetBuilder(data, argName, mutators, observationId);
 
         return this.castToMutators(builder);
@@ -159,11 +187,14 @@ export class MutatorSetBuilder<
      * Casts the provided ChainableMutatorBuilder instance to a ChainableMutators instance. This is a
      * workaround to avoid TypeScript's inability to infer the correct type of the returned object.
      */
-    private static castToMutators<
+    public static castToMutators<
         TData extends object,
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TData, TParamName>,
-    >(chainableMutatorSet: MutatorSetBuilder<TData, TParamName, TMutators>) {
+    >(
+        chainableMutatorSet: MutatorSetBuilder<TData, TParamName, TMutators>,
+    ): FinalMutators<TData, TParamName, TMutators> 
+    {
         return chainableMutatorSet as unknown as FinalMutators<TData, TParamName, TMutators>;
     }
 }

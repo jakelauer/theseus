@@ -5,8 +5,8 @@ import winstonConfigBuilder from "@Shared/Log/winston-config-builder";
 import { isTestMode } from "@Shared/Test/isTestMode";
 
 const testMode = isTestMode();
-
-setTheseusLogLevel(testMode ? "debug" : "major");
+console.log("Test mode: ", testMode);
+setTheseusLogLevel(testMode ? "verbose" : "silent");
 
 const rootLogger = winston.createLogger({
     ...winstonConfigBuilder().config,
@@ -25,23 +25,36 @@ const buildLogger = (label: string) => rootLogger.child({ label });
 export function getTheseusLogger(
     label: string,
     _mockLoggingLib?: (label: string) => MockLoggingLib,
-): TheseusLogger {
+): TheseusLogger 
+{
     const logger: winston.Logger = (_mockLoggingLib?.(label) as any) ?? buildLogger(label);
 
     Object.defineProperties(logger, {
         major: {
-            get() {
+            get() 
+            {
                 return (...args: Parameters<typeof logger.info>) => logger.log("major", ...args);
             },
         },
         trace: {
-            get() {
-                return (message: string, ...args: []) => {
+            get() 
+            {
+                return (message: string, ...args: []) => 
+                {
                     const stack = new Error(message).stack?.replace(/Error: /gi, "Trace: ");
+                    // Filter out theseus-logger and stack variable from the stack trace
                     const filtered = stack
                         ?.split("\n")
-                        .filter((line) => !line.includes("theseus-logger"))
-                        .join("\n");
+                        .reduce((acc, line) => 
+                        {
+                            const lineLongEnough = line.trim().length > 2;
+                            const isLineFromTheseusLogger = /theseus-logger|const stack = /.test(line);
+                            if (!isLineFromTheseusLogger && lineLongEnough) 
+                            {
+                                acc += line + "\n";
+                            }
+                            return acc;
+                        }, "");
                     return logger.log("debug", filtered, ...args);
                 };
             },

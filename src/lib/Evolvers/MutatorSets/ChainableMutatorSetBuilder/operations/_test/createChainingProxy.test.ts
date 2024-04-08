@@ -1,156 +1,188 @@
 import { expect } from "chai";
 
 import { createChainingProxy } from "../createChainingProxy";
+import { ChainableMutatorQueue } from "../ChainableMutatorQueue";
 
-describe("createChainingProxy", function () {
-    it("should allow method chaining and return proxy for chainable methods", function () {
-        const target = {
-            chainableMethod: () => {},
+const makeMutatorQueue = () => 
+{
+    let data = { value: 0 };
+    return ChainableMutatorQueue.create({
+        argName: "mutableData",
+        setMutableData: ({ mutableData }) => 
+        {
+            data = mutableData;
+        },
+        getMutableData: () => ({ mutableData: data }),
+    });
+};
+
+describe("createChainingProxy", function () 
+{
+    let queueMutation: ReturnType<typeof makeMutatorQueue>["queueMutation"];
+
+    beforeEach(function () 
+    {
+        queueMutation = makeMutatorQueue().queueMutation;
+    });
+
+    it("should allow method chaining and return proxy for chainable methods", function () 
+    {
+        const target: any = {
+            fixedMutators: {
+                chainableMethod: () => ({}),
+            },
         };
         const proxy = createChainingProxy({
             target,
-            queueMutation: () => ({}),
+            queue: makeMutatorQueue(),
         });
 
         expect(proxy.chainableMethod()).to.equal(proxy);
     });
 
-    it("should handle end of chain indicators correctly", function () {
+    it("should handle end of chain indicators correctly", function () 
+    {
         let finalChainLinkReached = false;
-        const target = {
-            finalForm: () => {
+        const target: any = {
+            do: () => 
+            {
                 finalChainLinkReached = true;
             },
         };
         const proxy = createChainingProxy({
             target,
-            queueMutation: (selfPath, func, args) => {
-                if (selfPath === "finalForm") {
-                    func.apply(target, args);
-                }
-                return {};
-            },
+            queue: makeMutatorQueue(),
         });
 
-        proxy.finalForm();
+        proxy.do();
         expect(finalChainLinkReached).to.be.true;
     });
 
-    it("should queue functions correctly via queueMutation", function () {
+    it("should queue functions correctly via queueMutation", function () 
+    {
         let queuedFunctionCalled = false;
-        const target = {
-            toBeQueued: () => {
+        const target: any = {
+            toBeQueued: () => 
+            {
                 queuedFunctionCalled = true;
             },
         };
         const proxy = createChainingProxy({
             target,
-            queueMutation: (selfPath, func, args) => {
-                if (selfPath === "toBeQueued") {
-                    func.apply(target, args);
-                }
-                return {};
-            },
+            queue: makeMutatorQueue(),
         });
 
         proxy.toBeQueued();
         expect(queuedFunctionCalled).to.be.true;
     });
 
-    it("should return correct values for non-function properties", function () {
-        const target = {
+    it("should return correct values for non-function properties", function () 
+    {
+        const target: any = {
             someProperty: "value",
         };
         const proxy = createChainingProxy({
             target,
-            queueMutation: () => ({}),
+            queue: makeMutatorQueue(),
         });
 
         expect(proxy.someProperty).to.equal("value");
     });
 
-    it("should throw an error when accessing undefined properties", function () {
-        const target = {};
+    it("should throw an error when accessing undefined properties", function () 
+    {
+        const target: any = {};
         const proxy = createChainingProxy({
             target,
-            queueMutation: () => ({}),
+            queue: makeMutatorQueue(),
         });
 
         expect(() => (proxy as any).undefinedProperty).to.throw(
             Error,
-            'Property "undefinedProperty" not found in target',
+            'Property or action "undefinedProperty" not found in target',
         );
     });
 
-    it("should correctly handle exceptions thrown in queued functions", function () {
+    it("should correctly handle exceptions thrown in queued functions", function () 
+    {
         const errorMessage = "Error in queued function";
-        const target = {
-            throwError: () => {
+        const target: any = {
+            throwError: () => 
+            {
                 throw new Error(errorMessage);
             },
         };
         const proxy = createChainingProxy({
             target,
-            queueMutation: (selfPath, func, args) => {
-                return func.apply(target, args);
-            },
+            queue: makeMutatorQueue(),
         });
 
         expect(() => proxy.throwError()).to.throw(Error, errorMessage);
     });
 
-    it("should maintain the order of queued mutations", function () {
+    it("should maintain the order of queued mutations", function () 
+    {
+        const data = { value: 0 };
         const order: number[] = [];
         const target = {
-            first: () => {
-                order.push(1);
-            },
-            second: () => {
-                order.push(2);
+            fixedMutators: {
+                first: ({ mutableData }: any) => 
+                {
+                    order.push(1);
+
+                    return mutableData;
+                },
+                second: ({ mutableData }: any) => 
+                {
+                    order.push(2);
+
+                    return mutableData;
+                },
             },
         };
-        const proxy = createChainingProxy({
+        const proxy = createChainingProxy<any>({
             target,
-            queueMutation: (selfPath, func) => {
-                return func();
-            },
+            queue: makeMutatorQueue(),
         });
 
         proxy.first().second();
         expect(order).to.deep.equal([1, 2]);
     });
 
-    it("should return correct result from a queued function not meant for further chaining", function () {
+    it("should return correct result from a queued function not meant for further chaining", function () 
+    {
         const expectedResult = 42;
         const target = {
             calculate: () => expectedResult,
         };
-        const proxy = createChainingProxy({
+        const proxy = createChainingProxy<any>({
             target,
-            queueMutation: (selfPath, func) => func(),
+            queue: makeMutatorQueue(),
         });
 
-        const result = proxy.finally.calculate();
+        const result = proxy.lastly.calculate();
         expect(result).to.equal(expectedResult);
     });
 
-    it("should handle asynchronous method calls correctly", async function () {
+    it("should handle asynchronous method calls correctly", async function () 
+    {
         let asyncOperationCompleted = false;
         const target = {
             asyncMethod: () =>
                 new Promise((resolve) =>
-                    setTimeout(() => {
+                    setTimeout(() => 
+                    {
                         asyncOperationCompleted = true;
                         resolve(true);
                     }, 10),
                 ),
         };
-        const proxy = createChainingProxy({
+        const proxy = createChainingProxy<any>({
             target,
-            queueMutation: (selfPath, func) => func(),
+            queue: makeMutatorQueue(),
         });
 
-        await proxy.finally.asyncMethod();
+        await proxy.lastly.asyncMethod();
         expect(asyncOperationCompleted).to.be.true;
     });
 });

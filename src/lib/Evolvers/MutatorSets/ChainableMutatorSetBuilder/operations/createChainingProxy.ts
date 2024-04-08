@@ -1,26 +1,20 @@
 import { Theseus } from "@/Theseus";
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 import type { SortaPromise } from "../../../Types/EvolverTypes";
-import { v4 as uuidv4 } from "uuid";
+import type { ChainableMutatorSetBuilder } from "../ChainableMutatorSetBuilder";
+import { enumValToFlagNames } from "../../../../Shared/Object/Flags";
+import type { ChainableMutatorQueue } from "./ChainableMutatorQueue";
 
-type ProxyAction = "function" | "toJSON" | "property" | "chainTermination" | "chainHelper" | undefined;
-
-type TTargetBase = { [key: string]: any };
-export type TTargetChained<TTarget extends TTargetBase> = {
-    [K in keyof TTarget]: TTarget[K] extends () => any ?
-        (
-            ...args: Parameters<TTarget[K]>
-        ) => ReturnType<TTarget[K]> extends Promise<any> ? Promise<TTargetChained<TTarget>>
-        :   TTargetChained<TTarget>
-    :   TTarget[K];
-} & {
-    toJSON: any;
-    finalForm: any;
-    finalFormAsync: any;
-    finally: any;
-    using: any;
-    then: any;
-};
+enum ProxyAction {
+    none = 0 << 0,
+    function = 1 << 0,
+    mutator = 1 << 1,
+    toJSON = 1 << 2,
+    property = 1 << 3,
+    chainTermination = 1 << 4,
+    chainHelper = 1 << 5,
+    updateData = 1 << 6,
+}
 
 /**
  * ChainingProxy is a class that enables method chaining and queueing of operations on a proxied object. It
@@ -28,11 +22,13 @@ export type TTargetChained<TTarget extends TTargetBase> = {
  * functionality is particularly useful for managing sequences of operations that should be executed in a
  * specific order.
  */
-class ChainingProxy<TTarget extends TTargetBase> {
-    private proxyUuid: string;
+class ChainingProxy<TTarget extends ChainableMutatorSetBuilder<any, any, any>> 
+{
+    private static proxyCount = 0;
+    private proxyIndex: string;
     private log: any;
     private isFinalChainLink: boolean;
-    private queueMutation: (selfPath: string, func: () => any, args: any[]) => SortaPromise<object>;
+    private queue: ChainableMutatorQueue<any, any>;
     private target: TTarget;
 
     /** Creates an instance of ChainingProxy. */
@@ -40,54 +36,73 @@ class ChainingProxy<TTarget extends TTargetBase> {
         private readonly params: {
             target: TTarget;
             observationId?: string;
-            queueMutation: (selfPath: string, func: () => any, args: any[]) => SortaPromise<object>;
+            queue: ChainableMutatorQueue<any, any>;
         },
-    ) {
-        this.proxyUuid = uuidv4();
-        this.log = getTheseusLogger(`ChainingProxy-${this.proxyUuid}`);
+    ) 
+    {
+        this.proxyIndex = ChainingProxy.proxyCount.toString();
+        this.log = getTheseusLogger(`ChainingProxy-${this.proxyIndex}`);
         this.isFinalChainLink = false;
-        this.queueMutation = params.queueMutation;
+        this.queue = params.queue;
         this.target = params.target;
+
+        ChainingProxy.proxyCount++;
     }
 
     /** Sets the flag to indicate whether the current chain link is the final one. */
-    private setChainTerminated(terminate: boolean) {
-        this.log.verbose(terminate ? "[=== Chain end reached ===]" : "[=== Chain reset ===]");
+    private setChainTerminated(terminate: boolean) 
+    {
+        this.log.verbose(terminate ? "[=== Chain terminated ===]" : "[=== Chain reset ===]");
         this.isFinalChainLink = terminate;
     }
 
     /** Handles the finalization of operations and resets the chain if necessary. */
-    private finalizeAndReset(execResult: any) {
+    private finalizeAndReset(execResult: any): SortaPromise<object> 
+    {
         const isAsync = execResult instanceof Promise;
-        if (isAsync) {
+        if (isAsync) 
+        {
             this.log.verbose("Promise detected, executing .finally operation asynchronously");
             void execResult.finally(() => this.setChainTerminated(false));
-        } else {
+        }
+        else 
+        {
             this.setChainTerminated(false);
         }
 
-        this.log.verbose(`Returning ${isAsync ? "async" : "sync"} result of queued operations`, execResult);
+        this.log.trace(`Returning ${isAsync ? "async" : "sync"} result of queued operations`, execResult);
         return execResult;
     }
 
     /** Handles the termination of the chain through specific properties. */
-    private onChainEnd(prop: string) {
-        this.log.verbose(`[=== Chain end reached ===] via "${prop}"`);
+    private onChainEnd(prop: string) 
+    {
+        this.log.verbose(`[=== Chain end detected ===] via "${prop}"`);
         this.setChainTerminated(true);
     }
 
     /** Processes a function call on the proxied object. */
-    private handleFunctionCall(proxy: any, prop: string, target: any) {
+    private handleFunctionCall(prop: string, target: any) 
+    {
         this.log.verbose(`Function "${prop}" called`);
-        return (...args: any[]) => {
-            const execResult = this.queueMutation(prop, target[prop], args);
+        return target[prop];
+    }
 
-            if (this.isFinalChainLink) {
-                this.log.verbose(".finally mode active, returning result of queued operations", execResult);
+    /** Processes a function call on the proxied object. */
+    private handleMutatorCall(proxy: any, prop: string, target: any) 
+    {
+        return (...args: any[]) => 
+        {
+            this.log.verbose(`Mutator "${prop}" requested`);
+            const execResult = this.queue.queueMutation(prop, target.fixedMutators[prop], args);
 
-                if (this.params.observationId) {
+            if (this.isFinalChainLink) 
+            {
+                if (this.params.observationId) 
+                {
                     void Theseus.updateInstance(this.params.observationId, execResult);
                 }
+                this.log.verbose(`.lastly mode active, returning result of queued operations after prop ${prop}`, execResult);
 
                 return this.finalizeAndReset(execResult);
             }
@@ -97,83 +112,186 @@ class ChainingProxy<TTarget extends TTargetBase> {
     }
 
     /** Handles the toJSON operation to allow serialization of the proxied object. */
-    private toJson(target: any) {
+    private toJson(target: any) 
+    {
         this.log.verbose("toJSON called");
-        return () => {
+        return () => 
+        {
             const copy = { ...target };
             delete copy.chainingProxy; // Remove the circular reference when serializing
             return copy;
         };
     }
 
-    /** Determines the action to be taken based on the property accessed on the proxy. */
-    private determineAction(target: any, rawProp: string | symbol): ProxyAction {
-        const prop = typeof rawProp === "symbol" ? rawProp.toString() : rawProp;
-
-        let requestType: ProxyAction;
-
-        this.log.debug("Determining action", { prop });
-
-        if (prop === "toJSON") {
-            requestType = "toJSON";
-        } else if (typeof target[prop] === "function") {
-            requestType = "function";
-        } else if (prop in target) {
-            requestType = "property";
-        } else if (["finally", "finalForm", "finalFormAsync"].includes(prop)) {
-            requestType = "chainTermination";
-        } else if (["finally", "then"].includes(prop)) {
-            requestType = "chainHelper";
+    /**
+	 * Resets the chain if the the property requeseted was a result property, indicating that the chain is
+	 * terminated.
+	 */
+    private resetIfResultReturned(prop: string, result: any)
+    {
+        if (prop === "result" || prop === "resultAsync") 
+        {
+            if (result instanceof Promise)
+            {
+                this.log.verbose("Result is a promise; skipping reset.", {
+                    isFinalChainLink: this.isFinalChainLink,
+                });
+            }
+            else 
+            {
+                this.setChainTerminated(false);
+            }
         }
+    }
+
+    /** Determines the action to be taken based on the property accessed on the proxy. */
+    private determineAction(target: any, prop: string): ProxyAction 
+    {
+        const propActions = {
+            toJSON: ProxyAction.toJSON,
+            lastly: ProxyAction.chainTermination | ProxyAction.chainHelper,
+            and: ProxyAction.chainHelper,
+            setData: ProxyAction.updateData,
+        } as const;
+
+        // Include properties leading to chain termination
+        const chainTerminationProps = new Set(["result", "resultAsync"]);
+
+        let requestType = ProxyAction.none; // Assuming ProxyAction is already defined somewhere in your code
+
+        if (chainTerminationProps.has(prop)) 
+        {
+            requestType = ProxyAction.chainTermination;
+        }
+        else if (prop in propActions) 
+        {
+            requestType = propActions[prop as keyof typeof propActions];
+        }
+        else if (typeof target[prop] === "function") 
+        {
+            requestType = ProxyAction.function;
+        }
+        else if (typeof target.fixedMutators?.[prop] === "function") 
+        {
+            requestType = ProxyAction.mutator;
+        }
+        else if (prop in target) 
+        {
+            requestType = ProxyAction.property;
+        }
+
+        const enumVal = enumValToFlagNames(requestType, ProxyAction);
+
+        this.log.debug(`Action determined for property "${prop}": ${enumVal}`);
 
         return requestType;
     }
 
     /** Processes the action determined by determineAction. */
-    private processAction(requestType: ProxyAction, proxy: any, target: any, prop: string) {
-        let toReturn: any;
+    private processAction(requestType: ProxyAction, proxy: any, target: any, prop: string) 
+    {
+        let toReturn: any = undefined; // Initial value is undefined to indicate "not set"
 
-        switch (requestType) {
-            case "function":
-                toReturn = this.handleFunctionCall(proxy, prop, target);
-                break;
-            case "toJSON":
-                toReturn = this.toJson(target);
-                break;
-            case "property":
-                toReturn = target[prop];
-                break;
-            case "chainTermination":
-                this.onChainEnd(prop);
-                toReturn = proxy;
-                break;
-            case "chainHelper":
-                this.log.trace(`Chain operation used: "${prop}"`);
-                toReturn = proxy;
-                break;
-            default:
-                this.log.error(`Property "${prop}" not found in target`);
-                throw new Error(`Property "${prop}" not found in target`);
+        const enumVal = enumValToFlagNames(requestType, ProxyAction);
+        this.log.verbose(`Processing action "${enumVal}" for property "${prop}"`, {
+            propsInTarget: Object.keys(target),
+            prop,
+        });
+
+        // Using bitwise AND (&) to check for each action.
+        if (requestType & ProxyAction.function) 
+        {
+            toReturn = this.handleFunctionCall(prop, target);
         }
+
+        if (requestType & ProxyAction.mutator) 
+        {
+            // Apply some logic to combine results if needed, for example:
+            toReturn = this.handleMutatorCall(proxy, prop, target) || toReturn;
+        }
+
+        if (requestType & ProxyAction.toJSON) 
+        {
+            toReturn = this.toJson(target);
+        }
+
+        if (requestType & ProxyAction.property) 
+        {
+            toReturn = target[prop];
+        }
+
+        if (requestType & ProxyAction.chainTermination) 
+        {
+            this.onChainEnd(prop);
+            toReturn = this.queue.asyncEncountered ? this.queue.queue : this.target.result;
+            this.log.verbose(`Returning result for property "${prop}". Async: ${this.queue.asyncEncountered}`, {
+                toReturn,
+            });
+        }
+
+        if (requestType & ProxyAction.chainHelper) 
+        {
+            toReturn = proxy;
+        }
+
+        if (requestType & ProxyAction.updateData) 
+        {
+            toReturn = this.params.target.setData;
+        }
+
+
+        // If after checking all bits toReturn is still undefined, it means no valid action was matched.
+        if (typeof toReturn === "undefined") 
+        {
+            this.log.trace(`Property or action "${prop}" not found in target or not supported`, { prop });
+            throw new Error(`Property or action "${prop}" not found in target or not supported`);
+        }
+
+        this.log.verbose(`Action "${enumVal}" processed for property "${prop}"`);
 
         return toReturn;
     }
 
+    private isBuiltInProp(prop: string)
+    {
+        const builtInProps = [
+            "constructor",
+            "prototype",
+            "__proto__",
+        ];
+        return builtInProps.includes(prop);
+    }
+
     /** Intercepts get operations on the proxy object to enable method chaining, queuing, and more. */
-    private getProperty(proxy: any, target: any, rawProp: string | symbol) {
-        this.log.verbose("Getting property", { rawProp });
-        const prop = typeof rawProp === "symbol" ? rawProp.toString() : rawProp;
+    private getProperty(proxy: any, target: any, prop: string | symbol) 
+    {
+        if (typeof prop === "symbol")
+        {
+            return target[prop];
+        }
 
-        const requestType = this.determineAction(target, rawProp);
+        if (this.isBuiltInProp(prop))
+        {
+            return target[prop];
+        }
 
-        return this.processAction(requestType, proxy, target, prop);
+        const requestType = this.determineAction(target, prop);
+
+        const result = this.processAction(requestType, proxy, target, prop);
+
+        this.log.verbose(`Returning result for property "${prop}"`);
+
+        this.resetIfResultReturned(prop, result);
+
+        return result;
     }
 
     /**
      * Creates a proxied instance of the target object with enhanced functionality for method chaining and
      * operation queuing.
      */
-    public create(): TTargetChained<TTarget> {
+    public create(): TTarget 
+    {
         const proxy: any = new Proxy(this.target as any, {
             get: (target: any, rawProp: string | symbol) => this.getProperty(proxy, target, rawProp),
         });
@@ -183,11 +301,12 @@ class ChainingProxy<TTarget extends TTargetBase> {
 }
 
 /** Creates a chaining proxy for the provided target object. */
-export function createChainingProxy<TTarget extends TTargetBase>(params: {
+export function createChainingProxy<TTarget extends ChainableMutatorSetBuilder<any, any, any>>(params: {
     target: TTarget;
     observationId?: string;
-    queueMutation: (selfPath: string, func: () => any, args: any[]) => SortaPromise<object>;
-}): TTargetChained<TTarget> {
+    queue: ChainableMutatorQueue<any, any>;
+}): TTarget 
+{
     const chainingProxy = new ChainingProxy(params);
     return chainingProxy.create();
 }

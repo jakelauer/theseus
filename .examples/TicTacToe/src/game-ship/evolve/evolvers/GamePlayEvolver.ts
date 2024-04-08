@@ -36,9 +36,9 @@ export const { GamePlayEvolver } = Evolver.create("GamePlayEvolver", { noun: "ga
 
             internal
                 .evolve(mutableGameState)
-                .using.setMark(coords, mark)
-                .then.updateLastPlayer(mark)
-                .then.updateLastPlayedCoords(coords);
+                .via.setMark(coords, mark)
+                .and.updateLastPlayer(mark)
+                .and.updateLastPlayedCoords(coords);
 
             return mutableGameState;
         },
@@ -47,9 +47,9 @@ export const { GamePlayEvolver } = Evolver.create("GamePlayEvolver", { noun: "ga
 
             internal
                 .evolve(mutableGameState)
-                .using.setMark(coords, mark)
-                .then.updateLastPlayer(mark)
-                .then.updateLastPlayedCoords(coords);
+                .via.setMark(coords, mark)
+                .and.updateLastPlayer(mark)
+                .and.updateLastPlayedCoords(coords);
 
             return mutableGameState;
         },

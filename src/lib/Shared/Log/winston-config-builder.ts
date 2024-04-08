@@ -1,6 +1,6 @@
 import * as winston from "winston";
 
-import { logLevels } from "@Shared/Log/set-theseus-log-level";
+import { logLevels, setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
 import { stringifier } from "@Shared/Log/stringifier";
 
 const { format, addColors } = winston;
@@ -14,7 +14,8 @@ export const theseusLogFormat = () =>
         json({ space: 2, circularValue: undefined }),
         prettyPrint(),
         timestamp({ format: "HH:MM:SS:ss.sss" }),
-        printf((info) => {
+        printf((info) => 
+        {
             const { label, level, timestamp, message, ...args } = info;
             const argsAsString = stringifier(args)
                 .split("\n")
@@ -34,25 +35,18 @@ addColors({
     silly: "magenta",
 });
 
-const allTransports: winston.transports.ConsoleTransportInstance[] = [];
+export const allTransports: winston.transports.ConsoleTransportInstance[] = [];
 
-const makeTransport = () => {
+const makeTransport = () => 
+{
     const transport = new winston.transports.Console();
     transport.level = "debug";
 
     allTransports.push(transport);
 
-    return transport;
-};
+    setTheseusLogLevel();
 
-export const setAllTransportsLevel = (level: keyof typeof logLevels | "silent") => {
-    allTransports.forEach((transport) => {
-        if (level === "silent") {
-            transport.silent = true;
-        } else {
-            transport.level = level;
-        }
-    });
+    return transport;
 };
 
 const devMode = process.env.NODE_ENV === "development";

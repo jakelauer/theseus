@@ -3,15 +3,18 @@ import sinon from "sinon";
 import type { logLevels } from "../set-theseus-log-level";
 import { setTheseusLogLevel } from "../set-theseus-log-level";
 
-describe("Set Theseus Log Level", function () {
+describe("Set Theseus Log Level", function () 
+{
     let levelSetCall: sinon.SinonStub;
 
-    afterEach(function () {
+    afterEach(function () 
+    {
         // Restore the original console transport behavior
         sinon.restore();
     });
 
-    it("should not throw an error for an unrecognized log level", function () {
+    it("should not throw an error for an unrecognized log level", function () 
+    {
         const invalidLevel = "notALogLevel";
         expect(() => setTheseusLogLevel(invalidLevel as keyof typeof logLevels)).not.to.throw();
         // Since the invalid level is not set, the last valid level should remain

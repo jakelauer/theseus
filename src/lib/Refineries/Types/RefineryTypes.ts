@@ -104,7 +104,7 @@ export type RefineryInstance<
  *   immutable. This ensures that the original data is not mutated during the refinement process, adhering to
  *   the principles of immutability and functional programming.
  *
- *   Usage involves calling `using` to apply the forge functions directly to the data, or `getForges` to
+ *   Usage involves calling `via` to apply the forge functions directly to the data, or `getForges` to
  *   retrieve the set of available forge functions for manual application or inspection. This flexibility
  *   allows developers to choose the most appropriate approach for their specific data transformation needs.
  */

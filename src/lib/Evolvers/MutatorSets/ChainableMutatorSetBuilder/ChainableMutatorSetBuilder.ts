@@ -1,15 +1,14 @@
-import { buildChainableMutatorQueue } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/buildChainableMutatorQueue";
+import { ChainableMutatorQueue } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/ChainableMutatorQueue";
 import { createChainingProxy } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy";
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
 
-import type { Chainable, ChainableMutators, FinalMutators } from "@Evolvers/Types/ChainableTypes";
+import type { Chainable, ChainableMutators } from "@Evolvers/Types/ChainableTypes";
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 import type { Mutable } from "@Shared/String/makeMutable";
 
 import type { GenericMutator, MutableData, MutatorDefs } from "../../Types/MutatorTypes";
-import type { TTargetChained } from "./operations/createChainingProxy";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
@@ -19,9 +18,7 @@ import type { TTargetChained } from "./operations/createChainingProxy";
  * @template TMutators The type representing the definitions of mutators applicable to the evolver data.
  */
 
-type QueueMutation = ReturnType<typeof buildChainableMutatorQueue>;
-
-const mutatorLog = getTheseusLogger("Mutator");
+const log = getTheseusLogger("ChainableMutatorSetBuilder");
 
 export class ChainableMutatorSetBuilder<
         TData extends object,
@@ -29,19 +26,20 @@ export class ChainableMutatorSetBuilder<
         TMutators extends MutatorDefs<TData, TParamName>,
     >
     extends MutatorSetBuilder<TData, TParamName, TMutators>
-    implements Chainable<TData>
+    implements Chainable<TData> 
 {
     private calls = 0;
 
-    private queueMutation: QueueMutation;
+    private mutatorQueue: ChainableMutatorQueue<TData, TParamName>;
 
     // Created by createChainingProxy; always matches the type of the current instance
-    private chainingProxy: TTargetChained<typeof this>;
+    private chainingProxy: typeof this;
 
-    constructor(inputData: TData, argName: TParamName, mutators: TMutators) {
+    constructor(inputData: TData, argName: TParamName, mutators: TMutators) 
+    {
         super(inputData, argName, mutators);
 
-        this.queueMutation = buildChainableMutatorQueue({
+        this.mutatorQueue = ChainableMutatorQueue.create({
             argName,
             getMutableData: this.getMutableData.bind(this),
             setMutableData: this.setMutableData.bind(this),
@@ -50,24 +48,35 @@ export class ChainableMutatorSetBuilder<
         this.chainingProxy = createChainingProxy({
             target: this,
             observationId: this.__theseusId as string,
-            queueMutation: this.queueMutation.bind(this),
+            queue: this.mutatorQueue,
         });
     }
 
-    private getMutableData() {
+    private getMutableData() 
+    {
         return this.mutableData;
     }
 
-    private setMutableData(data: MutableData<TData, TParamName>) {
+    private setMutableData(data: MutableData<TData, TParamName>) 
+    {
         this.mutableData = data;
     }
 
-    public get finalForm() {
-        return this.mutableData[this.argName];
+    private get resultBase():Promise<TData> | TData 
+    {
+        return this.mutatorQueue.asyncEncountered
+            ? Promise.resolve(this.mutableData[this.argName]) 
+            : this.mutableData[this.argName];
     }
 
-    public get finalFormAsync() {
-        return this.queueMutation("finalForm", () => this.finalForm, []) as Promise<TData>;
+    public get result() 
+    {
+        return this.resultBase as TData;
+    }
+
+    public get resultAsync(): Promise<TData> 
+    {
+        return this.resultBase as Promise<TData>;
     }
 
     /**
@@ -83,15 +92,23 @@ export class ChainableMutatorSetBuilder<
         context: any,
         selfPath: string,
         mutator: GenericMutator<TData, SortaPromise<TData>>,
-    ) {
+    ) 
+    {
         Object.assign(context, {
-            [selfPath]: (...args: any[]) => {
+            [selfPath]: (...args: any[]) => 
+            {
                 this.calls++;
-                mutatorLog.verbose(`Called "${selfPath}"`);
+
+                log.debug(`Executing mutator ${selfPath}`, { args });
 
                 return mutator(...args);
             },
         });
+    }
+
+    protected override getSelfExtensionPoint() 
+    {
+        return this.fixedMutators;
     }
 
     /**
@@ -103,15 +120,12 @@ export class ChainableMutatorSetBuilder<
      * @param mutators Definitions of mutators to apply to the state.
      * @returns An instance of ChainableMutatorSet configured with the provided parameters.
      */
-    public static createChainable<
+    public static  createChainable<
         TData extends object,
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TData, TParamName>,
-    >(
-        data: TData,
-        argName: TParamName,
-        mutators: TMutators,
-    ): ChainableMutators<TData, TParamName, TMutators> {
+    >(data: TData, argName: TParamName, mutators: TMutators) 
+    {
         const chain = new ChainableMutatorSetBuilder(data, argName, mutators);
         const proxy = chain.chainingProxy;
         return this.castToChainableMutators(proxy);
@@ -121,11 +135,12 @@ export class ChainableMutatorSetBuilder<
      * Casts the provided ChainableMutatorBuilder instance to a ChainableMutators instance. This is a
      * workaround to avoid TypeScript's inability to infer the correct type of the returned object.
      */
-    private static castToChainableMutators<
+    public static castToChainableMutators<
         TData extends object,
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TData, TParamName>,
-    >(chainableMutatorSet: TTargetChained<ChainableMutatorSetBuilder<TData, TParamName, TMutators>>) {
+    >(chainableMutatorSet: ChainableMutatorSetBuilder<TData, TParamName, TMutators>) 
+    {
         return chainableMutatorSet as ChainableMutators<TData, TParamName, TMutators>;
     }
 
@@ -133,11 +148,8 @@ export class ChainableMutatorSetBuilder<
      * Overrides the create method to indicate that ChainableMutatorSet is specifically designed for chainable
      * operations, and does not support the creation of non-chainable mutators.
      */
-    public static override create<
-        TData extends object,
-        TParamName extends Mutable<string>,
-        TMutators extends MutatorDefs<TData, TParamName>,
-    >(): FinalMutators<TData, TParamName, TMutators> {
+    public static override create(): never 
+    {
         throw new Error("ChainableMutatorSet does not support non-chained mutators.");
     }
 }

@@ -20,13 +20,13 @@ export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "ga
             const nextMarkType = lastPlayer === "X" ? "O" : "X";
             const randomSquare = GameBoardRefinery(mutableGameState).getRandomAvailableSquare();
             if (!randomSquare) {
-                return GameTurnEvolver.mutate(mutableGameState).using.gameOver("stalemate");
+                return GameTurnEvolver.mutate(mutableGameState).via.gameOver("stalemate");
             }
 
             GamePlayEvolver.evolve(mutableGameState)
-                .using.playMove(randomSquare, nextMarkType)
-                .then.delayedClearSquares()
-                .finally.delayedSetSquare(randomSquare, nextMarkType);
+                .via.playMove(randomSquare, nextMarkType)
+                .and.delayedClearSquares()
+                .lastly.delayedSetSquare(randomSquare, nextMarkType);
 
             log.info(`Played square: ${randomSquare}`);
 
