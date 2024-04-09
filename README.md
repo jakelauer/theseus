@@ -51,30 +51,7 @@ pnpm install theseus-js
 
 ### Usage
 
-```typescript
-import theseus from "theseus-js";
-import { ScheduleEvolver } from "./evolvers/ScheduleEvolver";
-import { ShiftEvolver } from "./evolvers/ShiftEvolver";
-import { MenuEvolver } from "./evolvers/MenuEvolver";
-import { OrderStatusRefinery } from "./refineries/OrderStatusRefinery";
-import { DiscountRefinery } from "./refineries/DiscountRefinery";
-
-const cafeState = {
-    //...
-};
-
-export const StarbucksShip = theseus(cafeState).maintainWith({
-    evolvers: {
-        ScheduleEvolver,
-        ShiftEvolver,
-        MenuEvolver,
-    },
-    refineries: {
-        OrderStatusRefinery,
-        DiscountRefinery,
-    },
-});
-```
+#### See the [tutorial](./.tutorial/README.md) for a walkthrough!
 
 ## Documentation
 
