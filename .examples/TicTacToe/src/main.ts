@@ -1,6 +1,6 @@
 import { getTheseusLogger, setTheseusLogLevel } from "theseus-js";
 
-import { GameShip } from "./GameShip";
+import { GameShip } from "./game-ship/game-ship";
 
 setTheseusLogLevel("major");
 

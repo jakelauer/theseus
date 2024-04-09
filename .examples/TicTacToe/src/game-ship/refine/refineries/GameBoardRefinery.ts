@@ -1,6 +1,7 @@
 import { getTheseusLogger, Refinery } from "theseus-js";
 
-import { Board, GameState } from "../../state/GameState";
+import { Board, GameState, MarkType } from "../../state/GameState";
+import { GameOutcomeRefinery, Triple } from "./GameOutcomeRefinery";
 
 const log = getTheseusLogger("GameBoardRefinery");
 

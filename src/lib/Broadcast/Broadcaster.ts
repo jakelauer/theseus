@@ -15,7 +15,8 @@ const log = getTheseusLogger("Broadcaster");
 export class Broadcaster<
     TData extends object,
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
-> {
+> 
+{
     protected readonly params: BroadcasterParams<TData, TObserverType>;
     protected readonly observers: { [key: string]: TObserverType } = {};
 
@@ -26,18 +27,21 @@ export class Broadcaster<
      *
      * @param params
      */
-    constructor(params?: BroadcasterParams<TData, TObserverType>) {
+    constructor(params?: BroadcasterParams<TData, TObserverType>) 
+    {
         this.params = {
             observerClassConstructor: null,
             ...(params ?? {}),
         };
     }
 
-    protected get allObservers(): TObserverType[] {
+    protected get allObservers(): TObserverType[] 
+    {
         return Object.values(this.observers);
     }
 
-    public async broadcast(data: TData) {
+    public async broadcast(data: TData) 
+    {
         const broadcastTo = this.getObserversToUpdate(data);
 
         log.verbose("Broadcasting data to observers", { count: broadcastTo.length });
@@ -45,22 +49,26 @@ export class Broadcaster<
         // Assign a guid to this broadcast
         const updateGuid = uuidv4();
 
-        if (broadcastTo.length === 0) {
+        if (broadcastTo.length === 0) 
+        {
             return Promise.resolve();
         }
 
         // Store the broadcast in pending updates, and delete it when it's complete
         this.pendingUpdates[updateGuid] = Promise.all(
-            broadcastTo.map((observer) => {
+            broadcastTo.map((observer) => 
+            {
                 log.verbose("Broadcasting to observer", { observer: observer.update });
                 return observer.update(data);
             }),
         )
-            .then((result) => {
+            .then((result) => 
+            {
                 log.verbose("Completed pending update", { updateGuid, result });
                 delete this.pendingUpdates[updateGuid];
             })
-            .catch((error) => {
+            .catch((error) => 
+            {
                 log.error(error);
             });
 
@@ -70,13 +78,14 @@ export class Broadcaster<
         return this.pendingUpdates[updateGuid];
     }
 
-    protected buildObserver(callback: (newData: TData) => void) {
+    protected buildObserver(callback: (newData: TData) => void) 
+    {
         const { observerClassConstructor } = this.params;
 
         const observer: TObserverType =
             observerClassConstructor ?
                 new observerClassConstructor(callback)
-            :   (new BroadcasterObserver(callback) as TObserverType);
+                :   (new BroadcasterObserver(callback) as TObserverType);
 
         return observer;
     }
@@ -84,7 +93,8 @@ export class Broadcaster<
     protected saveObserver(callback: (newData: TData) => void): {
         destroy: DestroyCallback;
         observer: TObserverType;
-    } {
+    } 
+    {
         const observer = this.buildObserver(callback);
 
         const guid = Broadcaster.guid();
@@ -103,13 +113,15 @@ export class Broadcaster<
      * @param props The further input about the observer, if any
      * @param callback
      */
-    public observe(callback: (newData: TData) => void): DestroyCallback {
+    public observe(callback: (newData: TData) => void): DestroyCallback 
+    {
         const { destroy } = this.saveObserver(callback);
 
         return destroy;
     }
 
-    protected static guid() {
+    protected static guid() 
+    {
         return (new Date().getTime() * Math.random()).toString(36);
     }
 
@@ -120,11 +132,13 @@ export class Broadcaster<
      * @protected
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Allow for override with access to data
-    protected getObserversToUpdate(data: TData) {
+    protected getObserversToUpdate(data: TData) 
+    {
         return this.allObservers;
     }
 
-    public static destroyAll(...destroyCallbacks: DestroyCallback[]) {
+    public static destroyAll(...destroyCallbacks: DestroyCallback[]) 
+    {
         destroyCallbacks.forEach((u) => u());
     }
 }

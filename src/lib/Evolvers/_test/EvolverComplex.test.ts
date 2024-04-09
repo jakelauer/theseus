@@ -9,7 +9,8 @@ const IncrementEvolverCreator = () =>
     })
         .toEvolve<{ count: number }>()
         .withMutators({
-            increment: ({ mutableAmount }, amount: number) => {
+            increment: ({ mutableAmount }, amount: number) => 
+            {
                 return {
                     count: mutableAmount.count + amount,
                 };
@@ -18,18 +19,22 @@ const IncrementEvolverCreator = () =>
 
 type IncrementEvolver = ReturnType<typeof IncrementEvolverCreator>["IncrementEvolver"];
 
-describe("EvolverComplex", () => {
+describe("EvolverComplex", () => 
+{
     let IncrementEvolver: IncrementEvolver;
 
-    before(function () {
+    before(function () 
+    {
         // Define a simple increment Evolver for demonstration purposes
         const { IncrementEvolver: recreatedIncremementEvolver } = IncrementEvolverCreator();
 
         IncrementEvolver = recreatedIncremementEvolver;
     });
 
-    describe("create and setup evolvers", () => {
-        it("should initialize and setup evolvers correctly, separating creation from execution", () => {
+    describe("create and setup evolvers", () => 
+    {
+        it("should initialize and setup evolvers correctly, separating creation from execution", () => 
+        {
             // Creation step: Define the structure of the complex evolver
             const { IncrementEvolver } = IncrementEvolverCreator();
 
@@ -41,23 +46,26 @@ describe("EvolverComplex", () => {
         });
     });
 
-    describe("execute mutations", () => {
-        it("should execute a single mutation correctly", () => {
+    describe("execute mutations", () => 
+    {
+        it("should execute a single mutation correctly", () => 
+        {
             // Execute step: Use the setup to perform mutations
             const initialData = { count: 0 };
-            const mutationResult = IncrementEvolver.mutate(initialData).using.increment(5);
+            const mutationResult = IncrementEvolver.mutate(initialData).via.increment(5);
 
             expect(mutationResult.count).to.equal(5);
         });
 
-        it("should execute chained mutations correctly", () => {
+        it("should execute chained mutations correctly", () => 
+        {
             const initialData = { count: 10 };
 
             // Chained execution: Demonstrates the use of the same setup for multiple operations
             const evolvedResult = IncrementEvolver.evolve(initialData)
-                .using.increment(5)
-                .then.increment(10)
-                .then.finally.increment(10);
+                .via.increment(5)
+                .and.increment(10)
+                .lastly.increment(10);
 
             expect(evolvedResult.count).to.equal(35);
         });

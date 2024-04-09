@@ -22,7 +22,8 @@ type MutatorsForEvolver<
     >["getMutators"]
 >;
 
-// Similar to MutatorsForEvolver but for macro mutators, determining the mutators for evolving the state on a larger scale.
+// Similar to MutatorsForEvolver but for macro mutators, determining the mutators for
+// evolving the state on a larger scale.
 type MacroMutatorsForEvolver<
     TEvolverName extends StringKeyOf<TEvolvers>,
     TData extends object,
@@ -65,7 +66,8 @@ type RemoveEvolverFromName<T> = {
     [K in keyof T as NormalizedEvolverName<Extract<K, string>>]: T[K];
 };
 
-// Applies a transformation to the names of the mutators, removing the 'Evolver' prefix to match the naming conventions of the complex.
+// Applies a transformation to the names of the mutators, removing the 
+// 'Evolver' prefix to match the naming conventions of the complex.
 export type MacroMutatorsFormatted<
     TData extends object,
     TParamName extends string,

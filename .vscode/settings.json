@@ -25,6 +25,11 @@
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "typescriptHero.imports.organizeOnSave": true,
     "[markdown]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+	},
+	"[xml]": {
+		"editor.defaultFormatter": "redhat.vscode-xml"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+	}
 }

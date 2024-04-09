@@ -1,160 +1,35 @@
-# TicTacToe example
+# TicTacToe Example
 
-Example output from running `pnpm start` in `.examples/TicTacToe`:
+This TicTacToe example demonstrates a game of TicTacToe using Theseus. It is located in the
+`.examples/TicTacToe` directory and includes a README.md with example output from running the game.
 
-```log
-fake-user@Jake-MacBook-M2-2 TicTacToe % pnpm start
+## How to Run the Example
 
-17:03:88:47.4747 verbose :: Creating refinery complex with refineries ⸨RefineryComplex⸩
-|  {
-|    "refineries": [ "GameBoardRefinery", "GameOutcomeRefinery" ]
-|  }
-17:03:88:47.4747 verbose :: Created evolver: GamePlayEvolver with mutators: ⸨Evolver⸩
-|  {
-|    "mutators": [ "playMove", "delayedSetSquare", "delayedClearSquares" ]
-|  }
-17:03:89:47.4747 verbose :: Created evolver: GameTurnEvolver with mutators: ⸨Evolver⸩
-|  {
-|    "mutators": [ "gameOver", "nextTurn" ]
-|  }
-17:03:89:47.4747 verbose :: Creating evolver complex with evolvers: ⸨EvolverComplex⸩
-|  {
-|    "evolvers": [ "GamePlayEvolver", "GameTurnEvolver" ]
-|  }
-17:03:89:47.4747 major :: Turn 0 ⸨GameTurnEvolver⸩
-17:03:89:47.4747 info :: Unused squares: 9 ⸨GameBoardRefinery⸩
-17:03:89:47.4747 info :: Getting random available square at 2,2 ⸨GameBoardRefinery⸩
-17:03:89:47.4747 info :: Received request to set square at 2,2 to O ⸨GameStateEvolver⸩
-17:03:89:47.4747 info :: [Proxy] [=== Chain end reached ===] via "finally" ⸨Queue⸩
-17:03:89:47.4747 info :: [Proxy] .finally mode active, returning result of queued operations ⸨Queue⸩
-17:03:89:47.4747 info :: Played square: 2,2 ⸨GameTurnEvolver⸩
-17:03:89:47.4747 info :: Checking for triples ⸨GameOutcomeRefinery⸩
-17:03:89:47.4747 info :: Checked 8 triples and found no winner ⸨GameOutcomeRefinery⸩
-17:03:89:47.4747 info :: Board state
-⬛⬛⬛
-⬛⬛⬛
-⬛⬛⭕
- ⸨Observe⸩
-17:03:89:47.4747 major :: Move detected! Taking next turn... ⸨Observe⸩
-17:03:89:47.4747 major :: Turn 1 ⸨GameTurnEvolver⸩
-17:03:89:47.4747 info :: Unused squares: 8 ⸨GameBoardRefinery⸩
-17:03:89:47.4747 info :: Getting random available square at 2,1 ⸨GameBoardRefinery⸩
-17:03:89:47.4747 info :: Received request to set square at 2,1 to X ⸨GameStateEvolver⸩
-17:03:89:47.4747 info :: [Proxy] [=== Chain end reached ===] via "finally" ⸨Queue⸩
-17:03:89:47.4747 info :: [Proxy] .finally mode active, returning result of queued operations ⸨Queue⸩
-17:03:89:47.4747 info :: Played square: 2,1 ⸨GameTurnEvolver⸩
-17:03:89:47.4747 info :: Checking for triples ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Checked 8 triples and found no winner ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Board state
-⬛⬛⬛
-⬛⬛⬛
-⬛❌⭕
- ⸨Observe⸩
-17:03:90:47.4747 major :: Move detected! Taking next turn... ⸨Observe⸩
-17:03:90:47.4747 major :: Turn 2 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Unused squares: 7 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Getting random available square at 1,0 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Received request to set square at 1,0 to O ⸨GameStateEvolver⸩
-17:03:90:47.4747 info :: [Proxy] [=== Chain end reached ===] via "finally" ⸨Queue⸩
-17:03:90:47.4747 info :: [Proxy] .finally mode active, returning result of queued operations ⸨Queue⸩
-17:03:90:47.4747 info :: Played square: 1,0 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Checking for triples ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Checked 8 triples and found no winner ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Board state
-⬛⬛⬛
-⭕⬛⬛
-⬛❌⭕
- ⸨Observe⸩
-17:03:90:47.4747 major :: Move detected! Taking next turn... ⸨Observe⸩
-17:03:90:47.4747 major :: Turn 3 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Unused squares: 6 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Getting random available square at 0,2 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Received request to set square at 0,2 to X ⸨GameStateEvolver⸩
-17:03:90:47.4747 info :: [Proxy] [=== Chain end reached ===] via "finally" ⸨Queue⸩
-17:03:90:47.4747 info :: [Proxy] .finally mode active, returning result of queued operations ⸨Queue⸩
-17:03:90:47.4747 info :: Played square: 0,2 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Checking for triples ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Checked 8 triples and found no winner ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Board state
-⬛⬛❌
-⭕⬛⬛
-⬛❌⭕
- ⸨Observe⸩
-17:03:90:47.4747 major :: Move detected! Taking next turn... ⸨Observe⸩
-17:03:90:47.4747 major :: Turn 4 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Unused squares: 5 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Getting random available square at 0,0 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Received request to set square at 0,0 to O ⸨GameStateEvolver⸩
-17:03:90:47.4747 info :: [Proxy] [=== Chain end reached ===] via "finally" ⸨Queue⸩
-17:03:90:47.4747 info :: [Proxy] .finally mode active, returning result of queued operations ⸨Queue⸩
-17:03:90:47.4747 info :: Played square: 0,0 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Checking for triples ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Checked 8 triples and found no winner ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Board state
-⭕⬛❌
-⭕⬛⬛
-⬛❌⭕
- ⸨Observe⸩
-17:03:90:47.4747 major :: Move detected! Taking next turn... ⸨Observe⸩
-17:03:90:47.4747 major :: Turn 5 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Unused squares: 4 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Getting random available square at 1,2 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Received request to set square at 1,2 to X ⸨GameStateEvolver⸩
-17:03:90:47.4747 info :: [Proxy] [=== Chain end reached ===] via "finally" ⸨Queue⸩
-17:03:90:47.4747 info :: [Proxy] .finally mode active, returning result of queued operations ⸨Queue⸩
-17:03:90:47.4747 info :: Played square: 1,2 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Checking for triples ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Checked 8 triples and found no winner ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Board state
-⭕⬛❌
-⭕⬛❌
-⬛❌⭕
- ⸨Observe⸩
-17:03:90:47.4747 major :: Move detected! Taking next turn... ⸨Observe⸩
-17:03:90:47.4747 major :: Turn 6 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Unused squares: 3 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Getting random available square at 0,1 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Received request to set square at 0,1 to O ⸨GameStateEvolver⸩
-17:03:90:47.4747 info :: [Proxy] [=== Chain end reached ===] via "finally" ⸨Queue⸩
-17:03:90:47.4747 info :: [Proxy] .finally mode active, returning result of queued operations ⸨Queue⸩
-17:03:90:47.4747 info :: Played square: 0,1 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Checking for triples ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Checked 8 triples and found no winner ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Board state
-⭕⭕❌
-⭕⬛❌
-⬛❌⭕
- ⸨Observe⸩
-17:03:90:47.4747 major :: Move detected! Taking next turn... ⸨Observe⸩
-17:03:90:47.4747 major :: Turn 7 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Unused squares: 2 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Getting random available square at 1,1 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Received request to set square at 1,1 to X ⸨GameStateEvolver⸩
-17:03:90:47.4747 info :: [Proxy] [=== Chain end reached ===] via "finally" ⸨Queue⸩
-17:03:90:47.4747 info :: [Proxy] .finally mode active, returning result of queued operations ⸨Queue⸩
-17:03:90:47.4747 info :: Played square: 1,1 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Checking for triples ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Checked 8 triples and found no winner ⸨GameOutcomeRefinery⸩
-17:03:90:47.4747 info :: Board state
-⭕⭕❌
-⭕❌❌
-⬛❌⭕
- ⸨Observe⸩
-17:03:90:47.4747 major :: Move detected! Taking next turn... ⸨Observe⸩
-17:03:90:47.4747 major :: Turn 8 ⸨GameTurnEvolver⸩
-17:03:90:47.4747 info :: Unused squares: 1 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Getting random available square at 2,0 ⸨GameBoardRefinery⸩
-17:03:90:47.4747 info :: Received request to set square at 2,0 to O ⸨GameStateEvolver⸩
-17:03:90:47.4747 info :: [Proxy] [=== Chain end reached ===] via "finally" ⸨Queue⸩
-17:03:90:47.4747 info :: [Proxy] .finally mode active, returning result of queued operations ⸨Queue⸩
-17:03:90:47.4747 info :: Played square: 2,0 ⸨GameTurnEvolver⸩
-17:03:91:47.4747 info :: Checking for triples ⸨GameOutcomeRefinery⸩
-17:03:91:47.4747 major :: Game over! winner ⸨GameTurnEvolver⸩
-17:03:91:47.4747 info :: Board state
-⭕⭕❌
-⭕❌❌
-⭕❌⭕
- ⸨Observe⸩
-17:03:91:47.4747 info :: Checking for triples ⸨GameOutcomeRefinery⸩
-17:03:91:47.4747 major :: We have a winner! Three Os down! ⸨Observe⸩
-```
+1. Navigate to the `.examples/TicTacToe` directory.
+2. Run the command `pnpm start` to start the game.
+
+## Example Output
+
+When the game is run, detailed log output showcases the game's progress, including the creation of refinery
+complexes, evolvers, and the sequence of turns taken by the game. It details actions such as setting squares,
+checking for game outcomes (like finding a winner), and the state of the game board after each move.
+
+### Key Points in the Output:
+
+-   Creation of refinery complexes with refineries like
+    [`GameBoardRefinery`](./src/game-ship/refine/refineries/GameBoardRefinery.ts) and
+    [`GameOutcomeRefinery`](./src/game-ship/refine/refineries/GameOutcomeRefinery.ts).
+-   Creation of evolvers such as [`GamePlayEvolver`](./src/game-ship/evolve/evolvers/GamePlayEvolver.ts) and
+    [`GameTurnEvolver`](./src/game-ship/evolve/evolvers/GameTurnEvolver.ts), with specific mutators/actions
+    they can perform.
+-   A log of each turn taken, including the unused squares, the action of setting squares with either X or O,
+    and checking for winning conditions.
+-   The final output shows the board state after each move, indicating moves with ⬛ for empty squares, ⭕ for
+    O's, and ❌ for X's. The output concludes with the announcement of a game over, indicating a winner or a
+    draw if applicable.
+
+This example showcases Theseus's capabilities in managing and evolving game state, demonstrating complex state
+manipulation through a familiar game of TicTacToe. It serves as a practical demonstration of Theseus's
+capabilities and as a template for building more complex state-driven applications.
+
+[See example output from running `pnpm start` in `.examples/TicTacToe`](./example-output.md)

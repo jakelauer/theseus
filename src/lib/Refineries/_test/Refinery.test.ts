@@ -2,7 +2,8 @@ import { expect } from "chai";
 
 import { Refinery } from "../Refinery";
 
-describe("Refinery", function () {
+describe("Refinery", function () 
+{
     interface TestData {
         field: string;
     }
@@ -11,7 +12,8 @@ describe("Refinery", function () {
         noun: "testData",
     } as const;
 
-    it("should create a refinery with the correct name", function () {
+    it("should create a refinery with the correct name", function () 
+    {
         const output = Refinery.create("testRefinery", refineryDefinition)
             .toRefine<TestData>()
             .withForges({
@@ -23,7 +25,8 @@ describe("Refinery", function () {
         expect(Object.keys(output)[0]).to.equal("testRefinery");
     });
 
-    it("should apply forge functions correctly", function () {
+    it("should apply forge functions correctly", function () 
+    {
         const { testRefinery } = Refinery.create("testRefinery", refineryDefinition)
             .toRefine<TestData>()
             .withForges({
@@ -37,11 +40,13 @@ describe("Refinery", function () {
         expect(result.field).to.equal("TEST");
     });
 
-    it("should throw an error if a forge function modifies the immutable data", function () {
+    it("should throw an error if a forge function modifies the immutable data", function () 
+    {
         const { testRefinery } = Refinery.create("testRefinery", refineryDefinition)
             .toRefine<TestData>()
             .withForges({
-                forge1: ({ immutableTestData }) => {
+                forge1: ({ immutableTestData }) => 
+                {
                     immutableTestData.field = immutableTestData.field.toUpperCase();
                     return immutableTestData;
                 },
@@ -51,16 +56,20 @@ describe("Refinery", function () {
         // This checks if the environment is strict, because in strict mode,
         // the assignment to the immutable property will throw a TypeError,
         // and in non-strict mode, the assignment will fail silently.
-        const isStrict = (function () {
+        const isStrict = (function () 
+        {
             return !this;
         })();
 
-        if (isStrict) {
+        if (isStrict) 
+        {
             expect(() => testRefinery(testData).forge1()).to.throw(
                 TypeError,
                 /^Cannot assign to read only property/,
             );
-        } else {
+        }
+        else 
+        {
             expect(() => testRefinery(testData).forge1()).to.deep.equal(testData);
         }
     });

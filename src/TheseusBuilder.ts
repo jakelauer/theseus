@@ -22,18 +22,25 @@ const log = getTheseusLogger("TheseusBuilder");
 const extendTheseusWith = <TTheseus extends ITheseus<any>, TExtension extends object>(
     instance: TTheseus,
     extension: TExtension,
-) => {
-    const propertyMapFromExtension = Object.keys(extension).reduce((acc, key) => {
+) => 
+{
+    const propertyMapFromExtension = Object.keys(extension).reduce((acc, key) => 
+    {
         const propertyDescriptor: any = Object.getOwnPropertyDescriptor(extension, key);
-        if (propertyDescriptor.get || propertyDescriptor.set) {
+        if (propertyDescriptor.get || propertyDescriptor.set) 
+        {
             acc[key] = {};
-            if (propertyDescriptor.get) {
+            if (propertyDescriptor.get) 
+            {
                 acc[key].get = propertyDescriptor.get; // Assign the getter function
             }
-            if (propertyDescriptor.set) {
+            if (propertyDescriptor.set) 
+            {
                 acc[key].set = propertyDescriptor.set; // Assign the setter function
             }
-        } else {
+        }
+        else 
+        {
             acc[key] = {
                 value: propertyDescriptor.value,
                 writable: true,
@@ -59,7 +66,8 @@ export default <TData extends object>(data: TData) => ({
         TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
     >(
         params: TheseusParams<TData, TParamName, TMutators, TEvolvers, TForges, TRefineries, TObserverType>,
-    ) => {
+    ) => 
+    {
         const { evolvers, refineries, ...rest } = params;
         const theseusInstance = new Theseus<TData, TObserverType>(data, rest);
 
@@ -88,11 +96,12 @@ export default <TData extends object>(data: TData) => ({
             innerInstance: ITheseus<TData>,
             evolvers: TEvolvers | EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers>,
             refineries?: TRefineries | RefineryComplexInstance<TData, TParamName, TForges, TRefineries>,
-        ) => {
+        ) => 
+        {
             const evolverComplex: EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers> =
                 "evolve" in evolvers ?
                     (evolvers as EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers>)
-                :   EvolverComplex.create<TData>().withEvolvers(evolvers);
+                    :   EvolverComplex.create<TData>().withEvolvers(evolvers);
 
             // set theseus id for each evolver, so that we can track which theseus is being used
             Object.values(evolverComplex.__evolvers__).forEach(
@@ -110,20 +119,22 @@ export default <TData extends object>(data: TData) => ({
                 extension,
             );
 
-            if (refineries) {
+            if (refineries) 
+            {
                 log.debug(
                     `Refineries found, adding to extension for Theseus instance ${innerInstance.__uuid}`,
                 );
                 const complex: RefineryComplexInstance<TData, TParamName, TForges, TRefineries> =
                     "refine" in refineries ?
                         (refineries as RefineryComplexInstance<TData, TParamName, TForges, TRefineries>)
-                    :   RefineryComplex.create<TData>().withRefineries(refineries);
+                        :   RefineryComplex.create<TData>().withRefineries(refineries);
 
                 extension = Object.defineProperties<BaseExtension>(
                     { ...extension, refine: undefined } as any,
                     {
                         refine: {
-                            get: () => {
+                            get: () => 
+                            {
                                 const instanceState = Theseus.getInstance(innerInstance.__uuid).state;
                                 return complex.refine(instanceState);
                             },

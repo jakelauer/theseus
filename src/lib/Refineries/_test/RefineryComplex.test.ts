@@ -4,14 +4,16 @@ import { Refinery } from "@Refineries/Refinery";
 
 import { RefineryComplex } from "../RefineryComplex";
 
-describe("RefineryComplex", function () {
+describe("RefineryComplex", function () 
+{
     interface TestData {
         field: string;
         count: number;
     }
 
     // Utility function to create a mock refinery that converts field to uppercase
-    function createMockUpperCaseRefinery() {
+    function createMockUpperCaseRefinery() 
+    {
         const { mockUpperCaseRefinery } = Refinery.create("mockUpperCaseRefinery", {
             noun: "testData",
         })
@@ -27,7 +29,8 @@ describe("RefineryComplex", function () {
     }
 
     // Utility function to create a mock refinery that increments count
-    function createMockIncrementCountRefinery() {
+    function createMockIncrementCountRefinery() 
+    {
         const { mockIncrementCountRefinery } = Refinery.create("mockIncrementCountRefinery", {
             noun: "testData",
         })
@@ -42,7 +45,8 @@ describe("RefineryComplex", function () {
         return mockIncrementCountRefinery;
     }
 
-    it("should aggregate multiple refineries and process data correctly", function () {
+    it("should aggregate multiple refineries and process data correctly", function () 
+    {
         const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
             UpperCaseRefinery: createMockUpperCaseRefinery(),
             IncrementCountRefinery: createMockIncrementCountRefinery(),
@@ -57,7 +61,8 @@ describe("RefineryComplex", function () {
         expect(resultAfterIncrement.count).to.equal(2);
     });
 
-    it("should maintain immutability of data across refineries", function () {
+    it("should maintain immutability of data across refineries", function () 
+    {
         const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
             UpperCaseRefinery: createMockUpperCaseRefinery(),
         });
@@ -71,7 +76,8 @@ describe("RefineryComplex", function () {
         expect(testData).to.deep.equal(resultBefore);
     });
 
-    it("should handle empty data correctly", function () {
+    it("should handle empty data correctly", function () 
+    {
         const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
             uppercase: createMockUpperCaseRefinery(),
         });
@@ -83,7 +89,8 @@ describe("RefineryComplex", function () {
         expect(result.field).to.equal("");
     });
 
-    it("should apply refineries in sequence correctly", function () {
+    it("should apply refineries in sequence correctly", function () 
+    {
         const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
             UpperCaseRefinery: createMockUpperCaseRefinery(),
             IncrementCountRefinery: createMockIncrementCountRefinery(),
@@ -99,7 +106,8 @@ describe("RefineryComplex", function () {
         expect(resultAfterIncrement.count).to.equal(1);
     });
 
-    it("should preserve data immutability when applying multiple refineries", function () {
+    it("should preserve data immutability when applying multiple refineries", function () 
+    {
         const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
             UpperCaseRefinery: createMockUpperCaseRefinery(),
             IncrementCountRefinery: createMockIncrementCountRefinery(),
