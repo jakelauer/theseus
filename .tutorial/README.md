@@ -62,3 +62,73 @@ export const initialGameState: GameState = {
     lastPlayedCoords: [-1, -1],
 };
 ```
+
+## Part II - Evolving
+
+Evolvers are specialized functions designed to manage the transformation of state within an application, following predefined rules or logic. They play a crucial role in enabling dynamic state changes, ensuring that application states evolve in a controlled, predictable manner based on user interactions or internal events.
+
+All evolvers have 4 parts:
+
+#### Name
+Evolvers are always named, and Theseus tries to enforce this because it makes working with higher-order components like EvolverComplexes easy. When you create an evolver, you give it a name, and that determines the output:
+
+```typescript
+// `MyStateEvolver` is enforced, and always matches the argument passed to `Evolver.create()`
+const { MyStateEvolver } = Evolver.create("MyStateEvolver" ...
+```
+
+#### Mutable state
+An evolver always mutates one type of state, and you must tell the evolver that type when you create it, using the `.toEvolve()` method.
+
+```typescript
+const { MyStateEvolver } = Evolver.create("MyStateEvolver", { noun: "myState" }).toEvolve<MyState>() //...
+```
+
+All mutators within the evolver must return this data type.
+
+#### Noun
+The `noun` for an evolver determines the name of the data argument passed to each `mutator`, for consistency. If you don't specify a `noun`, it defaults to `"input"`. Each `mutator`'s first argument will be an object of the evolver's data type, keyed by this noun, prefixed with `"mutable"` in camel-case:
+
+```typescript
+const { MyStateEvolver } = Evolver.create("MyStateEvolver", { noun: "myState" })
+    .toEvolve<MyState>()
+    .withMutators({
+        foo: ({ mutableMyState })
+		{
+			// ...
+		}
+	//...
+```
+#### Mutators
+
+Mutators are the heart of evolvers. They are functions which take in a mutable object and return a modified version of that object. To return any other type, use a `Refinery`.
+
+Mutators can be synchronous or asynchronous. All mutations happen in a queued fashion, and can be chained. 
+
+The first argument of a mutator must always be the mutable data object. Subsequent arguments can be added at the developer's discretion, and only those will be required when calling the mutator functions.
+
+```typescript
+const { MyStateEvolver } = Evolver.create("MyStateEvolver", { noun: "myState" })
+    .toEvolve<MyState>()
+    .withMutators({
+		// `amount` is specified in the mutator arguments after mutableMyState...
+        foo: ({ mutableMyState }, amount: number)
+		{
+			mutableMyState.iterations += amount;
+
+			return mutableMyState;
+		},
+        bar: ({ mutableMyState })
+		{
+			mutableMyState.iterations -= 1;
+
+			return mutableMyState;
+		}
+	});
+	
+const resultData = MyStateEvolver.evolve(someData)
+	// ...and we only need to pass `amount` when we call foo()
+	.using.foo(5)
+	.and.foo(3)
+	.finally.bar();
+```
