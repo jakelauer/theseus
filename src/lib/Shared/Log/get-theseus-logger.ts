@@ -5,15 +5,15 @@ import winstonConfigBuilder from "@Shared/Log/winston-config-builder";
 import { isTestMode } from "@Shared/Test/isTestMode";
 
 const testMode = isTestMode();
+console.log("Test mode: ", testMode);
+setTheseusLogLevel(testMode ? "verbose" : "silent");
 
-setTheseusLogLevel(testMode ? "debug" : "verbose");
+const rootLogger = winston.createLogger({
+    ...winstonConfigBuilder().config,
+});
 
 export type TheseusLogParams = Parameters<typeof winston.createLogger>[0];
-const buildLogger = (label: string, params: TheseusLogParams = {}) =>
-    winston.createLogger({
-        ...winstonConfigBuilder(label).config,
-        ...params,
-    });
+const buildLogger = (label: string) => rootLogger.child({ label });
 
 /**
  * Returns a logger with the given name.
@@ -24,26 +24,55 @@ const buildLogger = (label: string, params: TheseusLogParams = {}) =>
  */
 export function getTheseusLogger(
     label: string,
-    params: TheseusLogParams = {},
     _mockLoggingLib?: (label: string) => MockLoggingLib,
-): TheseusLogger {
-    const logger: winston.Logger = (_mockLoggingLib?.(label) as any) ?? buildLogger(label, params);
+): TheseusLogger 
+{
+    const logger: winston.Logger = (_mockLoggingLib?.(label) as any) ?? buildLogger(label);
 
-    Object.defineProperty(logger, "major", {
-        get() {
-            return (...args: Parameters<typeof logger.info>) => logger.log("major", ...args);
+    Object.defineProperties(logger, {
+        major: {
+            get() 
+            {
+                return (...args: Parameters<typeof logger.info>) => logger.log("major", ...args);
+            },
+        },
+        trace: {
+            get() 
+            {
+                return (message: string, ...args: []) => 
+                {
+                    const stack = new Error(message).stack?.replace(/Error: /gi, "Trace: ");
+                    // Filter out theseus-logger and stack variable from the stack trace
+                    const filtered = stack
+                        ?.split("\n")
+                        .reduce((acc, line) => 
+                        {
+                            const lineLongEnough = line.trim().length > 2;
+                            const isLineFromTheseusLogger = /theseus-logger|const stack = /.test(line);
+                            if (!isLineFromTheseusLogger && lineLongEnough) 
+                            {
+                                acc += line + "\n";
+                            }
+                            return acc;
+                        }, "");
+                    return logger.log("debug", filtered, ...args);
+                };
+            },
         },
     });
 
     return logger as TheseusLogger;
 }
 
-type TheseusLogger = winston.Logger & { major: winston.LeveledLogMethod };
+type TheseusLogLevelMethods = { major: winston.LeveledLogMethod; trace: winston.LeveledLogMethod };
+
+type TheseusLogger = winston.Logger & TheseusLogLevelMethods;
 
 /** Mock type for the logging library. */
 export type MockLoggingLib = Pick<
     winston.Logger,
     "info" | "error" | "warn" | "debug" | "format" | "silly" | "verbose"
-> & { major: winston.LeveledLogMethod };
+> &
+    TheseusLogLevelMethods;
 
 export default getTheseusLogger;

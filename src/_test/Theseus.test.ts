@@ -7,18 +7,22 @@ import { Theseus } from "@/Theseus";
 
 chai.use(chaiAsPromised);
 
-describe("Observation", () => {
+describe("Observation", () => 
+{
     let observation: Theseus<{ test: string }>;
 
-    beforeEach(() => {
+    beforeEach(() => 
+    {
         observation = new Theseus<{ test: string }>({ test: "initial" });
     });
 
-    it("should initialize with provided initial data", () => {
+    it("should initialize with provided initial data", () => 
+    {
         expect(observation.state).to.deep.equal({ test: "initial" });
     });
 
-    it("should allow observers to subscribe and receive updates", async () => {
+    it("should allow observers to subscribe and receive updates", async () => 
+    {
         const callback = sinon.fake();
         observation.observe(callback);
 
@@ -28,7 +32,8 @@ describe("Observation", () => {
         return;
     });
 
-    it("should allow observers to subscribe and receive initial state immediately if requested", async () => {
+    it("should allow observers to subscribe and receive initial state immediately if requested", async () => 
+    {
         const callback = sinon.fake();
         observation.observe(callback, true);
 
@@ -40,14 +45,16 @@ describe("Observation", () => {
         return;
     });
 
-    it("should not call observers immediately if updateImmediately is false", () => {
+    it("should not call observers immediately if updateImmediately is false", () => 
+    {
         const callback = sinon.fake();
         observation.observe(callback, false);
 
         expect(callback.called).to.be.false;
     });
 
-    it("should correctly update the state and notify observers", async () => {
+    it("should correctly update the state and notify observers", async () => 
+    {
         const callback = sinon.fake();
         observation.observe(callback);
 
@@ -58,15 +65,13 @@ describe("Observation", () => {
         return;
     });
 
-    it("should correctly handle instance retrieval and updates by ID", async () => {
-        console.log("observation.__uuid", observation.__uuid);
+    it("should correctly handle instance retrieval and updates by ID", async () => 
+    {
         const id = observation.__uuid;
         const callback = sinon.fake();
         observation.observe(callback);
 
-        console.log("Starting update for uuid", id);
         await Theseus.updateInstance(id, { test: "static update" });
-        console.log("Finished update for uuid", id);
 
         // Since updateInstance is async, we may need to wait or use fake timers
         // This example assumes immediate update for simplicity

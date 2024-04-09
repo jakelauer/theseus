@@ -1,21 +1,21 @@
 import * as winston from "winston";
 
-import { logLevels } from "@Shared/Log/set-theseus-log-level";
+import { logLevels, setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
 import { stringifier } from "@Shared/Log/stringifier";
 
 const { format, addColors } = winston;
-const { combine, colorize, label, timestamp, printf, errors, splat, prettyPrint, json } = format;
+const { combine, colorize, timestamp, printf, errors, splat, prettyPrint, json } = format;
 
-export const theseusLogFormat = (loggerLabel?: string) =>
+export const theseusLogFormat = () =>
     combine(
         errors({ stack: true }),
         colorize({ all: true }),
-        label({ label: loggerLabel }),
         splat(),
         json({ space: 2, circularValue: undefined }),
         prettyPrint(),
         timestamp({ format: "HH:MM:SS:ss.sss" }),
-        printf((info) => {
+        printf((info) => 
+        {
             const { label, level, timestamp, message, ...args } = info;
             const argsAsString = stringifier(args)
                 .split("\n")
@@ -35,20 +35,27 @@ addColors({
     silly: "magenta",
 });
 
-export const theseusTransports = {
-    console: new winston.transports.Console(),
+export const allTransports: winston.transports.ConsoleTransportInstance[] = [];
+
+const makeTransport = () => 
+{
+    const transport = new winston.transports.Console();
+    transport.level = "debug";
+
+    allTransports.push(transport);
+
+    setTheseusLogLevel();
+
+    return transport;
 };
 
-theseusTransports.console.level = "debug";
-
 const devMode = process.env.NODE_ENV === "development";
-export default (label: string) => ({
-    theseusTransports,
+export default () => ({
     config: {
         levels: logLevels,
-        format: theseusLogFormat(label),
+        format: theseusLogFormat(),
         exitOnError: false,
-        transports: [theseusTransports.console],
+        transports: [makeTransport()],
         level: devMode ? "info" : "major",
     } as winston.LoggerOptions,
 });

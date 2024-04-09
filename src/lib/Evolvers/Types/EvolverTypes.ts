@@ -43,12 +43,12 @@ export type EvolverInstance<
      * chaining, allowing for a concise expression of state transformations.
      *
      * @param input The initial state data to be mutated.
-     * @returns An object providing a direct way to apply the mutations (`using`) and a method (`getMutators`)
+     * @returns An object providing a direct way to apply the mutations (`via`) and a method (`getMutators`)
      *   to retrieve these mutators. The mutations applied through these mutators conclude the mutation
      *   process, returning the final state.
      */
     mutate: (input: TData) => {
-        using: ChainableMutators<TData, TParamName, TMutators, "final">;
+        via: ChainableMutators<TData, TParamName, TMutators, "final">;
         getMutators: () => ChainableMutators<TData, TParamName, TMutators, "final">;
     };
     /**
@@ -57,11 +57,11 @@ export type EvolverInstance<
      * operations.
      *
      * @param input The initial state data to evolve.
-     * @returns An object containing a set of chainable mutators (`using`) and a method (`getMutators`) to
+     * @returns An object containing a set of chainable mutators (`via`) and a method (`getMutators`) to
      *   directly retrieve these mutators.
      */
     evolve: (input: TData) => {
-        using: ChainableMutators<TData, TParamName, TMutators>;
+        via: ChainableMutators<TData, TParamName, TMutators>;
         getMutators: () => ChainableMutators<TData, TParamName, TMutators>;
     };
     getMutatorDefinitions: () => TMutators;

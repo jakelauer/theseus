@@ -2,28 +2,39 @@ import { getTheseusLogger } from "@Shared/index";
 
 const log = getTheseusLogger("BroadcasterObserver");
 
-const isomorphicNextTick = (fn: () => void) => {
-    if (typeof window === "undefined") {
+const isomorphicNextTick = (fn: () => void) => 
+{
+    if (typeof window === "undefined") 
+    {
         process.nextTick(fn);
-    } else {
+    }
+    else 
+    {
         requestAnimationFrame(fn);
     }
 };
 
-export class BroadcasterObserver<TData extends object> {
+export class BroadcasterObserver<TData extends object> 
+{
     public readonly callback: (newData: TData) => void;
 
-    constructor(callback: (newData: TData) => void) {
+    constructor(callback: (newData: TData) => void) 
+    {
         this.callback = callback;
     }
 
-    public update(newData: TData) {
+    public update(newData: TData) 
+    {
         return new Promise<void>((resolve, reject) =>
-            isomorphicNextTick(() => {
+            isomorphicNextTick(() => 
+            {
                 log.verbose("Updating observer");
-                try {
+                try 
+                {
                     this.callback(newData);
-                } catch (e) {
+                }
+                catch (e) 
+                {
                     reject(e);
                 }
                 resolve();

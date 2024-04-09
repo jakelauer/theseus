@@ -7,19 +7,23 @@ import { getTheseusLogger } from "@Shared/index";
 // Assuming these mock functions and classes are implemented elsewhere in the test suite
 import { mockEvolverComplex, mockRefineryComplex, type MockData } from "./mocks";
 
-describe("TheseusBuilder", function () {
+describe("TheseusBuilder", function () 
+{
     let loggerSpy: sinon.SinonSpy;
 
-    beforeEach(function () {
+    beforeEach(function () 
+    {
         // Mock the logger to observe logging operations
         loggerSpy = sinon.spy(getTheseusLogger("test"), "debug");
     });
 
-    afterEach(function () {
+    afterEach(function () 
+    {
         sinon.restore(); // Reset all mocks and spies
     });
 
-    it("extends a Theseus instance with evolvers correctly", function () {
+    it("extends a Theseus instance with evolvers correctly", function () 
+    {
         const theseusInstance = TheseusBuilder<MockData>({ touched: false }).maintainWith({
             evolvers: mockEvolverComplex,
         });
@@ -30,22 +34,21 @@ describe("TheseusBuilder", function () {
         expect(theseusInstance).to.have.property("mutate");
         expect(theseusInstance.evolve).to.have.property("mock");
         expect(theseusInstance.mutate).to.have.property("mock");
-        expect(theseusInstance.evolve.mock).to.have.property("toggleTouch");
-        expect(theseusInstance.mutate.mock).to.have.property("toggleTouch");
 
         expect(() =>
             theseusInstance.evolve.mock
                 .toggleTouch()
-                .then.toggleTouch()
-                .then.toggleTouch()
-                .then.toggleTouch()
-                .then.finally.toggleTouch(),
+                .and.toggleTouch()
+                .and.toggleTouch()
+                .and.toggleTouch()
+                .lastly.toggleTouch(),
         ).not.to.throw();
 
         expect(() => theseusInstance.mutate.mock.toggleTouch()).not.to.throw();
     });
 
-    it("extends a Theseus instance with evolvers and refineries correctly", function () {
+    it("extends a Theseus instance with evolvers and refineries correctly", function () 
+    {
         const theseusInstance = TheseusBuilder<MockData>({ touched: false }).maintainWith({
             evolvers: mockEvolverComplex,
             refineries: mockRefineryComplex,
@@ -54,13 +57,12 @@ describe("TheseusBuilder", function () {
         // Verify the extension was successful
         expect(theseusInstance).to.have.property("evolve");
         expect(theseusInstance.evolve).to.have.property("mock");
-        expect(theseusInstance.evolve.mock).to.have.property("toggleTouch");
 
         expect(theseusInstance).to.have.property("refine");
         expect(theseusInstance.refine).to.have.property("mock");
-        expect(theseusInstance.refine.mock).to.have.property("getOppositeOfTouched");
 
-        const refinerTest = (refiner: () => any, expectedValue: any) => {
+        const refinerTest = (refiner: () => any, expectedValue: any) => 
+        {
             const result = refiner();
             expect(result).to.equal(expectedValue);
         };

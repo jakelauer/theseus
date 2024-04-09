@@ -19,22 +19,25 @@ export class Theseus<
         TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
     >
     extends Broadcaster<TData, TObserverType>
-    implements ITheseus<TData>
+    implements ITheseus<TData> 
 {
     #internalState: TData;
     #uuid: string;
 
     public static instancesById: Record<string, Theseus<any, any>> = {};
 
-    public get __uuid() {
+    public get __uuid() 
+    {
         return this.#uuid;
     }
 
-    public get state() {
+    public get state() 
+    {
         return this.#internalState;
     }
 
-    private setData = (data: TData) => {
+    private setData = (data: TData) => 
+    {
         this.#internalState = data;
     };
 
@@ -44,7 +47,8 @@ export class Theseus<
      * @param initialData The starting data (can be null)
      * @param params
      */
-    constructor(data: TData, params?: BaseParams<TData, TObserverType>) {
+    constructor(data: TData, params?: BaseParams<TData, TObserverType>) 
+    {
         super(params?.broadcasterParams);
 
         this.#uuid = uuidv4();
@@ -57,7 +61,8 @@ export class Theseus<
      *
      * @param data
      */
-    private async update(data: TData) {
+    private async update(data: TData) 
+    {
         const newState = deepExtend(this.#internalState, data);
 
         this.setData(newState);
@@ -70,7 +75,8 @@ export class Theseus<
     }
 
     /** Run a callback after all pending updates have completed */
-    private nextTick(callback: () => void) {
+    private nextTick(callback: () => void) 
+    {
         const pendingUpdatePromises = Object.values(this.pendingUpdates);
         void Promise.allSettled(pendingUpdatePromises).finally(callback);
     }
@@ -83,12 +89,15 @@ export class Theseus<
      * @param props The further input about the observer, if any
      * @param callback
      */
-    public override observe(callback: (newData: TData) => void, updateImmediately = true): DestroyCallback {
+    public override observe(callback: (newData: TData) => void, updateImmediately = true): DestroyCallback 
+    {
         const { destroy, observer } = this.saveObserver(callback);
 
-        if (updateImmediately) {
+        if (updateImmediately) 
+        {
             // Update the callback once any pending updates are completed
-            this.nextTick(() => {
+            this.nextTick(() => 
+            {
                 observer.callback(this.#internalState);
             });
         }
@@ -96,11 +105,13 @@ export class Theseus<
         return destroy;
     }
 
-    public static getInstance(theseusId: string) {
+    public static getInstance(theseusId: string) 
+    {
         return this.instancesById[theseusId];
     }
 
-    public static async updateInstance(theseusId: string, data: any) {
+    public static async updateInstance(theseusId: string, data: any) 
+    {
         log.verbose(`Updating instance ${theseusId}`);
         const instance = Theseus.getInstance(theseusId);
         return await instance.update(data);

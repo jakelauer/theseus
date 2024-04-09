@@ -36,30 +36,9 @@ export const { GamePlayEvolver } = Evolver.create("GamePlayEvolver", { noun: "ga
 
             internal
                 .evolve(mutableGameState)
-                .using.setMark(coords, mark)
-                .then.updateLastPlayer(mark)
-                .then.updateLastPlayedCoords(coords);
-
-            return mutableGameState;
-        },
-        delayedSetSquare: async ({ mutableGameState }, coords: [number, number], mark: MarkType) => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-
-            internal
-                .evolve(mutableGameState)
-                .using.setMark(coords, mark)
-                .then.updateLastPlayer(mark)
-                .then.updateLastPlayedCoords(coords);
-
-            return mutableGameState;
-        },
-        delayedClearSquares: async ({ mutableGameState }) => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            mutableGameState.board = [
-                [undefined, undefined, undefined],
-                [undefined, undefined, undefined],
-                [undefined, undefined, undefined],
-            ];
+                .via.setMark(coords, mark)
+                .and.updateLastPlayer(mark)
+                .and.updateLastPlayedCoords(coords);
 
             return mutableGameState;
         },

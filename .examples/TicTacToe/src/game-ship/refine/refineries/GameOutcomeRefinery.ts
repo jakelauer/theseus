@@ -4,7 +4,7 @@ import { GameState } from "../../state/GameState";
 import { GameBoardRefinery } from "./GameBoardRefinery";
 
 type TripleType = "row" | "column" | "diagonalLR" | "diagonalRL";
-type Triple = {
+export type Triple = {
     type: TripleType;
     from: [number, number];
     to: [number, number];

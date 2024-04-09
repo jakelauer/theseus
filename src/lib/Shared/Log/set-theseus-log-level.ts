@@ -1,4 +1,4 @@
-import { theseusTransports } from "@Shared/Log/winston-config-builder";
+import { allTransports } from "@Shared/Log/winston-config-builder";
 
 export const logLevels = {
     error: 0,
@@ -8,9 +8,34 @@ export const logLevels = {
     http: 40,
     verbose: 50,
     debug: 60,
-    trace: 70,
+    trace: 60,
     silly: 80,
 } as const;
+
+
+let savedLevel: keyof typeof logLevels | "silent" = "silent";
+const setAllTransportsLevel = (newLevel?: keyof typeof logLevels | "silent") => 
+{
+    // If the level is already set to the new level, do nothing
+    if (savedLevel === newLevel) 
+    {
+        return;
+    }
+	
+    // Use the new level if it is provided, otherwise use the saved level
+    const level = newLevel ?? savedLevel;
+
+    // Save the level for future reference
+    savedLevel = level;
+
+    // Set the level and silent flag for all transports
+    for (const transport of allTransports) 
+    {
+        transport.level = level;
+        transport.silent = level === "silent";
+    }
+};
+	
 
 /**
  * Set the log level for the specified transport.
@@ -19,10 +44,7 @@ export const logLevels = {
  *   will log "warn" and "error" messages.
  */
 
-export const setTheseusLogLevel = (level: keyof typeof logLevels | "silent") => {
-    if (level === "silent") {
-        theseusTransports.console.silent = true;
-    } else {
-        theseusTransports.console.level = level;
-    }
+export const setTheseusLogLevel = (level?: keyof typeof logLevels | "silent") => 
+{
+    setAllTransportsLevel(level);
 };
