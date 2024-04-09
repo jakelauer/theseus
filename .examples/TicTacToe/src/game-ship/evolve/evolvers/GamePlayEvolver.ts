@@ -42,25 +42,4 @@ export const { GamePlayEvolver } = Evolver.create("GamePlayEvolver", { noun: "ga
 
             return mutableGameState;
         },
-        delayedSetSquare: async ({ mutableGameState }, coords: [number, number], mark: MarkType) => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-
-            internal
-                .evolve(mutableGameState)
-                .via.setMark(coords, mark)
-                .and.updateLastPlayer(mark)
-                .and.updateLastPlayedCoords(coords);
-
-            return mutableGameState;
-        },
-        delayedClearSquares: async ({ mutableGameState }) => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            mutableGameState.board = [
-                [undefined, undefined, undefined],
-                [undefined, undefined, undefined],
-                [undefined, undefined, undefined],
-            ];
-
-            return mutableGameState;
-        },
     });

@@ -40,8 +40,3 @@ export const initialGameState: GameState = {
     lastPlayer: "X",
     lastPlayedCoords: [-1, -1],
 };
-
-let currentGameState: GameState = initialGameState;
-
-export const getCurrentGameState = () => currentGameState;
-export const setCurrentGameState = (newGameState: GameState) => (currentGameState = newGameState);
