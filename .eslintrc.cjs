@@ -39,7 +39,7 @@ module.exports = {
         "indent": ["error", 4, { "SwitchCase": 1 }],
         "array-bracket-spacing": ["error", "never"],
         "object-curly-spacing": ["error", "always"],
-        "max-len": ["error", { "code": 120, "ignoreUrls": true, "ignoreTemplateLiterals": true, "ignoreStrings": true }],
+        "max-len": ["error", { "code": 40, "ignoreUrls": true, "ignoreTemplateLiterals": true, "ignoreStrings": true }],
         "arrow-parens": ["error", "always"],
         "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
         "no-tabs": "off", // Since you're using tabs

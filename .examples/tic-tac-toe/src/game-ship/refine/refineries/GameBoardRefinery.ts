@@ -14,7 +14,7 @@ export const { GameBoardRefinery } = Refinery.create("GameBoardRefinery", { noun
 
             return square;
         },
-        getRandomAvailableSquare: ({ immutableGameState }) => {
+        getRandomAvailableCoords: ({ immutableGameState }) => {
             type CoordsArray = [number, number][];
 
             const unusedSquares = immutableGameState.board.reduce((acc, row, rowIndex) => {

@@ -2,6 +2,7 @@ import { Evolver, getTheseusLogger } from "theseus-js";
 import { GameState } from "../../state/GameState";
 import { GameBoardRefinery } from "../../refine/refineries/GameBoardRefinery";
 import { GamePlayEvolver } from "./GamePlayEvolver";
+import { GameMetaEvolver } from "./GameMetaEvolver";
 
 const log = getTheseusLogger("GameTurnEvolver");
 
@@ -17,18 +18,17 @@ export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "ga
             const { turns, lastPlayer } = mutableGameState;
             log.major(`Turn ${turns}`);
 
-            const nextMarkType = lastPlayer === "X" ? "O" : "X";
-            const randomSquare = GameBoardRefinery(mutableGameState).getRandomAvailableSquare();
-            if (!randomSquare) {
+            const currentPlayer = lastPlayer === "X" ? "O" : "X";
+            const coordsForTurn = GameBoardRefinery(mutableGameState).getRandomAvailableCoords();
+            if (!coordsForTurn) {
                 return GameTurnEvolver.mutate(mutableGameState).via.gameOver("stalemate");
             }
 
-            GamePlayEvolver.evolve(mutableGameState).via.playMove(randomSquare, nextMarkType);
+            GamePlayEvolver.evolve(mutableGameState).via.playMove(coordsForTurn, currentPlayer);
 
-            log.info(`Played square: ${randomSquare}`);
-
-            mutableGameState.turns++;
-            mutableGameState.lastPlayer = nextMarkType;
+            GameMetaEvolver.evolve(mutableGameState)
+                .via.iterateTurnCount()
+                .and.updateLastPlayer(currentPlayer);
 
             return mutableGameState;
         },
