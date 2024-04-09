@@ -11,9 +11,9 @@
         "url": "https://github.com/jakelauer/theseus-js.git"
     },
     "bugs": {
-        "url": "https://github.com/theseus-js/theseus-js/issues"
+        "url": "https://github.com/jakelauer/theseus-js/issues"
     },
-    "homepage": "https://github.com/theseus-js/theseus-js",
+    "homepage": "https://github.com/jakelauer/theseus-js",
     "scripts": {
         "prepublish": "pnpm build",
         "prepare": "husky install",
