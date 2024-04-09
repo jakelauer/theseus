@@ -1,9 +1,9 @@
-# TicTacToe example output
+# Tic-tac-toe example output
 
-Example output from running `pnpm start` in `.examples/TicTacToe`:
+Example output from running `pnpm start` in `.examples/tic-tac-toe`:
 
 ```log
-fake-user@Jake-MacBook-M2-2 TicTacToe % pnpm start
+fake-user@Jake-MacBook-M2-2 Tic-tac-toe % pnpm start
 
 17:03:88:47.4747 verbose :: Creating refinery complex with refineries ⸨RefineryComplex⸩
 |  {

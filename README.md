@@ -66,9 +66,9 @@ For more detailed information on specific Theseus concepts, refer to the followi
 
 ## Examples
 
-Check out our TicTacToe example:
+Check out our Tic-tac-toe example:
 
-[Link to TicTacToe Example](.examples/TicTacToe/)
+[Link to Tic-tac-toe Example](.examples/tic-tac-toe/)
 
 This example demonstrates the practical implementation of Theseus concepts in a familiar game format, making
 it easier to grasp the library's capabilities.

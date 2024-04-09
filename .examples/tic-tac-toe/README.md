@@ -1,11 +1,11 @@
-# TicTacToe Example
+# Tic-tac-toe Example
 
-This TicTacToe example demonstrates a game of TicTacToe using Theseus. It is located in the
-`.examples/TicTacToe` directory and includes a README.md with example output from running the game.
+This Tic-tac-toe example demonstrates a game of Tic-tac-toe using Theseus. It is located in the
+`.examples/tic-tac-toe` directory and includes a README.md with example output from running the game.
 
 ## How to Run the Example
 
-1. Navigate to the `.examples/TicTacToe` directory.
+1. Navigate to the `.examples/tic-tac-toe` directory.
 2. Run the command `pnpm start` to start the game.
 
 ## Example Output
@@ -29,7 +29,7 @@ checking for game outcomes (like finding a winner), and the state of the game bo
     draw if applicable.
 
 This example showcases Theseus's capabilities in managing and evolving game state, demonstrating complex state
-manipulation through a familiar game of TicTacToe. It serves as a practical demonstration of Theseus's
+manipulation through a familiar game of Tic-tac-toe. It serves as a practical demonstration of Theseus's
 capabilities and as a template for building more complex state-driven applications.
 
-[See example output from running `pnpm start` in `.examples/TicTacToe`](./example-output.md)
+[See example output from running `pnpm start` in `.examples/tic-tac-toe`](./example-output.md)
