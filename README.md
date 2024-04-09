@@ -1,3 +1,7 @@
+<div style="text-align: center;">
+<img src="./.assets/logo.png" alt="Theseus Logo">
+</div>
+
 # Theseus
 
 Welcome to Theseus, a robust solution for managing application state with clarity and efficiency. Designed
