@@ -1,26 +1,34 @@
-module.exports = {  
+module.exports = {
     parser: "@typescript-eslint/parser",  
     parserOptions: {  
-        project: "./tsconfig.json",  
+        project: ["./tsconfig.json", "./.examples/tic-tac-toe/tsconfig.json"],  
         ecmaVersion: 2018,  
         sourceType: "module",  
         tsconfigRootDir: "./",  
     },  
     extends: [  
-        "eslint:recommended",  
+        "eslint:recommended",
         "plugin:@typescript-eslint/recommended",  
         "plugin:mocha/recommended",  
         "prettier",
+		"plugin:theseus/recommended"
     ],  
+	settings: {
+		'import/resolver': {
+			node: {
+			  paths: ["eslint-rules"]
+			}
+		  }
+	},
     plugins: ["unused-imports"],  
     rules: {  
 		indent: ["error", "tab"],
         quotes: [2, "double", { avoidEscape: true }],  
         "unused-imports/no-unused-imports": "error",  
         "no-async-promise-executor": "off",  
+        "mocha/no-setup-in-describe": "off",  
         "@typescript-eslint/no-floating-promises": ["error"],  
         "@typescript-eslint/no-explicit-any": "off",  
-        "mocha/no-setup-in-describe": "off",  
         "@typescript-eslint/consistent-type-imports": "error",  
         "@typescript-eslint/no-unused-vars": [  
             "error",  

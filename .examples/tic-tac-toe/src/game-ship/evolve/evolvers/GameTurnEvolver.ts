@@ -1,34 +1,43 @@
 import { Evolver, getTheseusLogger } from "theseus-js";
-import { GameState } from "../../state/GameState";
+import type { GameState } from "../../state/GameState";
 import { GameBoardRefinery } from "../../refine/refineries/GameBoardRefinery";
-import { GamePlayEvolver } from "./GamePlayEvolver";
-import { GameMetaEvolver } from "./GameMetaEvolver";
+import { GameEvolverComplex } from "../GameEvolverComplex";
 
 const log = getTheseusLogger("GameTurnEvolver");
 
 export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
-        gameOver: ({ mutableGameState }, reason: "stalemate" | "winner") => {
+        setWinner: ({ mutableGameState }, reason: "stalemate" | "winner") => 
+        {
             log.major(`Game over! ${reason}`);
             mutableGameState.winner = reason === "winner" ? mutableGameState.lastPlayer : "stalemate";
             return mutableGameState;
         },
-        nextTurn: ({ mutableGameState }): GameState => {
+        nextTurn: ({ mutableGameState }): GameState => 
+        {
             const { turns, lastPlayer } = mutableGameState;
-            log.major(`Turn ${turns}`);
+            log.major(`Taking turn #${turns}`);
 
-            const currentPlayer = lastPlayer === "X" ? "O" : "X";
-            const coordsForTurn = GameBoardRefinery(mutableGameState).getRandomAvailableCoords();
-            if (!coordsForTurn) {
-                return GameTurnEvolver.mutate(mutableGameState).via.gameOver("stalemate");
+            const { GameBoard, GameMeta } = GameEvolverComplex.evolve(mutableGameState);
+            const { getRandomAvailableCoords, getSquare } = GameBoardRefinery(mutableGameState);
+
+            const mark = lastPlayer === "X" ? "O" : "X";
+            const coords = getRandomAvailableCoords();
+            if (!coords) 
+            {
+                return GameTurnEvolver.mutate(mutableGameState).via.setWinner("stalemate");
             }
 
-            GamePlayEvolver.evolve(mutableGameState).via.playMove(coordsForTurn, currentPlayer);
+            const isAvailable = !getSquare(coords);
+            if (!isAvailable) 
+            {
+                throw new Error(`Square at ${coords} is already taken`);
+            }
 
-            GameMetaEvolver.evolve(mutableGameState)
-                .via.iterateTurnCount()
-                .and.updateLastPlayer(currentPlayer);
+            GameBoard.setMark(coords, mark);
+
+            GameMeta.iterateTurnCount().and.updateLastPlayer(mark).and.updateLastPlayedCoords(coords);
 
             return mutableGameState;
         },

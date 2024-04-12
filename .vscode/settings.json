@@ -24,9 +24,6 @@
     "eslint.format.enable": true,
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "typescriptHero.imports.organizeOnSave": true,
-	"[markdown]": {
-		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-	},
 	"[xml]": {
 		"editor.defaultFormatter": "redhat.vscode-xml"
 	},
@@ -34,6 +31,9 @@
 		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
 	},
 	"[javascript]": {
+		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+	},
+	"[markdown]": {
 		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
 	}
 }
