@@ -136,7 +136,14 @@ importers:
         specifier: ^5.4.2
         version: 5.4.2
 
-  packages/eslint-plugin-theseus: {}
+  packages/eslint-plugin-theseus:
+    devDependencies:
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      mocha:
+        specifier: ^10.3.0
+        version: 10.3.0
 
   packages/gpt-zip:
     dependencies:
