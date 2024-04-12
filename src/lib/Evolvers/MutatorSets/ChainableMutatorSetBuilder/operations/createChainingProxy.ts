@@ -223,7 +223,8 @@ class ChainingProxy<TTarget extends ChainableMutatorSetBuilder<any, any, any>>
         if (requestType & ProxyAction.chainTermination) 
         {
             this.onChainEnd(prop);
-            toReturn = this.queue.asyncEncountered ? this.queue.queue : this.target.result;
+            toReturn = this.queue.asyncEncountered ? this.queue.queue : this.target
+                .result;
             this.log.verbose(`Returning result for property "${prop}". Async: ${this.queue.asyncEncountered}`, {
                 toReturn,
             });

@@ -1,7 +1,7 @@
 module.exports = {
     parser: "@typescript-eslint/parser",  
     parserOptions: {  
-        project: ["./tsconfig.json", "./.examples/tic-tac-toe/tsconfig.json"],  
+        project: ["./tsconfig.json", "./.examples/tic-tac-toe/tsconfig.json", "./packages/eslint-plugin-theseus/tsconfig.json"],  
         ecmaVersion: 2018,  
         sourceType: "module",  
         tsconfigRootDir: "./",  
@@ -49,7 +49,6 @@ module.exports = {
         "object-curly-spacing": ["error", "always"],
         "max-len": ["error", { "code": 120, "ignoreUrls": true, "ignoreTemplateLiterals": true, "ignoreStrings": true }],
         "arrow-parens": ["error", "always"],
-        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
         "no-tabs": "off", // Since you're using tabs
         "key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
         "keyword-spacing": ["error", { "before": true, "after": true }],	

@@ -1,0 +1,10 @@
+{
+    "compileOnSave": false,
+    "include": ["./lib/**/*"],
+    "compilerOptions": {
+        "allowJs": true,
+        "rootDir": "./lib",
+        "baseUrl": "./lib",
+        "noEmit": true
+    }
+}

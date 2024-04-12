@@ -37,7 +37,9 @@ export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "ga
 
             GameBoard.setMark(coords, mark);
 
-            GameMeta.iterateTurnCount().and.updateLastPlayer(mark).and.updateLastPlayedCoords(coords);
+            GameMeta.iterateTurnCount()
+                .and.updateLastPlayer(mark)
+                .and.updateLastPlayedCoords(coords);
 
             return mutableGameState;
         },

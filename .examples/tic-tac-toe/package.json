@@ -7,12 +7,15 @@
 	"author": "Jake Lauer",
 	"license": "MIT",
 	"dependencies": {
-		"theseus-js": "workspace:latest",
-		"eslint-plugin-theseus": "workspace:latest"
+		"theseus-js": "workspace:latest"
 	},
 	"devDependencies": {
 		"ts-node": "10.9.2",
-		"pino-pretty": "5.0.0"
+		"pino-pretty": "5.0.0",
+        "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "@typescript-eslint/parser": "^6.21.0",
+        "eslint-plugin-theseus": "workspace:latest",
+        "eslint": "^8.57.0"
 	},
 	"scripts": {
 		"root-build": "cd ../../ && pnpm build && cd .examples/tic-tac-toe",
