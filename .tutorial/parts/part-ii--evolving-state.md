@@ -4,7 +4,22 @@ Evolvers are specialized functions designed to manage the transformation of stat
 predefined rules or logic. They play a crucial role in enabling dynamic state changes, ensuring that application states
 evolve in a controlled, predictable manner based on user interactions or internal events.
 
-## What makes an Evolvers?
+## Table of Contents
+- [Building an Evolver](#building-an-evolver)
+	- [Name](#name)
+	- [Mutable state](#mutable-state)
+	- [Noun](#noun)
+	- [Mutators](#mutators)
+- [Using Evolvers](#using-evolvers)
+	- [Mutations (single change)](#mutations-single-change)
+	- [Evolutions (multiple changes)](#evolutions-multiple-changes)
+		- [Asynchronous Chains](#asynchronous-chains)
+- [Tutorial: Tic-tac-toe Evolvers](#tutorial-tic-tac-toe-evolvers)
+	- [GameTurnEvolver](#gameturnevolver)
+	- [GameBoardEvolver](#gameboardevolver)
+	- [GameMetaEvolver](#gamemetaevolver)
+
+## Building an Evolver
 
 All evolvers have 4 parts:
 
@@ -178,4 +193,133 @@ avoid asynchronous race conditions.
 				})
 		}
 	});
+```
+
+## Tutorial: Tic-tac-toe Evolvers
+
+Evolvers are not opinionated about how they are used, but they are opinionated about how they are built. How you organize your evolvers is up to you, but here's a simple example of how you might use them in our tic-tac-toe game:
+
+### GameTurnEvolver
+
+This evolver manages the game state and the turn-taking logic.
+
+```typescript
+import { Evolver, getTheseusLogger } from "theseus-js";
+import type { GameState } from "../../state/GameState";
+import { GameBoardRefinery } from "../../refine/refineries/GameBoardRefinery";
+import { GameBoardEvolver } from "./GameBoardEvolver";
+import { GameMetaEvolver } from "./GameMetaEvolver";
+
+const log = getTheseusLogger("GameTurnEvolver");
+
+export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "gameState" })
+    .toEvolve<GameState>()
+    .withMutators({
+        /**
+		 * Set the winner of the game.
+		 */
+        setWinner: ({ mutableGameState }, reason: "stalemate" | "winner") => 
+        {
+            log.major(`Game over! ${reason}`);
+            mutableGameState.winner = reason === "winner" ? mutableGameState.lastPlayer : "stalemate";
+            return mutableGameState;
+        },
+        /**
+		 * Take the next turn at a random available square.
+		 */
+        nextTurn: ({ mutableGameState }): GameState => 
+        {
+            const { turns, lastPlayer } = mutableGameState;
+            log.major(`Taking turn #${turns}`);
+
+            const { getRandomAvailableCoords, getSquare } = GameBoardRefinery(mutableGameState);
+
+            // Determine the mark for the next player
+            const mark = lastPlayer === "X" ? "O" : "X";
+            const coords = getRandomAvailableCoords();
+            if (!coords) 
+            {
+                return GameTurnEvolver.mutate(mutableGameState).via.setWinner("stalemate");
+            }
+
+            // Check if the square is available
+            const isAvailable = !getSquare(coords);
+            if (!isAvailable) 
+            {
+                throw new Error(`Square at ${coords} is already taken`);
+            }
+
+            // Set the mark on the board
+            GameBoardEvolver.mutate(mutableGameState)
+                .via.setMark(coords, mark);
+
+            // Update the game metadata
+            GameMetaEvolver.evolve(mutableGameState)
+                .via.iterateTurnCount()
+                .and.updateLastPlayer(mark)
+                .and.updateLastPlayedCoords(coords);
+
+            return mutableGameState;
+        },
+    });
+
+```
+
+### GameBoardEvolver
+
+This evolver manages the game board state.
+
+```typescript
+import { Evolver } from "theseus-js";
+import type { GameState, MarkType } from "../../state/GameState";
+
+export const { GameBoardEvolver } = Evolver.create("GameBoardEvolver", { noun: "gameState" })
+    .toEvolve<GameState>()
+    .withMutators({
+        setMark: ({ mutableGameState }, coords: [number, number], mark: MarkType): GameState => 
+        {
+            const [row, col] = coords;
+            mutableGameState.board[row][col] = mark;
+            return mutableGameState;
+        },
+    });
+
+```
+
+### GameMetaEvolver
+
+This evolver manages the game metadata.
+
+```typescript
+import { Evolver } from "theseus-js";
+import type { GameState, MarkType } from "../../state/GameState";
+
+export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "gameState" })
+    .toEvolve<GameState>()
+    .withMutators({
+        /**
+		 * Update the last player to make a move.
+		 */
+        updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => 
+        {
+            mutableGameState.lastPlayer = mark;
+            return mutableGameState;
+        },
+        /**
+		 * Update the last played coordinates.
+		 */
+        updateLastPlayedCoords: ({ mutableGameState }, coords: [number, number]): GameState => 
+        {
+            mutableGameState.lastPlayedCoords = coords;
+            return mutableGameState;
+        },
+        /**
+		 * Iterate the turn count.
+		 */
+        iterateTurnCount: ({ mutableGameState }): GameState => 
+        {
+            mutableGameState.turns++;
+            return mutableGameState;
+        },
+    });
 ```
