@@ -39,6 +39,7 @@
     "devDependencies": {
         "@theseus/gpt-zip": "workspace:latest",
         "@theseus/publisher": "workspace:latest",
+        "eslint-plugin-theseus": "workspace:latest",
         "@types/chai": "^4.3.12",
         "@types/chai-as-promised": "^7.1.8",
         "@types/deep-equal": "^1.0.4",

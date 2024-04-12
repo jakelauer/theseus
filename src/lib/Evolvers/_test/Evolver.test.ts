@@ -43,10 +43,9 @@ describe("Evolvers", () =>
         it("should support fluent configuration and creation of an Evolver instance", () => 
         {
             const evolverName = "testEvolver";
-            const evolver = Evolver.buildCreator()
-                .toEvolve<TestData>()
-                .named(evolverName)
-                .withMutators(testMutators)[evolverName];
+            const evolver = Evolver.buildCreator().toEvolve<TestData>().named(evolverName).withMutators(testMutators)[
+                evolverName
+            ];
 
             expect(evolver).to.be.an.instanceof(Evolver);
         });
@@ -128,7 +127,7 @@ describe("Evolvers", () =>
 
         describe("Complex Mutator Functions", () => 
         {
-            // Testing with more complex mutator functions that might involve asynchronous operations, 
+            // Testing with more complex mutator functions that might involve asynchronous operations,
             // side effects, etc.
             it("should support complex mutator definitions", async () => 
             {
@@ -211,7 +210,7 @@ describe("Evolvers", () =>
 
                 expect(resultB.name).to.equal("TS*T");
 
-                return; 
+                return;
             });
         });
     });

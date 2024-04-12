@@ -11,10 +11,14 @@ ending in a finished board with either a winner or a stalemate. Here are the Typ
 state:
 
 ```typescript
-/** A multi-dimensional array representing the typical 3x3 Tic Tac Toe board. */
-export type Board = [[Square, Square, Square], [Square, Square, Square], [Square, Square, Square]];
+/** The typical 3x3 Tic Tac Toe board. */
+export type Board = [
+	[Square, Square, Square], 
+	[Square, Square, Square], 
+	[Square, Square, Square]
+];
 
-/** A type representing the two possible marks that can be placed on the board. */
+/** The two possible marks that can be placed on the board. */
 export type MarkType = "X" | "O";
 
 /** A type representing a single square on the board. */
