@@ -1,10 +1,12 @@
 
-## Part I - Defining state
+# Part I - Defining state
 
 Before Theseus can do anything for you, you need to define the shape of the state object it'll use. Theseus
 instances are built to work with one state object, and all of its evolvers and refineries must use that same
 object type. It's very important that this type includes all potential states that Theseus could possibly
 return from its mutators.
+
+## Tutorial: Tic-tac-toe Game State
 
 We're building a Tic-tac-toe game which will evolve over time, starting with a completely empty board, and
 ending in a finished board with either a winner or a stalemate. Here are the TypeScript types for our game
