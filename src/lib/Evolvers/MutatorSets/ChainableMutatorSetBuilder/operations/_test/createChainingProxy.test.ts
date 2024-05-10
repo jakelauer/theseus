@@ -160,7 +160,8 @@ describe("createChainingProxy", function ()
             queue: makeMutatorQueue(),
         });
 
-        const result = proxy.lastly.calculate();
+        const result = proxy
+            .lastly.calculate();
         expect(result).to.equal(expectedResult);
     });
 
@@ -182,7 +183,8 @@ describe("createChainingProxy", function ()
             queue: makeMutatorQueue(),
         });
 
-        await proxy.lastly.asyncMethod();
+        await proxy
+            .lastly.asyncMethod();
         expect(asyncOperationCompleted).to.be.true;
     });
 });

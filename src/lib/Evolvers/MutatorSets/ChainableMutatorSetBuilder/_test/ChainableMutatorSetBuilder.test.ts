@@ -54,7 +54,8 @@ describe("ChainableMutatorSet", function ()
 
     it("should allow chaining of mutator functions", async function () 
     {
-        chainableMutatorSet.increment(1).and.decrement(1);
+        chainableMutatorSet.increment(1)
+            .and.decrement(1);
         expect(testData.value).to.equal(0);
     });
 
@@ -74,7 +75,8 @@ describe("ChainableMutatorSet", function ()
     it("should retrieve the final form of the mutated data correctly", function () 
     {
         // Assuming result returns the entire TestData object or specifically the mutableTestData part
-        expect(chainableMutatorSet.increment(3).result.value).to.equal(3);
+        expect(chainableMutatorSet.increment(3)
+            .result.value).to.equal(3);
     });
 
     // Testing the factory method's successful creation of a ChainableMutatorSet instance
@@ -83,7 +85,8 @@ describe("ChainableMutatorSet", function ()
         // The instance has already been created in the beforeEach hook. 
         // This test verifies its correctness post-creation.
         expect(chainableMutatorSet).to.be.an.instanceof(ChainableMutatorSetBuilder);
-        expect(chainableMutatorSet.increment(5).result.value).to.equal(5);
+        expect(chainableMutatorSet.increment(5)
+            .result.value).to.equal(5);
     });
 
     // Testing the overridden create method to ensure it throws an error for non-chainable mutator sets
@@ -137,8 +140,10 @@ describe("ChainableMutatorSet", function ()
         const anotherChain = buildChainableMutatorSet(anotherTestData);
 
         await Promise.all([
-            chainableMutatorSet.increment(5).lastly.increment(2),
-            anotherChain.increment(5).lastly.increment(2),
+            chainableMutatorSet.increment(5)
+                .lastly.increment(2),
+            anotherChain.increment(5)
+                .lastly.increment(2),
         ]);
 
         expect(testData.value).to.equal(7);

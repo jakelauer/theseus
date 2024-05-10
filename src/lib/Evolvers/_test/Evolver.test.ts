@@ -43,10 +43,9 @@ describe("Evolvers", () =>
         it("should support fluent configuration and creation of an Evolver instance", () => 
         {
             const evolverName = "testEvolver";
-            const evolver = Evolver.buildCreator()
-                .toEvolve<TestData>()
-                .named(evolverName)
-                .withMutators(testMutators)[evolverName];
+            const evolver = Evolver.buildCreator().toEvolve<TestData>().named(evolverName).withMutators(testMutators)[
+                evolverName
+            ];
 
             expect(evolver).to.be.an.instanceof(Evolver);
         });
@@ -97,11 +96,13 @@ describe("Evolvers", () =>
                 const initialDataEvolver = testEvolver.evolve(initialData);
 
                 // Evolve the initial data from 1 to 2
-                const evolvedData = initialDataEvolver.via.increment(1).result;
+                const evolvedData = initialDataEvolver.via.increment(1)
+                    .result;
                 expect(evolvedData.value).to.equal(2); // The evolved data should be 2
 
                 // Create a second copy of the evolved data and evolve it again
-                const reEvolvedData = initialDataEvolver.via.increment(2).result;
+                const reEvolvedData = initialDataEvolver.via.increment(2)
+                    .result;
                 expect(evolvedData.value).to.equal(2); // The original evolved data should remain unchanged
                 expect(reEvolvedData.value).to.equal(4); // The new evolved data should be 3
 
@@ -128,7 +129,7 @@ describe("Evolvers", () =>
 
         describe("Complex Mutator Functions", () => 
         {
-            // Testing with more complex mutator functions that might involve asynchronous operations, 
+            // Testing with more complex mutator functions that might involve asynchronous operations,
             // side effects, etc.
             it("should support complex mutator definitions", async () => 
             {
@@ -211,7 +212,7 @@ describe("Evolvers", () =>
 
                 expect(resultB.name).to.equal("TS*T");
 
-                return; 
+                return;
             });
         });
     });

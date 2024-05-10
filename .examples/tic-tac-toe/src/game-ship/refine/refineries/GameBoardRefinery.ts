@@ -1,25 +1,29 @@
 import { getTheseusLogger, Refinery } from "theseus-js";
 
-import { Board, GameState, MarkType } from "../../state/GameState";
-import { GameOutcomeRefinery, Triple } from "./GameOutcomeRefinery";
+import type { Board, GameState } from "../../state/GameState";
 
 const log = getTheseusLogger("GameBoardRefinery");
 
 export const { GameBoardRefinery } = Refinery.create("GameBoardRefinery", { noun: "GameState" })
     .toRefine<GameState>()
     .withForges({
-        getSquare: ({ immutableGameState }, coords: [number, number]) => {
+        getSquare: ({ immutableGameState }, coords: [number, number]) => 
+        {
             const [row, col] = coords;
             const square = immutableGameState.board[row][col];
 
             return square;
         },
-        getRandomAvailableCoords: ({ immutableGameState }) => {
+        getRandomAvailableCoords: ({ immutableGameState }) => 
+        {
             type CoordsArray = [number, number][];
 
-            const unusedSquares = immutableGameState.board.reduce((acc, row, rowIndex) => {
-                row.forEach((square, colIndex) => {
-                    if (!square) {
+            const unusedSquares = immutableGameState.board.reduce((acc, row, rowIndex) => 
+            {
+                row.forEach((square, colIndex) => 
+                {
+                    if (!square) 
+                    {
                         acc.push([rowIndex, colIndex]);
                     }
                 });
@@ -29,7 +33,8 @@ export const { GameBoardRefinery } = Refinery.create("GameBoardRefinery", { noun
 
             log.info(`Unused squares: ${unusedSquares.length}`);
 
-            if (unusedSquares.length === 0) {
+            if (unusedSquares.length === 0) 
+            {
                 return undefined;
             }
 
@@ -39,8 +44,10 @@ export const { GameBoardRefinery } = Refinery.create("GameBoardRefinery", { noun
 
             return randomAvailableSquare;
         },
-        renderToString: ({ immutableGameState: { board } }) => {
-            const reducer = (acc: string[], row: Board[number]) => {
+        renderToString: ({ immutableGameState: { board } }) => 
+        {
+            const reducer = (acc: string[], row: Board[number]) => 
+            {
                 const rowString = row
                     .map((v) => (v ? v : "⬛"))
                     .join("")

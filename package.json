@@ -1,7 +1,7 @@
 {
     "private": false,
     "name": "theseus-js",
-    "version": "1.2.2",
+    "version": "1.3.0",
     "type": "module",
     "description": "Functionality to create and modify data fluently and narratively",
     "author": "Jake Lauer",
@@ -25,7 +25,9 @@
         "// ==== BUILD ==== //": "",
         "build": "pnpm lint-fix && tsc --project ./tsconfig.json && resolve-tspaths",
         "live": "tsc --watch --project ./tsconfig.json && resolve-tspaths",
-        "clean": "rimraf ./dist"
+        "clean": "rimraf ./dist",
+        "// ==== EXAMPLES ==== //": "",
+        "example:ttt": "pnpm --prefix ./.examples/tic-tac-toe start"
     },
     "dependencies": {
         "@ungap/structured-clone": "^1.2.0",
@@ -39,6 +41,7 @@
     "devDependencies": {
         "@theseus/gpt-zip": "workspace:latest",
         "@theseus/publisher": "workspace:latest",
+        "eslint-plugin-theseus": "workspace:latest",
         "@types/chai": "^4.3.12",
         "@types/chai-as-promised": "^7.1.8",
         "@types/deep-equal": "^1.0.4",

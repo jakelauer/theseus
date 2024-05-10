@@ -6,10 +6,12 @@ setTheseusLogLevel("major");
 
 const observeLog = getTheseusLogger("Observe");
 
-GameShip.observe((state) => {
+GameShip.observe((state) => 
+{
     onGameUpdated();
 
-    switch (state.winner) {
+    switch (state.winner) 
+    {
         case "stalemate":
             observeLog.major("Stalemate detected! Game over.");
             break;
@@ -24,18 +26,22 @@ GameShip.observe((state) => {
     }
 }, false);
 
-const onWinner = () => {
+const onWinner = () => 
+{
     const foundTriple = GameShip.refine.GameOutcome.checkForTriples();
-    if (foundTriple) {
+    if (foundTriple) 
+    {
         const { markType, tripleTypePlainEnglish } = GameShip.refine.GameOutcome.getTripleType(foundTriple);
         observeLog.major(`We have a winner! Three ${markType}s ${tripleTypePlainEnglish}!`);
     }
 };
 
-const onGameUpdated = () => {
+const onGameUpdated = () => 
+{
     const foundTriple = GameShip.refine.GameOutcome.checkForTriples();
-    if (foundTriple) {
-        GameShip.evolve.GameTurn.gameOver("winner");
+    if (foundTriple) 
+    {
+        GameShip.evolve.GameTurn.setWinner("winner");
     }
 
     const rendered = GameShip.refine.GameBoard.renderToString();
