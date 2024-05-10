@@ -1,6 +1,6 @@
 import { getTheseusLogger, Refinery } from "theseus-js";
 
-import { GameState } from "../../state/GameState";
+import type { GameState } from "../../state/GameState";
 import { GameBoardRefinery } from "./GameBoardRefinery";
 
 type TripleType = "row" | "column" | "diagonalLR" | "diagonalRL";
@@ -15,7 +15,8 @@ const log = getTheseusLogger("GameOutcomeRefinery");
 export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { noun: "GameState" })
     .toRefine<GameState>()
     .withForges({
-        checkTriple: ({ immutableGameState }, triple: Triple): boolean => {
+        checkTriple: ({ immutableGameState }, triple: Triple): boolean => 
+        {
             const [fromRow, fromCol] = triple.from;
             const markTypeAtCoords = GameBoardRefinery(immutableGameState).getSquare([fromRow, fromCol]);
 
@@ -30,17 +31,20 @@ export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { 
             };
 
             const offset = offsets[triple.type];
-            if (!offset) {
+            if (!offset) 
+            {
                 throw new Error(`Invalid triple type: ${triple.type}`);
             }
 
             // Assume the triple is complete initially
             let tripleIsComplete = true;
 
-            for (let i = 0; i < 3; i++) {
-                let coordinate: [number, number] = [fromRow + offset[0] * i, fromCol + offset[1] * i];
+            for (let i = 0; i < 3; i++) 
+            {
+                const coordinate: [number, number] = [fromRow + offset[0] * i, fromCol + offset[1] * i];
                 const markType = immutableGameState.board[coordinate[0]][coordinate[1]];
-                if (markType !== markTypeAtCoords) {
+                if (markType !== markTypeAtCoords) 
+                {
                     tripleIsComplete = false; // Set to false if any square doesn't match
                     break; // No need to continue checking
                 }
@@ -48,18 +52,22 @@ export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { 
 
             return tripleIsComplete;
         },
-        checkForTriples: ({ immutableGameState }): Triple | undefined => {
+        checkForTriples: ({ immutableGameState }): Triple | undefined => 
+        {
             log.info("Checking for triples");
             const triples: Triple[] = [];
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 3; i++) 
+            {
                 triples.push({ type: "row", from: [i, 0], to: [i, 2] });
                 triples.push({ type: "column", from: [0, i], to: [2, i] });
             }
             triples.push({ type: "diagonalLR", from: [0, 0], to: [2, 2] });
             triples.push({ type: "diagonalRL", from: [0, 2], to: [2, 0] });
-            for (const triple of triples) {
+            for (const triple of triples) 
+            {
                 const winner = GameOutcomeRefinery(immutableGameState).checkTriple(triple);
-                if (winner) {
+                if (winner) 
+                {
                     return triple;
                 }
             }
@@ -68,12 +76,13 @@ export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { 
 
             return undefined;
         },
-        getTripleType: ({ immutableGameState }, triple: Triple) => {
+        getTripleType: ({ immutableGameState }, triple: Triple) => 
+        {
             const markType = immutableGameState.board[triple.from[0]][triple.from[1]];
             const tripleTypePlainEnglish =
                 triple.type === "row" ? "across"
-                : triple.type === "column" ? "down"
-                : "diagonally";
+                    : triple.type === "column" ? "down"
+                        : "diagonally";
 
             return {
                 markType,

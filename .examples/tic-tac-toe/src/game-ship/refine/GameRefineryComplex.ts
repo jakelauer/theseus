@@ -1,4 +1,4 @@
-import { GameState } from "game-ship/state/GameState";
+import type { GameState } from "game-ship/state/GameState";
 import { RefineryComplex } from "theseus-js";
 
 import { GameBoardRefinery } from "./refineries/GameBoardRefinery";

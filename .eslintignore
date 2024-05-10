@@ -1,6 +1,8 @@
 .eslintrc.cjs
-packages/**/*
 dist
 node_modules
 .husky
 *.d.ts
+!.examples
+packages/publisher/**/*
+packages/gpt-zip/**/*

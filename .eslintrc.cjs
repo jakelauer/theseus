@@ -1,26 +1,34 @@
-module.exports = {  
+module.exports = {
     parser: "@typescript-eslint/parser",  
     parserOptions: {  
-        project: "./tsconfig.json",  
+        project: ["./tsconfig.json", "./.examples/tic-tac-toe/tsconfig.json", "./packages/eslint-plugin-theseus/tsconfig.json"],  
         ecmaVersion: 2018,  
         sourceType: "module",  
         tsconfigRootDir: "./",  
     },  
     extends: [  
-        "eslint:recommended",  
+        "eslint:recommended",
         "plugin:@typescript-eslint/recommended",  
         "plugin:mocha/recommended",  
         "prettier",
+		"plugin:theseus/recommended"
     ],  
+	settings: {
+		'import/resolver': {
+			node: {
+			  paths: ["eslint-rules"]
+			}
+		  }
+	},
     plugins: ["unused-imports"],  
     rules: {  
 		indent: ["error", "tab"],
         quotes: [2, "double", { avoidEscape: true }],  
         "unused-imports/no-unused-imports": "error",  
         "no-async-promise-executor": "off",  
+        "mocha/no-setup-in-describe": "off",  
         "@typescript-eslint/no-floating-promises": ["error"],  
         "@typescript-eslint/no-explicit-any": "off",  
-        "mocha/no-setup-in-describe": "off",  
         "@typescript-eslint/consistent-type-imports": "error",  
         "@typescript-eslint/no-unused-vars": [  
             "error",  
@@ -41,7 +49,6 @@ module.exports = {
         "object-curly-spacing": ["error", "always"],
         "max-len": ["error", { "code": 120, "ignoreUrls": true, "ignoreTemplateLiterals": true, "ignoreStrings": true }],
         "arrow-parens": ["error", "always"],
-        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
         "no-tabs": "off", // Since you're using tabs
         "key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
         "keyword-spacing": ["error", { "before": true, "after": true }],	
