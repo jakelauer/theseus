@@ -25,7 +25,9 @@
         "// ==== BUILD ==== //": "",
         "build": "pnpm lint-fix && tsc --project ./tsconfig.json && resolve-tspaths",
         "live": "tsc --watch --project ./tsconfig.json && resolve-tspaths",
-        "clean": "rimraf ./dist"
+        "clean": "rimraf ./dist",
+        "// ==== EXAMPLES ==== //": "",
+		"example:ttt": "pnpm --prefix ./.examples/tic-tac-toe start"
     },
     "dependencies": {
         "@ungap/structured-clone": "^1.2.0",
