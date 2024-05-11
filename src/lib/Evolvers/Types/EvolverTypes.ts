@@ -34,6 +34,7 @@ export type EvolverInstance<
 > = {
     __setTheseusId: (id: string) => void;
     __type__access__: TypeAccess<TData, TEvolverName, TParamName, TMutators>;
+    evolverName: TEvolverName;
 
     /**
      * Initiates a mutation operation on the evolver's data. Unlike `evolve`, `mutate` is tailored for
@@ -105,3 +106,11 @@ export interface EvolverOptions<TParamNoun extends string = "input"> {
  * @template T The type of the value or the resolved value of the promise.
  */
 export type SortaPromise<T> = T | Promise<T>;
+
+
+/**
+ * Represents a dictionary of evolvers, mapping the evolver name to the evolver instance.
+ */
+export type EvolversToDictionary<T extends EvolverInstance<any, string, any, any>[]> = {
+    [K in T[number]["evolverName"]]: Extract<T[number], { evolverName: K }>
+};

@@ -217,12 +217,6 @@ export class Evolver<
                 mutators: _TMutators,
             ) => 
             {
-                // This is a trick to force the type of the return value to be the name of the refinery.
-                type ForceReturnVariableName = Record<
-                    _TEvolverName,
-                    EvolverInstance<_TData, _TEvolverName, Mutable<_TParamName>, _TMutators>
-                >;
-
                 const evolver = new Evolver<_TData, _TEvolverName, _TParamName, _TMutators>(
                     name,
                     mutators,
@@ -233,9 +227,7 @@ export class Evolver<
                     mutators: Object.keys(mutators),
                 });
 
-                return {
-                    [name]: evolver,
-                } as unknown as ForceReturnVariableName;
+                return evolver;
             },
         }),
     });

@@ -6,7 +6,7 @@ import { GameMetaEvolver } from "./GameMetaEvolver";
 
 const log = getTheseusLogger("GameTurnEvolver");
 
-export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "gameState" })
+export const GameTurnEvolver = Evolver.create("GameTurn", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
         /**

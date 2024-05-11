@@ -60,7 +60,7 @@ export default <TData extends object>(data: TData) => ({
     maintainWith: <
         TParamName extends string,
         TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-        TEvolvers extends Record<string, EvolverInstance<TData, string, Mutable<TParamName>, TMutators>>,
+        TEvolvers extends EvolverInstance<TData, string, Mutable<TParamName>, TMutators>[],
         TForges extends ForgeDefs<TData, Immutable<TParamName>>,
         TRefineries extends Record<string, RefineryInitializer<TData, TParamName, TForges>>,
         TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
@@ -101,11 +101,11 @@ export default <TData extends object>(data: TData) => ({
             const evolverComplex: EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers> =
                 "evolve" in evolvers ?
                     (evolvers as EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers>)
-                    :   EvolverComplex.create<TData>().withEvolvers(evolvers);
+                    :   EvolverComplex.create<TData>().withEvolvers(...evolvers);
 
             // set theseus id for each evolver, so that we can track which theseus is being used
             Object.values(evolverComplex.__evolvers__).forEach(
-                (evolver: EvolverInstance<TData, string, Mutable<TParamName>, TMutators>) =>
+                (evolver: EvolverInstance<TData, string,  Mutable<TParamName>, TMutators>) =>
                     evolver.__setTheseusId(innerInstance.__uuid),
             );
 

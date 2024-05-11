@@ -17,7 +17,7 @@ const IncrementEvolverCreator = () =>
             },
         });
 
-type IncrementEvolver = ReturnType<typeof IncrementEvolverCreator>["IncrementEvolver"];
+type IncrementEvolver = ReturnType<typeof IncrementEvolverCreator>;
 
 describe("EvolverComplex", () => 
 {
@@ -26,9 +26,7 @@ describe("EvolverComplex", () =>
     before(function () 
     {
         // Define a simple increment Evolver for demonstration purposes
-        const { IncrementEvolver: recreatedIncremementEvolver } = IncrementEvolverCreator();
-
-        IncrementEvolver = recreatedIncremementEvolver;
+        IncrementEvolver = IncrementEvolverCreator();
     });
 
     describe("create and setup evolvers", () => 
@@ -36,7 +34,7 @@ describe("EvolverComplex", () =>
         it("should initialize and setup evolvers correctly, separating creation from execution", () => 
         {
             // Creation step: Define the structure of the complex evolver
-            const { IncrementEvolver } = IncrementEvolverCreator();
+            const IncrementEvolver = IncrementEvolverCreator();
 
             // Ensure the setup contains methods indicative of a successful setup
             expect(IncrementEvolver).to.have.property("mutate").that.is.a("function");
