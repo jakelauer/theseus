@@ -15,7 +15,7 @@
     },
     "homepage": "https://github.com/jakelauer/theseus-js",
     "scripts": {
-        "prepublish": "pnpm build",
+        "prepublish": "pnpm build && pnpm test",
         "prepare": "husky install",
         "// ==== TESTING ==== //": "",
         "lint": "git add . && pnpm lint-staged",
