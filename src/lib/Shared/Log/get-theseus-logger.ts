@@ -2,7 +2,7 @@ import winston from "winston";
 
 import { setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
 import winstonConfigBuilder from "@Shared/Log/winston-config-builder";
-import { isTestMode } from "@Shared/Test/isTestMode";
+import { isTestMode } from "@Shared/TestMode/isTestMode";
 
 const testMode = isTestMode();
 console.log("Test mode: ", testMode);
