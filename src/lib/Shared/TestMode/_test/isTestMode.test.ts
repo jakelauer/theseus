@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { isTestMode } from "@Shared/Test/isTestMode"; // Adjust the import path as necessary
+import { isTestMode } from "@Shared/TestMode/isTestMode"; // Adjust the import path as necessary
 
 describe("isTestMode", function () 
 {
