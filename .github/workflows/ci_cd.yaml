@@ -1,0 +1,35 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install pnpm
+      uses: pnpm/install@v1
+      
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Run tests
+      run: pnpm test
+
+    - name: Build package
+      run: pnpm build
+
+    - name: Publish package
+      if: success() && github.event_name == 'push'
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      run: pnpm publish --access public
