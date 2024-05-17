@@ -16,8 +16,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Setup Node.js 20
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    
     - name: Install pnpm
-      uses: pnpm/install@v1
+      run: |
+        curl -L https://unpkg.com/@pnpm/self-installer@latest | node
+        export PATH="./node_modules/.bin:$PATH"
+        pnpm --version
       
     - name: Install dependencies
       run: pnpm install
