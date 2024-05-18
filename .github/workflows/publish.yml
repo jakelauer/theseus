@@ -1,0 +1,79 @@
+name: Publish
+
+on:
+  workflow_dispatch: 
+    inputs:
+      publish_type:
+        description: 'Type of publish (major, minor, patch)'
+        required: true
+        default: 'patch'
+
+jobs:
+  trigger-build:
+    runs-on: ubuntu-latest
+    outputs:
+      build_workflow_run_id: ${{ steps.trigger-build.outputs.workflow_run_id }}
+    steps:
+      - name: Trigger Build Workflow
+        id: trigger-build
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Build
+          token: ${{ secrets.GH_PAT }}
+
+  wait-for-build:
+    needs: trigger-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Build to Complete
+        id: wait-for-build
+        run: |
+          gh run watch ${{ needs.trigger-build.outputs.build_workflow_run_id }}
+
+  trigger-test:
+    needs: wait-for-build
+    runs-on: ubuntu-latest
+    outputs:
+      test_workflow_run_id: ${{ steps.trigger-test.outputs.workflow_run_id }}
+    steps:
+      - name: Trigger Test Workflow
+        id: trigger-test
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Test
+          token: ${{ secrets.GH_PAT }}
+
+  wait-for-test:
+    needs: trigger-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Test to Complete
+        id: wait-for-test
+        run: |
+          gh run watch ${{ needs.trigger-test.outputs.test_workflow_run_id }}
+
+  publish:
+    needs: wait-for-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update Version
+        run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          git push origin main
+
+      - name: Publish package
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: pnpm publish --access public
