@@ -9,15 +9,25 @@ on:
       - main
 
 jobs:
-  call-setup:
-    uses: ./.github/workflows/setup.yml
-    with:
-      node_version: '20'  # Providing the required input
-
   test:
     runs-on: ubuntu-latest
-    needs: call-setup  # Ensure this job starts after the setup job
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: |
+          curl -L https://unpkg.com/@pnpm/self-installer@latest | node
+          export PATH="./node_modules/.bin:$PATH"
+          pnpm --version
+
+      - name: Install dependencies
+        run: pnpm install
       - name: Checkout code  # You need to checkout code again because each job starts fresh
         uses: actions/checkout@v3
 
