@@ -25,7 +25,7 @@ jobs:
         run: |
           BUILD_RUN_ID=$(gh api repos/jakelauer/theseus-js/commits/${{ github.sha }}/check-runs | jq -r '.check_runs[] | select(.name == "build") | .html_url | capture("/runs/(?<number>[0-9]+)/job") | .number' | sed 's/"//g' | head -n 1)
           echo "Fetched Run ID: $BUILD_RUN_ID"
-          echo "run_id=$BUILD_RUN_ID" >> $GITHUB_ENV
+          echo "::set-output name=run_id::$BUILD_RUN_ID"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -36,7 +36,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Wait for Build to Complete
-        run: gh run watch ${{ env.run_id }}
+        run: gh run watch ${{ needs.trigger-build.outputs.build_workflow_run_id }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -58,7 +58,7 @@ jobs:
         run: |
           TEST_RUN_ID=$(gh api repos/jakelauer/theseus-js/commits/${{ github.sha }}/check-runs | jq -r '.check_runs[] | select(.name == "test") | .html_url | capture("/runs/(?<number>[0-9]+)/job") | .number' | sed 's/"//g' | head -n 1)
           echo "Fetched Run ID: $TEST_RUN_ID"
-          echo "run_id=$TEST_RUN_ID" >> $GITHUB_ENV
+          echo "::set-output name=run_id::$TEST_RUN_ID"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -69,7 +69,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Wait for Test to Complete
-        run: gh run watch ${{ env.run_id }}
+        run: gh run watch ${{ needs.trigger-test.outputs.test_workflow_run_id }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
