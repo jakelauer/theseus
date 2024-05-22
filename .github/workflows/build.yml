@@ -14,12 +14,12 @@ jobs:
     with:
       node_version: '20'  # Providing the required input
 
-  test:
+  build:
     runs-on: ubuntu-latest
     needs: call-setup  # Ensure this job starts after the setup job
     steps:
       - name: Checkout code  # You need to checkout code again because each job starts fresh
         uses: actions/checkout@v3
 
-      - name: Run tests
+      - name: Run build
         run: pnpm build  # Assuming pnpm and node_modules are correctly configured to be available
