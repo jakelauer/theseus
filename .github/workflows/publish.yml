@@ -28,6 +28,12 @@ jobs:
           echo "::set-output name=run_id::$BUILD_RUN_ID"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact
+          path: ./
 
   wait-for-build:
     needs: trigger-build
@@ -79,6 +85,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifact
+          path: ./
       - name: Update Version
         run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
       - name: Configure Git
