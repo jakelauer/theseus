@@ -6,7 +6,6 @@ on:
       publish_type:
         description: 'Type of publish (major, minor, patch)'
         required: true
-        default: 'patch'
 
 jobs:
   trigger-build:
@@ -29,6 +28,8 @@ jobs:
         id: wait-for-build
         run: |
           gh run watch ${{ needs.trigger-build.outputs.build_workflow_run_id }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   trigger-test:
     needs: wait-for-build
@@ -51,6 +52,8 @@ jobs:
         id: wait-for-test
         run: |
           gh run watch ${{ needs.trigger-test.outputs.test_workflow_run_id }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish:
     needs: wait-for-test
