@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Wait for Build to Complete
         id: wait-for-build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh run watch ${{ needs.trigger-build.outputs.build_workflow_run_id }}
 
@@ -49,6 +51,8 @@ jobs:
     steps:
       - name: Wait for Test to Complete
         id: wait-for-test
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh run watch ${{ needs.trigger-test.outputs.test_workflow_run_id }}
 
