@@ -9,9 +9,11 @@ on:
       - main
 
 jobs:
-  build:
-    uses: ./.github/workflows/setup.yml
+  build-package:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup environment
+        uses: ./.github/workflows/setup.yml@main  # Make sure the reference is correct
+
       - name: Run tests
         run: pnpm test
