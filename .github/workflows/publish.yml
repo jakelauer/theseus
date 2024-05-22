@@ -19,11 +19,11 @@ jobs:
         with:
           workflow: Build
           token: ${{ secrets.GH_PAT }}
+
       - name: Fetch the Build Workflow Run ID
         id: get-build-run-id
         run: |
-          echo "Fetching the Build Workflow Run ID..."
-          BUILD_RUN_ID=$(gh run list --repo jakelauer/theseus-js --workflow=build.yml --limit=1 --json databaseId,status --jq '.[] | select(.status=="in_progress" or .status=="queued" or .status=="completed") | .databaseId')
+          BUILD_RUN_ID=$(gh api repos/$GITHUB_REPOSITORY/commits/${{ github.sha }}/check-runs | jq -r '.check_runs[] | select(.name == "Build") | .html_url | capture("/runs/(?<number>[0-9]+)/jobs") | .number' | sed 's/"//g' | head -n 1)
           echo "run_id=$BUILD_RUN_ID" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Wait for Build to Complete
         run: gh run watch ${{ env.run_id }}
         env:
@@ -51,11 +51,11 @@ jobs:
         with:
           workflow: Test
           token: ${{ secrets.GH_PAT }}
+
       - name: Fetch the Test Workflow Run ID
         id: get-test-run-id
         run: |
-          echo "Fetching the Test Workflow Run ID..."
-          TEST_RUN_ID=$(gh run list --repo jakelauer/theseus-js --workflow=test.yml --limit=1 --json databaseId,status --jq '.[] | select(.status=="in_progress" or .status=="queued" or .status=="completed") | .databaseId')
+          TEST_RUN_ID=$(gh api repos/$GITHUB_REPOSITORY/commits/${{ github.sha }}/check-runs | jq -r '.check_runs[] | select(.name == "Test") | .html_url | capture("/runs/(?<number>[0-9]+)/jobs") | .number' | sed 's/"//g' | head -n 1)
           echo "run_id=$TEST_RUN_ID" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Wait for Test to Complete
         run: gh run watch ${{ env.run_id }}
         env:
@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Update Version
         run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
       - name: Configure Git
