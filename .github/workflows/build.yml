@@ -10,7 +10,7 @@ on:
 
 jobs:
   call-setup:
-    uses: ./.github/workflows/setup.yml@main  # This calls the reusable workflow
+    uses: ./.github/workflows/setup.yml
 
   test:
     runs-on: ubuntu-latest
