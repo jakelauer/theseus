@@ -13,6 +13,7 @@ jobs:
     uses: ./.github/workflows/setup.yml
 
   build-package:
+    uses: ./.github/workflows/setup.yml
     runs-on: ubuntu-latest
     needs: build
     steps:
