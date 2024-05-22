@@ -18,8 +18,9 @@
         "eslint": "^8.57.0"
 	},
 	"scripts": {
-		"root-build": "cd ../../ && pnpm build && cd .examples/tic-tac-toe",
-		"start": "pnpm root-build && ts-node-esm --experimental-specifier-resolution=node ./src/main.ts"
+		"root-build": "pnpm --prefix ../../ build",
+		"start-raw": "node --loader ts-node/esm --experimental-specifier-resolution=node ./src/main.ts",
+		"start": "pnpm root-build && pnpm start-raw"
 	},
 	"main": "index.ts"
 }
