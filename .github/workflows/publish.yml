@@ -8,7 +8,14 @@ on:
         required: true
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
   trigger-build:
+    needs: setup
     runs-on: ubuntu-latest
     outputs:
       build_workflow_run_id: ${{ steps.trigger-build.outputs.workflowId }}
@@ -59,9 +66,6 @@ jobs:
     needs: wait-for-test
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Update Version
         run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
 
