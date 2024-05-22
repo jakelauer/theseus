@@ -11,6 +11,8 @@ on:
 jobs:
   call-setup:
     uses: ./.github/workflows/setup.yml
+    with:
+      node_version: '20'  # Providing the required input
 
   test:
     runs-on: ubuntu-latest
