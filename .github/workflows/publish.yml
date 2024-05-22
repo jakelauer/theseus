@@ -12,7 +12,7 @@ jobs:
   trigger-build:
     runs-on: ubuntu-latest
     outputs:
-      build_workflow_run_id: ${{ steps.trigger-build.outputs.workflow_run_id }}
+      build_workflow_run_id: ${{ steps.trigger-build.outputs.workflowId }}
     steps:
       - name: Trigger Build Workflow
         id: trigger-build
@@ -27,8 +27,6 @@ jobs:
     steps:
       - name: Wait for Build to Complete
         id: wait-for-build
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh run watch ${{ needs.trigger-build.outputs.build_workflow_run_id }}
 
@@ -36,7 +34,7 @@ jobs:
     needs: wait-for-build
     runs-on: ubuntu-latest
     outputs:
-      test_workflow_run_id: ${{ steps.trigger-test.outputs.workflow_run_id }}
+      test_workflow_run_id: ${{ steps.trigger-test.outputs.workflowId }}
     steps:
       - name: Trigger Test Workflow
         id: trigger-test
@@ -51,8 +49,6 @@ jobs:
     steps:
       - name: Wait for Test to Complete
         id: wait-for-test
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh run watch ${{ needs.trigger-test.outputs.test_workflow_run_id }}
 
