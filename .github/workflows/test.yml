@@ -28,8 +28,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-      - name: Checkout code  # You need to checkout code again because each job starts fresh
-        uses: actions/checkout@v3
 
       - name: Run tests
         run: pnpm test  # Assuming pnpm and node_modules are correctly configured to be available
