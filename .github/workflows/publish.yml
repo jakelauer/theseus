@@ -23,7 +23,7 @@ jobs:
       - name: Fetch the Build Workflow Run ID
         id: get-build-run-id
         run: |
-          BUILD_RUN_ID=$(gh api repos/jakelauer/theseus-js/commits/${{ github.sha }}/check-runs | jq -r '.check_runs[] | select(.name == "Build") | .html_url | capture("/runs/(?<number>[0-9]+)/jobs") | .number' | sed 's/"//g' | head -n 1)
+          BUILD_RUN_ID=$(gh api repos/jakelauer/theseus-js/commits/${{ github.sha }}/check-runs | jq -r '.check_runs[] | select(.name == "build") | .html_url | capture("/runs/(?<number>[0-9]+)/job") | .number' | sed 's/"//g' | head -n 1)
           echo "Fetched Run ID: $BUILD_RUN_ID"
           echo "run_id=$BUILD_RUN_ID" >> $GITHUB_ENV
         env:
@@ -56,7 +56,7 @@ jobs:
       - name: Fetch the Test Workflow Run ID
         id: get-test-run-id
         run: |
-          TEST_RUN_ID=$(gh api repos/jakelauer/theseus-js/commits/${{ github.sha }}/check-runs | jq -r '.check_runs[] | select(.name == "Test") | .html_url | capture("/runs/(?<number>[0-9]+)/jobs") | .number' | sed 's/"//g' | head -n 1)
+          TEST_RUN_ID=$(gh api repos/jakelauer/theseus-js/commits/${{ github.sha }}/check-runs | jq -r '.check_runs[] | select(.name == "test") | .html_url | capture("/runs/(?<number>[0-9]+)/job") | .number' | sed 's/"//g' | head -n 1)
           echo "Fetched Run ID: $TEST_RUN_ID"
           echo "run_id=$TEST_RUN_ID" >> $GITHUB_ENV
         env:
