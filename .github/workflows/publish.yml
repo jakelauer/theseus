@@ -85,6 +85,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install gh -y
 
+      - name: Install pnpm
+        run: |
+          curl -L https://unpkg.com/@pnpm/self-installer@latest | node
+          export PATH="./node_modules/.bin:$PATH"
+          pnpm --version
+
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Download Build Artifact
         run: |
           mkdir -p temp_artifacts
