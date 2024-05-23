@@ -109,18 +109,20 @@ jobs:
           rm -rf temp_artifacts
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
-        
-      - name: Configure Git
-        run: |
-          git config --global user.name "jakelauer"
-          git config --global user.email "jake.lauer@gmail.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}
 
       - name: Update Version
-        run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
-          
+        run: pnpm update-version --type ${{ github.event.inputs.publish_type }}
+
+      - name: Commit files
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "Add changes"
       - name: Push changes
-        run: git push origin main
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_PAT }}
+          branch: ${{ github.ref }}
         
       - name: Publish package
         env:
