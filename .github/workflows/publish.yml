@@ -76,6 +76,8 @@ jobs:
   publish:
     needs: wait-for-test
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -110,6 +112,7 @@ jobs:
         
       - name: Configure Git
         run: |
+          git config --global url.https://$GITHUB_TOKEN@github.com/.insteadOf https://github.com/
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
         env:
