@@ -84,6 +84,7 @@ jobs:
         with:
           name: build-artifact
           path: ./
+          run-id: ${{ needs.trigger-build.outputs.build_workflow_run_id }}
       - name: Update Version
         run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
       - name: Configure Git
