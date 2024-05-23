@@ -107,14 +107,16 @@ jobs:
           rm -rf temp_artifacts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Update Version
-        run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
         
       - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Version
+        run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
           
       - name: Push changes
         env:
