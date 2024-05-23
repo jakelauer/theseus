@@ -74,27 +74,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_PAT }}
 
   publish:
-    needs: wait-for-test
+    needs: wait-for-build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Install pnpm
-        run: |
-          curl -L https://unpkg.com/@pnpm/self-installer@latest | node
-          export PATH="./node_modules/.bin:$PATH"
-          pnpm --version
-
-      - name: Install dependencies
-        run: pnpm install
+        uses: actions/checkout@v2
 
       - name: Install GitHub CLI
         run: |
@@ -108,28 +92,26 @@ jobs:
           rsync -av temp_artifacts/ ./
           rm -rf temp_artifacts
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
-          
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Version
+        run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
+
       - name: Configure Git
         run: |
           git config --local user.name "GitHub Action"
           git config --local user.email "action@github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
-      - name: Update Version
-        run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit false
-
-      - name: Commit files
+      - name: Commit changes
         run: |
           git add package.json
-          git commit -m "Publishing ${{ github.event.inputs.publish_type }} update"
+          git commit -m "Publishing minor update"
 
       - name: Push changes
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git push origin main
-        
+
       - name: Publish package
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
