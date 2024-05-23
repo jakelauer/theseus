@@ -38,3 +38,4 @@ jobs:
         with:
           name: build-artifact
           path: ./
+          ignore-paths: .npmignore
