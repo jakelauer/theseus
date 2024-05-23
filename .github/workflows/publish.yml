@@ -74,7 +74,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_PAT }}
 
   publish:
-    needs: wait-for-build
+    needs: wait-for-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
