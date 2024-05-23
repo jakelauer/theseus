@@ -103,7 +103,7 @@ jobs:
         run: |
           mkdir -p temp_artifacts
           gh run download ${{ needs.trigger-build.outputs.build_workflow_run_id }} -n build-artifact --dir temp_artifacts
-          mv temp_artifacts/* .
+          rsync -av temp_artifacts/ ./
           rm -rf temp_artifacts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
