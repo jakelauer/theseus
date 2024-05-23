@@ -128,7 +128,6 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          git remote set-url origin https://x-access-token:${{GH_PAT}}@github.com/${{ github.repository }}
           git push origin main
         
       - name: Publish package
