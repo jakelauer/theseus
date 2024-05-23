@@ -78,23 +78,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v3
         with:
-          name: build-artifact
-          path: ./
-          run-id: ${{ needs.trigger-build.outputs.build_workflow_run_id }}
+          node-version: '20'
+
+      - name: Install pnpm
+        run: |
+          curl -L https://unpkg.com/@pnpm/self-installer@latest | node
+          export PATH="./node_modules/.bin:$PATH"
+          pnpm --version
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install gh -y
+
+      - name: Download Build Artifact
+        run: |
+          mkdir -p temp_artifacts
+          gh run download ${{ needs.trigger-build.outputs.build_workflow_run_id }} -n build-artifact --dir temp_artifacts
+          mv temp_artifacts/* .
+          rm -rf temp_artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Update Version
         run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
+        
       - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
       - name: Push changes
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: git push origin main
+        
       - name: Publish package
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
