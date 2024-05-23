@@ -112,16 +112,14 @@ jobs:
         
       - name: Configure Git
         run: |
-          git config --global user.name jakelauer
-          git config --global user.email jake.lauer@gmail.com
+          git config --global user.name "jakelauer"
+          git config --global user.email "jake.lauer@gmail.com"
           git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}
 
       - name: Update Version
         run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
           
       - name: Push changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: git push origin main
         
       - name: Publish package
