@@ -27,7 +27,7 @@ jobs:
           echo "Fetched Run ID: $BUILD_RUN_ID"
           echo "::set-output name=run_id::$BUILD_RUN_ID"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
 
   wait-for-build:
     needs: trigger-build
@@ -38,7 +38,7 @@ jobs:
       - name: Wait for Build to Complete
         run: gh run watch ${{ needs.trigger-build.outputs.build_workflow_run_id }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
 
   trigger-test:
     needs: wait-for-build
@@ -60,7 +60,7 @@ jobs:
           echo "Fetched Run ID: $TEST_RUN_ID"
           echo "::set-output name=run_id::$TEST_RUN_ID"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
 
   wait-for-test:
     needs: trigger-test
@@ -71,13 +71,11 @@ jobs:
       - name: Wait for Test to Complete
         run: gh run watch ${{ needs.trigger-test.outputs.test_workflow_run_id }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
 
   publish:
     needs: wait-for-test
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -108,14 +106,12 @@ jobs:
           rsync -av temp_artifacts/ ./
           rm -rf temp_artifacts
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
         
       - name: Configure Git
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global credential.https://github.com.username github-actions[bot]
-          git config --global credential.https://github.com.password ${{ secrets.GITHUB_TOKEN }}
+          git config --global credential.https://github.com.username git
+          git config --global credential.https://github.com.password ${{ secrets.GH_PAT }}
 
       - name: Update Version
         run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
