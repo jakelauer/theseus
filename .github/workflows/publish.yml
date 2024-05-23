@@ -79,6 +79,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v3
@@ -110,8 +112,9 @@ jobs:
         
       - name: Configure Git
         run: |
-          git config --global credential.https://github.com.username git
-          git config --global credential.https://github.com.password ${{ secrets.GH_PAT }}
+          git config --global user.name jakelauer
+          git config --global user.email jake.lauer@gmail.com
+          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}
 
       - name: Update Version
         run: pnpm update-version --type ${{ github.event.inputs.publish_type }} --commit true
