@@ -30,5 +30,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Run build	
+        run: pnpm build  # Assuming pnpm and node_modules are correctly configured to be available
+
+      - name: Run build
+        run: pnpm test  # Assuming pnpm and node_modules are correctly configured to be available
+
+
       - name: Run build
         run: pnpm build  # Assuming pnpm and node_modules are correctly configured to be available
+
+      - name: Run semantic-release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
