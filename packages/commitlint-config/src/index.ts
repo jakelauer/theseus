@@ -6,6 +6,7 @@ import {
 } from "@commitlint/types";
 
 export default {
+	preset: "angular",
 	parserPreset: "conventional-changelog-conventionalcommits",
 	rules: {
 		"body-leading-blank": [RuleConfigSeverity.Warning, "always"] as const,
@@ -39,6 +40,23 @@ export default {
 			],
 		] as [RuleConfigSeverity, RuleConfigCondition, string[]],
 	},
+	releaseRules: [
+		// major
+		{ breaking: true, release: "major" },
+		{ revert: true, release: "patch" },
+		// minor
+		{ type: "feat", release: "minor" },
+		{ type: "build", release: "minor" },
+		// patch
+		{ type: "fix", release: "patch" },
+		{ type: "perf", release: "patch" },
+		{ type: "docs", release: "patch" },
+		{ type: "refactor", release: "patch" },
+		{ type: "style", release: "patch" },
+		// none
+		{ type: "ci", release: false },
+		{ scope: "no-release", release: false },
+	],
 	prompt: {
 		questions: {
 			type: {
@@ -93,11 +111,6 @@ export default {
 						title: "Continuous Integrations",
 						emoji: "⚙️",
 					},
-					chore: {
-						description: "Other changes that don't modify src or test files",
-						title: "Chores",
-						emoji: "♻️",
-					},
 					revert: {
 						description: "Reverts a previous commit",
 						title: "Reverts",
@@ -107,7 +120,7 @@ export default {
 			},
 			scope: {
 				description:
-					"What is the scope of this change (e.g. component or file name)",
+					"What is the scope of this change (e.g. component/filename/no-release)",
 			},
 			subject: {
 				description:
