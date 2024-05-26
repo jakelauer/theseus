@@ -18,70 +18,70 @@ export class Theseus<
         TData extends object,
         TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
     >
-    extends Broadcaster<TData, TObserverType>
-    implements ITheseus<TData> 
+	extends Broadcaster<TData, TObserverType>
+	implements ITheseus<TData> 
 {
-    #internalState: TData;
-    #uuid: string;
+	#internalState: TData;
+	#uuid: string;
 
-    public static instancesById: Record<string, Theseus<any, any>> = {};
+	public static instancesById: Record<string, Theseus<any, any>> = {};
 
-    public get __uuid() 
-    {
-        return this.#uuid;
-    }
+	public get __uuid() 
+	{
+		return this.#uuid;
+	}
 
-    public get state() 
-    {
-        return this.#internalState;
-    }
+	public get state() 
+	{
+		return this.#internalState;
+	}
 
-    private setData = (data: TData) => 
-    {
-        this.#internalState = data;
-    };
+	private setData = (data: TData) => 
+	{
+		this.#internalState = data;
+	};
 
-    /**
+	/**
      * Creates an Observation instance
      *
      * @param initialData The starting data (can be null)
      * @param params
      */
-    constructor(data: TData, params?: BaseParams<TData, TObserverType>) 
-    {
-        super(params?.broadcasterParams);
+	constructor(data: TData, params?: BaseParams<TData, TObserverType>) 
+	{
+		super(params?.broadcasterParams);
 
-        this.#uuid = uuidv4();
-        this.setData(data);
-        Theseus.instancesById[this.#uuid] = this;
-    }
+		this.#uuid = uuidv4();
+		this.setData(data);
+		Theseus.instancesById[this.#uuid] = this;
+	}
 
-    /**
+	/**
      * Update the store with new data, and update subscribers.
      *
      * @param data
      */
-    private async update(data: TData) 
-    {
-        const newState = deepExtend(this.#internalState, data);
+	private async update(data: TData) 
+	{
+		const newState = deepExtend(this.#internalState, data);
 
-        this.setData(newState);
+		this.setData(newState);
 
-        log.verbose(`Updated state for instance ${this.__uuid}`);
-        await this.broadcast(this.#internalState);
-        log.verbose(`Broadcasted state for instance ${this.__uuid}`);
+		log.verbose(`Updated state for instance ${this.__uuid}`);
+		await this.broadcast(this.#internalState);
+		log.verbose(`Broadcasted state for instance ${this.__uuid}`);
 
-        return true;
-    }
+		return true;
+	}
 
-    /** Run a callback after all pending updates have completed */
-    private nextTick(callback: () => void) 
-    {
-        const pendingUpdatePromises = Object.values(this.pendingUpdates);
-        void Promise.allSettled(pendingUpdatePromises).finally(callback);
-    }
+	/** Run a callback after all pending updates have completed */
+	private nextTick(callback: () => void) 
+	{
+		const pendingUpdatePromises = Object.values(this.pendingUpdates);
+		void Promise.allSettled(pendingUpdatePromises).finally(callback);
+	}
 
-    /**
+	/**
      * Observe this data store. Call the returned callback to destroy.
      *
      * @param updateImmediately (default = true) If true, the callback will be called immediately on creation,
@@ -89,33 +89,33 @@ export class Theseus<
      * @param props The further input about the observer, if any
      * @param callback
      */
-    public override observe(callback: (newData: TData) => void, updateImmediately = true): DestroyCallback 
-    {
-        const { destroy, observer } = this.saveObserver(callback);
+	public override observe(callback: (newData: TData) => void, updateImmediately = true): DestroyCallback 
+	{
+		const { destroy, observer } = this.saveObserver(callback);
 
-        if (updateImmediately) 
-        {
-            // Update the callback once any pending updates are completed
-            this.nextTick(() => 
-            {
-                observer.callback(this.#internalState);
-            });
-        }
+		if (updateImmediately) 
+		{
+			// Update the callback once any pending updates are completed
+			this.nextTick(() => 
+			{
+				observer.callback(this.#internalState);
+			});
+		}
 
-        return destroy;
-    }
+		return destroy;
+	}
 
-    public static getInstance(theseusId: string) 
-    {
-        return this.instancesById[theseusId];
-    }
+	public static getInstance(theseusId: string) 
+	{
+		return this.instancesById[theseusId];
+	}
 
-    public static async updateInstance(theseusId: string, data: any) 
-    {
-        log.verbose(`Updating instance ${theseusId}`);
-        const instance = Theseus.getInstance(theseusId);
-        return await instance.update(data);
-    }
+	public static async updateInstance(theseusId: string, data: any) 
+	{
+		log.verbose(`Updating instance ${theseusId}`);
+		const instance = Theseus.getInstance(theseusId);
+		return await instance.update(data);
+	}
 }
 export type TheseusInstance = typeof Theseus;
 export default TheseusBuilder;

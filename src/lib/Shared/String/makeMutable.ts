@@ -15,7 +15,7 @@ export type Mutable<TParamName extends string = string> = `mutable${Capitalize<T
  */
 export function makeMutable<T extends string>(str: T): Mutable<T> 
 {
-    const capitalized = (str.charAt(0).toUpperCase() + str.slice(1)) as Capitalize<T>;
+	const capitalized = (str.charAt(0).toUpperCase() + str.slice(1)) as Capitalize<T>;
 
-    return `mutable${capitalized}`;
+	return `mutable${capitalized}`;
 }

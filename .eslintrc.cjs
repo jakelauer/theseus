@@ -2,7 +2,7 @@ module.exports = {
     parser: "@typescript-eslint/parser",  
 	ignorePatterns: ["*.js"],
     parserOptions: {  
-        project: ["./tsconfig.json", "./.examples/tic-tac-toe/tsconfig.json", "./packages/eslint-plugin-theseus/tsconfig.json"],
+        project: ["./**/tsconfig.json", "./.examples/**/tsconfig.json"],
         ecmaVersion: 2018,  
         sourceType: "module",  
         tsconfigRootDir: "./",  
@@ -23,7 +23,7 @@ module.exports = {
 	},
     plugins: ["unused-imports"],  
     rules: {  
-		indent: ["error", "tab"],
+		"indent": ["error", "tab", { "SwitchCase": 1 }],
         quotes: [2, "double", { avoidEscape: true }],  
         "unused-imports/no-unused-imports": "error",  
         "no-async-promise-executor": "off",  
@@ -45,7 +45,6 @@ module.exports = {
         ],
         "semi": ["error", "always"],
         "comma-dangle": ["error", "always-multiline"],
-        "indent": ["error", 4, { "SwitchCase": 1 }],
         "array-bracket-spacing": ["error", "never"],
         "object-curly-spacing": ["error", "always"],
         "max-len": ["error", { "code": 120, "ignoreUrls": true, "ignoreTemplateLiterals": true, "ignoreStrings": true }],

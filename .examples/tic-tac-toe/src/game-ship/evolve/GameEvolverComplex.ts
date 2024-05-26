@@ -5,7 +5,7 @@ import { GameBoardEvolver } from "./evolvers/GameBoardEvolver";
 import { GameMetaEvolver } from "./evolvers/GameMetaEvolver";
 
 export const GameEvolverComplex = EvolverComplex.create<GameState>().withEvolvers({
-    GameTurnEvolver,
-    GameBoardEvolver,
-    GameMetaEvolver,
+	GameTurnEvolver,
+	GameBoardEvolver,
+	GameMetaEvolver,
 });

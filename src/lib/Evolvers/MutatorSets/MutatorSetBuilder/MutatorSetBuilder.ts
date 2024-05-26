@@ -23,147 +23,147 @@ export class MutatorSetBuilder<
     TMutators extends MutatorDefs<TData, TParamName>,
 > 
 {
-    protected __theseusId?: string;
-    protected mutableData: { [key in TParamName]: TData };
-    public fixedMutators: TMutators = {} as TMutators;
+	protected __theseusId?: string;
+	protected mutableData: { [key in TParamName]: TData };
+	public fixedMutators: TMutators = {} as TMutators;
 
-    constructor(
-        inputData: TData,
+	constructor(
+		inputData: TData,
         protected readonly argName: TParamName,
         protected readonly mutators: TMutators,
         observationId?: string,
-    ) 
-    {
-        this.mutableData = this.inputToObject(inputData);
-        this.extendSelfWithMutators(mutators);
-        this.__theseusId = observationId;
-    }
+	) 
+	{
+		this.mutableData = this.inputToObject(inputData);
+		this.extendSelfWithMutators(mutators);
+		this.__theseusId = observationId;
+	}
 
-    public __setTheseusId(id: string) 
-    {
-        this.__theseusId = id;
-    }
+	public __setTheseusId(id: string) 
+	{
+		this.__theseusId = id;
+	}
 
-    public setData(data: TData) 
-    {
-        this.mutableData = this.inputToObject(data);
-    }
+	public setData(data: TData) 
+	{
+		this.mutableData = this.inputToObject(data);
+	}
 
-    protected getSelfExtensionPoint(): any 
-    {
-        return this;
-    }
+	protected getSelfExtensionPoint(): any 
+	{
+		return this;
+	}
 
-    /**
+	/**
      * Extends the instance with mutator functions defined in the mutators parameter. It recursively traverses
      * the mutators object, adding each function to the instance, allowing for nested mutator structures.
      */
-    private extendSelfWithMutators(mutators: TMutators, path: string[] = []) 
-    {
-        Object.keys(mutators).forEach((mutatorKey) => 
-        {
-            const item = mutators[mutatorKey];
-            const newPath = [...path, mutatorKey];
+	private extendSelfWithMutators(mutators: TMutators, path: string[] = []) 
+	{
+		Object.keys(mutators).forEach((mutatorKey) => 
+		{
+			const item = mutators[mutatorKey];
+			const newPath = [...path, mutatorKey];
 
-            if (typeof item === "function") 
-            {
-                const lastKey = newPath.pop() as string;
-                const context = newPath.reduce((obj, key) => 
-                {
-                    if (!obj[key]) obj[key] = {};
-                    return obj[key];
-                }, this.getSelfExtensionPoint() as any);
+			if (typeof item === "function") 
+			{
+				const lastKey = newPath.pop() as string;
+				const context = newPath.reduce((obj, key) => 
+				{
+					if (!obj[key]) obj[key] = {};
+					return obj[key];
+				}, this.getSelfExtensionPoint() as any);
 
-                this.addFunctionToSelf(context, lastKey, item);
-            }
-            else if (typeof item === "object" && item !== null) 
-            {
-                this.extendSelfWithMutators(item as TMutators, newPath);
-            }
-        });
-    }
+				this.addFunctionToSelf(context, lastKey, item);
+			}
+			else if (typeof item === "object" && item !== null) 
+			{
+				this.extendSelfWithMutators(item as TMutators, newPath);
+			}
+		});
+	}
 
-    /**
+	/**
      * Utility method to determine if a given value is a Promise.
      *
      * @param value The value to check.
      * @returns True if the value is a Promise, false otherwise.
      */
-    protected isPromise(path: string, value: any): value is Promise<any> 
-    {
-        const result = Boolean(value && typeof value.then === "function");
+	protected isPromise(path: string, value: any): value is Promise<any> 
+	{
+		const result = Boolean(value && typeof value.then === "function");
 
-        if (result) log.verbose(`Function "${path}" returns a Promise`);
+		if (result) log.verbose(`Function "${path}" returns a Promise`);
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
+	/**
      * Adds a function to the instance at the specified path. This method is used internally by
      * extendSelfWithMutators to attach mutator functions to the instance.
      */
-    protected addFunctionToSelf(
-        context: any,
-        selfPath: string,
-        mutator: GenericMutator<TData, SortaPromise<TData>>,
-    ) 
-    {
-        Object.assign(context, {
-            [selfPath]: (...args: any[]) => 
-            {
+	protected addFunctionToSelf(
+		context: any,
+		selfPath: string,
+		mutator: GenericMutator<TData, SortaPromise<TData>>,
+	) 
+	{
+		Object.assign(context, {
+			[selfPath]: (...args: any[]) => 
+			{
 
-                let funcResult: SortaPromise<TData>;
-                try 
-                {
-                    funcResult = mutator(this.mutableData, ...args);
-                }
-                catch (e) 
-                {
-                    log.error(`Error in mutator function "${selfPath}"`, e);
-                    throw e;
-                }
+				let funcResult: SortaPromise<TData>;
+				try 
+				{
+					funcResult = mutator(this.mutableData, ...args);
+				}
+				catch (e) 
+				{
+					log.error(`Error in mutator function "${selfPath}"`, e);
+					throw e;
+				}
 
-                if (funcResult === undefined) 
-                {
-                    log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
-                }
+				if (funcResult === undefined) 
+				{
+					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
+				}
 
-                const funcAsPromise =
+				const funcAsPromise =
                     funcResult instanceof Promise ? funcResult : Promise.resolve(funcResult);
 
-                funcAsPromise
-                    .then((result) => 
-                    {
-                        if (this.__theseusId && result) 
-                        {
-                            log.verbose(`Function "${selfPath}" completed, sending to Observation.`);
-                            void Theseus.updateInstance(this.__theseusId, result);
-                        }
-                    })
-                    .catch((e) => 
-                    {
-                        throw e;
-                    });
+				funcAsPromise
+					.then((result) => 
+					{
+						if (this.__theseusId && result) 
+						{
+							log.verbose(`Function "${selfPath}" completed, sending to Observation.`);
+							void Theseus.updateInstance(this.__theseusId, result);
+						}
+					})
+					.catch((e) => 
+					{
+						throw e;
+					});
 
-                return funcResult;
-            },
-        });
-    }
+				return funcResult;
+			},
+		});
+	}
 
-    /**
+	/**
      * Transforms the input data into the structured format expected by the mutators, keyed by the parameter
      * name.
      */
-    protected inputToObject<_TData, _TParamName extends Mutable<string>>(
-        input: _TData,
-    ): { [key in _TParamName]: _TData } 
-    {
-        return { [this.argName]: input } as {
+	protected inputToObject<_TData, _TParamName extends Mutable<string>>(
+		input: _TData,
+	): { [key in _TParamName]: _TData } 
+	{
+		return { [this.argName]: input } as {
             [key in _TParamName]: _TData;
         };
-    }
+	}
 
-    /**
+	/**
      * Factory method to create a new instance of MutatorSet with the provided initial data, argument name,
      * and mutators. This method facilitates the easy setup of a MutatorSet with a specific set of mutators.
      *
@@ -172,29 +172,29 @@ export class MutatorSetBuilder<
      * @param mutators The definitions of mutators to apply to the state.
      * @returns A new instance of MutatorSet configured with the provided parameters.
      */
-    public static create<
+	public static create<
         TData extends object,
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TData, TParamName>,
     >(data: TData, argName: TParamName, mutators: TMutators, observationId?: string) 
-    {
-        const builder = new MutatorSetBuilder(data, argName, mutators, observationId);
+	{
+		const builder = new MutatorSetBuilder(data, argName, mutators, observationId);
 
-        return this.castToMutators(builder);
-    }
+		return this.castToMutators(builder);
+	}
 
-    /**
+	/**
      * Casts the provided ChainableMutatorBuilder instance to a ChainableMutators instance. This is a
      * workaround to avoid TypeScript's inability to infer the correct type of the returned object.
      */
-    public static castToMutators<
+	public static castToMutators<
         TData extends object,
         TParamName extends Mutable<string>,
         TMutators extends MutatorDefs<TData, TParamName>,
     >(
-        chainableMutatorSet: MutatorSetBuilder<TData, TParamName, TMutators>,
-    ): FinalMutators<TData, TParamName, TMutators> 
-    {
-        return chainableMutatorSet as unknown as FinalMutators<TData, TParamName, TMutators>;
-    }
+		chainableMutatorSet: MutatorSetBuilder<TData, TParamName, TMutators>,
+	): FinalMutators<TData, TParamName, TMutators> 
+	{
+		return chainableMutatorSet as unknown as FinalMutators<TData, TParamName, TMutators>;
+	}
 }
