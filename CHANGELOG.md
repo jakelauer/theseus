@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/jakelauer/theseus-js/compare/v1.4.0...v1.4.1) (2024-05-26)
+
+
+### Bug Fixes
+
+* **release:** fixing release rules ([ecc7eb0](https://github.com/jakelauer/theseus-js/commit/ecc7eb001fb26aa183c27584f892dca3de4a521f))
+
 # [1.4.0](https://github.com/jakelauer/theseus-js/compare/v1.3.1...v1.4.0) (2024-05-26)
 
 
