@@ -5,6 +5,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "build": "echo 'no build'",
         "update": "node ./update-version.js",
         "pub": "node ./publish.js"
     },
