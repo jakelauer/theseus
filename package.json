@@ -18,7 +18,7 @@
         "prepublish": "pnpm build && pnpm test",
         "prepare": "husky install",
         "reinstall": "npx npkill && pnpm install",
-        "commit": "commit",
+        "commit": "cz",
         "// ==== TESTING ==== //": "",
         "lint": "git add . && pnpm lint-staged",
         "lint-fix": "eslint ./ --fix --resolve-plugins-relative-to=./",
@@ -32,7 +32,10 @@
         "example:ttt": "pnpm --prefix ./.examples/tic-tac-toe start"
     },
     "dependencies": {
+        "@commitlint/cz-commitlint": "^19.2.0",
+        "@commitlint/prompt": "^19.3.1",
         "@ungap/structured-clone": "^1.2.0",
+        "commitizen": "^4.3.0",
         "deep-equal": "^2.2.3",
         "deep-extend": "^0.6.0",
         "deep-freeze-strict": "^1.1.1",
@@ -98,5 +101,10 @@
     },
     "engines": {
         "node": ">=16.x"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/@commitlint/cz-commitlint/index.cjs"
+        }
     }
 }
