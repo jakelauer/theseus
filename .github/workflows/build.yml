@@ -1,47 +1,47 @@
 name: Build
 
 on:
-  workflow_dispatch: {}
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    workflow_dispatch: {}
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
+            - name: Setup Node.js 20
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "20"
 
-      - name: Install pnpm
-        run: |
-          curl -L https://unpkg.com/@pnpm/self-installer@latest | node
-          export PATH="./node_modules/.bin:$PATH"
-          pnpm --version
+            - name: Install pnpm
+              run: |
+                  curl -L https://unpkg.com/@pnpm/self-installer@latest | node
+                  export PATH="./node_modules/.bin:$PATH"
+                  pnpm --version
 
-      - name: Install dependencies
-        run: pnpm install
+            - name: Install dependencies
+              run: pnpm install
 
-      - name: Run build	
-        run: pnpm build  # Assuming pnpm and node_modules are correctly configured to be available
+            - name: Run build
+              run: pnpm test # Assuming pnpm and node_modules are correctly configured to be available
 
-      - name: Run build
-        run: pnpm test  # Assuming pnpm and node_modules are correctly configured to be available
+            - name: Run build
+              run: pnpm build # Assuming pnpm and node_modules are correctly configured to be available
 
+            - name: Set semantic-release command
+              id: set-release-command
+              run: echo "::set-output name=command::$(if [[ $GITHUB_EVENT_NAME == 'push' && $GITHUB_REF == 'refs/heads/main' ]]; then echo 'npx semantic-release'; else echo 'npx semantic-release --dry-run'; fi)"
 
-      - name: Run build
-        run: pnpm build  # Assuming pnpm and node_modules are correctly configured to be available
-
-      - name: Run semantic-release
-        run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+            - name: Run semantic-release
+              run: ${{ steps.set-release-command.outputs.command }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
