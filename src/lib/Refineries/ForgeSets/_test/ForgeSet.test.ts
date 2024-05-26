@@ -4,14 +4,14 @@ import { ForgeSet } from "../ForgeSet";
 
 describe("ForgeSet", function () 
 {
-    it("createForgeSet", function () 
-    {
-        const forgeSet = ForgeSet.create({}, "immutableTest", {
-            foo: () => {},
-            bar: () => {},
-        });
+	it("createForgeSet", function () 
+	{
+		const forgeSet = ForgeSet.create({}, "immutableTest", {
+			foo: () => {},
+			bar: () => {},
+		});
 
-        expect(forgeSet).to.have.property("foo");
-        expect(forgeSet).to.have.property("bar");
-    });
+		expect(forgeSet).to.have.property("foo");
+		expect(forgeSet).to.have.property("bar");
+	});
 });

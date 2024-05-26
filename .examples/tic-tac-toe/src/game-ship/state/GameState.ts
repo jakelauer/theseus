@@ -31,12 +31,12 @@ export interface GameState {
 }
 
 export const initialGameState: GameState = {
-    turns: 0,
-    board: [
-        [undefined, undefined, undefined],
-        [undefined, undefined, undefined],
-        [undefined, undefined, undefined],
-    ],
-    lastPlayer: "X",
-    lastPlayedCoords: [-1, -1],
+	turns: 0,
+	board: [
+		[undefined, undefined, undefined],
+		[undefined, undefined, undefined],
+		[undefined, undefined, undefined],
+	],
+	lastPlayer: "X",
+	lastPlayedCoords: [-1, -1],
 };

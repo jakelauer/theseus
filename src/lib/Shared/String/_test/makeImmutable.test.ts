@@ -4,9 +4,9 @@ import { makeImmutable } from "../makeImmutable"; // Adjust the import path as n
 
 describe("makeImmutable", function () 
 {
-    it("should prevent modifications to the returned string/object", function () 
-    {
-        const immutableString = makeImmutable("test");
-        expect(immutableString).to.equal("immutableTest");
-    });
+	it("should prevent modifications to the returned string/object", function () 
+	{
+		const immutableString = makeImmutable("test");
+		expect(immutableString).to.equal("immutableTest");
+	});
 });
