@@ -34,7 +34,10 @@ jobs:
               run: pnpm test # Assuming pnpm and node_modules are correctly configured to be available
 
             - name: Run build
-              run: pnpm build # Assuming pnpm and node_modules are correctly configured to be available
+              run: pnpm build:ci:pkg # Assuming pnpm and node_modules are correctly configured to be available
+
+            - name: Run build
+              run: pnpm build:ci # Assuming pnpm and node_modules are correctly configured to be available
 
             - name: Set semantic-release command
               id: set-release-command
