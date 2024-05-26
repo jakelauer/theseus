@@ -30,7 +30,7 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
-            - name: Run build
+            - name: Run tests
               run: pnpm test # Assuming pnpm and node_modules are correctly configured to be available
 
             - name: Run build
