@@ -1,5 +1,4 @@
 import deepExtend from "deep-extend";
-import allSettled from "promise.allsettled";
 import { v4 as uuidv4 } from "uuid";
 
 import { getTheseusLogger } from "@Shared/index";
@@ -11,8 +10,6 @@ import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 import type { DestroyCallback } from "./lib/Broadcast/Broadcaster";
 import type { BaseParams, ITheseus } from "@Types/Theseus";
 const log = getTheseusLogger("Observation");
-
-allSettled.shim();
 
 export class Theseus<
         TData extends object,
