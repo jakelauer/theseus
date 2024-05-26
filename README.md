@@ -1,3 +1,8 @@
+![build](https://github.com/jakelauer/theseus-js/actions/workflows/build.yml/badge.svg?branch=main)
+![test](https://github.com/jakelauer/theseus-js/actions/workflows/test.yml/badge.svg?branch=main)
+
+<a href="https://www.npmjs.com/package/theseus-js"><img src="https://badge.fury.io/js/theseus-js.svg" alt="npm version" height="18"></a>
+
 <div style="text-align: center;">
 <img src="./.assets/logo.png" alt="Theseus Logo">
 </div>
