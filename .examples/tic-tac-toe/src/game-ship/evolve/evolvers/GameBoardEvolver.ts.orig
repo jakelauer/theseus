@@ -1,10 +1,17 @@
 import { Evolver } from "theseus-js";
 import type { GameState, MarkType } from "../../state/GameState";
 
+<<<<<<< HEAD
 export const GameBoardEvolver = Evolver.create("GameBoard", { noun: "gameState" })
+    .toEvolve<GameState>()
+    .withMutators({
+        /**
+=======
+export const { GameBoardEvolver } = Evolver.create("GameBoardEvolver", { noun: "gameState" })
 	.toEvolve<GameState>()
 	.withMutators({
 		/**
+>>>>>>> main
 		 * Set the mark at the given coordinates.
 		 */
 		setMark: ({ mutableGameState }, coords: [number, number], mark: MarkType): GameState => 

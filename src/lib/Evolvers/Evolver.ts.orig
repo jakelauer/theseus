@@ -208,6 +208,17 @@ export class Evolver<
      *
      * @returns A fluent interface for constructing an Evolver with specified data and mutators.
      */
+<<<<<<< HEAD
+    public static create = <_TEvolverName extends string, _TParamName extends string = "input">(
+        name: _TEvolverName,
+        options?: EvolverOptions<_TParamName>,
+    ) => ({
+        toEvolve: <_TData extends object>() => ({
+            withMutators: <_TMutators extends MutatorDefs<_TData, Mutable<_TParamName>>>(
+                mutators: _TMutators,
+            ) => 
+            {
+=======
 	public static create = <_TEvolverName extends string, _TParamName extends string = "input">(
 		name: _TEvolverName,
 		options?: EvolverOptions<_TParamName>,
@@ -217,20 +228,36 @@ export class Evolver<
 				mutators: _TMutators,
 			) => 
 			{
-				const evolver = new Evolver<_TData, _TEvolverName, _TParamName, _TMutators>(
-					name,
-					mutators,
-					options,
-				);
+                // This is a trick to force the type of the return value to be the name of the refinery.
+                type ForceReturnVariableName = Record<
+                    _TEvolverName,
+                    EvolverInstance<_TData, _TEvolverName, Mutable<_TParamName>, _TMutators>
+                >;
 
-				log.verbose(`Created evolver: ${evolver.evolverName} with mutators:`, {
-					mutators: Object.keys(mutators),
-				});
+>>>>>>> main
+                const evolver = new Evolver<_TData, _TEvolverName, _TParamName, _TMutators>(
+                	name,
+                	mutators,
+                	options,
+                );
 
-				return evolver;
+                log.verbose(`Created evolver: ${evolver.evolverName} with mutators:`, {
+                	mutators: Object.keys(mutators),
+                });
+
+<<<<<<< HEAD
+                return evolver;
+            },
+        }),
+    });
+=======
+                return {
+                	[name]: evolver,
+                } as unknown as ForceReturnVariableName;
 			},
 		}),
 	});
+>>>>>>> main
 
 	/**
      * Provides a builder function to simplify the creation of Evolver instances, supporting a fluent

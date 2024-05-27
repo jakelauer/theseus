@@ -42,7 +42,7 @@ export type TheseusParams<
     TData extends object,
     TParamName extends string,
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-    TEvolvers extends Record<string, EvolverInstance<TData, string, Mutable<TParamName>, TMutators>>,
+    TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, TMutators>[],
     TForges extends ForgeDefs<TData, Immutable<TParamName>>,
     TRefineries extends Record<string, RefineryInitializer<TData, TParamName, TForges>>,
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,

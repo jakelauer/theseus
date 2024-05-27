@@ -1,10 +1,17 @@
 import { Evolver } from "theseus-js";
 import type { GameState, MarkType } from "../../state/GameState";
 
+<<<<<<< HEAD
 export const GameMetaEvolver = Evolver.create("GameMeta", { noun: "gameState" })
+    .toEvolve<GameState>()
+    .withMutators({
+        /**
+=======
+export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "gameState" })
 	.toEvolve<GameState>()
 	.withMutators({
 		/**
+>>>>>>> main
 		 * Update the last player to make a move.
 		 */
 		updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => 

@@ -19,24 +19,36 @@ export const generateEvolveMethods = <
 		macro: TIsMacro,
 	) => 
 {
-	// Iterates over each evolver name, reducing the collection of evolvers into a single object (result)
-	// that maps formatted evolver names to their mutators. This object is then returned as the final result
-	// of the method, representing the cumulative mutations available for application to the state.
-	const result = evolvers.reduce(
-		(acc, evolver) => 
-		{
-			const mutators = macro 
-				? evolver.evolve(input).getMutators() 
-				: evolver.mutate(input).getMutators();
+    // Iterates over each evolver name, reducing the collection of evolvers into a single object (result)
+    // that maps formatted evolver names to their mutators. This object is then returned as the final result
+    // of the method, representing the cumulative mutations available for application to the state.
+<<<<<<< HEAD
+    const result = evolvers.reduce(
+        (acc, evolver) => 
+        {
+            const mutators = macro 
+                ? evolver.evolve(input).getMutators() 
+                : evolver.mutate(input).getMutators();
 
-			(acc as Record<string, any>)[evolver.evolverName] = mutators;
+            (acc as Record<string, any>)[evolver.evolverName] = mutators;
+=======
+    const result = keys.reduce(
+    	(acc, key: TEvolverPassedNames) => 
+    	{
+    		const evolver = evolvers[key];
+    		const mutators =
+                macro ? evolver.evolve(input).getMutators() : evolver.mutate(input).getMutators();
+    		const formattedEvolverName = normalizeEvolverName(key);
 
-			return acc;
-		},
+    		(acc as Record<NormalizedEvolverName<string>, any>)[formattedEvolverName] = mutators;
+>>>>>>> main
+
+    		return acc;
+    	},
         {} as MutatorsFormatted<TData, TParamName, TEvolvers>,
-	);
+    );
 
-	return result;
+    return result;
 };
 
 export const evolve = <
@@ -76,11 +88,27 @@ const mutate = <
 };
 
 export const create = <TData extends object>() => ({
-	withEvolvers: <
+<<<<<<< HEAD
+    withEvolvers: <
         TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, any>[],
         TParamName extends string,
     >(
-		...evolvers: TEvolvers
+        ...evolvers: TEvolvers
+    ) => 
+    {
+        log.verbose("Creating evolver complex with evolvers:", {
+            evolvers: Object.keys(evolvers),
+        });
+
+        return {
+		    __evolvers__: evolvers,
+		    /**
+=======
+	withEvolvers: <
+        TEvolvers extends Record<string, EvolverInstance<TData, string, Mutable<TParamName>, any>>,
+        TParamName extends string,
+    >(
+		evolvers: TEvolvers,
 	) => 
 	{
 		log.verbose("Creating evolver complex with evolvers:", {
@@ -88,8 +116,9 @@ export const create = <TData extends object>() => ({
 		});
 
 		return {
-		    __evolvers__: evolvers,
-		    /**
+			__evolvers__: evolvers,
+			/**
+>>>>>>> main
              * Performs a single mutation on the given input, and returns the resulting transformed data.
              *
              * Examples:
@@ -97,8 +126,13 @@ export const create = <TData extends object>() => ({
              *     const { BoxScore } = BaseballEvolverComplex.mutate(myData);
              *     const result = BoxScore.setRuns(5);
              */
+<<<<<<< HEAD
 		    mutate: (input: TData) => mutate(input).withEvolvers(evolvers),
 		    /**
+=======
+			mutate: (input: TData) => mutate(input).withEvolvers(evolvers),
+			/**
+>>>>>>> main
              * Performs multiple mutations on the given input, chained together. The final result is available
              * via the `finish` method, or by preceding the final chained call with `.lastly`.
              *
@@ -108,13 +142,23 @@ export const create = <TData extends object>() => ({
              *     const result = BoxScore.setRuns(5).and.setHits(10).and.setErrors(0).finish(); // option 1
              *     const result = BoxScore.setRuns(5).and.setHits(10).and.lastly.setErrors(0); // option 2
              */
+<<<<<<< HEAD
 		    evolve: (input: TData) => evolve(input).withEvolvers(evolvers),
 		    use: (input: TData) => ({
 		        mutate: mutate(input).withEvolvers(evolvers),
 		        evolve: evolve(input).withEvolvers(evolvers),
 		    }),
+        } as EvolverComplexInstance<TData, TParamName, any, TEvolvers>;
+    },
+=======
+			evolve: (input: TData) => evolve(input).withEvolvers(evolvers),
+			use: (input: TData) => ({
+				mutate: mutate(input).withEvolvers(evolvers),
+				evolve: evolve(input).withEvolvers(evolvers),
+			}),
 		} as EvolverComplexInstance<TData, TParamName, any, TEvolvers>;
 	},
+>>>>>>> main
 });
 
 /** Facilitates complex data transformations by combining multiple Evolvers. */

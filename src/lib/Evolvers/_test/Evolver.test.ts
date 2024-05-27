@@ -10,7 +10,7 @@ describe("Evolvers", () =>
         value: number;
     }
 
-    const { testEvolver } = Evolver.create("testEvolver")
+    const testEvolver = Evolver.create("testEvolver")
     	.toEvolve<TestData>()
     	.withMutators({
     		increment: ({ mutableInput }) => ({ value: mutableInput.value + 1 }),
@@ -31,7 +31,7 @@ describe("Evolvers", () =>
 
     	it("should create an Evolver instance with the correct name and mutators", () => 
     	{
-    		const { testEvolver } = preMutatorTestEvolver.withMutators(testMutators);
+    		const testEvolver = preMutatorTestEvolver.withMutators(testMutators);
 
     		expect(testEvolver).to.be.an.instanceof(Evolver);
     		expect(testEvolver.getMutatorDefinitions()).to.deep.equal(testMutators);
@@ -43,9 +43,7 @@ describe("Evolvers", () =>
     	it("should support fluent configuration and creation of an Evolver instance", () => 
     	{
     		const evolverName = "testEvolver";
-    		const evolver = Evolver.buildCreator().toEvolve<TestData>().named(evolverName).withMutators(testMutators)[
-    			evolverName
-    		];
+    		const evolver = Evolver.buildCreator().toEvolve<TestData>().named(evolverName).withMutators(testMutators);
 
     		expect(evolver).to.be.an.instanceof(Evolver);
     	});
@@ -55,7 +53,7 @@ describe("Evolvers", () =>
     {
     	it("should return the correct set of mutators", () => 
     	{
-    		const { testEvolver } = preMutatorTestEvolver.withMutators(testMutators);
+    		const testEvolver = preMutatorTestEvolver.withMutators(testMutators);
     		expect(testEvolver.getMutatorDefinitions()).to.deep.equal(testMutators);
     	});
     });
@@ -85,7 +83,7 @@ describe("Evolvers", () =>
         {
         	it("should return a new object copy that won't change after further evolutions", () => 
         	{
-        		const { testEvolver } = Evolver.create("testEvolver")
+        		const testEvolver = Evolver.create("testEvolver")
         			.toEvolve<TestData>()
         			.withMutators({
         				increment: ({ mutableInput }, by: number) => ({ value: mutableInput.value + by }),
@@ -117,7 +115,7 @@ describe("Evolvers", () =>
         {
         	it("should work with different data structures", () => 
         	{
-        		const { stringEvolver } = Evolver.create("stringEvolver")
+        		const stringEvolver = Evolver.create("string")
         			.toEvolve<AnotherTestData>()
         			.withMutators({
         				rename: ({ mutableInput }) => ({ name: `New ${mutableInput.name}` }),
@@ -134,13 +132,13 @@ describe("Evolvers", () =>
         	it("should support complex mutator definitions", async () => 
         	{
         		// Example of an async mutator, if supported by the design
-        		const evolver = Evolver.create("asyncEvolver")
+        		const evolver = Evolver.create("async")
         			.toEvolve<AnotherTestData>()
         			.withMutators({
         				asyncIncrement: async ({ mutableInput }) => ({
         					name: mutableInput.name + "1",
         				}),
-        			}).asyncEvolver;
+        			});
 
         		// Assuming Evolver or mutators can handle async operations, use async/await or promises as needed
         		expect(evolver).to.be.an.instanceof(Evolver);
@@ -151,7 +149,7 @@ describe("Evolvers", () =>
         {
         	it("should support async chained mutators", async () => 
         	{
-        		const { AsyncEvolver } = Evolver.create("AsyncEvolver")
+        		const AsyncEvolver = Evolver.create("async")
         			.toEvolve<AnotherTestData>()
         			.withMutators({
         				asyncMakeNameUpperCase: async ({ mutableInput }) => 
