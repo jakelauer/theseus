@@ -1,3 +1,17 @@
+# [3.0.0](https://github.com/jakelauer/theseus-js/compare/v2.0.0...v3.0.0) (2024-05-27)
+
+
+### Features
+
+* **refineries:** array-based refineries ([#14](https://github.com/jakelauer/theseus-js/issues/14)) ([08a84d2](https://github.com/jakelauer/theseus-js/commit/08a84d21c7d803cf5152a53817feec0fabcb473d))
+
+
+### BREAKING CHANGES
+
+* **refineries:** refineries and complexes cannot be referenced int he same way
+
+Co-authored-by: Jake Lauer <jakelauer@Jake-MacBook-M2-2.local>
+
 # [2.0.0](https://github.com/jakelauer/theseus-js/compare/v1.4.1...v2.0.0) (2024-05-27)
 
 
