@@ -28,6 +28,7 @@ export default {
 			[
 				"build",
 				"ci",
+				"chore",
 				"docs",
 				"feat",
 				"fix",
