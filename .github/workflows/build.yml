@@ -1,14 +1,16 @@
 name: Build
 
 on:
-  workflow_run:
-    workflows: ["Test"]
-    types:
-      - completed
+    workflow_dispatch: {}
+    push:
+      branches:
+        - main
+    pull_request:
+      branches:
+        - main
 
 jobs:
   build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -28,6 +30,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Run tests
+        run: pnpm test
 
       - name: Run build
         run: pnpm build:ci:pkg  # Assuming pnpm and node_modules are correctly configured to be available
