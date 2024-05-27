@@ -6,7 +6,7 @@ import structuredClone from "@ungap/structured-clone";
 
 import { ForgeSet } from "./ForgeSets/ForgeSet";
 
-import type { NormalizedRefineryName } from "./Util/normalizeRefineryName";
+import { normalizeRefineryName, type NormalizedRefineryName } from "./Util/normalizeRefineryName";
 import type { ForgeDefs, RefineObject, RefineryDefinition as RefineryOptions } from "./Types/RefineryTypes";
 import type { Immutable } from "@Shared/String/makeImmutable";
 const log = getTheseusLogger("Refinery");
@@ -25,17 +25,18 @@ export type RefineryInitializer<
 
 export type RefineryResult<
     TData extends object,
-    TRefineryName extends string,
     TParamNoun extends string,
     TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
-> = Record<TRefineryName, RefineryInitializer<TData, TParamNoun, TForges>>;
+> = RefineryInitializer<TData, TParamNoun, TForges>;
+
+const callableSymbol = Symbol("callable");
 
 export class Refinery<
     TData extends object,
     TRefineryName extends string,
     TParamNoun extends string,
     TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
-> 
+> extends Function
 {
 	public readonly refineryName: NormalizedRefineryName<TRefineryName>;
 	public readonly immutableArgName: Immutable<TParamNoun>;
@@ -43,13 +44,28 @@ export class Refinery<
 
 	private constructor(name: TRefineryName, forges: TForges, options: RefineryOptions<TParamNoun>) 
 	{
+		super();
+		
 		const normalizedName = this.normalizeName(name);
 		const immutableDataNoun: TParamNoun = options.noun ?? ("input" as TParamNoun);
 
 		this.refineryName = normalizedName;
 		this.immutableArgName = makeImmutable(immutableDataNoun);
 		this.forges = forges;
+
+		return new Proxy(this, {
+			apply: (target, _thisArg, argumentsList: any[]) => 
+			{
+			  if (argumentsList.length !== 1) 
+				{
+					throw new Error("CallableClass instances only accept a single argument.");
+			  }
+			  return target[callableSymbol](argumentsList[0]);
+			},
+		});
 	}
+
+	public [callableSymbol] = this.refine;
 
 	/**
      * Normalizes the refinery name by removing any 'refinery' prefix or suffix, ensuring a clean,
@@ -57,17 +73,13 @@ export class Refinery<
      */
 	private normalizeName(name: TRefineryName) 
 	{
-		const trimmed = this.trimRefineryFromName(name);
+		const trimmed = normalizeRefineryName(name);
+
+		log.debug(`Normalizing refinery name: ${name} -> ${trimmed}`);
 
 		this.assertValidName(trimmed, "Name cannot be empty, nor only the word 'refinery'");
 
-		return name as NormalizedRefineryName<TRefineryName>;
-	}
-
-	private trimRefineryFromName(name: string) 
-	{
-		const ensureName = name ?? "";
-		return ensureName.replace(/^(refinery\s+|\s+refinery)$/gi, "");
+		return trimmed as unknown as NormalizedRefineryName<TRefineryName>;
 	}
 
 	private assertValidName(name: string, errorMessage: string) 
@@ -109,7 +121,7 @@ export class Refinery<
 		const forgeSetGetter = () => forgeSet;
 		const result = {
 			...forgeSet,
-			getForges: () => forgeSetGetter,
+			getForges: () => forgeSetGetter(),
 		};
 
 		return result as RefineObject<TData, TParamNoun, TForges>;
@@ -170,9 +182,7 @@ export class Refinery<
 					options,
 				);
 
-				return {
-					[name]: (data: _TData) => refinery.refine(data),
-				} as RefineryResult<_TData, _TRefineryName, _TParamNoun, _TForges>;
+				return refinery;
 			},
 		}),
 	});
