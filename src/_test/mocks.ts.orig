@@ -15,13 +15,27 @@ export const mockRefineryComplex = RefineryComplex.create().withRefineries({
 		}).mockRefinery,
 });
 
+<<<<<<< HEAD
 const mockEvolver = Evolver.create("mock", { noun: "mockData" }).toEvolve<MockData>().withMutators({
-	toggleTouch: ({ mutableMockData }) => 
-	{
-		mutableMockData.touched = !mutableMockData.touched;
+    toggleTouch: ({ mutableMockData }) => 
+    {
+        mutableMockData.touched = !mutableMockData.touched;
 
-		return mutableMockData;
-	},
+        return mutableMockData;
+    },
+=======
+export const mockEvolverComplex = EvolverComplex.create().withEvolvers({
+	mockEvolver: Evolver.create("mockEvolver", { noun: "mockData" })
+		.toEvolve<MockData>()
+		.withMutators({
+			toggleTouch: ({ mutableMockData }) => 
+			{
+				mutableMockData.touched = !mutableMockData.touched;
+
+				return mutableMockData;
+			},
+		}).mockEvolver,
+>>>>>>> main
 });
 
 export const mockEvolverComplex = EvolverComplex.create<MockData>().withEvolvers(mockEvolver);

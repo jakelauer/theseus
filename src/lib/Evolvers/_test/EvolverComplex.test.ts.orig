@@ -23,10 +23,26 @@ describe("EvolverComplex", () =>
 {
 	let IncrementEvolver: IncrementEvolver;
 
+<<<<<<< HEAD
+    before(function () 
+    {
+        // Define a simple increment Evolver for demonstration purposes
+        IncrementEvolver = IncrementEvolverCreator();
+    });
+
+    describe("create and setup evolvers", () => 
+    {
+        it("should initialize and setup evolvers correctly, separating creation from execution", () => 
+        {
+            // Creation step: Define the structure of the complex evolver
+            const IncrementEvolver = IncrementEvolverCreator();
+=======
 	before(function () 
 	{
 		// Define a simple increment Evolver for demonstration purposes
-		IncrementEvolver = IncrementEvolverCreator();
+		const { IncrementEvolver: recreatedIncremementEvolver } = IncrementEvolverCreator();
+
+		IncrementEvolver = recreatedIncremementEvolver;
 	});
 
 	describe("create and setup evolvers", () => 
@@ -34,7 +50,8 @@ describe("EvolverComplex", () =>
 		it("should initialize and setup evolvers correctly, separating creation from execution", () => 
 		{
 			// Creation step: Define the structure of the complex evolver
-			const IncrementEvolver = IncrementEvolverCreator();
+			const { IncrementEvolver } = IncrementEvolverCreator();
+>>>>>>> main
 
 			// Ensure the setup contains methods indicative of a successful setup
 			expect(IncrementEvolver).to.have.property("mutate").that.is.a("function");

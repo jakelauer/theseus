@@ -6,10 +6,17 @@ import { GameMetaEvolver } from "./GameMetaEvolver";
 
 const log = getTheseusLogger("GameTurnEvolver");
 
+<<<<<<< HEAD
 export const GameTurnEvolver = Evolver.create("GameTurn", { noun: "gameState" })
+    .toEvolve<GameState>()
+    .withMutators({
+        /**
+=======
+export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "gameState" })
 	.toEvolve<GameState>()
 	.withMutators({
 		/**
+>>>>>>> main
 		 * Set the winner of the game.
 		 */
 		setWinner: ({ mutableGameState }, reason: "stalemate" | "winner") => 
