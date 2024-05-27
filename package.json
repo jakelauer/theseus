@@ -23,7 +23,9 @@
         "lint": "git add . && pnpm lint-staged",
         "lint-fix": "eslint ./ --fix --resolve-plugins-relative-to=./",
         "test:debug": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs --debug-mode",
-        "test": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs",
+        "test:base": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs",
+        "test:pkg": "for dir in packages/*/; do (cd \"$dir\" && [ -f package.json ] && pnpm test); done",
+        "test": "pnpm test:base && pnpm test:pkg",
         "// ==== BUILD ==== //": "",
         "build:base": "tsc --project ./tsconfig.json && resolve-tspaths",
         "build:ci": "pnpm build:base",
@@ -57,7 +59,6 @@
         "@semantic-release/release-notes-generator": "^13.0.0",
         "@theseus/commitlint-config": "workspace:latest",
         "@theseus/gpt-zip": "workspace:latest",
-        "@theseus/publisher": "workspace:latest",
         "@types/chai": "^4.3.12",
         "@types/chai-as-promised": "^7.1.8",
         "@types/deep-equal": "^1.0.4",
@@ -88,10 +89,10 @@
         "prettier-eslint": "^16.3.0",
         "resolve-tspaths": "^0.8.18",
         "semantic-release": "^23.1.1",
-        "sinon": "^17.0.1",
+        "sinon": "^18.0.0",
         "sinon-chai": "^3.7.0",
-        "tsx": "^4.7.1",
-        "typescript": "^5.4.2"
+        "tsx": "^4.11.0",
+        "typescript": "^5.4.5"
     },
     "lint-staged": {
         "*.ts": [

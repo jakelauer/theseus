@@ -13,6 +13,6 @@
         "mocha": "^10.3.0"
     },
     "keywords": [],
-    "author": "",
-    "license": "ISC"
+    "author": "Jake Lauer",
+    "license": "MIT"
 }

@@ -1,12 +1,13 @@
 {
     "name": "@theseus/commitlint-config",
     "private": true,
-	"type": "module",
+    "type": "module",
     "version": "1.0.0",
     "description": "",
     "main": "./dist/index.js",
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "test": "echo 'no tests'"
     },
     "keywords": [],
     "author": "",

@@ -6,7 +6,8 @@
     "main": "index.js",
     "scripts": {
         "build": "echo 'no build'",
-        "start": "node index.js"
+        "start": "node index.js",
+        "test": "echo 'no tests'"
     },
     "bin": {
         "gpt-zip": "./index.js"
