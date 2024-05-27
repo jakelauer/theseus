@@ -27,7 +27,6 @@ export default {
 			"always",
 			[
 				"build",
-				"chore",
 				"ci",
 				"docs",
 				"feat",

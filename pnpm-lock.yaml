@@ -63,9 +63,6 @@ importers:
       '@theseus/gpt-zip':
         specifier: workspace:latest
         version: link:packages/gpt-zip
-      '@theseus/publisher':
-        specifier: workspace:latest
-        version: link:packages/publisher
       '@types/chai':
         specifier: ^4.3.12
         version: 4.3.16
@@ -157,16 +154,16 @@ importers:
         specifier: ^23.1.1
         version: 23.1.1(typescript@5.4.5)
       sinon:
-        specifier: ^17.0.1
-        version: 17.0.2
+        specifier: ^18.0.0
+        version: 18.0.0
       sinon-chai:
         specifier: ^3.7.0
-        version: 3.7.0(chai@4.4.1)(sinon@17.0.2)
+        version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       tsx:
-        specifier: ^4.7.1
-        version: 4.10.5
+        specifier: ^4.11.0
+        version: 4.11.0
       typescript:
-        specifier: ^5.4.2
+        specifier: ^5.4.5
         version: 5.4.5
 
   packages/commitlint-config:
@@ -201,15 +198,6 @@ importers:
       klaw-sync:
         specifier: ^6.0.0
         version: 6.0.0
-      prompts:
-        specifier: ^2.4.2
-        version: 2.4.2
-
-  packages/publisher:
-    dependencies:
-      arg:
-        specifier: ^5.0.1
-        version: 5.0.2
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
@@ -4103,8 +4091,8 @@ packages:
     resolution: {integrity: sha512-EZSPZB70jiVsivaBLYDCyntd5eH8NTSMOn3rB+HxwdmKThGELLdYv8qVIMWvZEFy9w8ZZpW9h9OB32l1rGtj7g==}
     dev: true
 
-  /nise@5.1.9:
-    resolution: {integrity: sha512-qOnoujW4SV6e40dYxJOb3uvuoPHtmLzIk4TFo+j0jPJoC+5Z9xja5qH5JZobEPsa8+YYphMrOSwnrshEhG2qww==}
+  /nise@6.0.0:
+    resolution: {integrity: sha512-K8ePqo9BFvN31HXwEtTNGzgrPpmvgciDsFz8aztFjt4LqKO/JeFD8tBOeuDiCMXrIl/m1YvfH8auSpxfaD09wg==}
     dependencies:
       '@sinonjs/commons': 3.0.1
       '@sinonjs/fake-timers': 11.2.2
@@ -5004,25 +4992,24 @@ packages:
       is-arrayish: 0.3.2
     dev: false
 
-  /sinon-chai@3.7.0(chai@4.4.1)(sinon@17.0.2):
+  /sinon-chai@3.7.0(chai@4.4.1)(sinon@18.0.0):
     resolution: {integrity: sha512-mf5NURdUaSdnatJx3uhoBOrY9dtL19fiOtAdT1Azxg3+lNJFiuN0uzaU3xX1LeAfL17kHQhTAJgpsfhbMJMY2g==}
     peerDependencies:
       chai: ^4.0.0
       sinon: '>=4.0.0'
     dependencies:
       chai: 4.4.1
-      sinon: 17.0.2
+      sinon: 18.0.0
     dev: true
 
-  /sinon@17.0.2:
-    resolution: {integrity: sha512-uihLiaB9FhzesElPDFZA7hDcNABzsVHwr3YfmM9sBllVwab3l0ltGlRV1XhpNfIacNDLGD1QRZNLs5nU5+hTuA==}
-    deprecated: There
+  /sinon@18.0.0:
+    resolution: {integrity: sha512-+dXDXzD1sBO6HlmZDd7mXZCR/y5ECiEiGCBSGuFD/kZ0bDTofPYc6JaeGmPSF+1j1MejGUWkORbYOLDyvqCWpA==}
     dependencies:
       '@sinonjs/commons': 3.0.1
       '@sinonjs/fake-timers': 11.2.2
       '@sinonjs/samsam': 8.0.0
       diff: 5.2.0
-      nise: 5.1.9
+      nise: 6.0.0
       supports-color: 7.2.0
     dev: true
 
@@ -5386,8 +5373,8 @@ packages:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
     dev: true
 
-  /tsx@4.10.5:
-    resolution: {integrity: sha512-twDSbf7Gtea4I2copqovUiNTEDrT8XNFXsuHpfGbdpW/z9ZW4fTghzzhAG0WfrCuJmJiOEY1nLIjq4u3oujRWQ==}
+  /tsx@4.11.0:
+    resolution: {integrity: sha512-vzGGELOgAupsNVssAmZjbUDfdm/pWP4R+Kg8TVdsonxbXk0bEpE1qh0yV6/QxUVXaVlNemgcPajGdJJ82n3stg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
