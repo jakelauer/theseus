@@ -1,0 +1,19 @@
+{
+    "name": "@theseus/commitlint-config",
+    "private": true,
+    "type": "module",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "test": "echo 'no tests'"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@commitlint/types": "^19.0.3",
+        "typescript": "^5.4.2"
+    }
+}

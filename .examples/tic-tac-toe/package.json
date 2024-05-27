@@ -1,25 +1,26 @@
 {
-	"name": "examples-tic-tac-toe",
-	"type": "module",
-	"private": true,
-	"version": "1.0.0",
-	"description": "A fun tic-tac-toe game.",
-	"author": "Jake Lauer",
-	"license": "MIT",
-	"dependencies": {
-		"theseus-js": "workspace:latest"
-	},
-	"devDependencies": {
-		"ts-node": "10.9.2",
-		"pino-pretty": "5.0.0",
+    "name": "examples-tic-tac-toe",
+    "type": "module",
+    "private": true,
+    "version": "1.0.0",
+    "description": "A fun tic-tac-toe game.",
+    "author": "Jake Lauer",
+    "license": "MIT",
+    "dependencies": {
+        "theseus-js": "workspace:latest"
+    },
+    "devDependencies": {
+        "ts-node": "10.9.2",
+        "pino-pretty": "5.0.0",
         "@typescript-eslint/eslint-plugin": "^6.21.0",
         "@typescript-eslint/parser": "^6.21.0",
         "eslint-plugin-theseus": "workspace:latest",
         "eslint": "^8.57.0"
-	},
-	"scripts": {
-		"root-build": "cd ../../ && pnpm build && cd .examples/tic-tac-toe",
-		"start": "pnpm root-build && ts-node-esm --experimental-specifier-resolution=node ./src/main.ts"
-	},
-	"main": "index.ts"
+    },
+    "scripts": {
+        "root-build": "pnpm --prefix ../../ build:base",
+        "start-raw": "node --loader ts-node/esm --experimental-specifier-resolution=node ./src/main.ts",
+        "start": "pnpm root-build && pnpm start-raw"
+    },
+    "main": "index.ts"
 }

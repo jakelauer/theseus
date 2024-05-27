@@ -13,7 +13,7 @@ export type Immutable<TParamName extends string = string> = `immutable${Capitali
  */
 export function makeImmutable<T extends string>(str: T): Immutable<T> 
 {
-    const capitalized = (str.charAt(0).toUpperCase() + str.slice(1)) as Capitalize<T>;
+	const capitalized = (str.charAt(0).toUpperCase() + str.slice(1)) as Capitalize<T>;
 
-    return `immutable${capitalized}`;
+	return `immutable${capitalized}`;
 }

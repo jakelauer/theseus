@@ -12,7 +12,7 @@
     },
     "files.exclude": {
         // "dist/": true,
-        "**/node_modules/**": true
+        //"**/node_modules/**": true
     },
     "tsimporter.doubleQuotes": true,
     "typescript.preferences.quoteStyle": "double",
@@ -31,5 +31,8 @@
     "[javascript]": {
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
-    "typescript.tsdk": "node_modules/typescript/lib"
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
 }

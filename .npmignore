@@ -1,7 +1,7 @@
 .*
 tsconfig.json
 /src
-/packages/publisher
+/packages/**/*
 node_modules
 pnpm-workspace.yaml
 *.map

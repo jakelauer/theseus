@@ -21,50 +21,50 @@ const refine = <
     TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
     TRefineries extends Record<string, RefineryInitializer<TData, TParamNoun, TForges>>,
 >(
-        input: TData,
-    ) => ({
-    /**
+		input: TData,
+	) => ({
+		/**
      * Specifies the set of refineries to be used for processing the input data. Each property in the provided
      * object should be a Refinery whose data matches TData. Follows a fluent pattern, allowing for intuitive
      * and clear data processing steps.
      */
-        withRefineries: (refineries: TRefineries) => 
-        {
-            const keys = Object.keys(refineries) as (keyof TRefineries)[];
+		withRefineries: (refineries: TRefineries) => 
+		{
+			const keys = Object.keys(refineries) as (keyof TRefineries)[];
 
-            const result = keys.reduce(
-                (acc, key: string) => 
-                {
-                    const refinery = refineries[key];
-                    const forges = refinery(input) as OneRefinery<
+			const result = keys.reduce(
+				(acc, key: string) => 
+				{
+					const refinery = refineries[key];
+					const forges = refinery(input) as OneRefinery<
                     TData,
                     TParamNoun,
                     TForges,
                     TRefineries,
                     typeof key
                 >;
-                    const formattedRefineryName = normalizeRefineryName(key) as NormalizedRefineryName<string>;
+					const formattedRefineryName = normalizeRefineryName(key) as NormalizedRefineryName<string>;
 
-                    (acc as Record<NormalizedRefineryName<string>, any>)[formattedRefineryName] = forges;
+					(acc as Record<NormalizedRefineryName<string>, any>)[formattedRefineryName] = forges;
 
-                    return acc;
-                },
+					return acc;
+				},
             {} as RefineryComplexOutcome<TData, TParamNoun, TForges, TRefineries>,
-            );
+			);
 
-            return result;
-        },
-    });
+			return result;
+		},
+	});
 
 const create = <TData extends object>() => ({
-    withRefineries: <
+	withRefineries: <
         TParamNoun extends string,
         TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
         TRefineries extends Record<string, RefineryInitializer<TData, TParamNoun, TForges>>,
     >(
-        refineries: TRefineries,
-    ): RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries> =>
-        innerWithRefineries<TData, TParamNoun, TForges, TRefineries>(refineries),
+		refineries: TRefineries,
+	): RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries> =>
+		innerWithRefineries<TData, TParamNoun, TForges, TRefineries>(refineries),
 });
 
 const innerWithRefineries = <
@@ -73,19 +73,19 @@ const innerWithRefineries = <
     TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
     TRefineries extends Record<string, RefineryInitializer<TData, TParamNoun, TForges>>,
 >(
-        refineries: TRefineries,
-    ) => 
+		refineries: TRefineries,
+	) => 
 {
-    const result = {
-        refine: (input: TData) =>
-            refine<TData, TParamNoun, TForges, TRefineries>(input).withRefineries(refineries),
-    } as const;
+	const result = {
+		refine: (input: TData) =>
+			refine<TData, TParamNoun, TForges, TRefineries>(input).withRefineries(refineries),
+	} as const;
 
-    log.verbose("Creating refinery complex with refineries", {
-        refineries: Object.keys(refineries),
-    });
+	log.verbose("Creating refinery complex with refineries", {
+		refineries: Object.keys(refineries),
+	});
 
-    return result;
+	return result;
 };
 
 /**
@@ -95,7 +95,7 @@ const innerWithRefineries = <
  */
 export class RefineryComplex 
 {
-    public static create = create;
+	public static create = create;
 }
 
 export type RefineryComplexInstance<

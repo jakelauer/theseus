@@ -5,36 +5,36 @@ export interface MockData {
 }
 
 export const mockRefineryComplex = RefineryComplex.create().withRefineries({
-    mockRefinery: Refinery.create("mockRefinery", { noun: "mockData" })
-        .toRefine<MockData>()
-        .withForges({
-            getOppositeOfTouched: ({ immutableMockData }) => 
-            {
-                return !immutableMockData.touched;
-            },
-        }).mockRefinery,
+	mockRefinery: Refinery.create("mockRefinery", { noun: "mockData" })
+		.toRefine<MockData>()
+		.withForges({
+			getOppositeOfTouched: ({ immutableMockData }) => 
+			{
+				return !immutableMockData.touched;
+			},
+		}).mockRefinery,
 });
 
 const mockEvolver = Evolver.create("mock", { noun: "mockData" }).toEvolve<MockData>().withMutators({
-    toggleTouch: ({ mutableMockData }) => 
-    {
-        mutableMockData.touched = !mutableMockData.touched;
+	toggleTouch: ({ mutableMockData }) => 
+	{
+		mutableMockData.touched = !mutableMockData.touched;
 
-        return mutableMockData;
-    },
+		return mutableMockData;
+	},
 });
 
 export const mockEvolverComplex = EvolverComplex.create<MockData>().withEvolvers(mockEvolver);
 
 
 export const mockEvolverKeyMap = {
-    mock: {
-        touch: "",
-    },
+	mock: {
+		touch: "",
+	},
 };
 
 export const mockMutatorKeyMap = {
-    mock: {
-        getOppositeOfTouched: "",
-    },
+	mock: {
+		getOppositeOfTouched: "",
+	},
 };

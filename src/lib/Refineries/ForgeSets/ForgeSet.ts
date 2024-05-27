@@ -15,75 +15,75 @@ export class ForgeSet<
     TForges extends ForgeDefs<TData, TParamName>,
 > 
 {
-    protected readonly argName: TParamName;
-    protected mutableData: { [key in TParamName]: TData };
+	protected readonly argName: TParamName;
+	protected mutableData: { [key in TParamName]: TData };
 
-    constructor(inputData: TData, argName: TParamName, forges: TForges) 
-    {
-        this.argName = argName;
-        this.mutableData = this.inputToObject(inputData);
+	constructor(inputData: TData, argName: TParamName, forges: TForges) 
+	{
+		this.argName = argName;
+		this.mutableData = this.inputToObject(inputData);
 
-        this.extendSelfWithForges(forges);
-    }
+		this.extendSelfWithForges(forges);
+	}
 
-    /**
+	/**
      * Extends the ForgeSet instance with forge functions defined in the `forges` parameter. It recursively
      * traverses the forges object, adding each function to the instance.
      */
-    private extendSelfWithForges(forges: TForges, path: string[] = []) 
-    {
-        Object.keys(forges).forEach((key) => 
-        {
-            const item = forges[key];
-            const newPath = [...path, key];
+	private extendSelfWithForges(forges: TForges, path: string[] = []) 
+	{
+		Object.keys(forges).forEach((key) => 
+		{
+			const item = forges[key];
+			const newPath = [...path, key];
 
-            if (typeof item === "function") 
-            {
-                // Use reduce to traverse and/or build the nested structure
-                const lastKey = newPath.pop() as string;
-                const context = newPath.reduce((obj, key) => 
-                {
-                    if (!obj[key]) obj[key] = {};
-                    return obj[key];
-                }, this as any);
+			if (typeof item === "function") 
+			{
+				// Use reduce to traverse and/or build the nested structure
+				const lastKey = newPath.pop() as string;
+				const context = newPath.reduce((obj, key) => 
+				{
+					if (!obj[key]) obj[key] = {};
+					return obj[key];
+				}, this as any);
 
-                // Assign the function
-                this.addFunctionToSelf(context, lastKey, item);
-            }
-            else if (typeof item === "object" && item !== null) 
-            {
-                // Recursive call for nested objects
-                this.extendSelfWithForges(item as TForges, newPath);
-            }
-        });
-    }
+				// Assign the function
+				this.addFunctionToSelf(context, lastKey, item);
+			}
+			else if (typeof item === "object" && item !== null) 
+			{
+				// Recursive call for nested objects
+				this.extendSelfWithForges(item as TForges, newPath);
+			}
+		});
+	}
 
-    /**
+	/**
      * Adds a forge function to the instance at the specified path. This method is used internally by
      * `extendSelfWithForges` to attach forge functions to the instance.
      */
-    protected addFunctionToSelf(context: any, selfPath: string, func: (...args: any[]) => any) 
-    {
-        Object.assign(context, {
-            [selfPath]: (...args: any[]) => 
-            {
-                return func(this.mutableData, ...args);
-            },
-        });
-    }
+	protected addFunctionToSelf(context: any, selfPath: string, func: (...args: any[]) => any) 
+	{
+		Object.assign(context, {
+			[selfPath]: (...args: any[]) => 
+			{
+				return func(this.mutableData, ...args);
+			},
+		});
+	}
 
-    /**
+	/**
      * Transforms the input data into the structured format expected by the forge functions, keyed by the
      * parameter name.
      */
-    protected inputToObject<TData, TParamName extends string>(input: TData): { [key in TParamName]: TData } 
-    {
-        return { [this.argName]: input } as {
+	protected inputToObject<TData, TParamName extends string>(input: TData): { [key in TParamName]: TData } 
+	{
+		return { [this.argName]: input } as {
             [key in TParamName]: TData;
         };
-    }
+	}
 
-    /**
+	/**
      * Factory method to create an instance of `ForgeSet` with specified initial data, argument name, and
      * forge definitions. This method facilitates the easy setup of a ForgeSet with a specific set of forges.
      *
@@ -92,17 +92,17 @@ export class ForgeSet<
      * @param forges The definitions of forge functions to apply to the data.
      * @returns An instance of `ForgeSet` configured with the provided parameters.
      */
-    public static create<
+	public static create<
         TData extends object,
         TParamName extends Immutable,
         TForges extends ForgeDefs<TData, TParamName>,
     >(data: TData, argName: TParamName, forges: TForges): ExposeForges<TData, TParamName, TForges> 
-    {
-        return new ForgeSet(data, argName, forges) as ExposeForges<TData, TParamName, TForges>;
-    }
+	{
+		return new ForgeSet(data, argName, forges) as ExposeForges<TData, TParamName, TForges>;
+	}
 
-    public get self() 
-    {
-        return this;
-    }
+	public get self() 
+	{
+		return this;
+	}
 }

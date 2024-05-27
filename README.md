@@ -1,3 +1,9 @@
+![build](https://github.com/jakelauer/theseus-js/actions/workflows/build.yml/badge.svg?branch=main)
+![test](https://github.com/jakelauer/theseus-js/actions/workflows/test.yml/badge.svg?branch=main)
+
+<a href="https://www.npmjs.com/package/theseus-js"><img src="https://badgen.net/npm/v/theseus-js?color=red" alt="npm version" height="18"></a>
+<img src="https://badgen.net/github/license/jakelauer/theseus-js" alt="npm version" height="18">
+
 <div style="text-align: center;">
 <img src="./.assets/logo.png" alt="Theseus Logo">
 </div>

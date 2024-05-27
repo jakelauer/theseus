@@ -3,3 +3,4 @@ packages:
     - "../../packages/eslint-plugin-theseus"
     - "../../packages/gpt-zip"
     - "../../packages/publisher"
+    - "../../packages/commitlint-config"

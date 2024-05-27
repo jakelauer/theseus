@@ -14,29 +14,29 @@ export const generateEvolveMethods = <
     TParamName extends string,
     TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, any>[],
 >(
-        evolvers: TEvolvers,
-        input: TData,
-        macro: TIsMacro,
-    ) => 
+		evolvers: TEvolvers,
+		input: TData,
+		macro: TIsMacro,
+	) => 
 {
-    // Iterates over each evolver name, reducing the collection of evolvers into a single object (result)
-    // that maps formatted evolver names to their mutators. This object is then returned as the final result
-    // of the method, representing the cumulative mutations available for application to the state.
-    const result = evolvers.reduce(
-        (acc, evolver) => 
-        {
-            const mutators = macro 
-                ? evolver.evolve(input).getMutators() 
-                : evolver.mutate(input).getMutators();
+	// Iterates over each evolver name, reducing the collection of evolvers into a single object (result)
+	// that maps formatted evolver names to their mutators. This object is then returned as the final result
+	// of the method, representing the cumulative mutations available for application to the state.
+	const result = evolvers.reduce(
+		(acc, evolver) => 
+		{
+			const mutators = macro 
+				? evolver.evolve(input).getMutators() 
+				: evolver.mutate(input).getMutators();
 
-            (acc as Record<string, any>)[evolver.evolverName] = mutators;
+			(acc as Record<string, any>)[evolver.evolverName] = mutators;
 
-            return acc;
-        },
+			return acc;
+		},
         {} as MutatorsFormatted<TData, TParamName, TEvolvers>,
-    );
+	);
 
-    return result;
+	return result;
 };
 
 export const evolve = <
@@ -45,16 +45,16 @@ export const evolve = <
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
     TParamName extends string,
 >(
-        input: TData,
-    ) => 
+		input: TData,
+	) => 
 {
-    return {
-        /** Sets up the evolution process with specified evolvers for chained mutations. */
-        withEvolvers: (evolvers: TEvolvers) => 
-        {
-            return generateEvolveMethods(evolvers, input, true);
-        },
-    };
+	return {
+		/** Sets up the evolution process with specified evolvers for chained mutations. */
+		withEvolvers: (evolvers: TEvolvers) => 
+		{
+			return generateEvolveMethods(evolvers, input, true);
+		},
+	};
 };
 
 const mutate = <
@@ -63,31 +63,31 @@ const mutate = <
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
     TParamName extends string,
 >(
-        input: TData,
-    ) => 
+		input: TData,
+	) => 
 {
-    return {
-        /** Configures the mutation process with specific evolvers. */
-        withEvolvers: (evolvers: TEvolvers) => 
-        {
-            return generateEvolveMethods(evolvers, input, false);
-        },
-    };
+	return {
+		/** Configures the mutation process with specific evolvers. */
+		withEvolvers: (evolvers: TEvolvers) => 
+		{
+			return generateEvolveMethods(evolvers, input, false);
+		},
+	};
 };
 
 export const create = <TData extends object>() => ({
-    withEvolvers: <
+	withEvolvers: <
         TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, any>[],
         TParamName extends string,
     >(
-        ...evolvers: TEvolvers
-    ) => 
-    {
-        log.verbose("Creating evolver complex with evolvers:", {
-            evolvers: Object.keys(evolvers),
-        });
+		...evolvers: TEvolvers
+	) => 
+	{
+		log.verbose("Creating evolver complex with evolvers:", {
+			evolvers: Object.keys(evolvers),
+		});
 
-        return {
+		return {
 		    __evolvers__: evolvers,
 		    /**
              * Performs a single mutation on the given input, and returns the resulting transformed data.
@@ -113,15 +113,15 @@ export const create = <TData extends object>() => ({
 		        mutate: mutate(input).withEvolvers(evolvers),
 		        evolve: evolve(input).withEvolvers(evolvers),
 		    }),
-        } as EvolverComplexInstance<TData, TParamName, any, TEvolvers>;
-    },
+		} as EvolverComplexInstance<TData, TParamName, any, TEvolvers>;
+	},
 });
 
 /** Facilitates complex data transformations by combining multiple Evolvers. */
 export class EvolverComplex 
 {
-    /** Initializes the creation process for a new EvolverComplex instance. */
-    public static create = create;
+	/** Initializes the creation process for a new EvolverComplex instance. */
+	public static create = create;
 }
 
 export type EvolverComplexInstance<
