@@ -1,3 +1,20 @@
+# [2.0.0](https://github.com/jakelauer/theseus-js/compare/v1.4.1...v2.0.0) (2024-05-27)
+
+
+### Bug Fixes
+
+* **chore:** chore ([1244197](https://github.com/jakelauer/theseus-js/commit/1244197e869e121375581e358e6dd9a6bbfdd083))
+
+
+### Features
+
+* **nit:** release ([6ee1933](https://github.com/jakelauer/theseus-js/commit/6ee193332e881b8d7019c44aa48eb7507997ec11))
+
+
+### BREAKING CHANGES
+
+* **nit:** Evolvers as arrays
+
 ## [1.4.1](https://github.com/jakelauer/theseus-js/compare/v1.4.0...v1.4.1) (2024-05-26)
 
 
