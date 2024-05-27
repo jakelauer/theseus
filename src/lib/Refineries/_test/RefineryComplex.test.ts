@@ -14,7 +14,7 @@ describe("RefineryComplex", function ()
     // Utility function to create a mock refinery that converts field to uppercase
     function createMockUpperCaseRefinery() 
     {
-    	const { mockUpperCaseRefinery } = Refinery.create("mockUpperCaseRefinery", {
+    	const mockUpperCaseRefinery = Refinery.create("mockUpperCaseRefinery", {
     		noun: "testData",
     	})
     		.toRefine<TestData>()
@@ -31,7 +31,7 @@ describe("RefineryComplex", function ()
     // Utility function to create a mock refinery that increments count
     function createMockIncrementCountRefinery() 
     {
-    	const { mockIncrementCountRefinery } = Refinery.create("mockIncrementCountRefinery", {
+    	const mockIncrementCountRefinery = Refinery.create("mockIncrementCountRefinery", {
     		noun: "testData",
     	})
     		.toRefine<TestData>()
@@ -47,15 +47,15 @@ describe("RefineryComplex", function ()
 
     it("should aggregate multiple refineries and process data correctly", function () 
     {
-    	const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
-    		UpperCaseRefinery: createMockUpperCaseRefinery(),
-    		IncrementCountRefinery: createMockIncrementCountRefinery(),
-    	});
+    	const refineryComplex = RefineryComplex.create<TestData>().withRefineries(
+    		createMockUpperCaseRefinery(),
+    		createMockIncrementCountRefinery(),
+    	);
 
     	const testData: TestData = { field: "test", count: 1 };
-    	const { UpperCase, IncrementCount } = refineryComplex.refine(testData);
-    	const resultAfterUppercase = UpperCase.makeUppercase();
-    	const resultAfterIncrement = IncrementCount.incrementCount();
+    	const { mockIncrementCount, mockUpperCase } = refineryComplex.refine(testData);
+    	const resultAfterUppercase = mockUpperCase.makeUppercase();
+    	const resultAfterIncrement = mockIncrementCount.incrementCount();
 
     	expect(resultAfterUppercase.field).to.equal("TEST");
     	expect(resultAfterIncrement.count).to.equal(2);
@@ -63,14 +63,14 @@ describe("RefineryComplex", function ()
 
     it("should maintain immutability of data across refineries", function () 
     {
-    	const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
-    		UpperCaseRefinery: createMockUpperCaseRefinery(),
-    	});
+    	const refineryComplex = RefineryComplex.create<TestData>().withRefineries(
+    		createMockUpperCaseRefinery(),
+    	);
 
     	const testData: TestData = { field: "test", count: 1 };
-    	const { UpperCase } = refineryComplex.refine(testData);
+    	const { mockUpperCase } = refineryComplex.refine(testData);
     	const resultBefore = { ...testData };
-    	UpperCase.makeUppercase();
+    	mockUpperCase.makeUppercase();
 
     	// Ensuring the original testData is not modified by the refinery process
     	expect(testData).to.deep.equal(resultBefore);
@@ -78,28 +78,28 @@ describe("RefineryComplex", function ()
 
     it("should handle empty data correctly", function () 
     {
-    	const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
-    		uppercase: createMockUpperCaseRefinery(),
-    	});
+    	const refineryComplex = RefineryComplex.create<TestData>().withRefineries(
+    		createMockUpperCaseRefinery(),
+    	);
 
     	const testData: TestData = { field: "", count: 0 };
-    	const { uppercase } = refineryComplex.refine(testData);
-    	const result = uppercase.makeUppercase();
+    	const { mockUpperCase } = refineryComplex.refine(testData);
+    	const result = mockUpperCase.makeUppercase();
 
     	expect(result.field).to.equal("");
     });
 
     it("should apply refineries in sequence correctly", function () 
     {
-    	const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
-    		UpperCaseRefinery: createMockUpperCaseRefinery(),
-    		IncrementCountRefinery: createMockIncrementCountRefinery(),
-    	});
+    	const refineryComplex = RefineryComplex.create<TestData>().withRefineries(
+    		createMockUpperCaseRefinery(),
+    		createMockIncrementCountRefinery(),
+    	);
 
     	const testData: TestData = { field: "sequence", count: 0 };
-    	const { UpperCase, IncrementCount } = refineryComplex.refine(testData);
-    	const resultAfterUppercase = UpperCase.makeUppercase();
-    	const resultAfterIncrement = IncrementCount.incrementCount();
+    	const { mockIncrementCount, mockUpperCase } = refineryComplex.refine(testData);
+    	const resultAfterUppercase = mockUpperCase.makeUppercase();
+    	const resultAfterIncrement = mockIncrementCount.incrementCount();
 
     	// Verify that each refinery's transformation is applied sequentially
     	expect(resultAfterUppercase.field).to.equal("SEQUENCE");
@@ -108,16 +108,18 @@ describe("RefineryComplex", function ()
 
     it("should preserve data immutability when applying multiple refineries", function () 
     {
-    	const refineryComplex = RefineryComplex.create<TestData>().withRefineries({
-    		UpperCaseRefinery: createMockUpperCaseRefinery(),
-    		IncrementCountRefinery: createMockIncrementCountRefinery(),
-    	});
+    	const refineryComplex = RefineryComplex.create<TestData>().withRefineries(
+    		createMockUpperCaseRefinery(),
+    		createMockIncrementCountRefinery(),
+    	);
 
     	const testData: TestData = { field: "immutable", count: 1 };
     	const originalTestData = { ...testData };
-    	const { IncrementCount, UpperCase } = refineryComplex.refine(testData);
-    	UpperCase.makeUppercase();
-    	IncrementCount.incrementCount();
+    	const funcs = refineryComplex.refine(testData);
+    	console.log(funcs);
+    	const { mockIncrementCount, mockUpperCase } = funcs;
+    	mockUpperCase.makeUppercase();
+    	mockIncrementCount.incrementCount();
 
     	// Verify original data remains unchanged
     	expect(testData).to.deep.equal(originalTestData);

@@ -52,7 +52,7 @@ module.exports = {
         "comma-dangle": ["error", "always-multiline"],
         "array-bracket-spacing": ["error", "never"],
         "object-curly-spacing": ["error", "always"],
-        "max-len": ["error", { "code": 120, "ignoreUrls": true, "ignoreTemplateLiterals": true, "ignoreStrings": true }],
+        "max-len": ["error", { "code": 180, "ignoreUrls": true, "ignoreTemplateLiterals": true, "ignoreStrings": true }],
         "arrow-parens": ["error", "always"],
         "no-tabs": "off", // Since you're using tabs
         "key-spacing": ["error", { "beforeColon": false, "afterColon": true }],

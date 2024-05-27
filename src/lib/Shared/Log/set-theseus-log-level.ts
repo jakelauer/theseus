@@ -12,9 +12,11 @@ export const logLevels = {
 	silly: 80,
 } as const;
 
+export type ValidLogLevels = keyof typeof logLevels | "silent";
 
-let savedLevel: keyof typeof logLevels | "silent" = "silent";
-const setAllTransportsLevel = (newLevel?: keyof typeof logLevels | "silent") => 
+
+let savedLevel: ValidLogLevels = "silent";
+const setAllTransportsLevel = (newLevel?: ValidLogLevels) => 
 {
 	// If the level is already set to the new level, do nothing
 	if (savedLevel === newLevel) 
@@ -44,7 +46,7 @@ const setAllTransportsLevel = (newLevel?: keyof typeof logLevels | "silent") =>
  *   will log "warn" and "error" messages.
  */
 
-export const setTheseusLogLevel = (level?: keyof typeof logLevels | "silent") => 
+export const setTheseusLogLevel = (level: ValidLogLevels = "warn") => 
 {
 	setAllTransportsLevel(level);
 };

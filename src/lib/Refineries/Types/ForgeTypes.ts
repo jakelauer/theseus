@@ -6,6 +6,6 @@ import type { Immutable } from "@Shared/String/makeImmutable";
  * by the functionality. They must return some type other than TData.
  */
 export type Forge<TData extends object, TPropName extends Immutable<string>> = (
-    input: { [key in TPropName]: TData },
+    input: { [key in TPropName]: TData},
     ...args: any[]
 ) => any;

@@ -6,22 +6,14 @@ import type { Mutable } from "@Shared/String/makeMutable";
 
 import type {
 	EvolveObject,
-	EvolverInstance,
 	EvolverOptions,
 	MutateObject,
 	TypeAccess,
 } from "@Evolvers/Types/EvolverTypes";
 import type { MutatorDefs } from "@Evolvers/Types/MutatorTypes";
-import type { NormalizedEvolverName } from "@Evolvers/Util/normalizeEvolverName";
+import { normalizeEvolverName, type NormalizedEvolverName } from "@Evolvers/Util/normalizeEvolverName";
 import type { ChainableMutators, FinalMutators } from "./Types/ChainableTypes";
 const log = getTheseusLogger("Evolver");
-
-export type EvolverResult<
-    TData extends object,
-    TEvolverName extends string,
-    TParamName extends string,
-    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-> = Record<TEvolverName, EvolverInstance<TData, TEvolverName, Mutable<TParamName>, TMutators>>;
 
 /**
  * Represents an evolver for data transformation and mutation, encapsulating the logic for mutating and
@@ -89,17 +81,11 @@ export class Evolver<
 
 	private normalizeName(name: TEvolverName) 
 	{
-		const trimmed = this.trimEvolverFromName(name);
+		const trimmed = normalizeEvolverName(name);
 
 		this.assertValidName(trimmed, "Name cannot be empty, nor only the word 'refinery'");
 
-		return name as NormalizedEvolverName<TEvolverName>;
-	}
-
-	private trimEvolverFromName(name: string) 
-	{
-		const ensureName = name ?? "";
-		return ensureName.replace(/^(evolver\s+|\s+evolver)$/gi, "");
+		return trimmed as unknown as NormalizedEvolverName<TEvolverName>;
 	}
 
 	private assertValidName(name: string, errorMessage: string) 

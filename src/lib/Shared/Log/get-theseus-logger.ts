@@ -2,11 +2,9 @@ import winston from "winston";
 
 import { setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
 import winstonConfigBuilder from "@Shared/Log/winston-config-builder";
-import { isTestMode } from "@Shared/TestMode/isTestMode";
+import { logLevelFromFlag } from "@Shared/Log/log-level-from-flag";
 
-const testMode = isTestMode();
-console.log("Test mode: ", testMode);
-setTheseusLogLevel(testMode ? "verbose" : "silent");
+setTheseusLogLevel(logLevelFromFlag ?? "silent");
 
 const rootLogger = winston.createLogger({
 	...winstonConfigBuilder().config,

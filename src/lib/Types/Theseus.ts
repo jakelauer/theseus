@@ -3,7 +3,7 @@ import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 import type { EvolverComplex, EvolverComplexInstance } from "@Evolvers/EvolverComplex";
 import type { EvolverInstance } from "@Evolvers/Types/EvolverTypes";
 import type { MutatorDefs } from "@Evolvers/Types/MutatorTypes";
-import type { RefineryInitializer } from "@Refineries/Refinery";
+import type { Refinery } from "@Refineries/Refinery";
 import type { RefineryComplexInstance } from "@Refineries/RefineryComplex";
 import type { ForgeDefs } from "@Refineries/Types";
 import type { Immutable } from "@Shared/String/makeImmutable";
@@ -44,7 +44,7 @@ export type TheseusParams<
     TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
     TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, TMutators>[],
     TForges extends ForgeDefs<TData, Immutable<TParamName>>,
-    TRefineries extends Record<string, RefineryInitializer<TData, TParamName, TForges>>,
+	TRefineries extends Refinery<TData, string, TParamName, TForges>[],
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
 > = BaseParams<TData, TObserverType> & {
     evolvers: TEvolvers | EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers>;

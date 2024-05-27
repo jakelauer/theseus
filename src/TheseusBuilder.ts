@@ -9,10 +9,10 @@ import { Theseus } from "./Theseus";
 import type { MacroMutatorsFormatted, MutatorsFormatted } from "@Evolvers/Types/EvolverComplexTypes";
 import type { EvolverInstance } from "@Evolvers/Types/EvolverTypes";
 import type { MutatorDefs } from "@Evolvers/Types/MutatorTypes";
-import type { RefineryInitializer } from "@Refineries/Refinery";
+import type { Refinery } from "@Refineries/Refinery";
 import type { RefineryComplexInstance } from "@Refineries/RefineryComplex";
 import type { ForgeDefs } from "@Refineries/Types";
-import type { RefineryComplexOutcome } from "@Refineries/Types/RefineryComplexTypes";
+import type { RefineriesRemapped } from "@Refineries/Types/RefineryComplexTypes";
 import type { Immutable } from "@Shared/String/makeImmutable";
 import type { Mutable } from "@Shared/String/makeMutable";
 import type { ITheseus, TheseusParams } from "@Types/Theseus";
@@ -62,7 +62,7 @@ export default <TData extends object>(data: TData) => ({
         TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
         TEvolvers extends EvolverInstance<TData, string, Mutable<TParamName>, TMutators>[],
         TForges extends ForgeDefs<TData, Immutable<TParamName>>,
-        TRefineries extends Record<string, RefineryInitializer<TData, TParamName, TForges>>,
+		TRefineries extends Refinery<TData, string, TParamName, TForges>[],
         TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
     >(
 		params: TheseusParams<TData, TParamName, TMutators, TEvolvers, TForges, TRefineries, TObserverType>,
@@ -82,7 +82,7 @@ export default <TData extends object>(data: TData) => ({
         >;
 
         type RefineExtension = {
-            refine?: RefineryComplexOutcome<TData, TParamName, TForges, TRefineries>;
+            refine?: RefineriesRemapped<TData, TParamName, TForges, TRefineries>;
         };
 
         type BaseExtension = {
@@ -127,7 +127,7 @@ export default <TData extends object>(data: TData) => ({
         		const complex: RefineryComplexInstance<TData, TParamName, TForges, TRefineries> =
                     "refine" in refineries ?
                     	(refineries as RefineryComplexInstance<TData, TParamName, TForges, TRefineries>)
-                    	:   RefineryComplex.create<TData>().withRefineries(refineries);
+                    	:   RefineryComplex.create<TData>().withRefineries(...refineries);
 
         		extension = Object.defineProperties<BaseExtension>(
                     { ...extension, refine: undefined } as any,
