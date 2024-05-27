@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { Refinery } from "../Refinery";
 
-describe("Refinery", function () 
+describe("Refinery Base", function () 
 {
     interface TestData {
         field: string;
@@ -22,12 +22,12 @@ describe("Refinery", function ()
     				field: immutableTestData.field.toUpperCase(),
     			}),
     		});
-    	expect(Object.keys(output)[0]).to.equal("testRefinery");
+    	expect(output.refineryName).to.equal("test");
     });
 
     it("should apply forge functions correctly", function () 
     {
-    	const { testRefinery } = Refinery.create("testRefinery", refineryDefinition)
+    	const testRefinery = Refinery.create("testRefinery", refineryDefinition)
     		.toRefine<TestData>()
     		.withForges({
     			forge1: ({ immutableTestData }) => ({
@@ -42,7 +42,7 @@ describe("Refinery", function ()
 
     it("should throw an error if a forge function modifies the immutable data", function () 
     {
-    	const { testRefinery } = Refinery.create("testRefinery", refineryDefinition)
+    	const testRefinery = Refinery.create("testRefinery", refineryDefinition)
     		.toRefine<TestData>()
     		.withForges({
     			forge1: ({ immutableTestData }) => 

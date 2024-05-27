@@ -4,16 +4,16 @@ export interface MockData {
     touched: boolean;
 }
 
-export const mockRefineryComplex = RefineryComplex.create().withRefineries({
-	mockRefinery: Refinery.create("mockRefinery", { noun: "mockData" })
+export const mockRefineryComplex = RefineryComplex.create().withRefineries(
+	Refinery.create("mockRefinery", { noun: "mockData" })
 		.toRefine<MockData>()
 		.withForges({
 			getOppositeOfTouched: ({ immutableMockData }) => 
 			{
 				return !immutableMockData.touched;
 			},
-		}).mockRefinery,
-});
+		}),
+);
 
 const mockEvolver = Evolver.create("mock", { noun: "mockData" }).toEvolve<MockData>().withMutators({
 	toggleTouch: ({ mutableMockData }) => 

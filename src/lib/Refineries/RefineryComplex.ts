@@ -1,13 +1,12 @@
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
-import { normalizeRefineryName } from "./Util/normalizeRefineryName";
 
 import type { Immutable } from "@Shared/String/makeImmutable";
 
-import type { RefineryInitializer } from "./Refinery";
+import type { Refinery } from "./Refinery";
 import type { ForgeDefs } from "./Types/RefineryTypes";
 import type { NormalizedRefineryName } from "./Util/normalizeRefineryName";
-import type { OneRefinery, RefineryComplexOutcome } from "@Refineries/Types/RefineryComplexTypes";
+import type { RefineriesRemapped } from "@Refineries/Types/RefineryComplexTypes";
 
 const log = getTheseusLogger("RefineryComplex");
 
@@ -19,7 +18,7 @@ const refine = <
     TData extends object,
     TParamNoun extends string,
     TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
-    TRefineries extends Record<string, RefineryInitializer<TData, TParamNoun, TForges>>,
+    TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
 >(
 		input: TData,
 	) => ({
@@ -30,27 +29,20 @@ const refine = <
      */
 		withRefineries: (refineries: TRefineries) => 
 		{
-			const keys = Object.keys(refineries) as (keyof TRefineries)[];
-
-			const result = keys.reduce(
-				(acc, key: string) => 
+			const result = refineries.reduce(
+				(acc, refinery) => 
 				{
-					const refinery = refineries[key];
-					const forges = refinery(input) as OneRefinery<
-                    TData,
-                    TParamNoun,
-                    TForges,
-                    TRefineries,
-                    typeof key
-                >;
-					const formattedRefineryName = normalizeRefineryName(key) as NormalizedRefineryName<string>;
+					const forgeSet = refinery(input);
 
-					(acc as Record<NormalizedRefineryName<string>, any>)[formattedRefineryName] = forges;
+					(acc as Record<NormalizedRefineryName<string>, any>)[refinery.refineryName] = forgeSet.getForges();
 
 					return acc;
 				},
-            {} as RefineryComplexOutcome<TData, TParamNoun, TForges, TRefineries>,
+            {} as RefineriesRemapped<TData, TParamNoun, TForges, TRefineries>,
 			);
+			log.verbose("Reduced refineries to", {
+				result,
+			});
 
 			return result;
 		},
@@ -60,9 +52,9 @@ const create = <TData extends object>() => ({
 	withRefineries: <
         TParamNoun extends string,
         TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
-        TRefineries extends Record<string, RefineryInitializer<TData, TParamNoun, TForges>>,
+		TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
     >(
-		refineries: TRefineries,
+		...refineries: TRefineries
 	): RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries> =>
 		innerWithRefineries<TData, TParamNoun, TForges, TRefineries>(refineries),
 });
@@ -71,7 +63,7 @@ const innerWithRefineries = <
     TData extends object,
     TParamNoun extends string,
     TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
-    TRefineries extends Record<string, RefineryInitializer<TData, TParamNoun, TForges>>,
+    TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
 >(
 		refineries: TRefineries,
 	) => 
@@ -102,7 +94,7 @@ export type RefineryComplexInstance<
     TData extends object,
     TParamNoun extends string,
     TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
-    TRefineries extends Record<string, RefineryInitializer<TData, TParamNoun, TForges>>,
+    TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
 > = {
-    refine: (data: TData) => RefineryComplexOutcome<TData, TParamNoun, TForges, TRefineries>;
+    refine: (data: TData) => RefineriesRemapped<TData, TParamNoun, TForges, TRefineries>;
 };
