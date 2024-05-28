@@ -73,7 +73,7 @@ export const RenderRefinery = Refinery.create("RenderRefinery", { noun: "GameSta
 
 ### Forges
 
-Forges are the heart of evolvers. They are functions which take in an immutable object and return a modified version of that object. To return any other type, use an evolver instead.
+Forges are functions which transform the refinery's immutable data object into a new type of data, which can be anything *except* the original data type. If you want to modify the original data, you should use an evolver (covered in [Part II](./part-ii--evolving-state.md)) instead.
 
 The first argument of a forge must always be the immutable data object. Subsequent arguments can be added at the developer's discretion, and only those will be required when calling the mutator functions. The immutable data cannot be modified, because it is frozen when the refinery is created.
 
@@ -103,5 +103,27 @@ export const RenderRefinery = Refinery.create("RenderRefinery", { noun: "GameSta
 			return board.reduce<string[]>(reducer, []).join("\r\n");
 		},
 	});
+
+
+// Usage
+const gameState = { board: [
+	[null, null, "X"], 
+	[null, "O", null], 
+	[null, "O", null]
+] };
+
+// Option 1: Calling the refinery instance directly
+const rendered = RenderRefinery(gameState).renderToString();
+
+// Option 2: Using the `refine` method
+const rendered = RenderRefinery.refine(gameState).renderToString();
+
+/**
+ * Should return:
+ * 
+ * ⬛⬛❌
+ * ⬛⭕⬛
+ * ⬛⭕⬛
+ */
 ```
 

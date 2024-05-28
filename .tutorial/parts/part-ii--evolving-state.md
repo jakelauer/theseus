@@ -180,7 +180,7 @@ avoid asynchronous race conditions.
 		onTurnTaken: async ({ mutableGameState }) => {
 			const result = await GameMetaEvolver.evolve(mutableGameState)
 				.via.asyncAddPlayer()
-				.via.asyncUpdateLastPlayer(mark)
+				.and.asyncUpdateLastPlayer(mark)
 				.and.asyncUpdateLastPlayedCoords(coords)
 				.resultAsync;
 

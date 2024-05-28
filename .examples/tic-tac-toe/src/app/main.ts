@@ -1,6 +1,6 @@
 import { getTheseusLogger } from "theseus-js";
-import "./set-log-level";
-import { GameShip } from "./game-ship/game-ship";
+import "../set-log-level";
+import { GameShip } from "../game-ship/game-ship";
 
 const observeLog = getTheseusLogger("Observe");
 
