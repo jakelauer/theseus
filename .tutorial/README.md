@@ -4,6 +4,8 @@
 
 ## Walkthrough 
 
+### [Part 0: FIRM Encapsulation, or "Why does Theseus exist?"](./parts/part-0--FIRM-encapsulation.md)
+
 ### [Part I: Defining State](./parts/part-i--defining-state.md)
 
 ### [Part II: Evolving State](./parts/part-ii--evolving-state.md)
