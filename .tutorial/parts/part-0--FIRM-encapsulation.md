@@ -6,23 +6,10 @@ I have a confession to make: I made up the term "FIRM" for this tutorial.
 
 It stands for:
 
-<style>
-	.initial {
-		font-size:larger;
-		font-weight:bold;
-		width:1.5rem;
-		text-align:center;
-		padding-right:2px;
-		margin:2px;
-		border:1px solid white;
-		display:inline-block;
-	}
-</style>
-
-- <span class="initial">F</span>luent
-- <span class="initial">I</span>mmutable
-- <span class="initial">R</span>eliable
-- <span class="initial">M</span>odular
+- <span style="font-size:larger; font-weight:bold; width:1.5rem; text-align:center; padding-right:2px; margin:2px; border:1px solid white; display:inline-block;">F</span>luent
+- <span style="font-size:larger; font-weight:bold; width:1.5rem; text-align:center; padding-right:2px; margin:2px; border:1px solid white; display:inline-block;">I</span>mmutable
+- <span style="font-size:larger; font-weight:bold; width:1.5rem; text-align:center; padding-right:2px; margin:2px; border:1px solid white; display:inline-block;">R</span>eliable
+- <span style="font-size:larger; font-weight:bold; width:1.5rem; text-align:center; padding-right:2px; margin:2px; border:1px solid white; display:inline-block;">M</span>odular
 
 The idea is to encapsulate the state of your application in a way that is easy to work with, easy to reason about, and easy to test. Theseus exists to help you achieve this goal.
 
