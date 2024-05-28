@@ -23,10 +23,13 @@ evolve in a controlled, predictable manner based on user interactions or interna
 
 All evolvers have 4 parts:
 
-### Name
+### Name & Noun
 
-Evolvers are always named, and Theseus tries to enforce this because it makes working with higher-order components like
-EvolverComplexes easy. When you create an evolver, you give it a name, and that determines the output:
+Evolvers are always named, which makes working with higher-order components like [EvolverComplexes](./extended/evolver-complex.md) easy. When you create an evolver, you give it a name, and that determines how it will be used when grouped with other evolvers.
+
+The `noun` for an evolver determines the name of the data argument passed to each `mutator`, for consistency. If you
+don't specify a `noun`, it defaults to `"input"`. Each `mutator`'s first argument will be an object of the evolver's
+data type, keyed by this noun, prefixed with `"mutable"` in camel-case.
 
 ```typescript
 /**
@@ -34,8 +37,24 @@ EvolverComplexes easy. When you create an evolver, you give it a name, and that 
  * value passed to Evolver.create()
  */
 
-export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver" //...
+export const MetaEvolver = Evolver.create("MetaEvolver", { noun: "gameState" })
+	// .toEvolve<GameState>()
+	// .withMutators({
+         updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => {
+    //         mutableGameState.lastPlayer = mark;
+    //         return mutableGameState;
+    //     },
+    //     updateLastPlayedCoords: ({ mutableGameState }, coords: [number, number]): GameState => {
+    //         mutableGameState.lastPlayedCoords = coords;
+    //         return mutableGameState;
+    //     },
+    //     iterateTurnCount: ({ mutableGameState }): GameState => {
+    //         mutableGameState.turns++;
+    //         return mutableGameState;
+    //     },
+	// });
 ```
+
 
 ### Mutable state
 
@@ -43,30 +62,23 @@ An evolver always mutates one type of state, and you must tell the evolver that 
 `.toEvolve()` method.
 
 ```typescript
-export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "gameState" })
+
+export const MetaEvolver = Evolver.create("GameMetaEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
-    .withMutators({
-		// ...
-```
-
-All mutators within the evolver must return this data type.
-
-### Noun
-
-The `noun` for an evolver determines the name of the data argument passed to each `mutator`, for consistency. If you
-don't specify a `noun`, it defaults to `"input"`. Each `mutator`'s first argument will be an object of the evolver's
-data type, keyed by this noun, prefixed with `"mutable"` in camel-case:
-
-```typescript
-export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "gameState" })
-    .toEvolve<GameState>()
-    .withMutators({
-        updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => {
-            mutableGameState.lastPlayer = mark;
-            return mutableGameState;
-        },
-        //... other mutators
-    });
+	// .withMutators({
+    //     updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => {
+    //         mutableGameState.lastPlayer = mark;
+    //         return mutableGameState;
+    //     },
+    //     updateLastPlayedCoords: ({ mutableGameState }, coords: [number, number]): GameState => {
+    //         mutableGameState.lastPlayedCoords = coords;
+    //         return mutableGameState;
+    //     },
+    //     iterateTurnCount: ({ mutableGameState }): GameState => {
+    //         mutableGameState.turns++;
+    //         return mutableGameState;
+    //     },
+	// });
 ```
 
 ### Mutators
@@ -80,7 +92,7 @@ The first argument of a mutator must always be the mutable data object. Subseque
 developer's discretion, and only those will be required when calling the mutator functions.
 
 ```typescript
-export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "gameState" })
+export const MetaEvolver = Evolver.create("GameMetaEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
         updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => {
@@ -187,6 +199,7 @@ avoid asynchronous race conditions.
 				.and.asyncUpdateLastPlayedCoords(coords)
 				.resultAsync
 				.then(result => {
+					
 					console.log(result);
 
 					return result;
@@ -212,7 +225,7 @@ import { GameMetaEvolver } from "./GameMetaEvolver";
 
 const log = getTheseusLogger("GameTurnEvolver");
 
-export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "gameState" })
+export const GameTurnEvolver = Evolver.create("GameTurnEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
         /**
@@ -222,7 +235,8 @@ export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "ga
         {
             log.major(`Game over! ${reason}`);
             mutableGameState.winner = reason === "winner" ? mutableGameState.lastPlayer : "stalemate";
-            return mutableGameState;
+            
+			return mutableGameState;
         },
         /**
 		 * Take the next turn at a random available square.
@@ -232,11 +246,11 @@ export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "ga
             const { turns, lastPlayer } = mutableGameState;
             log.major(`Taking turn #${turns}`);
 
-            const { getRandomAvailableCoords, getSquare } = GameBoardRefinery(mutableGameState);
+            const { getRandomAvailableSquare, getSquare } = SquaresRefinery(mutableGameState);
 
             // Determine the mark for the next player
             const mark = lastPlayer === "X" ? "O" : "X";
-            const coords = getRandomAvailableCoords();
+            const coords = getRandomAvailableSquare();
             if (!coords) 
             {
                 return GameTurnEvolver.mutate(mutableGameState).via.setWinner("stalemate");
@@ -273,14 +287,15 @@ This evolver manages the game board state.
 import { Evolver } from "theseus-js";
 import type { GameState, MarkType } from "../../state/GameState";
 
-export const { GameBoardEvolver } = Evolver.create("GameBoardEvolver", { noun: "gameState" })
+export const GameBoardEvolver = Evolver.create("GameBoardEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
         setMark: ({ mutableGameState }, coords: [number, number], mark: MarkType): GameState => 
         {
             const [row, col] = coords;
             mutableGameState.board[row][col] = mark;
-            return mutableGameState;
+            
+			return mutableGameState;
         },
     });
 
@@ -294,7 +309,7 @@ This evolver manages the game metadata.
 import { Evolver } from "theseus-js";
 import type { GameState, MarkType } from "../../state/GameState";
 
-export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "gameState" })
+export const GameMetaEvolver = Evolver.create("GameMetaEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
         /**
@@ -303,7 +318,8 @@ export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "ga
         updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => 
         {
             mutableGameState.lastPlayer = mark;
-            return mutableGameState;
+            
+			return mutableGameState;
         },
         /**
 		 * Update the last played coordinates.
@@ -311,7 +327,8 @@ export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "ga
         updateLastPlayedCoords: ({ mutableGameState }, coords: [number, number]): GameState => 
         {
             mutableGameState.lastPlayedCoords = coords;
-            return mutableGameState;
+            
+			return mutableGameState;
         },
         /**
 		 * Iterate the turn count.
@@ -319,7 +336,8 @@ export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "ga
         iterateTurnCount: ({ mutableGameState }): GameState => 
         {
             mutableGameState.turns++;
-            return mutableGameState;
+            
+			return mutableGameState;
         },
     });
 ```

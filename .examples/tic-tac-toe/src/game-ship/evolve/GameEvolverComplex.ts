@@ -1,11 +1,11 @@
 import { EvolverComplex } from "theseus-js";
 import type { GameState } from "../state/GameState";
-import { GameTurnEvolver } from "./evolvers/GameTurnEvolver";
-import { GameBoardEvolver } from "./evolvers/GameBoardEvolver";
-import { GameMetaEvolver } from "./evolvers/GameMetaEvolver";
+import { TurnEvolver } from "./evolvers/TurnEvolver";
+import { BoardEvolver } from "./evolvers/BoardEvolver";
+import { MetaEvolver } from "./evolvers/MetaEvolver";
 
 export const GameEvolverComplex = EvolverComplex.create<GameState>().withEvolvers(
-	GameTurnEvolver,
-	GameBoardEvolver,
-	GameMetaEvolver,
+	TurnEvolver,
+	BoardEvolver,
+	MetaEvolver,
 );

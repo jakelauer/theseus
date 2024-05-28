@@ -8,4 +8,4 @@
 
 ### [Part II: Evolving State](./parts/part-ii--evolving-state.md)
 
-
+### [Part III: Refining State](./parts/part-iii--refining-state.md)

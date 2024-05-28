@@ -1,8 +1,6 @@
-import { getTheseusLogger, setTheseusLogLevel } from "theseus-js";
-
+import { getTheseusLogger } from "theseus-js";
+import "./set-log-level";
 import { GameShip } from "./game-ship/game-ship";
-
-setTheseusLogLevel("major");
 
 const observeLog = getTheseusLogger("Observe");
 
@@ -21,32 +19,32 @@ GameShip.observe((state) =>
 			break;
 		default:
 			observeLog.major("Move detected! Taking next turn...");
-			GameShip.mutate.GameTurn.nextTurn();
+			GameShip.mutate.Turn.nextTurn();
 			break;
 	}
 }, false);
 
 const onWinner = () => 
 {
-	const foundTriple = GameShip.refine.GameOutcome.checkForTriples();
+	const foundTriple = GameShip.refine.Outcome.checkForTriples();
 	if (foundTriple) 
 	{
-		const { markType, tripleTypePlainEnglish } = GameShip.refine.GameOutcome.getTripleType(foundTriple);
+		const { markType, tripleTypePlainEnglish } = GameShip.refine.Outcome.getTripleType(foundTriple);
 		observeLog.major(`We have a winner! Three ${markType}s ${tripleTypePlainEnglish}!`);
 	}
 };
 
 const onGameUpdated = () => 
 {
-	const foundTriple = GameShip.refine.GameOutcome.checkForTriples();
+	const foundTriple = GameShip.refine.Outcome.checkForTriples();
 	if (foundTriple) 
 	{
-		GameShip.evolve.GameTurn.setWinner("winner");
+		GameShip.evolve.Turn.setWinner("winner");
 	}
 
-	const rendered = GameShip.refine.GameBoard.renderToString();
+	const rendered = GameShip.refine.Render.renderToString();
 
 	observeLog.info("Board state\r\n%s\r\n", rendered);
 };
 
-GameShip.mutate.GameTurn.nextTurn();
+GameShip.mutate.Turn.nextTurn();

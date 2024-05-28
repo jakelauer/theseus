@@ -1,7 +1,7 @@
 import { Evolver } from "theseus-js";
 import type { GameState, MarkType } from "../../state/GameState";
 
-export const GameBoardEvolver = Evolver.create("GameBoard", { noun: "gameState" })
+export const BoardEvolver = Evolver.create("BoardEvolver", { noun: "gameState" })
 	.toEvolve<GameState>()
 	.withMutators({
 		/**
