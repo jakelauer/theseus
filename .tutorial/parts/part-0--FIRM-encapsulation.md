@@ -207,7 +207,6 @@ type SurfaceType = "tile" | "carpet" | "shelf" | "window" | "counter";
 type RoomType = "kitchen" | "livingRoom" | "bedroom" | "bathroom";
 type RoomState = {
 	type: RoomType;
-	surfacesToClean: SurfaceType[];
 	cleanedSurfaces: string[];
 };
 type HouseState = {
@@ -333,23 +332,6 @@ const BathroomEvolver = Evolver.create("BathroomEvolver", { noun: "room" })
 ### Execute 
 
 ```typescript
-
-// Room Evolver Getter
-function getEvolverForRoom(room: RoomState): any {
-	switch (room.type) {
-		case "kitchen":
-			return KitchenEvolver;
-		case "livingRoom":
-			return LivingRoomEvolver;
-		case "bedroom":
-			return BedroomEvolver;
-		case "bathroom":
-			return BathroomEvolver;
-		default:
-			return null;
-	}
-}
-
 // House Evolver
 const HouseEvolver = Evolver.create("HouseEvolver", { noun: "house" })
 	.toEvolve<HouseState>()
