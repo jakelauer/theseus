@@ -11,3 +11,7 @@
 ### [Part II: Evolving State](./parts/part-ii--evolving-state.md)
 
 ### [Part III: Refining State](./parts/part-iii--refining-state.md)
+
+### [Part IV: EvolverComplex & RefineryComplex](./parts/part-iv-evolvercomplex-refinerycomplex.md)
+
+### [Part V: Theseus](./parts/part-v--theseus.md)
