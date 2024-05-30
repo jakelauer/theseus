@@ -1,3 +1,17 @@
+# [4.0.0](https://github.com/jakelauer/theseus-js/compare/v3.0.0...v4.0.0) (2024-05-30)
+
+
+### Features
+
+* **immutability:** immutability with immer ([#16](https://github.com/jakelauer/theseus-js/issues/16)) ([31cdbd9](https://github.com/jakelauer/theseus-js/commit/31cdbd99ea5775685f96614a78ecefe99f52748b))
+
+
+### BREAKING CHANGES
+
+* **immutability:** No longer mutable anywhere, no more requirements for naming
+
+Co-authored-by: Jake Lauer <jakelauer@Jake-MacBook-M2-2.local>
+
 # [3.0.0](https://github.com/jakelauer/theseus-js/compare/v2.0.0...v3.0.0) (2024-05-27)
 
 
