@@ -13,8 +13,6 @@ import type { Refinery } from "@Refineries/Refinery";
 import type { RefineryComplexInstance } from "@Refineries/RefineryComplex";
 import type { ForgeDefs } from "@Refineries/Types";
 import type { RefineriesRemapped } from "@Refineries/Types/RefineryComplexTypes";
-import type { Immutable } from "@Shared/String/makeImmutable";
-import type { Mutable } from "@Shared/String/makeMutable";
 import type { ITheseus, TheseusParams } from "@Types/Theseus";
 const log = getTheseusLogger("TheseusBuilder");
 
@@ -59,9 +57,9 @@ const extendTheseusWith = <TTheseus extends ITheseus<any>, TExtension extends ob
 export default <TData extends object>(data: TData) => ({
 	maintainWith: <
         TParamName extends string,
-        TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-        TEvolvers extends EvolverInstance<TData, string, Mutable<TParamName>, TMutators>[],
-        TForges extends ForgeDefs<TData, Immutable<TParamName>>,
+        TMutators extends MutatorDefs<TData, TParamName>,
+        TEvolvers extends EvolverInstance<TData, string, TParamName, TMutators>[],
+        TForges extends ForgeDefs<TData, TParamName>,
 		TRefineries extends Refinery<TData, string, TParamName, TForges>[],
         TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
     >(
@@ -105,7 +103,7 @@ export default <TData extends object>(data: TData) => ({
 
         	// set theseus id for each evolver, so that we can track which theseus is being used
         	Object.values(evolverComplex.__evolvers__).forEach(
-        		(evolver: EvolverInstance<TData, string,  Mutable<TParamName>, TMutators>) =>
+        		(evolver: EvolverInstance<TData, string,  TParamName, TMutators>) =>
         			evolver.__setTheseusId(innerInstance.__uuid),
         	);
 

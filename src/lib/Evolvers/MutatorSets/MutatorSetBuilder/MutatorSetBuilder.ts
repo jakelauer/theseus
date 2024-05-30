@@ -3,15 +3,15 @@ import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 import { Theseus } from "@/Theseus";
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
-import type { Mutable } from "@Shared/String/makeMutable";
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
+import { createDraft, finishDraft, type Draft } from "immer";
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
  * adding mutator functions to the evolver and executing these functions to mutate the evolver's state.
  *
  * @template TData The type of data the evolver operates on.
- * @template TParamName The type representing the names of mutable parameters within the evolver data.
+ * @template TParamName The type representing the names of the evolver data.
  * @template TMutators The type representing the definitions of mutators applicable to the evolver data.
  */
 
@@ -19,12 +19,12 @@ const log = getTheseusLogger("MutatorSetBuilder");
 
 export class MutatorSetBuilder<
     TData extends object,
-    TParamName extends Mutable<string>,
+    TParamName extends string,
     TMutators extends MutatorDefs<TData, TParamName>,
 > 
 {
 	protected __theseusId?: string;
-	protected mutableData: { [key in TParamName]: TData };
+	protected data: Record<TParamName, TData>;
 	public fixedMutators: TMutators = {} as TMutators;
 
 	constructor(
@@ -34,7 +34,7 @@ export class MutatorSetBuilder<
         observationId?: string,
 	) 
 	{
-		this.mutableData = this.inputToObject(inputData);
+		this.data = this.inputToObject(inputData);
 		this.extendSelfWithMutators(mutators);
 		this.__theseusId = observationId;
 	}
@@ -44,9 +44,9 @@ export class MutatorSetBuilder<
 		this.__theseusId = id;
 	}
 
-	public setData(data: TData) 
+	public replaceData(data: TData) 
 	{
-		this.mutableData = this.inputToObject(data);
+		this.data = this.inputToObject(data);
 	}
 
 	protected getSelfExtensionPoint(): any 
@@ -111,17 +111,20 @@ export class MutatorSetBuilder<
 		Object.assign(context, {
 			[selfPath]: (...args: any[]) => 
 			{
-
+				const draft = createDraft(this.data);
+				
 				let funcResult: SortaPromise<TData>;
 				try 
 				{
-					funcResult = mutator(this.mutableData, ...args);
+					funcResult = mutator(draft, ...args);
 				}
 				catch (e) 
 				{
 					log.error(`Error in mutator function "${selfPath}"`, e);
 					throw e;
 				}
+
+				log.debug(`Result of mutator "${selfPath}"`, funcResult);
 
 				if (funcResult === undefined) 
 				{
@@ -145,16 +148,35 @@ export class MutatorSetBuilder<
 						throw e;
 					});
 
-				return funcResult;
+
+				return this.extractDataFromDraftResult(draft, funcResult);
 			},
 		});
 	}
+
+	protected extractDataFromDraftResult(draft: Draft<Record<TParamName, TData>>, funcResult: SortaPromise<TData>)
+	{
+		const generateOutcome = (data: TData) => 
+		{
+			// @ts-expect-error - TS doesn't understand that the draft can be indexed
+			draft[this.argName] = data;
+			const finishedDraft = finishDraft(draft) as Record<TParamName, TData>;
+			return finishedDraft[this.argName];
+		};
+
+		return funcResult instanceof Promise 
+			? funcResult.then((result: TData) => 
+			{
+				return generateOutcome(result);
+			}) 
+			: generateOutcome(funcResult);
+	};
 
 	/**
      * Transforms the input data into the structured format expected by the mutators, keyed by the parameter
      * name.
      */
-	protected inputToObject<_TData, _TParamName extends Mutable<string>>(
+	protected inputToObject<_TData, _TParamName extends string>(
 		input: _TData,
 	): { [key in _TParamName]: _TData } 
 	{
@@ -168,13 +190,13 @@ export class MutatorSetBuilder<
      * and mutators. This method facilitates the easy setup of a MutatorSet with a specific set of mutators.
      *
      * @param data The initial state data to use.
-     * @param argName The name of the argument representing the mutable part of the state.
+     * @param argName The name of the argument representing the state.
      * @param mutators The definitions of mutators to apply to the state.
      * @returns A new instance of MutatorSet configured with the provided parameters.
      */
 	public static create<
         TData extends object,
-        TParamName extends Mutable<string>,
+        TParamName extends string,
         TMutators extends MutatorDefs<TData, TParamName>,
     >(data: TData, argName: TParamName, mutators: TMutators, observationId?: string) 
 	{
@@ -189,7 +211,7 @@ export class MutatorSetBuilder<
      */
 	public static castToMutators<
         TData extends object,
-        TParamName extends Mutable<string>,
+        TParamName extends string,
         TMutators extends MutatorDefs<TData, TParamName>,
     >(
 		chainableMutatorSet: MutatorSetBuilder<TData, TParamName, TMutators>,

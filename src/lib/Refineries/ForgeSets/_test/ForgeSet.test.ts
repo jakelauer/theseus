@@ -6,7 +6,7 @@ describe("ForgeSet", function ()
 {
 	it("createForgeSet", function () 
 	{
-		const forgeSet = ForgeSet.create({}, "immutableTest", {
+		const forgeSet = ForgeSet.create({}, "test", {
 			foo: () => {},
 			bar: () => {},
 		});

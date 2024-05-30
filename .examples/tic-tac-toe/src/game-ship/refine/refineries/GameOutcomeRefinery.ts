@@ -15,10 +15,10 @@ const log = getTheseusLogger("GameOutcomeRefinery");
 export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { noun: "GameState" })
 	.toRefine<GameState>()
 	.withForges({
-		checkTriple: ({ immutableGameState }, triple: Triple): boolean => 
+		checkTriple: ({ gameState }, triple: Triple): boolean => 
 		{
 			const [fromRow, fromCol] = triple.from;
-			const markTypeAtCoords = GameBoardRefinery(immutableGameState).getSquare([fromRow, fromCol]);
+			const markTypeAtCoords = GameBoardRefinery(gameState).getSquare([fromRow, fromCol]);
 
 			// Immediately return if the first square is empty or undefined
 			if (!markTypeAtCoords) return false;
@@ -42,7 +42,7 @@ export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { 
 			for (let i = 0; i < 3; i++) 
 			{
 				const coordinate: [number, number] = [fromRow + offset[0] * i, fromCol + offset[1] * i];
-				const markType = immutableGameState.board[coordinate[0]][coordinate[1]];
+				const markType = gameState.board[coordinate[0]][coordinate[1]];
 				if (markType !== markTypeAtCoords) 
 				{
 					tripleIsComplete = false; // Set to false if any square doesn't match
@@ -52,7 +52,7 @@ export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { 
 
 			return tripleIsComplete;
 		},
-		checkForTriples: ({ immutableGameState }): Triple | undefined => 
+		checkForTriples: ({ gameState }): Triple | undefined => 
 		{
 			log.info("Checking for triples");
 			const triples: Triple[] = [];
@@ -65,7 +65,7 @@ export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { 
 			triples.push({ type: "diagonalRL", from: [0, 2], to: [2, 0] });
 			for (const triple of triples) 
 			{
-				const winner = GameOutcomeRefinery(immutableGameState).checkTriple(triple);
+				const winner = GameOutcomeRefinery(gameState).checkTriple(triple);
 				if (winner) 
 				{
 					return triple;
@@ -76,9 +76,9 @@ export const { GameOutcomeRefinery } = Refinery.create("GameOutcomeRefinery", { 
 
 			return undefined;
 		},
-		getTripleType: ({ immutableGameState }, triple: Triple) => 
+		getTripleType: ({ gameState }, triple: Triple) => 
 		{
-			const markType = immutableGameState.board[triple.from[0]][triple.from[1]];
+			const markType = gameState.board[triple.from[0]][triple.from[1]];
 			const tripleTypePlainEnglish =
                 triple.type === "row" ? "across"
                 	: triple.type === "column" ? "down"

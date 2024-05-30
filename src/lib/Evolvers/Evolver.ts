@@ -1,8 +1,5 @@
 import { ChainableMutatorSetBuilder, MutatorSetBuilder } from "@Evolvers/MutatorSets";
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import { makeMutable } from "@Shared/String/makeMutable";
-
-import type { Mutable } from "@Shared/String/makeMutable";
 
 import type {
 	EvolveObject,
@@ -23,22 +20,22 @@ export class Evolver<
     TData extends object,
     TEvolverName extends string,
     TParamName extends string,
-    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
+    TMutators extends MutatorDefs<TData, TParamName>,
 > 
 {
 	#observationId?: string;
 	public readonly evolverName: NormalizedEvolverName<TEvolverName>;
-	protected readonly mutableArgName: Mutable<TParamName>;
+	protected readonly paramName: TParamName;
 	protected readonly mutators: TMutators;
 
-	private cachedMutatorSet: FinalMutators<TData, Mutable<TParamName>, TMutators> | undefined;
-	private cachedChainableMutatorSet: ChainableMutators<TData, Mutable<TParamName>, TMutators> | undefined;
+	private cachedMutatorSet: FinalMutators<TData, TParamName, TMutators> | undefined;
+	private cachedChainableMutatorSet: ChainableMutators<TData, TParamName, TMutators> | undefined;
 
 	/**
      * This only exists to provide outside access to the type parameters of evolvers nested within an
      * EvolverComplex. It doesn't need a value.
      */
-	public readonly __type__access__: TypeAccess<TData, TEvolverName, Mutable<TParamName>, TMutators>;
+	public readonly __type__access__: TypeAccess<TData, TEvolverName, TParamName, TMutators>;
 
 	/**
      * Constructor for Evolver. Initializes the evolver with a name, set of mutators, and optional
@@ -47,10 +44,9 @@ export class Evolver<
 	protected constructor(name: TEvolverName, mutators: TMutators, options?: EvolverOptions<TParamName>) 
 	{
 		const normalizedName = this.normalizeName(name);
-		const mutableDataNoun: TParamName = options?.noun ?? ("input" as TParamName);
+		this.paramName = options?.noun ?? ("input" as TParamName);
 
 		this.evolverName = normalizedName;
-		this.mutableArgName = makeMutable(mutableDataNoun);
 
 		this.assertValidMutators(mutators);
 		this.mutators = mutators;
@@ -112,9 +108,9 @@ export class Evolver<
 	{
 		const mutatorSet =
             this.cachedMutatorSet ??
-            MutatorSetBuilder.create<TData, Mutable<TParamName>, TMutators>(
+            MutatorSetBuilder.create<TData, TParamName, TMutators>(
             	input,
-            	this.mutableArgName,
+            	this.paramName,
             	this.mutators,
             	this.#observationId,
             );
@@ -124,11 +120,11 @@ export class Evolver<
 			this.cachedMutatorSet = mutatorSet;
 		}
 
-		(mutatorSet as MutatorSetBuilder<any, any, any>).setData(input);
+		(mutatorSet as MutatorSetBuilder<any, any, any>).replaceData(input);
 
 		const mutatorSetGetter = () => mutatorSet;
 		const result = Object.defineProperties<
-            MutateObject<TData, TEvolverName, Mutable<TParamName>, TMutators>
+            MutateObject<TData, TEvolverName, TParamName, TMutators>
         >({} as any, {
         	getMutators: {
         		get: () => mutatorSetGetter,
@@ -150,9 +146,9 @@ export class Evolver<
 	{
 		const mutatorSet =
             this.cachedChainableMutatorSet ??
-            ChainableMutatorSetBuilder.createChainable<TData, Mutable<TParamName>, TMutators>(
+            ChainableMutatorSetBuilder.createChainable<TData, TParamName, TMutators>(
             	input,
-            	this.mutableArgName,
+            	this.paramName,
             	this.mutators,
             );
 
@@ -161,12 +157,12 @@ export class Evolver<
 			this.cachedChainableMutatorSet = mutatorSet;
 		}
 
-		(mutatorSet as ChainableMutatorSetBuilder<any, any, any>).setData(input);
+		(mutatorSet as ChainableMutatorSetBuilder<any, any, any>).replaceData(input);
 
 		const mutatorSetGetter = () => mutatorSet;
 
 		const result = Object.defineProperties<
-            EvolveObject<TData, TEvolverName, Mutable<TParamName>, TMutators>
+            EvolveObject<TData, TEvolverName, TParamName, TMutators>
         >({} as any, {
         	getMutators: {
         		get: () => mutatorSetGetter,
@@ -199,7 +195,7 @@ export class Evolver<
 		options?: EvolverOptions<_TParamName>,
 	) => ({
 		toEvolve: <_TData extends object>() => ({
-			withMutators: <_TMutators extends MutatorDefs<_TData, Mutable<_TParamName>>>(
+			withMutators: <_TMutators extends MutatorDefs<_TData, _TParamName>>(
 				mutators: _TMutators,
 			) => 
 			{

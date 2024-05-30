@@ -1,7 +1,6 @@
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 
-import type { Mutable } from "@Shared/String/makeMutable";
 
 import type { EvolverInstance } from "./Types/EvolverTypes";
 import type { MutatorDefs } from "./Types/MutatorTypes";
@@ -12,7 +11,7 @@ export const generateEvolveMethods = <
     TData extends object,
     TIsMacro extends boolean,
     TParamName extends string,
-    TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, any>[],
+    TEvolvers extends EvolverInstance<TData, string,  TParamName, any>[],
 >(
 		evolvers: TEvolvers,
 		input: TData,
@@ -41,8 +40,8 @@ export const generateEvolveMethods = <
 
 export const evolve = <
     TData extends object,
-    TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, TMutators>[],
-    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
+    TEvolvers extends EvolverInstance<TData, string,  TParamName, TMutators>[],
+    TMutators extends MutatorDefs<TData, TParamName>,
     TParamName extends string,
 >(
 		input: TData,
@@ -59,8 +58,8 @@ export const evolve = <
 
 const mutate = <
     TData extends object,
-    TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, TMutators>[],
-    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
+    TEvolvers extends EvolverInstance<TData, string,  TParamName, TMutators>[],
+    TMutators extends MutatorDefs<TData, TParamName>,
     TParamName extends string,
 >(
 		input: TData,
@@ -77,7 +76,7 @@ const mutate = <
 
 export const create = <TData extends object>() => ({
 	withEvolvers: <
-        TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, any>[],
+        TEvolvers extends EvolverInstance<TData, string,  TParamName, any>[],
         TParamName extends string,
     >(
 		...evolvers: TEvolvers
@@ -127,8 +126,8 @@ export class EvolverComplex
 export type EvolverComplexInstance<
     TData extends object,
     TParamName extends string,
-    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-    TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, TMutators>[],
+    TMutators extends MutatorDefs<TData, TParamName>,
+    TEvolvers extends EvolverInstance<TData, string,  TParamName, TMutators>[],
 > = {
     __evolvers__: TEvolvers;
     mutate: (data: TData) => MutatorsFormatted<TData, TParamName, TEvolvers>;

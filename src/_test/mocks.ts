@@ -8,19 +8,19 @@ export const mockRefineryComplex = RefineryComplex.create().withRefineries(
 	Refinery.create("mockRefinery", { noun: "mockData" })
 		.toRefine<MockData>()
 		.withForges({
-			getOppositeOfTouched: ({ immutableMockData }) => 
+			getOppositeOfTouched: ({ mockData }) => 
 			{
-				return !immutableMockData.touched;
+				return !mockData.touched;
 			},
 		}),
 );
 
 const mockEvolver = Evolver.create("mock", { noun: "mockData" }).toEvolve<MockData>().withMutators({
-	toggleTouch: ({ mutableMockData }) => 
+	toggleTouch: ({ mockData }) => 
 	{
-		mutableMockData.touched = !mutableMockData.touched;
+		mockData.touched = !mockData.touched;
 
-		return mutableMockData;
+		return mockData;
 	},
 });
 

@@ -13,16 +13,16 @@ describe("Evolvers", () =>
     const testEvolver = Evolver.create("testEvolver")
     	.toEvolve<TestData>()
     	.withMutators({
-    		increment: ({ mutableInput }) => ({ value: mutableInput.value + 1 }),
-    		decrement: ({ mutableInput }) => ({ value: mutableInput.value - 1 }),
+    		increment: ({ input }) => ({ value: input.value + 1 }),
+    		decrement: ({ input }) => ({ value: input.value - 1 }),
     	});
 
     const preMutatorTestEvolver = Evolver.create("testEvolver").toEvolve<TestData>();
     type MutatorType = Parameters<(typeof preMutatorTestEvolver)["withMutators"]>[0];
 
     const testMutators = {
-    	increment: ({ mutableInput }) => ({ value: mutableInput.value + 1 }),
-    	decrement: ({ mutableInput }) => ({ value: mutableInput.value - 1 }),
+    	increment: ({ input }) => ({ value: input.value + 1 }),
+    	decrement: ({ input }) => ({ value: input.value - 1 }),
     } satisfies MutatorType;
 
     describe("Factory Method and Initialization", () => 
@@ -86,7 +86,7 @@ describe("Evolvers", () =>
         		const testEvolver = Evolver.create("testEvolver")
         			.toEvolve<TestData>()
         			.withMutators({
-        				increment: ({ mutableInput }, by: number) => ({ value: mutableInput.value + by }),
+        				increment: ({ input }, by: number) => ({ value: input.value + by }),
         			});
 
         		const initialData = { value: 1 };
@@ -105,9 +105,9 @@ describe("Evolvers", () =>
         		expect(reEvolvedData.value).to.equal(4); // The new evolved data should be 3
 
         		// Directly edit the evolved data manually
-        		evolvedData.value = 5;
-        		expect(evolvedData.value).to.equal(5); // The evolved data should be 5 after manual editing
-        		expect(reEvolvedData.value).to.equal(4); // The new evolved data should remain 3
+        		;
+        		expect(() => {evolvedData.value = 5;}).to.throw(); // The evolved data should be immutable
+        		expect(reEvolvedData.value).to.equal(4); // The new evolved data should remain unchanged
         	});
         });
 
@@ -118,7 +118,7 @@ describe("Evolvers", () =>
         		const stringEvolver = Evolver.create("string")
         			.toEvolve<AnotherTestData>()
         			.withMutators({
-        				rename: ({ mutableInput }) => ({ name: `New ${mutableInput.name}` }),
+        				rename: ({ input }) => ({ name: `New ${input.name}` }),
         			});
 
         		expect(stringEvolver).to.be.an.instanceof(Evolver);
@@ -135,8 +135,8 @@ describe("Evolvers", () =>
         		const evolver = Evolver.create("async")
         			.toEvolve<AnotherTestData>()
         			.withMutators({
-        				asyncIncrement: async ({ mutableInput }) => ({
-        					name: mutableInput.name + "1",
+        				asyncIncrement: async ({ input }) => ({
+        					name: input.name + "1",
         				}),
         			});
 
@@ -152,47 +152,47 @@ describe("Evolvers", () =>
         		const AsyncEvolver = Evolver.create("async")
         			.toEvolve<AnotherTestData>()
         			.withMutators({
-        				asyncMakeNameUpperCase: async ({ mutableInput }) => 
+        				asyncMakeNameUpperCase: async ({ input }) => 
         				{
         					const result = await new Promise<AnotherTestData>((resolve) => 
         					{
         						setTimeout(() => 
         						{
-        							mutableInput.name = mutableInput.name.toUpperCase();
-        							resolve(mutableInput);
+        							input.name = input.name.toUpperCase();
+        							resolve(input);
         						}, 100);
         					});
 
         					return result;
         				},
-        				asyncMakeNameLowerCase: async ({ mutableInput }) => 
+        				asyncMakeNameLowerCase: async ({ input }) => 
         				{
         					const result = await new Promise<AnotherTestData>((resolve) => 
         					{
         						setTimeout(() => 
         						{
-        							mutableInput.name = mutableInput.name.toLowerCase();
-        							resolve(mutableInput);
+        							input.name = input.name.toLowerCase();
+        							resolve(input);
         						}, 100);
         					});
 
         					return result;
         				},
-        				asyncReverseName: async ({ mutableInput }) => 
+        				asyncReverseName: async ({ input }) => 
         				{
         					const result = await new Promise<AnotherTestData>((resolve) => 
         					{
         						setTimeout(() => 
         						{
-        							mutableInput.name = mutableInput.name.split("").reverse().join("");
-        							resolve(mutableInput);
+        							input.name = input.name.split("").reverse().join("");
+        							resolve(input);
         						}, 100);
         					});
 
         					return result;
         				},
-        				syncReplaceVowels: ({ mutableInput }) => ({
-        					name: mutableInput.name.replace(/[aeiou]/gi, "*"),
+        				syncReplaceVowels: ({ input }) => ({
+        					name: input.name.replace(/[aeiou]/gi, "*"),
         				}),
         			});
 

@@ -1,4 +1,3 @@
-import type { Mutable } from "@Shared/String/makeMutable";
 import type { FuncMinusFirstArg } from "@Types/Modifiers";
 import type { SortaPromise } from "./EvolverTypes";
 
@@ -10,9 +9,9 @@ import type { SortaPromise } from "./EvolverTypes";
  */
 export type Mutator<
     TData extends object,
-    TParamName extends Mutable<string>,
+    TParamName extends string,
     TReturnData extends SortaPromise<TData>,
-> = (input: MutableData<TData, TParamName>, ...args: any[]) => TReturnData;
+> = (input: ParamNameData<TData, TParamName>, ...args: any[]) => TReturnData;
 
 /**
  * Matches the signature of a mutator function, without requiring specific arguments. This is useful for
@@ -23,12 +22,12 @@ export type GenericMutator<TData extends object, TReturnData extends SortaPromis
     ...args: any[]
 ) => TReturnData;
 
-export type MutableData<TData extends object, TParamName extends Mutable<string>> = {
+export type ParamNameData<TData extends object, TParamName extends string> = {
     [key in TParamName]: TData;
 };
 
 /** Represents a collection of definitions for mutators applicable to a piece of evolver data. */
-export type MutatorDefs<TData extends object, TParamName extends Mutable<string>> = {
+export type MutatorDefs<TData extends object, TParamName extends string> = {
     [key: string]: MutatorDefChild<TData, TParamName>;
 };
 
@@ -36,7 +35,7 @@ export type MutatorDefs<TData extends object, TParamName extends Mutable<string>
  * A union type that can represent either a single mutator function or a nested collection of mutator
  * definitions. This allows for the recursive definition of mutators, supporting complex, nested mutations.
  */
-export type MutatorDefChild<TData extends object, TParamName extends Mutable<string>> =
+export type MutatorDefChild<TData extends object, TParamName extends string> =
     | Mutator<TData, TParamName, SortaPromise<TData>>
     | MutatorDefs<TData, TParamName>;
 
@@ -46,7 +45,7 @@ export type MutatorDefChild<TData extends object, TParamName extends Mutable<str
  */
 export type MutatorDict<
     TData extends object,
-    TParamName extends Mutable<string>,
+    TParamName extends string,
     TDict extends MutatorDefs<TData, TParamName>,
 > = {
     [K in keyof TDict]: TDict[K] extends (...args: any) => any ?

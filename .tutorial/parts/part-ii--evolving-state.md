@@ -7,7 +7,6 @@ evolve in a controlled, predictable manner based on user interactions or interna
 ## Table of Contents
 - [Building an Evolver](#building-an-evolver)
 	- [Name](#name)
-	- [Mutable state](#mutable-state)
 	- [Noun](#noun)
 	- [Mutators](#mutators)
 - [Using Evolvers](#using-evolvers)
@@ -37,33 +36,19 @@ EvolverComplexes easy. When you create an evolver, you give it a name, and that 
 export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver" //...
 ```
 
-### Mutable state
-
-An evolver always mutates one type of state, and you must tell the evolver that type when you create it, using the
-`.toEvolve()` method.
-
-```typescript
-export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "gameState" })
-    .toEvolve<GameState>()
-    .withMutators({
-		// ...
-```
-
-All mutators within the evolver must return this data type.
-
 ### Noun
 
 The `noun` for an evolver determines the name of the data argument passed to each `mutator`, for consistency. If you
 don't specify a `noun`, it defaults to `"input"`. Each `mutator`'s first argument will be an object of the evolver's
-data type, keyed by this noun, prefixed with `"mutable"` in camel-case:
+data type, keyed by this noun.
 
 ```typescript
 export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
-        updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => {
-            mutableGameState.lastPlayer = mark;
-            return mutableGameState;
+        updateLastPlayer: ({ gameState }, mark: MarkType): GameState => {
+            gameState.lastPlayer = mark;
+            return gameState;
         },
         //... other mutators
     });
@@ -71,29 +56,31 @@ export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "ga
 
 ### Mutators
 
-Mutators are the heart of evolvers. They are functions which take in a mutable object and return a modified version of
+Mutators are the heart of evolvers. They are functions which take in an object and return a modified version of
 that object. To return any other type, use a `Refinery`.
 
 Mutators can be synchronous or asynchronous. All mutations happen in a queued fashion, and can be chained.
 
-The first argument of a mutator must always be the mutable data object. Subsequent arguments can be added at the
+The first argument of a mutator must always be the data object. Subsequent arguments can be added at the
 developer's discretion, and only those will be required when calling the mutator functions.
+
+Despite the name, the original data remains immutable. The mutator functions operate on a draft copy of the data via [immer](https://immerjs.github.io/immer/docs/introduction).
 
 ```typescript
 export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
-        updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => {
-            mutableGameState.lastPlayer = mark;
-            return mutableGameState;
+        updateLastPlayer: ({ gameState }, mark: MarkType): GameState => {
+            gameState.lastPlayer = mark;
+            return gameState;
         },
-        updateLastPlayedCoords: ({ mutableGameState }, coords: [number, number]): GameState => {
-            mutableGameState.lastPlayedCoords = coords;
-            return mutableGameState;
+        updateLastPlayedCoords: ({ gameState }, coords: [number, number]): GameState => {
+            gameState.lastPlayedCoords = coords;
+            return gameState;
         },
-        iterateTurnCount: ({ mutableGameState }): GameState => {
-            mutableGameState.turns++;
-            return mutableGameState;
+        iterateTurnCount: ({ gameState }): GameState => {
+            gameState.turns++;
+            return gameState;
         },
     });
 
@@ -117,7 +104,7 @@ Mutations cannot be chained, and always output the resultant data directly.
 // No more viable moves are available
 const onMoveUnavailable = () => {
     // gameOver() returns the state because we used mutate()
-    return GameTurnEvolver.mutate(mutableGameState).via.gameOver("stalemate");
+    return GameTurnEvolver.mutate(gameState).via.gameOver("stalemate");
 };
 ```
 
@@ -143,13 +130,13 @@ because the data being evolved is mutable.
 ```typescript
 	// ...inside an evolver
 	.withMutators({
-		onTurnTaken: ({ mutableGameState }) => {
-			GameMetaEvolver.evolve(mutableGameState)
+		onTurnTaken: ({ gameState }) => {
+			GameMetaEvolver.evolve(gameState)
 				.via.updateLastPlayer(mark)
 				.and.updateLastPlayedCoords(coords);
 
-			// mutableGameState has been modified via the evolver
-			return mutableGameState;
+			// gameState has been modified via the evolver
+			return gameState;
 		},
 	});
 ```
@@ -165,8 +152,8 @@ avoid asynchronous race conditions.
 ```typescript
 	// Async/await
 	.withMutators({
-		onTurnTaken: async ({ mutableGameState }) => {
-			const result = await GameMetaEvolver.evolve(mutableGameState)
+		onTurnTaken: async ({ gameState }) => {
+			const result = await GameMetaEvolver.evolve(gameState)
 				.via.asyncAddPlayer()
 				.via.asyncUpdateLastPlayer(mark)
 				.and.asyncUpdateLastPlayedCoords(coords)
@@ -180,8 +167,8 @@ avoid asynchronous race conditions.
 
 	// Promise
 	.withMutators({
-		onTurnTaken: async ({ mutableGameState }) => {
-			GameMetaEvolver.evolve(mutableGameState)
+		onTurnTaken: async ({ gameState }) => {
+			GameMetaEvolver.evolve(gameState)
 				.via.asyncAddPlayer()
 				.via.asyncUpdateLastPlayer(mark)
 				.and.asyncUpdateLastPlayedCoords(coords)
@@ -218,28 +205,28 @@ export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "ga
         /**
 		 * Set the winner of the game.
 		 */
-        setWinner: ({ mutableGameState }, reason: "stalemate" | "winner") => 
+        setWinner: ({ gameState }, reason: "stalemate" | "winner") => 
         {
             log.major(`Game over! ${reason}`);
-            mutableGameState.winner = reason === "winner" ? mutableGameState.lastPlayer : "stalemate";
-            return mutableGameState;
+            gameState.winner = reason === "winner" ? gameState.lastPlayer : "stalemate";
+            return gameState;
         },
         /**
 		 * Take the next turn at a random available square.
 		 */
-        nextTurn: ({ mutableGameState }): GameState => 
+        nextTurn: ({ gameState }): GameState => 
         {
-            const { turns, lastPlayer } = mutableGameState;
+            const { turns, lastPlayer } = gameState;
             log.major(`Taking turn #${turns}`);
 
-            const { getRandomAvailableCoords, getSquare } = GameBoardRefinery(mutableGameState);
+            const { getRandomAvailableCoords, getSquare } = GameBoardRefinery(gameState);
 
             // Determine the mark for the next player
             const mark = lastPlayer === "X" ? "O" : "X";
             const coords = getRandomAvailableCoords();
             if (!coords) 
             {
-                return GameTurnEvolver.mutate(mutableGameState).via.setWinner("stalemate");
+                return GameTurnEvolver.mutate(gameState).via.setWinner("stalemate");
             }
 
             // Check if the square is available
@@ -250,16 +237,16 @@ export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "ga
             }
 
             // Set the mark on the board
-            GameBoardEvolver.mutate(mutableGameState)
+            GameBoardEvolver.mutate(gameState)
                 .via.setMark(coords, mark);
 
             // Update the game metadata
-            GameMetaEvolver.evolve(mutableGameState)
+            GameMetaEvolver.evolve(gameState)
                 .via.iterateTurnCount()
                 .and.updateLastPlayer(mark)
                 .and.updateLastPlayedCoords(coords);
 
-            return mutableGameState;
+            return gameState;
         },
     });
 
@@ -276,11 +263,11 @@ import type { GameState, MarkType } from "../../state/GameState";
 export const { GameBoardEvolver } = Evolver.create("GameBoardEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
-        setMark: ({ mutableGameState }, coords: [number, number], mark: MarkType): GameState => 
+        setMark: ({ gameState }, coords: [number, number], mark: MarkType): GameState => 
         {
             const [row, col] = coords;
-            mutableGameState.board[row][col] = mark;
-            return mutableGameState;
+            gameState.board[row][col] = mark;
+            return gameState;
         },
     });
 
@@ -300,26 +287,26 @@ export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "ga
         /**
 		 * Update the last player to make a move.
 		 */
-        updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => 
+        updateLastPlayer: ({ gameState }, mark: MarkType): GameState => 
         {
-            mutableGameState.lastPlayer = mark;
-            return mutableGameState;
+            gameState.lastPlayer = mark;
+            return gameState;
         },
         /**
 		 * Update the last played coordinates.
 		 */
-        updateLastPlayedCoords: ({ mutableGameState }, coords: [number, number]): GameState => 
+        updateLastPlayedCoords: ({ gameState }, coords: [number, number]): GameState => 
         {
-            mutableGameState.lastPlayedCoords = coords;
-            return mutableGameState;
+            gameState.lastPlayedCoords = coords;
+            return gameState;
         },
         /**
 		 * Iterate the turn count.
 		 */
-        iterateTurnCount: ({ mutableGameState }): GameState => 
+        iterateTurnCount: ({ gameState }): GameState => 
         {
-            mutableGameState.turns++;
-            return mutableGameState;
+            gameState.turns++;
+            return gameState;
         },
     });
 ```

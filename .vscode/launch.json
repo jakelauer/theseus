@@ -19,7 +19,7 @@
             "request": "launch",
             "name": "Run Mocha Tests",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["test", "--", "--grep", "\"should handle asynchronous mutations correctly\""],
+            "runtimeArgs": ["test"],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"
