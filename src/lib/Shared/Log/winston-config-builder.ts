@@ -1,6 +1,6 @@
 import * as winston from "winston";
 
-import { logLevels, setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
+import { DEFAULT_LOG_LEVEL, logLevels, setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
 import { stringifier } from "@Shared/Log/stringifier";
 
 const { format, addColors } = winston;
@@ -40,7 +40,7 @@ export const allTransports: winston.transports.ConsoleTransportInstance[] = [];
 const makeTransport = () => 
 {
 	const transport = new winston.transports.Console();
-	transport.level = "debug";
+	transport.level = DEFAULT_LOG_LEVEL;
 
 	allTransports.push(transport);
 
