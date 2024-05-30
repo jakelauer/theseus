@@ -18,34 +18,34 @@ export type ForgeDict<TDict extends Record<string, () => any>> = {
  * structuring.
  *
  * @template TData The type of data that the forge functions will operate on.
- * @template TParamName The name of the parameter representing the data
+ * @template TParamNoun The name of the parameter representing the data
  */
-export type ForgeDefs<TData extends object, TParamName extends string> = {
-    [key: string]: ForgeDefChild<TData, TParamName>;
+export type ForgeDefs<TData extends object, TParamNoun extends string> = {
+    [key: string]: ForgeDefChild<TData, TParamNoun>;
 };
 
 /**
  * Represents either a single forge function or a nested collection of forge definitions.
  *
  * @template TData The type of data being refined.
- * @template TParamName The name of the parameter representing the data
+ * @template TParamNoun The name of the parameter representing the data
  */
-export type ForgeDefChild<TData extends object, TParamName extends string> =
-    | Forge<TData, TParamName>
-    | ForgeDefs<TData, TParamName>;
+export type ForgeDefChild<TData extends object, TParamNoun extends string> =
+    | Forge<TData, TParamNoun>
+    | ForgeDefs<TData, TParamNoun>;
 
 /**
  * Exposes forge functions from a set to be used in data refinement processes. This type dynamically creates a
  * chainable interface for each forge function, allowing for intuitive and flexible data transformations.
  *
  * @template TData The type of data being refined.
- * @template TParamName The name of the parameter representing the data
+ * @template TParamNoun The name of the parameter representing the data
  * @template TForges The forge definitions to be exposed.
  */
 export type ExposeForges<
     TData extends object,
-    TParamName extends string,
-    TForges extends ForgeDefChild<TData, TParamName>,
+    TParamNoun extends string,
+    TForges extends ForgeDefChild<TData, TParamNoun>,
 > = {
     // Iterate over each key in TMutators to create a chainable method
     [K in keyof TForges]: TForges[K] extends (...args: any) => any ?
@@ -53,7 +53,7 @@ export type ExposeForges<
             // Return another function which creates the chain
             (...args: Parameters<TForges[K]>) => ReturnType<TForges[K]>
         >
-    : TForges[K] extends ForgeDefChild<TData, TParamName> ? ExposeForges<TData, TParamName, TForges[K]>
+    : TForges[K] extends ForgeDefChild<TData, TParamNoun> ? ExposeForges<TData, TParamNoun, TForges[K]>
     : never;
 };
 
@@ -72,7 +72,7 @@ export type RefineryInstance<
     TParamNoun extends string,
 > = {
     refineryName: NormalizedRefineryName<TRefineryName>;
-    argName: TParamNoun;
+    paramNoun: TParamNoun;
 
     refine: (input: TData) => {
         withForge: ExposeForges<TData, TParamNoun, TForges>;

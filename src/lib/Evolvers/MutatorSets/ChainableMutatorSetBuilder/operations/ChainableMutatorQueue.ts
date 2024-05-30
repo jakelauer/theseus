@@ -5,21 +5,21 @@ import { createDraft, finishDraft, type Draft } from "immer";
 
 const log = getTheseusLogger("Queue");
 
-interface Params<TData extends object, TParamName extends string> 
+interface Params<TData extends object, TParamNoun extends string> 
 {
-	argName: TParamName;
-	setData: (data: ParamNameData<TData, TParamName>) => void;
-	getData: () => ParamNameData<TData, TParamName>;
+	paramNoun: TParamNoun;
+	setData: (data: ParamNameData<TData, TParamNoun>) => void;
+	getData: () => ParamNameData<TData, TParamNoun>;
 }
 
 export interface MutatorQueue<
 	TData extends object,
-	TParamName extends string>{
+	TParamNoun extends string>{
 	asyncEncountered: () => boolean;
 	queue: Promise<any>;
 	queueMutation<TFuncReturn extends SortaPromise<TData>>(
 		mutatorPath: string,
-		func: Mutator<TData, TParamName, TFuncReturn>,
+		func: Mutator<TData, TParamNoun, TFuncReturn>,
 		args: any[]
 	): SortaPromise<TData>;
 	reset: () => void;
@@ -27,14 +27,14 @@ export interface MutatorQueue<
 
 export class ChainableMutatorQueue<
 	TData extends object,
-	TParamName extends string
+	TParamNoun extends string
 > 
 {
 	private _isAsyncEncountered = false;
 	private _queue: SortaPromise<any> = Promise.resolve();
-	#draft: Draft<ParamNameData<TData, TParamName>>;
+	#draft: Draft<ParamNameData<TData, TParamNoun>>;
 
-	private constructor(private params: Params<TData, TParamName>) {}
+	private constructor(private params: Params<TData, TParamNoun>) {}
 
 	public get asyncEncountered() 
 	{
@@ -91,7 +91,7 @@ export class ChainableMutatorQueue<
 
 	private buildQueueOperation(
 		selfPath: string,
-		mutator: Mutator<TData, TParamName, SortaPromise<TData>>,
+		mutator: Mutator<TData, TParamNoun, SortaPromise<TData>>,
 		args: any[],
 	) 
 	{
@@ -105,7 +105,7 @@ export class ChainableMutatorQueue<
 			this.#draft = createDraft(data);
 			log.verbose(`Draft created for ${selfPath}`, this.#draft);
 
-			const mutatorResult = mutator(this.#draft as ParamNameData<TData, TParamName>, ...args);
+			const mutatorResult = mutator(this.#draft as ParamNameData<TData, TParamNoun>, ...args);
 			log.verbose(`Executed queue operation ${selfPath}`, { args });
 
 			if (mutatorResult === undefined || mutatorResult === null) 
@@ -127,26 +127,26 @@ export class ChainableMutatorQueue<
 		};
 	}
 
-	private inputToObject(input: TData): { [key in TParamName]: TData } 
+	private inputToObject(input: TData): { [key in TParamNoun]: TData } 
 	{
-		return { [this.params.argName]: input } as {
-			[key in TParamName]: TData;
+		return { [this.params.paramNoun]: input } as {
+			[key in TParamNoun]: TData;
 		};
 	}
 
 	public queueMutation<TFuncReturn extends Promise<TData>>(
 		mutatorPath: string,
-		func: Mutator<TData, TParamName, TFuncReturn>,
+		func: Mutator<TData, TParamNoun, TFuncReturn>,
 		args: any[]
 	): Promise<TData>;
 	public queueMutation<TFuncReturn extends TData>(
 		mutatorPath: string,
-		func: Mutator<TData, TParamName, TFuncReturn>,
+		func: Mutator<TData, TParamNoun, TFuncReturn>,
 		args: any[]
 	): TData;
 	public queueMutation<TFuncReturn extends SortaPromise<TData>>(
 		mutatorPath: string,
-		func: Mutator<TData, TParamName, TFuncReturn>,
+		func: Mutator<TData, TParamNoun, TFuncReturn>,
 		args: any[],
 	): TFuncReturn 
 	{
@@ -201,8 +201,8 @@ export class ChainableMutatorQueue<
 		const finalizeAndReturnData = (result: TData) => 
 		{
 			const finishedDraft = this.extractDataFromDraftResult(this.#draft, result);
-			this.params.setData(finishedDraft as ParamNameData<TData, TParamName>);
-			return this.params.getData()[this.params.argName];
+			this.params.setData(finishedDraft as ParamNameData<TData, TParamNoun>);
+			return this.params.getData()[this.params.paramNoun];
 		};
 
 		let outcome: SortaPromise<TData>;
@@ -225,21 +225,21 @@ export class ChainableMutatorQueue<
 		return outcome;
 	}
 
-	protected extractDataFromDraftResult(draft: Draft<ParamNameData<TData, TParamName>>, funcResult: SortaPromise<TData>)
+	protected extractDataFromDraftResult(draft: Draft<ParamNameData<TData, TParamNoun>>, funcResult: SortaPromise<TData>)
 	{
-		const generateOutcome = (d: Draft<ParamNameData<TData, TParamName>>) => (finishDraft(d) as ParamNameData<TData, TParamName>);
+		const generateOutcome = (d: Draft<ParamNameData<TData, TParamNoun>>) => (finishDraft(d) as ParamNameData<TData, TParamNoun>);
 
 		return funcResult instanceof Promise 
 			? funcResult.then((r: TData) => 
 			{
-				(draft as ParamNameData<TData, TParamName>)[this.params.argName] = r;
+				(draft as ParamNameData<TData, TParamNoun>)[this.params.paramNoun] = r;
 				return generateOutcome(draft);
 			}) 
 			: generateOutcome(draft);
 	};
 
-	public static create<TData extends object, TParamName extends string>(
-		params: Params<TData, TParamName>,
+	public static create<TData extends object, TParamNoun extends string>(
+		params: Params<TData, TParamNoun>,
 	)
 	{
 		return new ChainableMutatorQueue(params);

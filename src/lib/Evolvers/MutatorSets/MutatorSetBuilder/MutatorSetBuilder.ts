@@ -11,7 +11,7 @@ import { createDraft, finishDraft, type Draft } from "immer";
  * adding mutator functions to the evolver and executing these functions to mutate the evolver's state.
  *
  * @template TData The type of data the evolver operates on.
- * @template TParamName The type representing the names of the evolver data.
+ * @template TParamNoun The type representing the names of the evolver data.
  * @template TMutators The type representing the definitions of mutators applicable to the evolver data.
  */
 
@@ -19,17 +19,17 @@ const log = getTheseusLogger("MutatorSetBuilder");
 
 export class MutatorSetBuilder<
     TData extends object,
-    TParamName extends string,
-    TMutators extends MutatorDefs<TData, TParamName>,
+    TParamNoun extends string,
+    TMutators extends MutatorDefs<TData, TParamNoun>,
 > 
 {
 	protected __theseusId?: string;
-	protected data: Record<TParamName, TData>;
+	protected data: Record<TParamNoun, TData>;
 	public fixedMutators: TMutators = {} as TMutators;
 
 	constructor(
 		inputData: TData,
-        protected readonly argName: TParamName,
+        protected readonly paramNoun: TParamNoun,
         protected readonly mutators: TMutators,
         observationId?: string,
 	) 
@@ -154,14 +154,14 @@ export class MutatorSetBuilder<
 		});
 	}
 
-	protected extractDataFromDraftResult(draft: Draft<Record<TParamName, TData>>, funcResult: SortaPromise<TData>)
+	protected extractDataFromDraftResult(draft: Draft<Record<TParamNoun, TData>>, funcResult: SortaPromise<TData>)
 	{
 		const generateOutcome = (data: TData) => 
 		{
 			// @ts-expect-error - TS doesn't understand that the draft can be indexed
-			draft[this.argName] = data;
-			const finishedDraft = finishDraft(draft) as Record<TParamName, TData>;
-			return finishedDraft[this.argName];
+			draft[this.paramNoun] = data;
+			const finishedDraft = finishDraft(draft) as Record<TParamNoun, TData>;
+			return finishedDraft[this.paramNoun];
 		};
 
 		return funcResult instanceof Promise 
@@ -176,12 +176,12 @@ export class MutatorSetBuilder<
      * Transforms the input data into the structured format expected by the mutators, keyed by the parameter
      * name.
      */
-	protected inputToObject<_TData, _TParamName extends string>(
+	protected inputToObject<_TData, _TParamNoun extends string>(
 		input: _TData,
-	): { [key in _TParamName]: _TData } 
+	): { [key in _TParamNoun]: _TData } 
 	{
-		return { [this.argName]: input } as {
-            [key in _TParamName]: _TData;
+		return { [this.paramNoun]: input } as {
+            [key in _TParamNoun]: _TData;
         };
 	}
 
@@ -190,17 +190,17 @@ export class MutatorSetBuilder<
      * and mutators. This method facilitates the easy setup of a MutatorSet with a specific set of mutators.
      *
      * @param data The initial state data to use.
-     * @param argName The name of the argument representing the state.
+     * @param paramNoun The name of the argument representing the state.
      * @param mutators The definitions of mutators to apply to the state.
      * @returns A new instance of MutatorSet configured with the provided parameters.
      */
 	public static create<
         TData extends object,
-        TParamName extends string,
-        TMutators extends MutatorDefs<TData, TParamName>,
-    >(data: TData, argName: TParamName, mutators: TMutators, observationId?: string) 
+        TParamNoun extends string,
+        TMutators extends MutatorDefs<TData, TParamNoun>,
+    >(data: TData, paramNoun: TParamNoun, mutators: TMutators, observationId?: string) 
 	{
-		const builder = new MutatorSetBuilder(data, argName, mutators, observationId);
+		const builder = new MutatorSetBuilder(data, paramNoun, mutators, observationId);
 
 		return this.castToMutators(builder);
 	}
@@ -211,12 +211,12 @@ export class MutatorSetBuilder<
      */
 	public static castToMutators<
         TData extends object,
-        TParamName extends string,
-        TMutators extends MutatorDefs<TData, TParamName>,
+        TParamNoun extends string,
+        TMutators extends MutatorDefs<TData, TParamNoun>,
     >(
-		chainableMutatorSet: MutatorSetBuilder<TData, TParamName, TMutators>,
-	): FinalMutators<TData, TParamName, TMutators> 
+		chainableMutatorSet: MutatorSetBuilder<TData, TParamNoun, TMutators>,
+	): FinalMutators<TData, TParamNoun, TMutators> 
 	{
-		return chainableMutatorSet as unknown as FinalMutators<TData, TParamName, TMutators>;
+		return chainableMutatorSet as unknown as FinalMutators<TData, TParamNoun, TMutators>;
 	}
 }

@@ -11,8 +11,8 @@ import type { ForgeDefs } from "@Refineries/Types";
 export type BuildFromEvolvers<
     TData extends object,
     TEvolverName extends string,
-    TParamName extends string,
-    TEvolvers extends Record<string, EvolverInstance<TData, TEvolverName, TParamName, any>>,
+    TParamNoun extends string,
+    TEvolvers extends Record<string, EvolverInstance<TData, TEvolverName, TParamNoun, any>>,
 > = {
     evolvers: TEvolvers;
     initialState: TData;
@@ -38,13 +38,13 @@ export type BaseParams<
 
 export type TheseusParams<
     TData extends object,
-    TParamName extends string,
-    TMutators extends MutatorDefs<TData, TParamName>,
-    TEvolvers extends EvolverInstance<TData, string,  TParamName, TMutators>[],
-    TForges extends ForgeDefs<TData, TParamName>,
-	TRefineries extends Refinery<TData, string, TParamName, TForges>[],
+    TParamNoun extends string,
+    TMutators extends MutatorDefs<TData, TParamNoun>,
+    TEvolvers extends EvolverInstance<TData, string,  TParamNoun, TMutators>[],
+    TForges extends ForgeDefs<TData, TParamNoun>,
+	TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
 > = BaseParams<TData, TObserverType> & {
-    evolvers: TEvolvers | EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers>;
-    refineries?: TRefineries | RefineryComplexInstance<TData, TParamName, TForges, TRefineries>;
+    evolvers: TEvolvers | EvolverComplexInstance<TData, TParamNoun, TMutators, TEvolvers>;
+    refineries?: TRefineries | RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries>;
 };

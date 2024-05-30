@@ -56,14 +56,14 @@ const extendTheseusWith = <TTheseus extends ITheseus<any>, TExtension extends ob
 /** Create a new Theseus instance */
 export default <TData extends object>(data: TData) => ({
 	maintainWith: <
-        TParamName extends string,
-        TMutators extends MutatorDefs<TData, TParamName>,
-        TEvolvers extends EvolverInstance<TData, string, TParamName, TMutators>[],
-        TForges extends ForgeDefs<TData, TParamName>,
-		TRefineries extends Refinery<TData, string, TParamName, TForges>[],
+        TParamNoun extends string,
+        TMutators extends MutatorDefs<TData, TParamNoun>,
+        TEvolvers extends EvolverInstance<TData, string, TParamNoun, TMutators>[],
+        TForges extends ForgeDefs<TData, TParamNoun>,
+		TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
         TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
     >(
-		params: TheseusParams<TData, TParamName, TMutators, TEvolvers, TForges, TRefineries, TObserverType>,
+		params: TheseusParams<TData, TParamNoun, TMutators, TEvolvers, TForges, TRefineries, TObserverType>,
 	) => 
 	{
 		const { evolvers, refineries, ...rest } = params;
@@ -71,7 +71,7 @@ export default <TData extends object>(data: TData) => ({
 
         type ParamsAbbrev = TheseusParams<
             TData,
-            TParamName,
+            TParamNoun,
             TMutators,
             TEvolvers,
             TForges,
@@ -80,30 +80,30 @@ export default <TData extends object>(data: TData) => ({
         >;
 
         type RefineExtension = {
-            refine?: RefineriesRemapped<TData, TParamName, TForges, TRefineries>;
+            refine?: RefineriesRemapped<TData, TParamNoun, TForges, TRefineries>;
         };
 
         type BaseExtension = {
-            evolve: MacroMutatorsFormatted<TData, TParamName, TEvolvers>;
-            mutate: MutatorsFormatted<TData, TParamName, TEvolvers>;
+            evolve: MacroMutatorsFormatted<TData, TParamNoun, TEvolvers>;
+            mutate: MutatorsFormatted<TData, TParamNoun, TEvolvers>;
         };
         type Extension = BaseExtension &
             (ParamsAbbrev["refineries"] extends undefined ? RefineExtension : Required<RefineExtension>);
 
         const addEvolversAndRefineries = (
         	innerInstance: ITheseus<TData>,
-        	evolvers: TEvolvers | EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers>,
-        	refineries?: TRefineries | RefineryComplexInstance<TData, TParamName, TForges, TRefineries>,
+        	evolvers: TEvolvers | EvolverComplexInstance<TData, TParamNoun, TMutators, TEvolvers>,
+        	refineries?: TRefineries | RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries>,
         ) => 
         {
-        	const evolverComplex: EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers> =
+        	const evolverComplex: EvolverComplexInstance<TData, TParamNoun, TMutators, TEvolvers> =
                 "evolve" in evolvers ?
-                	(evolvers as EvolverComplexInstance<TData, TParamName, TMutators, TEvolvers>)
+                	(evolvers as EvolverComplexInstance<TData, TParamNoun, TMutators, TEvolvers>)
                 	:   EvolverComplex.create<TData>().withEvolvers(...evolvers);
 
         	// set theseus id for each evolver, so that we can track which theseus is being used
         	Object.values(evolverComplex.__evolvers__).forEach(
-        		(evolver: EvolverInstance<TData, string,  TParamName, TMutators>) =>
+        		(evolver: EvolverInstance<TData, string,  TParamNoun, TMutators>) =>
         			evolver.__setTheseusId(innerInstance.__uuid),
         	);
 
@@ -122,9 +122,9 @@ export default <TData extends object>(data: TData) => ({
         		log.debug(
         			`Refineries found, adding to extension for Theseus instance ${innerInstance.__uuid}`,
         		);
-        		const complex: RefineryComplexInstance<TData, TParamName, TForges, TRefineries> =
+        		const complex: RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries> =
                     "refine" in refineries ?
-                    	(refineries as RefineryComplexInstance<TData, TParamName, TForges, TRefineries>)
+                    	(refineries as RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries>)
                     	:   RefineryComplex.create<TData>().withRefineries(...refineries);
 
         		extension = Object.defineProperties<BaseExtension>(

@@ -10,8 +10,8 @@ const log = getTheseusLogger("EvolverComplex");
 export const generateEvolveMethods = <
     TData extends object,
     TIsMacro extends boolean,
-    TParamName extends string,
-    TEvolvers extends EvolverInstance<TData, string,  TParamName, any>[],
+    TParamNoun extends string,
+    TEvolvers extends EvolverInstance<TData, string,  TParamNoun, any>[],
 >(
 		evolvers: TEvolvers,
 		input: TData,
@@ -32,7 +32,7 @@ export const generateEvolveMethods = <
 
 			return acc;
 		},
-        {} as MutatorsFormatted<TData, TParamName, TEvolvers>,
+        {} as MutatorsFormatted<TData, TParamNoun, TEvolvers>,
 	);
 
 	return result;
@@ -40,9 +40,9 @@ export const generateEvolveMethods = <
 
 export const evolve = <
     TData extends object,
-    TEvolvers extends EvolverInstance<TData, string,  TParamName, TMutators>[],
-    TMutators extends MutatorDefs<TData, TParamName>,
-    TParamName extends string,
+    TEvolvers extends EvolverInstance<TData, string,  TParamNoun, TMutators>[],
+    TMutators extends MutatorDefs<TData, TParamNoun>,
+    TParamNoun extends string,
 >(
 		input: TData,
 	) => 
@@ -58,9 +58,9 @@ export const evolve = <
 
 const mutate = <
     TData extends object,
-    TEvolvers extends EvolverInstance<TData, string,  TParamName, TMutators>[],
-    TMutators extends MutatorDefs<TData, TParamName>,
-    TParamName extends string,
+    TEvolvers extends EvolverInstance<TData, string,  TParamNoun, TMutators>[],
+    TMutators extends MutatorDefs<TData, TParamNoun>,
+    TParamNoun extends string,
 >(
 		input: TData,
 	) => 
@@ -76,8 +76,8 @@ const mutate = <
 
 export const create = <TData extends object>() => ({
 	withEvolvers: <
-        TEvolvers extends EvolverInstance<TData, string,  TParamName, any>[],
-        TParamName extends string,
+        TEvolvers extends EvolverInstance<TData, string,  TParamNoun, any>[],
+        TParamNoun extends string,
     >(
 		...evolvers: TEvolvers
 	) => 
@@ -112,7 +112,7 @@ export const create = <TData extends object>() => ({
 		        mutate: mutate(input).withEvolvers(evolvers),
 		        evolve: evolve(input).withEvolvers(evolvers),
 		    }),
-		} as EvolverComplexInstance<TData, TParamName, any, TEvolvers>;
+		} as EvolverComplexInstance<TData, TParamNoun, any, TEvolvers>;
 	},
 });
 
@@ -125,15 +125,15 @@ export class EvolverComplex
 
 export type EvolverComplexInstance<
     TData extends object,
-    TParamName extends string,
-    TMutators extends MutatorDefs<TData, TParamName>,
-    TEvolvers extends EvolverInstance<TData, string,  TParamName, TMutators>[],
+    TParamNoun extends string,
+    TMutators extends MutatorDefs<TData, TParamNoun>,
+    TEvolvers extends EvolverInstance<TData, string,  TParamNoun, TMutators>[],
 > = {
     __evolvers__: TEvolvers;
-    mutate: (data: TData) => MutatorsFormatted<TData, TParamName, TEvolvers>;
-    evolve: (data: TData) => MacroMutatorsFormatted<TData, TParamName, TEvolvers>;
+    mutate: (data: TData) => MutatorsFormatted<TData, TParamNoun, TEvolvers>;
+    evolve: (data: TData) => MacroMutatorsFormatted<TData, TParamNoun, TEvolvers>;
     use: (data: TData) => {
-        mutate: MutatorsFormatted<TData, TParamName, TEvolvers>;
-        evolve: MacroMutatorsFormatted<TData, TParamName, TEvolvers>;
+        mutate: MutatorsFormatted<TData, TParamNoun, TEvolvers>;
+        evolve: MacroMutatorsFormatted<TData, TParamNoun, TEvolvers>;
     };
 };
