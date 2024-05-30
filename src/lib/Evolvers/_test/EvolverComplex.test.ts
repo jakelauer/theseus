@@ -9,10 +9,10 @@ const IncrementEvolverCreator = () =>
 	})
 		.toEvolve<{ count: number }>()
 		.withMutators({
-			increment: ({ mutableAmount }, amount: number) => 
+			increment: ({ amount }, delta: number) => 
 			{
 				return {
-					count: mutableAmount.count + amount,
+					count: amount.count + delta,
 				};
 			},
 		});

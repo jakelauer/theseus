@@ -7,25 +7,25 @@ export const GameMetaEvolver = Evolver.create("GameMeta", { noun: "gameState" })
 		/**
 		 * Update the last player to make a move.
 		 */
-		updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => 
+		updateLastPlayer: ({ gameState }, mark: MarkType): GameState => 
 		{
-			mutableGameState.lastPlayer = mark;
-			return mutableGameState;
+			gameState.lastPlayer = mark;
+			return gameState;
 		},
 		/**
 		 * Update the last played coordinates.
 		 */
-		updateLastPlayedCoords: ({ mutableGameState }, coords: [number, number]): GameState => 
+		updateLastPlayedCoords: ({ gameState }, coords: [number, number]): GameState => 
 		{
-			mutableGameState.lastPlayedCoords = coords;
-			return mutableGameState;
+			gameState.lastPlayedCoords = coords;
+			return gameState;
 		},
 		/**
 		 * Iterate the turn count.
 		 */
-		iterateTurnCount: ({ mutableGameState }): GameState => 
+		iterateTurnCount: ({ gameState }): GameState => 
 		{
-			mutableGameState.turns++;
-			return mutableGameState;
+			gameState.turns++;
+			return gameState;
 		},
 	});

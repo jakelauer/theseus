@@ -19,9 +19,9 @@ describe("RefineryComplex", function ()
     	})
     		.toRefine<TestData>()
     		.withForges({
-    			makeUppercase: ({ immutableTestData }) => ({
-    				...immutableTestData,
-    				field: immutableTestData.field.toUpperCase(),
+    			makeUppercase: ({ testData }) => ({
+    				...testData,
+    				field: testData.field.toUpperCase(),
     			}),
     		});
 
@@ -36,9 +36,9 @@ describe("RefineryComplex", function ()
     	})
     		.toRefine<TestData>()
     		.withForges({
-    			incrementCount: ({ immutableTestData }) => ({
-    				...immutableTestData,
-    				count: immutableTestData.count + 1,
+    			incrementCount: ({ testData }) => ({
+    				...testData,
+    				count: testData.count + 1,
     			}),
     		});
 

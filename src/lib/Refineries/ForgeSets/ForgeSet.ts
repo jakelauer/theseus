@@ -1,4 +1,3 @@
-import type { Immutable } from "@Shared/String/makeImmutable";
 
 import type { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
 
@@ -11,17 +10,17 @@ import type { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
  */
 export class ForgeSet<
     TData extends object,
-    TParamName extends Immutable,
+    TParamName extends string,
     TForges extends ForgeDefs<TData, TParamName>,
 > 
 {
 	protected readonly argName: TParamName;
-	protected mutableData: { [key in TParamName]: TData };
+	protected data: { [key in TParamName]: TData };
 
 	constructor(inputData: TData, argName: TParamName, forges: TForges) 
 	{
 		this.argName = argName;
-		this.mutableData = this.inputToObject(inputData);
+		this.data = this.inputToObject(inputData);
 
 		this.extendSelfWithForges(forges);
 	}
@@ -67,7 +66,7 @@ export class ForgeSet<
 		Object.assign(context, {
 			[selfPath]: (...args: any[]) => 
 			{
-				return func(this.mutableData, ...args);
+				return func(this.data, ...args);
 			},
 		});
 	}
@@ -94,7 +93,7 @@ export class ForgeSet<
      */
 	public static create<
         TData extends object,
-        TParamName extends Immutable,
+        TParamName extends string,
         TForges extends ForgeDefs<TData, TParamName>,
     >(data: TData, argName: TParamName, forges: TForges): ExposeForges<TData, TParamName, TForges> 
 	{
