@@ -3,13 +3,13 @@ import type { EvolveObject, EvolverInstance, MutateObject } from "@Evolvers/Type
 // Determines the mutators for a given evolver by returning the types of mutators available for the evolver's data.
 type MutatorsForEvolver<
     TData extends object,
-    TParamName extends string,
-    TEvolver extends EvolverInstance<TData, string, TParamName, any>,
+    TParamNoun extends string,
+    TEvolver extends EvolverInstance<TData, string, TParamNoun, any>,
 > = ReturnType<
     MutateObject<
         TEvolver["__type__access__"]["data"],
         TEvolver["__type__access__"]["evolverName"],
-        TEvolver["__type__access__"]["paramName"],
+        TEvolver["__type__access__"]["paramNoun"],
         TEvolver["__type__access__"]["mutators"]
     >["getMutators"]
 >;
@@ -18,13 +18,13 @@ type MutatorsForEvolver<
 // evolving the state on a larger scale.
 type MacroMutatorsForEvolver<
     TData extends object,
-    TParamName extends string,
-    TEvolver extends EvolverInstance<TData, string, TParamName, any>,
+    TParamNoun extends string,
+    TEvolver extends EvolverInstance<TData, string, TParamNoun, any>,
 > = ReturnType<
     EvolveObject<
         TEvolver["__type__access__"]["data"],
         TEvolver["__type__access__"]["evolverName"],
-        TEvolver["__type__access__"]["paramName"],
+        TEvolver["__type__access__"]["paramNoun"],
         TEvolver["__type__access__"]["mutators"]
     >["getMutators"]
 >;
@@ -32,12 +32,12 @@ type MacroMutatorsForEvolver<
 // Maps each evolver name to its corresponding set of mutators, facilitating direct access to the mutators by name.
 type MutatorsRemapped<
     TData extends object,
-    TParamName extends string,
-    TEvolvers extends EvolverInstance<TData, string,  TParamName, any>[],
+    TParamNoun extends string,
+    TEvolvers extends EvolverInstance<TData, string,  TParamNoun, any>[],
 > = {
     [K in TEvolvers[number]["evolverName"]]: MutatorsForEvolver<
 		TData, 
-		TParamName, 
+		TParamNoun, 
         ExtractEvolverByName<TEvolvers[number], K>
 	>;
 };
@@ -45,12 +45,12 @@ type MutatorsRemapped<
 // Similar to MutatorsRemapped but for macro mutators, mapping each evolver name to its set of macro mutators.
 type MacroMutatorsRemapped<
     TData extends object,
-    TParamName extends string,
-    TEvolvers extends EvolverInstance<TData, string,  TParamName, any>[],
+    TParamNoun extends string,
+    TEvolvers extends EvolverInstance<TData, string,  TParamNoun, any>[],
 > = {
     [K in TEvolvers[number]["evolverName"]]: MacroMutatorsForEvolver<
         TData,
-        TParamName,
+        TParamNoun,
         ExtractEvolverByName<TEvolvers[number], K>
     >;
 };
@@ -67,11 +67,11 @@ type ExtractEvolverByName<TEvolvers, Name> = TEvolvers extends { evolverName: Na
 // 'Evolver' prefix to match the naming conventions of the complex.
 export type MacroMutatorsFormatted<
     TData extends object,
-    TParamName extends string,
-    TEvolvers extends EvolverInstance<TData, string,  TParamName, any>[],
-> = MacroMutatorsRemapped<TData, TParamName, TEvolvers>;
+    TParamNoun extends string,
+    TEvolvers extends EvolverInstance<TData, string,  TParamNoun, any>[],
+> = MacroMutatorsRemapped<TData, TParamNoun, TEvolvers>;
 export type MutatorsFormatted<
     TData extends object,
-    TParamName extends string,
-    TEvolvers extends EvolverInstance<TData, string,  TParamName, any>[],
-> = MutatorsRemapped<TData, TParamName, TEvolvers>;
+    TParamNoun extends string,
+    TEvolvers extends EvolverInstance<TData, string,  TParamNoun, any>[],
+> = MutatorsRemapped<TData, TParamNoun, TEvolvers>;

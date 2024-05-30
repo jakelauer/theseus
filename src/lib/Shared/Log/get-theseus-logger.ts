@@ -4,7 +4,7 @@ import { setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
 import winstonConfigBuilder from "@Shared/Log/winston-config-builder";
 import { logLevelFromFlag } from "@Shared/Log/log-level-from-flag";
 
-setTheseusLogLevel(logLevelFromFlag ?? "silent");
+setTheseusLogLevel(logLevelFromFlag ?? "warn");
 
 const rootLogger = winston.createLogger({
 	...winstonConfigBuilder().config,

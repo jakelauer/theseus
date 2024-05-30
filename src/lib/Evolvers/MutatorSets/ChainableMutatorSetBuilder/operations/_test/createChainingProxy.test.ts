@@ -7,7 +7,7 @@ const makeMutatorQueue = () =>
 {
 	let dataReference = { value: 0 };
 	return ChainableMutatorQueue.create({
-		argName: "data",
+		paramNoun: "data",
 		setData: ({ data }) => 
 		{
 			if (data instanceof Promise) 

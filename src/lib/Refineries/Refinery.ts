@@ -37,7 +37,7 @@ export class Refinery<
 > extends Function
 {
 	public readonly refineryName: NormalizedRefineryName<TRefineryName>;
-	public readonly argName: TParamNoun;
+	public readonly paramNoun: TParamNoun;
 	private readonly forges: TForges;
 
 	private constructor(name: TRefineryName, forges: TForges, options: RefineryOptions<TParamNoun>) 
@@ -47,7 +47,7 @@ export class Refinery<
 		const normalizedName = this.normalizeName(name);
 
 		this.refineryName = normalizedName;
-		this.argName = options.noun ?? ("input" as TParamNoun);;
+		this.paramNoun = options.noun ?? ("input" as TParamNoun);;
 		this.forges = forges;
 
 		return new Proxy(this, {
@@ -101,7 +101,7 @@ export class Refinery<
 		// Create the actions which will be available when `for()` is called.
 		const forgeSet = ForgeSet.create<TData, TParamNoun, TForges>(
 			clone,
-			this.argName,
+			this.paramNoun,
 			this.forges,
 		);
 

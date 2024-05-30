@@ -14,16 +14,13 @@ export const logLevels = {
 
 export type ValidLogLevels = keyof typeof logLevels | "silent";
 
+export const DEFAULT_LOG_LEVEL: ValidLogLevels = "warn";
 
-let savedLevel: ValidLogLevels = "silent";
+let savedLevel: ValidLogLevels;
 const setAllTransportsLevel = (newLevel?: ValidLogLevels) => 
 {
-	// If the level is already set to the new level, do nothing
-	if (savedLevel === newLevel) 
-	{
-		return;
-	}
-	
+	let changed = false;
+
 	// Use the new level if it is provided, otherwise use the saved level
 	const level = newLevel ?? savedLevel;
 
@@ -33,9 +30,20 @@ const setAllTransportsLevel = (newLevel?: ValidLogLevels) =>
 	// Set the level and silent flag for all transports
 	for (const transport of allTransports) 
 	{
-		transport.level = level;
-		transport.silent = level === "silent";
+		if (level !== transport.level)
+		{
+			transport.level = level;
+			changed = true;
+		}
+
+		if (level === "silent" && !transport.silent)
+		{
+			transport.silent = level === "silent";
+			changed = true;
+		}
 	}
+
+	return changed;
 };
 	
 
@@ -46,10 +54,15 @@ const setAllTransportsLevel = (newLevel?: ValidLogLevels) =>
  *   will log "warn" and "error" messages.
  */
 
-let lastLogLevel: ValidLogLevels = "warn";
+let lastLogLevel: ValidLogLevels = DEFAULT_LOG_LEVEL;
 export const setTheseusLogLevel = (level: ValidLogLevels = lastLogLevel) => 
 {
 	lastLogLevel = level;
 
-	setAllTransportsLevel(level);
+	const changed = setAllTransportsLevel(level);
+
+	if (changed)
+	{
+		console.log("Set Theseus log level to", level); // eslint-disable-line no-console
+	}
 };
