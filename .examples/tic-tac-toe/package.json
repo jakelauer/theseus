@@ -10,16 +10,16 @@
         "theseus-js": "workspace:latest"
     },
     "devDependencies": {
-        "ts-node": "10.9.2",
-        "pino-pretty": "5.0.0",
         "@typescript-eslint/eslint-plugin": "^6.21.0",
         "@typescript-eslint/parser": "^6.21.0",
+        "eslint": "^8.57.0",
         "eslint-plugin-theseus": "workspace:latest",
-        "eslint": "^8.57.0"
+        "pino-pretty": "5.0.0",
+        "tsx": "^4.11.0"
     },
     "scripts": {
         "root-build": "pnpm --prefix ../../ build:base",
-        "start-raw": "node --loader ts-node/esm --experimental-specifier-resolution=node ./src/main.ts",
+        "start-raw": "node --import=tsx ./src/main.ts",
         "start": "pnpm root-build && pnpm start-raw"
     },
     "main": "index.ts"

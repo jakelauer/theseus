@@ -22,10 +22,13 @@ evolve in a controlled, predictable manner based on user interactions or interna
 
 All evolvers have 4 parts:
 
-### Name
+### Name & Noun
 
-Evolvers are always named, and Theseus tries to enforce this because it makes working with higher-order components like
-EvolverComplexes easy. When you create an evolver, you give it a name, and that determines the output:
+Evolvers are always named, which makes working with higher-order components like [EvolverComplexes](./extended/evolver-complex.md) easy. When you create an evolver, you give it a name, and that determines how it will be used when grouped with other evolvers.
+
+The `noun` for an evolver determines the name of the data argument passed to each `mutator`, for consistency. If you
+don't specify a `noun`, it defaults to `"input"`. Each `mutator`'s first argument will be an object of the evolver's
+data type, keyed by this noun, prefixed with `"mutable"` in camel-case.
 
 ```typescript
 /**
@@ -33,7 +36,22 @@ EvolverComplexes easy. When you create an evolver, you give it a name, and that 
  * value passed to Evolver.create()
  */
 
-export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver" //...
+export const MetaEvolver = Evolver.create("MetaEvolver", { noun: "gameState" })
+	// .toEvolve<GameState>()
+	// .withMutators({
+         updateLastPlayer: ({ mutableGameState }, mark: MarkType): GameState => {
+    //         mutableGameState.lastPlayer = mark;
+    //         return mutableGameState;
+    //     },
+    //     updateLastPlayedCoords: ({ mutableGameState }, coords: [number, number]): GameState => {
+    //         mutableGameState.lastPlayedCoords = coords;
+    //         return mutableGameState;
+    //     },
+    //     iterateTurnCount: ({ mutableGameState }): GameState => {
+    //         mutableGameState.turns++;
+    //         return mutableGameState;
+    //     },
+	// });
 ```
 
 ### Noun
@@ -174,6 +192,7 @@ avoid asynchronous race conditions.
 				.and.asyncUpdateLastPlayedCoords(coords)
 				.resultAsync
 				.then(result => {
+					
 					console.log(result);
 
 					return result;
@@ -199,7 +218,7 @@ import { GameMetaEvolver } from "./GameMetaEvolver";
 
 const log = getTheseusLogger("GameTurnEvolver");
 
-export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "gameState" })
+export const GameTurnEvolver = Evolver.create("GameTurnEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
         /**
@@ -219,11 +238,11 @@ export const { GameTurnEvolver } = Evolver.create("GameTurnEvolver", { noun: "ga
             const { turns, lastPlayer } = gameState;
             log.major(`Taking turn #${turns}`);
 
-            const { getRandomAvailableCoords, getSquare } = GameBoardRefinery(gameState);
+            const { getRandomAvailableCoords, getSquare } = GameBoardRefinery(mutableGameState);
 
             // Determine the mark for the next player
             const mark = lastPlayer === "X" ? "O" : "X";
-            const coords = getRandomAvailableCoords();
+            const coords = getRandomAvailableSquare();
             if (!coords) 
             {
                 return GameTurnEvolver.mutate(gameState).via.setWinner("stalemate");
@@ -260,7 +279,7 @@ This evolver manages the game board state.
 import { Evolver } from "theseus-js";
 import type { GameState, MarkType } from "../../state/GameState";
 
-export const { GameBoardEvolver } = Evolver.create("GameBoardEvolver", { noun: "gameState" })
+export const GameBoardEvolver = Evolver.create("GameBoardEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
         setMark: ({ gameState }, coords: [number, number], mark: MarkType): GameState => 
@@ -281,7 +300,7 @@ This evolver manages the game metadata.
 import { Evolver } from "theseus-js";
 import type { GameState, MarkType } from "../../state/GameState";
 
-export const { GameMetaEvolver } = Evolver.create("GameMetaEvolver", { noun: "gameState" })
+export const GameMetaEvolver = Evolver.create("GameMetaEvolver", { noun: "gameState" })
     .toEvolve<GameState>()
     .withMutators({
         /**

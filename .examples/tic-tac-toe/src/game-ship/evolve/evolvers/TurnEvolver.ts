@@ -1,39 +1,39 @@
 import { Evolver, getTheseusLogger } from "theseus-js";
 import type { GameState } from "../../state/GameState";
-import { GameBoardRefinery } from "../../refine/refineries/GameBoardRefinery";
-import { GameBoardEvolver } from "./GameBoardEvolver";
-import { GameMetaEvolver } from "./GameMetaEvolver";
+import { SquaresRefinery } from "../../refine/refineries/SquaresRefinery";
+import { BoardEvolver } from "./BoardEvolver";
+import { MetaEvolver } from "./MetaEvolver";
 
 const log = getTheseusLogger("GameTurnEvolver");
 
-export const GameTurnEvolver = Evolver.create("GameTurn", { noun: "gameState" })
+export const TurnEvolver = Evolver.create("TurnEvolver", { noun: "gameState" })
 	.toEvolve<GameState>()
 	.withMutators({
 		/**
 		 * Set the winner of the game.
 		 */
-		setWinner: ({ gameState }, reason: "stalemate" | "winner") => 
+		setWinner: ({ mutableGameState }, reason: "stalemate" | "winner") => 
 		{
 			log.major(`Game over! ${reason}`);
-			gameState.winner = reason === "winner" ? gameState.lastPlayer : "stalemate";
-			return gameState;
+			mutableGameState.winner = reason === "winner" ? mutableGameState.lastPlayer : "stalemate";
+			return mutableGameState;
 		},
 		/**
 		 * Take the next turn at a random available square.
 		 */
-		nextTurn: ({ gameState }): GameState => 
+		nextTurn: ({ mutableGameState }): GameState => 
 		{
-			const { turns, lastPlayer } = gameState;
+			const { turns, lastPlayer } = mutableGameState;
 			log.major(`Taking turn #${turns}`);
 
-			const { getRandomAvailableCoords, getSquare } = GameBoardRefinery(gameState);
+			const { getRandomAvailableSquare, getSquare } = SquaresRefinery.refine(mutableGameState);
 
 			// Determine the mark for the next player
 			const mark = lastPlayer === "X" ? "O" : "X";
-			const coords = getRandomAvailableCoords();
+			const coords = getRandomAvailableSquare();
 			if (!coords) 
 			{
-				return GameTurnEvolver.mutate(gameState).via.setWinner("stalemate");
+				return TurnEvolver.mutate(mutableGameState).via.setWinner("stalemate");
 			}
 
 			// Check if the square is available
@@ -44,15 +44,15 @@ export const GameTurnEvolver = Evolver.create("GameTurn", { noun: "gameState" })
 			}
 
 			// Set the mark on the board
-			GameBoardEvolver.mutate(gameState)
+			BoardEvolver.mutate(mutableGameState)
 				.via.setMark(coords, mark);
 
 			// Update the game metadata
-			GameMetaEvolver.evolve(gameState)
+			MetaEvolver.evolve(mutableGameState)
 				.via.iterateTurnCount()
 				.and.updateLastPlayer(mark)
 				.and.updateLastPlayedCoords(coords);
 
-			return gameState;
+			return mutableGameState;
 		},
 	});

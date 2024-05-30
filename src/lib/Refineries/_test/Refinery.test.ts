@@ -73,4 +73,19 @@ describe("Refinery Base", function ()
     		expect(() => testRefinery(testData).forge1()).to.deep.equal(testData);
     	}
     });
+
+    it("should allow a refinery's instance to be callback directly and return the refined data", function () 
+    {
+    	const testRefinery = Refinery.create("testRefinery", refineryDefinition)
+    		.toRefine<TestData>()
+    		.withForges({
+    			forge1: ({ testData }) => ({
+    				...testData,
+    				field: testData.field.toUpperCase(),
+    			}),
+    		});
+    	const testData: TestData = { field: "test" };
+    	const result = testRefinery(testData).forge1();
+    	expect(result.field).to.equal("TEST");
+    });
 });
