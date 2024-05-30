@@ -22,7 +22,7 @@
         "// ==== TESTING ==== //": "",
         "lint": "git add . && pnpm lint-staged",
         "lint-fix": "eslint ./ --fix --resolve-plugins-relative-to=./",
-        "test:debug": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs --theseus-log-level info",
+        "test:debug": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs",
         "test:pkg": "for dir in packages/*/; do (cd \"$dir\" && [ -f package.json ] && pnpm test); done",
         "test:all": "pnpm test && pnpm test:pkg",
         "test": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs",
