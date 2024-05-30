@@ -1,7 +1,6 @@
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 
-import type { Immutable } from "@Shared/String/makeImmutable";
 
 import type { Refinery } from "./Refinery";
 import type { ForgeDefs } from "./Types/RefineryTypes";
@@ -17,7 +16,7 @@ const log = getTheseusLogger("RefineryComplex");
 const refine = <
     TData extends object,
     TParamNoun extends string,
-    TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
+    TForges extends ForgeDefs<TData, TParamNoun>,
     TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
 >(
 		input: TData,
@@ -51,7 +50,7 @@ const refine = <
 const create = <TData extends object>() => ({
 	withRefineries: <
         TParamNoun extends string,
-        TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
+        TForges extends ForgeDefs<TData, TParamNoun>,
 		TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
     >(
 		...refineries: TRefineries
@@ -62,7 +61,7 @@ const create = <TData extends object>() => ({
 const innerWithRefineries = <
     TData extends object,
     TParamNoun extends string,
-    TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
+    TForges extends ForgeDefs<TData, TParamNoun>,
     TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
 >(
 		refineries: TRefineries,
@@ -93,7 +92,7 @@ export class RefineryComplex
 export type RefineryComplexInstance<
     TData extends object,
     TParamNoun extends string,
-    TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
+    TForges extends ForgeDefs<TData, TParamNoun>,
     TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
 > = {
     refine: (data: TData) => RefineriesRemapped<TData, TParamNoun, TForges, TRefineries>;

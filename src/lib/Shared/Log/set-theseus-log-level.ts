@@ -46,7 +46,10 @@ const setAllTransportsLevel = (newLevel?: ValidLogLevels) =>
  *   will log "warn" and "error" messages.
  */
 
-export const setTheseusLogLevel = (level: ValidLogLevels = "warn") => 
+let lastLogLevel: ValidLogLevels = "warn";
+export const setTheseusLogLevel = (level: ValidLogLevels = lastLogLevel) => 
 {
+	lastLogLevel = level;
+
 	setAllTransportsLevel(level);
 };

@@ -17,9 +17,9 @@ describe("Refinery Base", function ()
     	const output = Refinery.create("testRefinery", refineryDefinition)
     		.toRefine<TestData>()
     		.withForges({
-    			forge1: ({ immutableTestData }) => ({
-    				...immutableTestData,
-    				field: immutableTestData.field.toUpperCase(),
+    			forge1: ({ testData }) => ({
+    				...testData,
+    				field: testData.field.toUpperCase(),
     			}),
     		});
     	expect(output.refineryName).to.equal("test");
@@ -30,9 +30,9 @@ describe("Refinery Base", function ()
     	const testRefinery = Refinery.create("testRefinery", refineryDefinition)
     		.toRefine<TestData>()
     		.withForges({
-    			forge1: ({ immutableTestData }) => ({
-    				...immutableTestData,
-    				field: immutableTestData.field.toUpperCase(),
+    			forge1: ({ testData }) => ({
+    				...testData,
+    				field: testData.field.toUpperCase(),
     			}),
     		});
     	const testData: TestData = { field: "test" };
@@ -40,15 +40,15 @@ describe("Refinery Base", function ()
     	expect(result.field).to.equal("TEST");
     });
 
-    it("should throw an error if a forge function modifies the immutable data", function () 
+    it("should throw an error if a forge function modifies the imdata", function () 
     {
     	const testRefinery = Refinery.create("testRefinery", refineryDefinition)
     		.toRefine<TestData>()
     		.withForges({
-    			forge1: ({ immutableTestData }) => 
+    			forge1: ({ testData }) => 
     			{
-    				immutableTestData.field = immutableTestData.field.toUpperCase();
-    				return immutableTestData;
+    				testData.field = testData.field.toUpperCase();
+    				return testData;
     			},
     		});
     	const testData: TestData = { field: "test" };

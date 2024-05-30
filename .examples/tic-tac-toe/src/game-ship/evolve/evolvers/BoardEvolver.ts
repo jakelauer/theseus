@@ -7,10 +7,10 @@ export const BoardEvolver = Evolver.create("BoardEvolver", { noun: "gameState" }
 		/**
 		 * Set the mark at the given coordinates.
 		 */
-		setMark: ({ mutableGameState }, coords: [number, number], mark: MarkType): GameState => 
+		setMark: ({ gameState }, coords: [number, number], mark: MarkType): GameState => 
 		{
 			const [row, col] = coords;
-			mutableGameState.board[row][col] = mark;
-			return mutableGameState;
+			gameState.board[row][col] = mark;
+			return gameState;
 		},
 	});

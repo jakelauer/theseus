@@ -1,20 +1,20 @@
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
-import type { MutableData, Mutator } from "@Evolvers/Types/MutatorTypes";
+import type { ParamNameData, Mutator } from "@Evolvers/Types/MutatorTypes";
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import type { Mutable } from "@Shared/String/makeMutable";
+import { createDraft, finishDraft, type Draft } from "immer";
 
 const log = getTheseusLogger("Queue");
 
-interface Params<TData extends object, TParamName extends Mutable<string>> 
+interface Params<TData extends object, TParamName extends string> 
 {
 	argName: TParamName;
-	setMutableData: (data: MutableData<TData, TParamName>) => void;
-	getMutableData: () => MutableData<TData, TParamName>;
+	setData: (data: ParamNameData<TData, TParamName>) => void;
+	getData: () => ParamNameData<TData, TParamName>;
 }
 
 export interface MutatorQueue<
 	TData extends object,
-	TParamName extends Mutable>{
+	TParamName extends string>{
 	asyncEncountered: () => boolean;
 	queue: Promise<any>;
 	queueMutation<TFuncReturn extends SortaPromise<TData>>(
@@ -27,11 +27,12 @@ export interface MutatorQueue<
 
 export class ChainableMutatorQueue<
 	TData extends object,
-	TParamName extends Mutable
+	TParamName extends string
 > 
 {
 	private _isAsyncEncountered = false;
 	private _queue: SortaPromise<any> = Promise.resolve();
+	#draft: Draft<ParamNameData<TData, TParamName>>;
 
 	private constructor(private params: Params<TData, TParamName>) {}
 
@@ -97,14 +98,20 @@ export class ChainableMutatorQueue<
 		return () => 
 		{
 			log.verbose(`Executing queue operation ${selfPath}`, { args });
-			const mutableData = this.params.getMutableData();
-			const mutatorResult = mutator(mutableData, ...args);
+			const data = this.params.getData();
+
+			log.verbose(`Creating draft for ${selfPath}`, data);
+			
+			this.#draft = createDraft(data);
+			log.verbose(`Draft created for ${selfPath}`, this.#draft);
+
+			const mutatorResult = mutator(this.#draft as ParamNameData<TData, TParamName>, ...args);
 			log.verbose(`Executed queue operation ${selfPath}`, { args });
 
 			if (mutatorResult === undefined || mutatorResult === null) 
 			{
 				throw new Error(
-					`Mutator ${selfPath} returned ${mutatorResult}. Mutators must return a value compatible with the mutable data type.`,
+					`Mutator ${selfPath} returned ${mutatorResult}. Mutators must return a value compatible with the data type.`,
 				);
 			}
 
@@ -191,26 +198,47 @@ export class ChainableMutatorQueue<
 		result: TData | Promise<TData>,
 	): SortaPromise<TData> 
 	{
+		const finalizeAndReturnData = (result: TData) => 
+		{
+			const finishedDraft = this.extractDataFromDraftResult(this.#draft, result);
+			this.params.setData(finishedDraft as ParamNameData<TData, TParamName>);
+			return this.params.getData()[this.params.argName];
+		};
+
 		let outcome: SortaPromise<TData>;
 		if (result instanceof Promise) 
 		{
+			log.verbose("Async operation detected, waiting for resolution before setting...");
 			outcome = result.then((resolvedResult) =>
 			{
-				this.params.setMutableData(this.inputToObject(resolvedResult));
+				log.verbose("Async operation resolved, setting data to result of operation", resolvedResult);
 
-				return resolvedResult;
+				return finalizeAndReturnData(resolvedResult);
 			});
 		}
 		else 
 		{
-			this.params.setMutableData(this.inputToObject(result));
-			outcome = result;
+			log.verbose("Setting data to result of operation", result);
+			outcome = finalizeAndReturnData(result);
 		}
 
 		return outcome;
 	}
 
-	public static create<TData extends object, TParamName extends Mutable>(
+	protected extractDataFromDraftResult(draft: Draft<ParamNameData<TData, TParamName>>, funcResult: SortaPromise<TData>)
+	{
+		const generateOutcome = (d: Draft<ParamNameData<TData, TParamName>>) => (finishDraft(d) as ParamNameData<TData, TParamName>);
+
+		return funcResult instanceof Promise 
+			? funcResult.then((r: TData) => 
+			{
+				(draft as ParamNameData<TData, TParamName>)[this.params.argName] = r;
+				return generateOutcome(draft);
+			}) 
+			: generateOutcome(draft);
+	};
+
+	public static create<TData extends object, TParamName extends string>(
 		params: Params<TData, TParamName>,
 	)
 	{

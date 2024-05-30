@@ -6,15 +6,13 @@ import type { MutatorDefs } from "@Evolvers/Types/MutatorTypes";
 import type { Refinery } from "@Refineries/Refinery";
 import type { RefineryComplexInstance } from "@Refineries/RefineryComplex";
 import type { ForgeDefs } from "@Refineries/Types";
-import type { Immutable } from "@Shared/String/makeImmutable";
 
-import type { Mutable } from "@Shared/String/makeMutable";
 
 export type BuildFromEvolvers<
     TData extends object,
     TEvolverName extends string,
     TParamName extends string,
-    TEvolvers extends Record<string, EvolverInstance<TData, TEvolverName, Mutable<TParamName>, any>>,
+    TEvolvers extends Record<string, EvolverInstance<TData, TEvolverName, TParamName, any>>,
 > = {
     evolvers: TEvolvers;
     initialState: TData;
@@ -41,9 +39,9 @@ export type BaseParams<
 export type TheseusParams<
     TData extends object,
     TParamName extends string,
-    TMutators extends MutatorDefs<TData, Mutable<TParamName>>,
-    TEvolvers extends EvolverInstance<TData, string,  Mutable<TParamName>, TMutators>[],
-    TForges extends ForgeDefs<TData, Immutable<TParamName>>,
+    TMutators extends MutatorDefs<TData, TParamName>,
+    TEvolvers extends EvolverInstance<TData, string,  TParamName, TMutators>[],
+    TForges extends ForgeDefs<TData, TParamName>,
 	TRefineries extends Refinery<TData, string, TParamName, TForges>[],
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
 > = BaseParams<TData, TObserverType> & {

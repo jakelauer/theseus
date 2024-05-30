@@ -77,8 +77,6 @@ features of the library: a tic-tac-toe game.
 
 [Link to Tic-tac-toe Example](.examples/tic-tac-toe/)
 
-This example demonstrates the practical implementation of Theseus concepts in a familiar game format, making
-it easier to grasp the library's capabilities.
 
 
 

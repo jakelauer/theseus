@@ -5,14 +5,18 @@ import { ChainableMutatorQueue } from "../ChainableMutatorQueue";
 
 const makeMutatorQueue = () => 
 {
-	let data = { value: 0 };
+	let dataReference = { value: 0 };
 	return ChainableMutatorQueue.create({
-		argName: "mutableData",
-		setMutableData: ({ mutableData }) => 
+		argName: "data",
+		setData: ({ data }) => 
 		{
-			data = mutableData;
+			if (data instanceof Promise) 
+			{
+				throw new Error("Cannot set data to a Promise.");
+			}
+			dataReference = data;
 		},
-		getMutableData: () => ({ mutableData: data }),
+		getData: () => ({ data: dataReference }),
 	});
 };
 
@@ -122,21 +126,20 @@ describe("createChainingProxy", function ()
 
 	it("should maintain the order of queued mutations", function () 
 	{
-		const data = { value: 0 };
 		const order: number[] = [];
 		const target = {
 			fixedMutators: {
-				first: ({ mutableData }: any) => 
+				first: ({ data }: any) => 
 				{
 					order.push(1);
 
-					return mutableData;
+					return data;
 				},
-				second: ({ mutableData }: any) => 
+				second: ({ data }: any) => 
 				{
 					order.push(2);
 
-					return mutableData;
+					return data;
 				},
 			},
 		};
@@ -145,7 +148,9 @@ describe("createChainingProxy", function ()
 			queue: makeMutatorQueue(),
 		});
 
-		proxy.first().second();
+		proxy
+			.first()
+			.second();
 		expect(order).to.deep.equal([1, 2]);
 	});
 

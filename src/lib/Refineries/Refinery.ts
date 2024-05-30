@@ -1,14 +1,12 @@
-import deepFreeze from "deep-freeze-strict";
 
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import { makeImmutable } from "@Shared/String/makeImmutable";
-import structuredClone from "@ungap/structured-clone";
 
 import { ForgeSet } from "./ForgeSets/ForgeSet";
 
 import { normalizeRefineryName, type NormalizedRefineryName } from "./Util/normalizeRefineryName";
 import type { ForgeDefs, RefineObject, RefineryDefinition as RefineryOptions } from "./Types/RefineryTypes";
-import type { Immutable } from "@Shared/String/makeImmutable";
+import { freeze } from "immer";
+import structuredClone from "@ungap/structured-clone";
 const log = getTheseusLogger("Refinery");
 
 /**
@@ -20,13 +18,13 @@ const log = getTheseusLogger("Refinery");
 export type RefineryInitializer<
     TData extends object,
     TParamNoun extends string,
-    TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
+    TForges extends ForgeDefs<TData, TParamNoun>,
 > = (data: TData) => RefineObject<TData, TParamNoun, TForges>;
 
 export type RefineryResult<
     TData extends object,
     TParamNoun extends string,
-    TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
+    TForges extends ForgeDefs<TData, TParamNoun>,
 > = RefineryInitializer<TData, TParamNoun, TForges>;
 
 const callableSymbol = Symbol("callable");
@@ -35,11 +33,11 @@ export class Refinery<
     TData extends object,
     TRefineryName extends string,
     TParamNoun extends string,
-    TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
+    TForges extends ForgeDefs<TData, TParamNoun>,
 > extends Function
 {
 	public readonly refineryName: NormalizedRefineryName<TRefineryName>;
-	public readonly immutableArgName: Immutable<TParamNoun>;
+	public readonly argName: TParamNoun;
 	private readonly forges: TForges;
 
 	private constructor(name: TRefineryName, forges: TForges, options: RefineryOptions<TParamNoun>) 
@@ -47,10 +45,9 @@ export class Refinery<
 		super();
 		
 		const normalizedName = this.normalizeName(name);
-		const immutableDataNoun: TParamNoun = options.noun ?? ("input" as TParamNoun);
 
 		this.refineryName = normalizedName;
-		this.immutableArgName = makeImmutable(immutableDataNoun);
+		this.argName = options.noun ?? ("input" as TParamNoun);;
 		this.forges = forges;
 
 		return new Proxy(this, {
@@ -97,14 +94,14 @@ export class Refinery<
      */
 	public refine(input: TData) 
 	{
-		const inputClone = structuredClone(input);
+		const clone = structuredClone(input);
 
-		deepFreeze(inputClone);
+		freeze(clone, true);
 
 		// Create the actions which will be available when `for()` is called.
-		const forgeSet = ForgeSet.create<TData, Immutable<TParamNoun>, TForges>(
-			inputClone,
-			this.immutableArgName,
+		const forgeSet = ForgeSet.create<TData, TParamNoun, TForges>(
+			clone,
+			this.argName,
 			this.forges,
 		);
 
@@ -150,8 +147,8 @@ export class Refinery<
      * const {MyRefinery} = Refinery.create("MyRefinery", "theData")
      *   .toRefine<{ myDataType: number }>() // Specify the data type to be refined
      *   .withForges({ // Define the forge functions
-     *     forgeFunction1: (immutableTheData) => { ... },
-     *     forgeFunction2: (immutableTheData) => { ... },
+     *     forgeFunction1: (theData) => { ... },
+     *     forgeFunction2: (theData) => { ... },
      *   });
      * ```
      *
@@ -171,10 +168,10 @@ export class Refinery<
 	) => ({
 		/**
          * Name the evolver. This name will affect the argument passed in to each evolver action. For example,
-         * if the name is "shoppingCart", each action will receive an argument entitled "mutableShoppingCart"
+         * if the name is "shoppingCart", each action will receive an argument entitled "shoppingCart"
          */
 		toRefine: <_TData extends object>() => ({
-			withForges: <_TForges extends ForgeDefs<_TData, Immutable<_TParamNoun>>>(forges: _TForges) => 
+			withForges: <_TForges extends ForgeDefs<_TData, _TParamNoun>>(forges: _TForges) =>
 			{
 				const refinery = new Refinery<_TData, _TRefineryName, _TParamNoun, _TForges>(
 					name,
