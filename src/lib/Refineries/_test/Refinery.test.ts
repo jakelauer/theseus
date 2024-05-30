@@ -79,9 +79,9 @@ describe("Refinery Base", function ()
     	const testRefinery = Refinery.create("testRefinery", refineryDefinition)
     		.toRefine<TestData>()
     		.withForges({
-    			forge1: ({ immutableTestData }) => ({
-    				...immutableTestData,
-    				field: immutableTestData.field.toUpperCase(),
+    			forge1: ({ testData }) => ({
+    				...testData,
+    				field: testData.field.toUpperCase(),
     			}),
     		});
     	const testData: TestData = { field: "test" };
