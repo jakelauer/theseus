@@ -1,3 +1,37 @@
+# [5.0.0](https://github.com/jakelauer/theseus-js/compare/v4.0.0...v5.0.0) (2024-05-30)
+
+
+* Docs update (#15) ([dc3bdc2](https://github.com/jakelauer/theseus-js/commit/dc3bdc28b5dccdebff9110fadbf2e47c6558fe9c)), closes [#15](https://github.com/jakelauer/theseus-js/issues/15)
+
+
+### BREAKING CHANGES
+
+* refineries and complexes cannot be referenced int he same way
+
+* docs(tutorial): continuing tutorial
+
+Adding refineries to tutorial docs
+
+* docs(tutorial): more docs for tutorial
+
+added some information about the purpose of Theseus and why it exists
+
+* docs(tutorial): updating contents
+
+* docs(tutorial): swapping out the style tag
+
+* docs(tutorial): fix FIRM description
+
+* docs(tutorial): complexess
+
+Added evolver and refinery complex docs
+
+* docs(tutorial): updating readme
+
+* docs(docs): minor
+
+* fix(test): fixed data noun reference
+
 # [4.0.0](https://github.com/jakelauer/theseus-js/compare/v3.0.0...v4.0.0) (2024-05-30)
 
 
