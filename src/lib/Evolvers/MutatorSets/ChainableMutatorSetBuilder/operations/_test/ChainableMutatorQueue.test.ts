@@ -24,10 +24,10 @@ describe("ChainableMutatorQueue", function ()
 
 	it("should process synchronous mutators in sequence", function () 
 	{
-		const argName = "testArg";
-		let testData: ParamNameData<{ value: number }, "testArg"> = { [argName]: { value: 1 } };
+		const paramNoun = "testArg";
+		let testData: ParamNameData<{ value: number }, "testArg"> = { [paramNoun]: { value: 1 } };
         type TData = typeof testData;
-        type TEvolverData = (typeof testData)[typeof argName];
+        type TEvolverData = (typeof testData)[typeof paramNoun];
 
         const setData = (data: any) => 
         {
@@ -45,7 +45,7 @@ describe("ChainableMutatorQueue", function ()
         };
 
         const queue = ChainableMutatorQueue.create({
-        	argName,
+        	paramNoun,
         	getData: getData,
         	setData: setData,
         });
@@ -53,15 +53,15 @@ describe("ChainableMutatorQueue", function ()
         void queue.queueMutation("syncMutatorPath", syncMutator, [1]);
         void queue.queueMutation("syncMutatorPath", syncMutator, [2]);
 
-        expect(testData[argName]).to.deep.equal({ value: 4 });
+        expect(testData[paramNoun]).to.deep.equal({ value: 4 });
 	});
 
 	it("should handle asynchronous mutators correctly", async function () 
 	{
-		const argName = "testArg";
-		let testData: ParamNameData<{ value: number }, "testArg"> = { [argName]: { value: 1 } };
+		const paramNoun = "testArg";
+		let testData: ParamNameData<{ value: number }, "testArg"> = { [paramNoun]: { value: 1 } };
         type TData = typeof testData;
-        type TEvolverData = (typeof testData)[typeof argName];
+        type TEvolverData = (typeof testData)[typeof paramNoun];
 
         const setData = (data: any) => 
         {
@@ -85,7 +85,7 @@ describe("ChainableMutatorQueue", function ()
         };
 
         const queue = ChainableMutatorQueue.create({
-        	argName,
+        	paramNoun,
         	getData: getData,
         	setData: setData,
         });
@@ -93,18 +93,18 @@ describe("ChainableMutatorQueue", function ()
         await queue.queueMutation("asyncMutatorPath", asyncMutator, [1]);
         await queue.queueMutation("asyncMutatorPath", asyncMutator, [2]);
 
-        expect(testData[argName]).to.deep.equal({ value: 4 });
+        expect(testData[paramNoun]).to.deep.equal({ value: 4 });
 	});
 
 	it("should log an error if a mutator returns undefined", function () 
 	{
-		const argName = "undefinedReturnArg" as string;
+		const paramNoun = "undefinedReturnArg" as string;
 		const setData = sinon.stub();
-		const getData = sinon.stub().returns({ [argName]: { value: 0 } });
+		const getData = sinon.stub().returns({ [paramNoun]: { value: 0 } });
 		const undefinedMutator = () => undefined;
 
 		const queue = ChainableMutatorQueue.create({
-			argName,
+			paramNoun,
 			getData: getData,
 			setData: setData,
 		});
@@ -116,13 +116,13 @@ describe("ChainableMutatorQueue", function ()
 
 	it("should log an error if a mutator returns the wrong type", function () 
 	{
-		const argName = "undefinedReturnArg" as string;
+		const paramNoun = "undefinedReturnArg" as string;
 		const setData = sinon.stub();
-		const getData = sinon.stub().returns({ [argName]: { value: 0 } });
+		const getData = sinon.stub().returns({ [paramNoun]: { value: 0 } });
 		const stringMutator = () => "not an object" as any;
 
 		const queue = ChainableMutatorQueue.create({
-			argName,
+			paramNoun,
 			getData: getData,
 			setData: setData,
 		});
@@ -135,16 +135,16 @@ describe("ChainableMutatorQueue", function ()
 	it("should log an error if a mutator returns the wrong type async", async function () 
 	{
 		type Data = {"undefinedReturn": number};
-		const argName = "undefinedReturn";
+		const paramNoun = "undefinedReturn";
 		const setData = sinon.stub();
-		const getData = sinon.stub().returns({ [argName]: 0 });
+		const getData = sinon.stub().returns({ [paramNoun]: 0 });
 		const numberToStringMutator = async () => 
 		{
 		    return Promise.resolve("not a number") as unknown as Data;
 		};
 
-		const queue = ChainableMutatorQueue.create<Data, typeof argName>({
-		    argName,
+		const queue = ChainableMutatorQueue.create<Data, typeof paramNoun>({
+		    paramNoun,
 		    getData: getData,
 		    setData: setData,
 		});

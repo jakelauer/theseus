@@ -3,15 +3,15 @@ import type { MutatorDefs } from "./MutatorTypes";
 export interface TypeAccess<
     TData extends object,
     TEvolverName extends string,
-    TParamName extends string,
-    TMutators extends MutatorDefs<TData, TParamName>,
+    TParamNoun extends string,
+    TMutators extends MutatorDefs<TData, TParamNoun>,
 > {
     data: TData;
     mutators: TMutators;
     evolverName: TEvolverName;
-    paramName: TParamName;
+    paramNoun: TParamNoun;
     returnData: SortaPromise<TData>;
-    evolver: EvolverInstance<TData, TEvolverName, TParamName, TMutators>;
+    evolver: EvolverInstance<TData, TEvolverName, TParamNoun, TMutators>;
 }
 
 /**
@@ -20,17 +20,17 @@ export interface TypeAccess<
  * retrieve these mutators directly.
  *
  * @template TData The type of data the evolver operates on.
- * @template TParamName The type representing the name of the data.
+ * @template TParamNoun The type representing the name of the data.
  * @template TMutators The type representing the definitions of mutators applicable to the evolver data.
  */
 export type EvolverInstance<
     TData extends object,
     TEvolverName extends string,
-    TParamName extends string,
-    TMutators extends MutatorDefs<TData, TParamName>,
+    TParamNoun extends string,
+    TMutators extends MutatorDefs<TData, TParamNoun>,
 > = {
     __setTheseusId: (id: string) => void;
-    __type__access__: TypeAccess<TData, TEvolverName, TParamName, TMutators>;
+    __type__access__: TypeAccess<TData, TEvolverName, TParamNoun, TMutators>;
     evolverName: TEvolverName;
 
     /**
@@ -46,8 +46,8 @@ export type EvolverInstance<
      *   process, returning the final state.
      */
     mutate: (input: TData) => {
-        via: ChainableMutators<TData, TParamName, TMutators, "final">;
-        getMutators: () => ChainableMutators<TData, TParamName, TMutators, "final">;
+        via: ChainableMutators<TData, TParamNoun, TMutators, "final">;
+        getMutators: () => ChainableMutators<TData, TParamNoun, TMutators, "final">;
     };
     /**
      * Initiates an evolution operation on the evolver's data, providing access to a set of chainable
@@ -59,8 +59,8 @@ export type EvolverInstance<
      *   directly retrieve these mutators.
      */
     evolve: (input: TData) => {
-        via: ChainableMutators<TData, TParamName, TMutators>;
-        getMutators: () => ChainableMutators<TData, TParamName, TMutators>;
+        via: ChainableMutators<TData, TParamNoun, TMutators>;
+        getMutators: () => ChainableMutators<TData, TParamNoun, TMutators>;
     };
     getMutatorDefinitions: () => TMutators;
 };
