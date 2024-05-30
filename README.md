@@ -63,21 +63,20 @@ pnpm install theseus-js
 
 #### See the [tutorial](./.tutorial/README.md) for a walkthrough!
 
-## Documentation
+## Tutorial
 
-For more detailed information on specific Theseus concepts, refer to the following documentation sections:
+To help you get started with Theseus, we've created a comprehensive tutorial that covers the core concepts,
+features, and best practices for using the library.
 
--   [Evolvers Documentation](src/lib/Evolvers)
--   [Refineries Documentation](src/lib/Refineries)
+[Link to Tutorial](./.tutorial/README.md)
 
-## Examples
+## Simple Example
 
-Check out our Tic-tac-toe example:
+For a more hands-on introduction to Theseus, we've created a simple example that demonstrates the basic
+features of the library: a tic-tac-toe game.
 
 [Link to Tic-tac-toe Example](.examples/tic-tac-toe/)
 
-This example demonstrates the practical implementation of Theseus concepts in a familiar game format, making
-it easier to grasp the library's capabilities.
 
 ## Building and Contributing
 

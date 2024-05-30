@@ -1,5 +1,3 @@
-import type { Immutable } from "@Shared/String/makeImmutable";
-
 import type { FuncMinusFirstArg } from "@Types/Modifiers";
 import type { NormalizedRefineryName } from "../Util/normalizeRefineryName";
 
@@ -20,10 +18,9 @@ export type ForgeDict<TDict extends Record<string, () => any>> = {
  * structuring.
  *
  * @template TData The type of data that the forge functions will operate on.
- * @template TParamName The name of the parameter representing the forgeable part of the data, marked as
- *   immutable.
+ * @template TParamName The name of the parameter representing the data
  */
-export type ForgeDefs<TData extends object, TParamName extends Immutable> = {
+export type ForgeDefs<TData extends object, TParamName extends string> = {
     [key: string]: ForgeDefChild<TData, TParamName>;
 };
 
@@ -31,10 +28,9 @@ export type ForgeDefs<TData extends object, TParamName extends Immutable> = {
  * Represents either a single forge function or a nested collection of forge definitions.
  *
  * @template TData The type of data being refined.
- * @template TParamName The name of the parameter representing the forgeable part of the data, marked as
- *   immutable.
+ * @template TParamName The name of the parameter representing the data
  */
-export type ForgeDefChild<TData extends object, TParamName extends Immutable> =
+export type ForgeDefChild<TData extends object, TParamName extends string> =
     | Forge<TData, TParamName>
     | ForgeDefs<TData, TParamName>;
 
@@ -43,13 +39,12 @@ export type ForgeDefChild<TData extends object, TParamName extends Immutable> =
  * chainable interface for each forge function, allowing for intuitive and flexible data transformations.
  *
  * @template TData The type of data being refined.
- * @template TParamName The name of the parameter representing the forgeable part of the data, marked as
- *   immutable.
+ * @template TParamName The name of the parameter representing the data
  * @template TForges The forge definitions to be exposed.
  */
 export type ExposeForges<
     TData extends object,
-    TParamName extends Immutable,
+    TParamName extends string,
     TForges extends ForgeDefChild<TData, TParamName>,
 > = {
     // Iterate over each key in TMutators to create a chainable method
@@ -63,8 +58,7 @@ export type ExposeForges<
 };
 
 /**
- * Represents an instance of a refinery, encapsulating its name, the immutable argument name, and the forge
- * functions available for refining data.
+ * Represents an instance of a refinery.
  *
  * @template TData The type of data to be refined.
  * @template TForges The forge definitions applicable to the forgeable data.
@@ -73,16 +67,16 @@ export type ExposeForges<
  */
 export type RefineryInstance<
     TData extends object,
-    TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
+    TForges extends ForgeDefs<TData, TParamNoun>,
     TRefineryName extends string,
     TParamNoun extends string,
 > = {
     refineryName: NormalizedRefineryName<TRefineryName>;
-    immutableArgName: Immutable<TParamNoun>;
+    argName: TParamNoun;
 
     refine: (input: TData) => {
-        withForge: ExposeForges<TData, Immutable<TParamNoun>, TForges>;
-        getForges: () => ExposeForges<TData, Immutable<TParamNoun>, TForges>;
+        withForge: ExposeForges<TData, TParamNoun, TForges>;
+        getForges: () => ExposeForges<TData, TParamNoun, TForges>;
     };
 
     getForgeDefinitions: () => TForges;
@@ -100,9 +94,7 @@ export type RefineryInstance<
  * @template TData The type of data being refined.
  * @template TForges The forge definitions applicable to the forgeable data. This includes any transformations
  *   or modifications that can be applied to the data as part of the refinement process.
- * @template TParamNoun The name of the parameter representing the forgeable part of the data, marked as
- *   immutable. This ensures that the original data is not mutated during the refinement process, adhering to
- *   the principles of immutability and functional programming.
+ * @template TParamNoun The name of the parameter representing the data.
  *
  *   Usage involves calling `via` to apply the forge functions directly to the data, or `getForges` to
  *   retrieve the set of available forge functions for manual application or inspection. This flexibility
@@ -111,8 +103,8 @@ export type RefineryInstance<
 export type RefineObject<
     TData extends object,
     TParamNoun extends string,
-    TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
-> = ExposeForges<TData, Immutable<TParamNoun>, TForges>;
+    TForges extends ForgeDefs<TData, TParamNoun>,
+> = ExposeForges<TData, TParamNoun, TForges>;
 
 /**
  * Describes the structure for defining a refinery, including its name and the data noun used to refer to
@@ -123,9 +115,7 @@ export type RefineObject<
  */
 export interface RefineryDefinition<TParamNoun extends string = "input"> {
     /**
-     * The name of the variable which will be used to refer to the input data. This will be prepended with
-     * "immutable", so if the name is "user", the variable will be "immutableUser". Refineries are designed to
-     * take in immutable data and return a new object, rather than mutating the original object.
+     * The name of the parameter representing the data.
      *
      * If you want to mutate the original object, use an Evolver instead.
      */

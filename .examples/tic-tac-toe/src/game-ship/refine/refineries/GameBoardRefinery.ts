@@ -4,21 +4,21 @@ import type { Board, GameState } from "../../state/GameState";
 
 const log = getTheseusLogger("GameBoardRefinery");
 
-export const { GameBoardRefinery } = Refinery.create("GameBoardRefinery", { noun: "GameState" })
+export const GameBoardRefinery = Refinery.create("GameBoardRefinery", { noun: "gameState" })
 	.toRefine<GameState>()
 	.withForges({
-		getSquare: ({ immutableGameState }, coords: [number, number]) => 
+		getSquare: ({ gameState }, coords: [number, number]) => 
 		{
 			const [row, col] = coords;
-			const square = immutableGameState.board[row][col];
+			const square = gameState.board[row][col];
 
 			return square;
 		},
-		getRandomAvailableCoords: ({ immutableGameState }) => 
+		getRandomAvailableCoords: ({ gameState }) => 
 		{
             type CoordsArray = [number, number][];
 
-            const unusedSquares = immutableGameState.board.reduce((acc, row, rowIndex) => 
+            const unusedSquares = gameState.board.reduce((acc, row, rowIndex) => 
             {
             	row.forEach((square, colIndex) => 
             	{
@@ -44,7 +44,7 @@ export const { GameBoardRefinery } = Refinery.create("GameBoardRefinery", { noun
 
             return randomAvailableSquare;
 		},
-		renderToString: ({ immutableGameState: { board } }) => 
+		renderToString: ({ gameState: { board } }) => 
 		{
 			const reducer = (acc: string[], row: Board[number]) => 
 			{

@@ -102,7 +102,8 @@ class ChainingProxy<TTarget extends ChainableMutatorSetBuilder<any, any, any>>
 				{
 					void Theseus.updateInstance(this.params.observationId, execResult);
 				}
-				this.log.verbose(`.lastly mode active, returning result of queued operations after prop ${prop}`, execResult);
+
+				//this.log.verbose(`.lastly mode active, returning result of queued operations after prop ${prop}`, execResult);
 
 				return this.finalizeAndReset(execResult);
 			}
@@ -237,7 +238,7 @@ class ChainingProxy<TTarget extends ChainableMutatorSetBuilder<any, any, any>>
 
 		if (requestType & ProxyAction.updateData) 
 		{
-			toReturn = this.params.target.setData;
+			toReturn = this.params.target.replaceData;
 		}
 
 

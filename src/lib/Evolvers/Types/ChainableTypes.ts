@@ -1,4 +1,3 @@
-import type { Mutable } from "@Shared/String/makeMutable";
 import type { FuncMinusFirstArg } from "../../Types/Modifiers";
 import type { MutatorDefChild } from "./MutatorTypes";
 
@@ -21,7 +20,7 @@ type MutatorCallable<TMutator extends (...args: any[]) => any, TReturn> = FuncMi
  * if necessary.
  *
  * @template TData The type of data being mutated within the chain.
- * @template TParamName The type representing the names of mutable parameters within the data.
+ * @template TParamName The type representing the name of the data.
  * @template TMutators The type representing the definitions of mutators applicable to the data.
  * @template TMutator The specific mutator function being applied in this chain link.
  * @template IsFinal A tracker indicating whether the current operation is considered the final one in the
@@ -42,7 +41,7 @@ type MutatorCallable<TMutator extends (...args: any[]) => any, TReturn> = FuncMi
  */
 type SyncChainable<
     TData extends object,
-    TParamName extends Mutable<string>,
+    TParamName extends string,
     TMutators extends MutatorDefChild<TData, TParamName>,
     TMutator extends (...args: any[]) => any,
     IsAsync extends AsyncTracker,
@@ -56,7 +55,7 @@ type SyncChainable<
 
 export type FinishChain<
     TData extends object,
-    TParamName extends Mutable<string>,
+    TParamName extends string,
     TMutators extends MutatorDefChild<TData, TParamName>,
     IsAsync extends AsyncTracker,
 > = Record<"resultAsync", Promise<TData>> &
@@ -64,7 +63,7 @@ export type FinishChain<
 
 type AsyncChainable<
     TData extends object,
-    TParamName extends Mutable<string>,
+    TParamName extends string,
     TMutators extends MutatorDefChild<TData, TParamName>,
     TMutator extends (...args: any[]) => any,
     IsAsync extends AsyncTracker,
@@ -90,7 +89,7 @@ type IsChainAsync<TMutators, PrevAsync extends AsyncTracker> = {
  * match the operations' nature (sync or async) and whether the chain is at its final operation.
  *
  * @template TData The type of data being mutated by the chain.
- * @template TParamName The type representing the names of mutable parameters within the data.
+ * @template TParamName The type representing the name of the data.
  * @template TMutators The type representing the definitions of mutators applicable to the data.
  * @template IsFinal A tracker indicating whether the current operation is the final one in the chain.
  *
@@ -110,7 +109,7 @@ type IsChainAsync<TMutators, PrevAsync extends AsyncTracker> = {
 
 export type ChainableMutators<
     TData extends object,
-    TParamName extends Mutable<string>,
+    TParamName extends string,
     TMutators extends MutatorDefChild<TData, TParamName>,
     IsFinal extends FinalTracker = "notFinal",
     IsAsync extends AsyncTracker = IsChainAsync<TMutators, "sync">,
@@ -146,6 +145,6 @@ export interface Chainable<TData extends object> {
 
 export type FinalMutators<
     TData extends object,
-    TParamName extends Mutable<string>,
+    TParamName extends string,
     TMutators extends MutatorDefChild<TData, TParamName>,
 > = ChainableMutators<TData, TParamName, TMutators, "final">;

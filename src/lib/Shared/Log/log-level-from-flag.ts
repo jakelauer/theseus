@@ -8,6 +8,9 @@ export function determineLogLevel(argv: string[]): ValidLogLevels | undefined
 	if (logLevelFlagExists(argv)) 
 	{
 		const logLevelFlag = argv[argv.indexOf("--theseus-log-level") + 1];
+
+		console.log(`Theseus log level flag detected: ${logLevelFlag}`);
+
 		return logLevelFlag in logLevels ? logLevelFlag as ValidLogLevels : "silent";
 	}
 	return undefined;

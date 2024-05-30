@@ -1,6 +1,5 @@
 import type { Refinery } from "@Refineries/Refinery";
 import type { ForgeDefs } from "@Refineries/Types/RefineryTypes";
-import type { Immutable } from "@Shared/String/makeImmutable";
 
 /**
  * Maps each provided refinery to its output as determined by the getForges method. The getForges method
@@ -9,7 +8,7 @@ import type { Immutable } from "@Shared/String/makeImmutable";
 export type RefineriesRemapped<
     TData extends object,
     TParamNoun extends string,
-    TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
+    TForges extends ForgeDefs<TData, TParamNoun>,
     TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
 > = {
     [K in TRefineries[number]["refineryName"]]: ReturnType<ExtractRefineryByName<TRefineries[number], K>["refine"]>;
@@ -19,7 +18,7 @@ export type RefineriesRemapped<
 export type OneRefinery<
     TData extends object,
     TParamNoun extends string,
-    TForges extends ForgeDefs<TData, Immutable<TParamNoun>>,
+    TForges extends ForgeDefs<TData, TParamNoun>,
     TRefinery extends Refinery<TData, string, TParamNoun, TForges>,
 > = TRefinery;
 

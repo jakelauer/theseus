@@ -11,31 +11,31 @@ interface TestData {
 }
 
 const buildChainableMutatorSet = (testData: TestData) =>
-	ChainableMutatorSetBuilder.createChainable(testData, "mutableTestData", {
-		increment: ({ mutableTestData }, amount: number) => 
+	ChainableMutatorSetBuilder.createChainable(testData, "testData", {
+		increment: ({ testData }, amount: number) => 
 		{
 			getTheseusLogger("Increment").trace("Incrementing by", amount);
-			mutableTestData.value += amount;
-			return mutableTestData;
+			testData.value += amount;
+			return testData;
 		},
 		// Assuming a similar pattern for other mutators
-		decrement: ({ mutableTestData }, amount: number) => 
+		decrement: ({ testData }, amount: number) => 
 		{
-			mutableTestData.value -= amount;
-			return mutableTestData;
+			testData.value -= amount;
+			return testData;
 		},
-		asyncIncrement: async ({ mutableTestData }, amount: number) => 
+		asyncIncrement: async ({ testData }, amount: number) => 
 		{
 			return new Promise((resolve) => 
 			{
 				setTimeout(() => 
 				{
-					mutableTestData.value += amount;
-					resolve(mutableTestData);
+					testData.value += amount;
+					resolve(testData);
 				}, 10);
 			});
 		},
-		throwError: ({ mutableTestData }) => 
+		throwError: ({ testData }) => 
 		{
 			throw new Error("Test Error");
 		},
@@ -54,9 +54,9 @@ describe("ChainableMutatorSet", function ()
 
 	it("should allow chaining of mutator functions", async function () 
 	{
-		chainableMutatorSet.increment(1)
-			.and.decrement(1);
-		expect(testData.value).to.equal(0);
+		const output = chainableMutatorSet.increment(1)
+			.lastly.decrement(2);
+		expect(output.value).to.equal(-1);
 	});
 
 	// Assuming an asynchronous mutator has been added to the TestMutators
@@ -74,7 +74,7 @@ describe("ChainableMutatorSet", function ()
 
 	it("should retrieve the final form of the mutated data correctly", function () 
 	{
-		// Assuming result returns the entire TestData object or specifically the mutableTestData part
+		// Assuming result returns the entire TestData object or specifically the testData part
 		expect(chainableMutatorSet.increment(3)
 			.result.value).to.equal(3);
 	});
@@ -139,14 +139,14 @@ describe("ChainableMutatorSet", function ()
 		const anotherTestData = { value: 10 };
 		const anotherChain = buildChainableMutatorSet(anotherTestData);
 
-		await Promise.all([
+		const results = await Promise.all([
 			chainableMutatorSet.increment(5)
 				.lastly.increment(2),
 			anotherChain.increment(5)
 				.lastly.increment(2),
 		]);
 
-		expect(testData.value).to.equal(7);
-		expect(anotherTestData.value).to.equal(17);
+		expect(results[0].value).to.equal(7);
+		expect(results[1].value).to.equal(17);
 	});
 });
