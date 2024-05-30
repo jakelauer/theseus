@@ -5,11 +5,11 @@ import { MutatorSetBuilder } from "../MutatorSetBuilder";
 describe("MutatorSetBuilder", function () 
 {
     type TestData = { testProp: number };
-    const argName = "testProp";
+    const paramNoun = "testProp";
 
     let initialData: TestData = { testProp: 42 };
     const makeBuilder = () =>
-    	MutatorSetBuilder.create(initialData, argName, {
+    	MutatorSetBuilder.create(initialData, paramNoun, {
     		increase: ({ testProp }, amount: number) => 
     		{
     			testProp.testProp += amount;
@@ -28,13 +28,13 @@ describe("MutatorSetBuilder", function ()
     {
     	expect(builder)
     		.to.have.property("data")
-    		.that.deep.equals({ [argName]: initialData });
+    		.that.deep.equals({ [paramNoun]: initialData });
     });
 
     it("inputToObject transforms input data into structured format", function () 
     {
     	const structuredData = (builder as any)["inputToObject"](initialData);
-    	expect(structuredData).to.deep.equal({ [argName]: initialData });
+    	expect(structuredData).to.deep.equal({ [paramNoun]: initialData });
     });
 
     it("create method returns a new instance of MutatorSetBuilder", function () 
@@ -42,7 +42,7 @@ describe("MutatorSetBuilder", function ()
     	expect(builder).to.be.instanceOf(MutatorSetBuilder);
     	expect(builder)
     		.to.have.property("data")
-    		.that.deep.equals({ [argName]: initialData });
+    		.that.deep.equals({ [paramNoun]: initialData });
     });
 
     it("create method returns a new instance with mutators applied", function () 

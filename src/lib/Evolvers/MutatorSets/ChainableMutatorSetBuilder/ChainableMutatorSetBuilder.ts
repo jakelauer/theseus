@@ -13,7 +13,7 @@ import type { GenericMutator, ParamNameData, MutatorDefs } from "../../Types/Mut
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
  *
  * @template TData The type of data the evolver operates on.
- * @template TParamName The type representing the names of data parameters within the evolver data.
+ * @template TParamNoun The type representing the names of data parameters within the evolver data.
  * @template TMutators The type representing the definitions of mutators applicable to the evolver data.
  */
 
@@ -21,25 +21,25 @@ const log = getTheseusLogger("ChainableMutatorSetBuilder");
 
 export class ChainableMutatorSetBuilder<
         TData extends object,
-        TParamName extends string,
-        TMutators extends MutatorDefs<TData, TParamName>,
+        TParamNoun extends string,
+        TMutators extends MutatorDefs<TData, TParamNoun>,
     >
-	extends MutatorSetBuilder<TData, TParamName, TMutators>
+	extends MutatorSetBuilder<TData, TParamNoun, TMutators>
 	implements Chainable<TData> 
 {
 	private calls = 0;
 
-	private mutatorQueue: ChainableMutatorQueue<TData, TParamName>;
+	private mutatorQueue: ChainableMutatorQueue<TData, TParamNoun>;
 
 	// Created by createChainingProxy; always matches the type of the current instance
 	private chainingProxy: typeof this;
 
-	constructor(inputData: TData, argName: TParamName, mutators: TMutators) 
+	constructor(inputData: TData, paramNoun: TParamNoun, mutators: TMutators) 
 	{
-		super(inputData, argName, mutators);
+		super(inputData, paramNoun, mutators);
 
 		this.mutatorQueue = ChainableMutatorQueue.create({
-			argName,
+			paramNoun,
 			getData: this.getData.bind(this),
 			setData: this.setData.bind(this),
 		});
@@ -56,7 +56,7 @@ export class ChainableMutatorSetBuilder<
 		return this.data;
 	}
 
-	private setData(data: ParamNameData<TData, TParamName>) 
+	private setData(data: ParamNameData<TData, TParamNoun>) 
 	{
 		if (data instanceof Promise)
 		{
@@ -69,8 +69,8 @@ export class ChainableMutatorSetBuilder<
 	private get resultBase():Promise<TData> | TData 
 	{
 		return this.mutatorQueue.asyncEncountered
-			? Promise.resolve(this.data[this.argName]) 
-			: this.data[this.argName];
+			? Promise.resolve(this.data[this.paramNoun]) 
+			: this.data[this.paramNoun];
 	}
 
 	public get result() 
@@ -109,7 +109,7 @@ export class ChainableMutatorSetBuilder<
 
 				const result = mutator(dataDraft, ...rest);
 
-				Object.assign(dataDraft[this.argName], result);
+				Object.assign(dataDraft[this.paramNoun], result);
 
 				return result;
 			},
@@ -126,17 +126,17 @@ export class ChainableMutatorSetBuilder<
      * and mutator definitions. Facilitates the creation of chainable mutators.
      *
      * @param data Initial state data.
-     * @param argName Name of the argument representing the data.
+     * @param paramNoun Name of the argument representing the data.
      * @param mutators Definitions of mutators to apply to the state.
      * @returns An instance of ChainableMutatorSet configured with the provided parameters.
      */
 	public static  createChainable<
         TData extends object,
-        TParamName extends string,
-        TMutators extends MutatorDefs<TData, TParamName>,
-    >(data: TData, argName: TParamName, mutators: TMutators) 
+        TParamNoun extends string,
+        TMutators extends MutatorDefs<TData, TParamNoun>,
+    >(data: TData, paramNoun: TParamNoun, mutators: TMutators) 
 	{
-		const chain = new ChainableMutatorSetBuilder(data, argName, mutators);
+		const chain = new ChainableMutatorSetBuilder(data, paramNoun, mutators);
 		const proxy = chain.chainingProxy;
 		return this.castToChainableMutators(proxy);
 	}
@@ -147,11 +147,11 @@ export class ChainableMutatorSetBuilder<
      */
 	public static castToChainableMutators<
         TData extends object,
-        TParamName extends string,
-        TMutators extends MutatorDefs<TData, TParamName>,
-    >(chainableMutatorSet: ChainableMutatorSetBuilder<TData, TParamName, TMutators>) 
+        TParamNoun extends string,
+        TMutators extends MutatorDefs<TData, TParamNoun>,
+    >(chainableMutatorSet: ChainableMutatorSetBuilder<TData, TParamNoun, TMutators>) 
 	{
-		return chainableMutatorSet as ChainableMutators<TData, TParamName, TMutators>;
+		return chainableMutatorSet as ChainableMutators<TData, TParamNoun, TMutators>;
 	}
 
 	/**

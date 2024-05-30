@@ -19,32 +19,32 @@ const log = getTheseusLogger("Evolver");
 export class Evolver<
     TData extends object,
     TEvolverName extends string,
-    TParamName extends string,
-    TMutators extends MutatorDefs<TData, TParamName>,
+    TParamNoun extends string,
+    TMutators extends MutatorDefs<TData, TParamNoun>,
 > 
 {
 	#observationId?: string;
 	public readonly evolverName: NormalizedEvolverName<TEvolverName>;
-	protected readonly paramName: TParamName;
+	protected readonly paramNoun: TParamNoun;
 	protected readonly mutators: TMutators;
 
-	private cachedMutatorSet: FinalMutators<TData, TParamName, TMutators> | undefined;
-	private cachedChainableMutatorSet: ChainableMutators<TData, TParamName, TMutators> | undefined;
+	private cachedMutatorSet: FinalMutators<TData, TParamNoun, TMutators> | undefined;
+	private cachedChainableMutatorSet: ChainableMutators<TData, TParamNoun, TMutators> | undefined;
 
 	/**
      * This only exists to provide outside access to the type parameters of evolvers nested within an
      * EvolverComplex. It doesn't need a value.
      */
-	public readonly __type__access__: TypeAccess<TData, TEvolverName, TParamName, TMutators>;
+	public readonly __type__access__: TypeAccess<TData, TEvolverName, TParamNoun, TMutators>;
 
 	/**
      * Constructor for Evolver. Initializes the evolver with a name, set of mutators, and optional
      * configuration.
      */
-	protected constructor(name: TEvolverName, mutators: TMutators, options?: EvolverOptions<TParamName>) 
+	protected constructor(name: TEvolverName, mutators: TMutators, options?: EvolverOptions<TParamNoun>) 
 	{
 		const normalizedName = this.normalizeName(name);
-		this.paramName = options?.noun ?? ("input" as TParamName);
+		this.paramNoun = options?.noun ?? ("input" as TParamNoun);
 
 		this.evolverName = normalizedName;
 
@@ -108,9 +108,9 @@ export class Evolver<
 	{
 		const mutatorSet =
             this.cachedMutatorSet ??
-            MutatorSetBuilder.create<TData, TParamName, TMutators>(
+            MutatorSetBuilder.create<TData, TParamNoun, TMutators>(
             	input,
-            	this.paramName,
+            	this.paramNoun,
             	this.mutators,
             	this.#observationId,
             );
@@ -124,7 +124,7 @@ export class Evolver<
 
 		const mutatorSetGetter = () => mutatorSet;
 		const result = Object.defineProperties<
-            MutateObject<TData, TEvolverName, TParamName, TMutators>
+            MutateObject<TData, TEvolverName, TParamNoun, TMutators>
         >({} as any, {
         	getMutators: {
         		get: () => mutatorSetGetter,
@@ -146,9 +146,9 @@ export class Evolver<
 	{
 		const mutatorSet =
             this.cachedChainableMutatorSet ??
-            ChainableMutatorSetBuilder.createChainable<TData, TParamName, TMutators>(
+            ChainableMutatorSetBuilder.createChainable<TData, TParamNoun, TMutators>(
             	input,
-            	this.paramName,
+            	this.paramNoun,
             	this.mutators,
             );
 
@@ -162,7 +162,7 @@ export class Evolver<
 		const mutatorSetGetter = () => mutatorSet;
 
 		const result = Object.defineProperties<
-            EvolveObject<TData, TEvolverName, TParamName, TMutators>
+            EvolveObject<TData, TEvolverName, TParamNoun, TMutators>
         >({} as any, {
         	getMutators: {
         		get: () => mutatorSetGetter,
@@ -190,16 +190,16 @@ export class Evolver<
      *
      * @returns A fluent interface for constructing an Evolver with specified data and mutators.
      */
-	public static create = <_TEvolverName extends string, _TParamName extends string = "input">(
+	public static create = <_TEvolverName extends string, _TParamNoun extends string = "input">(
 		name: _TEvolverName,
-		options?: EvolverOptions<_TParamName>,
+		options?: EvolverOptions<_TParamNoun>,
 	) => ({
 		toEvolve: <_TData extends object>() => ({
-			withMutators: <_TMutators extends MutatorDefs<_TData, _TParamName>>(
+			withMutators: <_TMutators extends MutatorDefs<_TData, _TParamNoun>>(
 				mutators: _TMutators,
 			) => 
 			{
-				const evolver = new Evolver<_TData, _TEvolverName, _TParamName, _TMutators>(
+				const evolver = new Evolver<_TData, _TEvolverName, _TParamNoun, _TMutators>(
 					name,
 					mutators,
 					options,
@@ -220,7 +220,7 @@ export class Evolver<
      *
      * @returns A function for fluently configuring and creating an Evolver instance.
      */
-	public static buildCreator = <_TParamName extends string>(options?: EvolverOptions<_TParamName>) => ({
+	public static buildCreator = <_TParamNoun extends string>(options?: EvolverOptions<_TParamNoun>) => ({
 		toEvolve: <_TData extends object>() => ({
 			named: <_TEvolverName extends string>(name: _TEvolverName) => 
 			{
@@ -232,7 +232,7 @@ export class Evolver<
 					throw new Error(`Evolver name cannot contain whitespace: ${name}`);
 				}
 
-				return this.create<_TEvolverName, _TParamName>(name, options).toEvolve<_TData>();
+				return this.create<_TEvolverName, _TParamNoun>(name, options).toEvolve<_TData>();
 			},
 		}),
 	});

@@ -10,16 +10,16 @@ import type { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
  */
 export class ForgeSet<
     TData extends object,
-    TParamName extends string,
-    TForges extends ForgeDefs<TData, TParamName>,
+    TParamNoun extends string,
+    TForges extends ForgeDefs<TData, TParamNoun>,
 > 
 {
-	protected readonly argName: TParamName;
-	protected data: { [key in TParamName]: TData };
+	protected readonly paramNoun: TParamNoun;
+	protected data: { [key in TParamNoun]: TData };
 
-	constructor(inputData: TData, argName: TParamName, forges: TForges) 
+	constructor(inputData: TData, paramNoun: TParamNoun, forges: TForges) 
 	{
-		this.argName = argName;
+		this.paramNoun = paramNoun;
 		this.data = this.inputToObject(inputData);
 
 		this.extendSelfWithForges(forges);
@@ -75,10 +75,10 @@ export class ForgeSet<
      * Transforms the input data into the structured format expected by the forge functions, keyed by the
      * parameter name.
      */
-	protected inputToObject<TData, TParamName extends string>(input: TData): { [key in TParamName]: TData } 
+	protected inputToObject<TData, TParamNoun extends string>(input: TData): { [key in TParamNoun]: TData } 
 	{
-		return { [this.argName]: input } as {
-            [key in TParamName]: TData;
+		return { [this.paramNoun]: input } as {
+            [key in TParamNoun]: TData;
         };
 	}
 
@@ -87,17 +87,17 @@ export class ForgeSet<
      * forge definitions. This method facilitates the easy setup of a ForgeSet with a specific set of forges.
      *
      * @param data The initial forgeable data.
-     * @param argName The name of the argument representing the forgeable part of the data.
+     * @param paramNoun The name of the argument representing the forgeable part of the data.
      * @param forges The definitions of forge functions to apply to the data.
      * @returns An instance of `ForgeSet` configured with the provided parameters.
      */
 	public static create<
         TData extends object,
-        TParamName extends string,
-        TForges extends ForgeDefs<TData, TParamName>,
-    >(data: TData, argName: TParamName, forges: TForges): ExposeForges<TData, TParamName, TForges> 
+        TParamNoun extends string,
+        TForges extends ForgeDefs<TData, TParamNoun>,
+    >(data: TData, paramNoun: TParamNoun, forges: TForges): ExposeForges<TData, TParamNoun, TForges> 
 	{
-		return new ForgeSet(data, argName, forges) as ExposeForges<TData, TParamName, TForges>;
+		return new ForgeSet(data, paramNoun, forges) as ExposeForges<TData, TParamNoun, TForges>;
 	}
 
 	public get self() 
