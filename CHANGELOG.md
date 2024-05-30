@@ -1,3 +1,11 @@
+## [5.0.1](https://github.com/jakelauer/theseus-js/compare/v5.0.0...v5.0.1) (2024-05-30)
+
+
+### Bug Fixes
+
+* **logging:** fix log level settings ([3686ed5](https://github.com/jakelauer/theseus-js/commit/3686ed56d57f2765b6333f21d754a787dc10ed1d))
+* **release:** trigger patch release ([996602e](https://github.com/jakelauer/theseus-js/commit/996602e248e2aa2428d71734fda2c2a38495da03))
+
 # [5.0.0](https://github.com/jakelauer/theseus-js/compare/v4.0.0...v5.0.0) (2024-05-30)
 
 
