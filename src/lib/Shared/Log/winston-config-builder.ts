@@ -6,6 +6,16 @@ import { stringifier } from "@Shared/Log/stringifier";
 const { format, addColors } = winston;
 const { combine, colorize, timestamp, printf, errors, splat, prettyPrint, json } = format;
 
+const skipToJsonLogs = format((info) => 
+{
+	if (info.message.includes("toSJ"))
+	{
+		return false;
+	}
+	
+	return info;
+});
+
 export const theseusLogFormat = () =>
 	combine(
 		errors({ stack: true }),
@@ -14,6 +24,7 @@ export const theseusLogFormat = () =>
 		json({ space: 2, circularValue: undefined }),
 		prettyPrint(),
 		timestamp({ format: "HH:MM:SS:ss.sss" }),
+		skipToJsonLogs(),
 		printf((info) => 
 		{
 			const { label, level, timestamp, message, ...args } = info;

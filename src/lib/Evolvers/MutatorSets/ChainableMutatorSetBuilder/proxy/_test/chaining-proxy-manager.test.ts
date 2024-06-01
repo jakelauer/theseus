@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
-import { createChainingProxy } from "../createChainingProxy";
-import { ChainableMutatorQueue } from "../ChainableMutatorQueue";
+import { createChainingProxy } from "../chaining-proxy-manager";
+import { ChainableMutatorQueue } from "../../ChainableMutatorQueue";
 
 const makeMutatorQueue = () => 
 {

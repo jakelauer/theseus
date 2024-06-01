@@ -19,7 +19,7 @@
             "request": "launch",
             "name": "Run Mocha Tests",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["test"],
+            "runtimeArgs": ["test", "--", "--grep", "\"should return correct values for non-function properties\""],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"
