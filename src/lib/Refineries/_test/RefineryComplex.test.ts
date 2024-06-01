@@ -116,7 +116,6 @@ describe("RefineryComplex", function ()
     	const testData: TestData = { field: "immutable", count: 1 };
     	const originalTestData = { ...testData };
     	const funcs = refineryComplex.refine(testData);
-    	console.log(funcs);
     	const { mockIncrementCount, mockUpperCase } = funcs;
     	mockUpperCase.makeUppercase();
     	mockIncrementCount.incrementCount();
