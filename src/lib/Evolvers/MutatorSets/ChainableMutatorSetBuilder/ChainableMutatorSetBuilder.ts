@@ -1,5 +1,4 @@
-import { ChainableMutatorQueue } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/ChainableMutatorQueue";
-import { createChainingProxy } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/operations/createChainingProxy";
+import { ChainableMutatorQueue } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/ChainableMutatorQueue";
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
@@ -8,6 +7,7 @@ import type { Chainable, ChainableMutators } from "@Evolvers/Types/ChainableType
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 
 import type { GenericMutator, ParamNameData, MutatorDefs } from "../../Types/MutatorTypes";
+import { createChainingProxy } from "./proxy/chaining-proxy-manager";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
