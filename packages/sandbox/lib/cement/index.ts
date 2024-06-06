@@ -53,6 +53,10 @@ function applyChanges<T extends object>(target: T, changes: Record<string | symb
 		}
 	}
 
+	delete target[CONSTANTS.SETTER];
+	delete target[CONSTANTS.PROP_PREFIX];
+	delete target[CONSTANTS.VERIFICATION.BASIS_SYMBOL];
+
 	return target;
 }
 
