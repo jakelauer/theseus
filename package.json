@@ -15,7 +15,6 @@
     },
     "homepage": "https://github.com/jakelauer/theseus-js",
     "scripts": {
-        "postinstall": "pnpm build:pkg",
         "prepublish": "pnpm build && pnpm test",
         "prepare": "husky install",
         "reinstall": "npx npkill && pnpm install",
