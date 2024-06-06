@@ -131,23 +131,21 @@ export class MutatorSetBuilder<
 					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
 				}
 
-				return this.extractDataFromDraftResult(draft, funcResult);
+				return this.extractDataFromDraftResult(funcResult);
 			},
 		});
 	}
 
-	protected extractDataFromDraftResult(draft: Record<TParamNoun, TData>, funcResult: SortaPromise<TData>)
+	protected extractDataFromDraftResult(funcResult: SortaPromise<TData>)
 	{
 		const generateOutcome = (data: TData) => 
 		{
-			draft[this.paramNoun] = data;
-			const finishedDraft = cement(draft) as Record<TParamNoun, TData>;
-			const outcome = finishedDraft[this.paramNoun];
-			if (this.__theseusId && outcome) 
+			const finishedDraft = cement(data) as Record<TParamNoun, TData>;
+			if (this.__theseusId && finishedDraft) 
 			{
-				void Theseus.updateInstance(this.__theseusId, outcome);
+				void Theseus.updateInstance(this.__theseusId, finishedDraft);
 			}
-			return outcome;
+			return finishedDraft;
 		};
 
 		return funcResult instanceof Promise 
