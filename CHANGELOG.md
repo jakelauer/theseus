@@ -1,3 +1,16 @@
+# [6.0.0](https://github.com/jakelauer/theseus-js/compare/v5.0.1...v6.0.0) (2024-06-06)
+
+
+### Features
+
+* **immutability:** replace immer with custom package ([b9d505d](https://github.com/jakelauer/theseus-js/commit/b9d505d1a139e30eb6fe2985d65b0eeb98c4d285))
+* **immutability:** replace immer with custom package ([#20](https://github.com/jakelauer/theseus-js/issues/20)) ([abe16a8](https://github.com/jakelauer/theseus-js/commit/abe16a801bc94475631d50a38ddf76bf6164ed57))
+
+
+### BREAKING CHANGES
+
+* **immutability:** immer replaced
+
 ## [5.0.1](https://github.com/jakelauer/theseus-js/compare/v5.0.0...v5.0.1) (2024-05-30)
 
 
