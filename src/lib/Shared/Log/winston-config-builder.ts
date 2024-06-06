@@ -1,14 +1,23 @@
 import * as winston from "winston";
 
-import { DEFAULT_LOG_LEVEL, logLevels, setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
+import { setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
 import { stringifier } from "@Shared/Log/stringifier";
+import { theseusArgs } from "./theseus-args";
+import { DEFAULT_LOG_LEVEL, logLevels } from "./log-levels";
 
 const { format, addColors } = winston;
 const { combine, colorize, timestamp, printf, errors, splat, prettyPrint, json } = format;
 
-const skipToJsonLogs = format((info) => 
+const logFilter = theseusArgs["theseus-log-filter"];
+
+const filterLogs = format((info) => 
 {
 	if (info.message.includes("toSJ"))
+	{
+		return false;
+	}
+
+	if (logFilter && info.message.match(logFilter))
 	{
 		return false;
 	}
@@ -23,8 +32,8 @@ export const theseusLogFormat = () =>
 		splat(),
 		json({ space: 2, circularValue: undefined }),
 		prettyPrint(),
-		timestamp({ format: "HH:MM:SS:ss.sss" }),
-		skipToJsonLogs(),
+		timestamp({ format: "HH:mm:ss:SS" }),
+		filterLogs(),
 		printf((info) => 
 		{
 			const { label, level, timestamp, message, ...args } = info;

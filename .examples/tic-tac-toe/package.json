@@ -19,7 +19,7 @@
     },
     "scripts": {
         "root-build": "pnpm --prefix ../../ build:base",
-        "start-raw": "node --import=tsx ./src/main.ts",
+        "start-raw": "node --import=tsx ./src/app/main.ts",
         "start": "pnpm root-build && pnpm start-raw"
     },
     "main": "index.ts"

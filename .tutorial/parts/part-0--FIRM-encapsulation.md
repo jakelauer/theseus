@@ -142,31 +142,31 @@ In Theseus, you can use evolvers and refineries to break down complex state tran
 			},
 			tryPlacePieceByEdge: ({mutablePuzzle}, piece: Piece) => {
 				// Try to place the piece by edge
-				const foundEdgeCoordinates = PuzzlePieceRefinery(mutablePuzzle).findEdge(piece);
+				const foundEdgeCoordinates= PuzzlePieceRefinery.refine(mutablePuzzle).findEdge(piece);
 				mutablePuzzle = PuzzleEvolver.mutate(mutablePuzzle).via.placePieceByCoords(piece, foundEdgeCoordinates);
 				return mutablePuzzle;
 			},
 			tryPlacePieceByCorner: ({mutablePuzzle}, piece: Piece) => {
 				// Try to place the piece by corner
-				const foundCornerCoordinates = PuzzlePieceRefinery(mutablePuzzle).findCorner(piece);
+				const foundCornerCoordinates= PuzzlePieceRefinery.refine(mutablePuzzle).findCorner(piece);
 				mutablePuzzle = PuzzleEvolver.mutate(mutablePuzzle).via.placePieceByCoords(piece, foundCornerCoordinates);
 				return mutablePuzzle;
 			},
 			tryPlacePieceByColorGroup: ({mutablePuzzle}, piece: Piece) => {
 				// Try to place the piece by color group
-				const foundColorGroupCoordinates = PuzzlePieceRefinery(mutablePuzzle).findColorGroup(piece);
+				const foundColorGroupCoordinates= PuzzlePieceRefinery.refine(mutablePuzzle).findColorGroup(piece);
 				mutablePuzzle = PuzzleEvolver.mutate(mutablePuzzle).via.placePieceByCoords(piece, foundColorGroupCoordinates);
 				return mutablePuzzle;
 			},
 			tryPlacePieceByNotableFeature: ({mutablePuzzle}, piece: Piece) => {
 				// Try to place the piece by notable feature
-				const foundNotableFeatureCoordinates = PuzzlePieceRefinery(mutablePuzzle).findNotableFeature(piece);
+				const foundNotableFeatureCoordinates= PuzzlePieceRefinery.refine(mutablePuzzle).findNotableFeature(piece);
 				mutablePuzzle = PuzzleEvolver.mutate(mutablePuzzle).via.placePieceByCoords(piece, foundNotableFeatureCoordinates);
 				return mutablePuzzle;
 			},
 			addUnplacedToGroup: ({mutablePuzzle}, piece: Piece) => {
 				if(mutablePuzzle.pieceStatus[piece.id] !== "placed") {
-					const mostLikelyGroup = PuzzlePieceRefinery(mutablePuzzle).determinePieceGroupLikelihood(piece);
+					const mostLikelyGroup= PuzzlePieceRefinery.refine(mutablePuzzle).determinePieceGroupLikelihood(piece);
 					mutablePuzzle.byGroup[mostLikelyGroup].push(piece);
 				}
 				

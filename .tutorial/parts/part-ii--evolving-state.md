@@ -238,7 +238,7 @@ export const GameTurnEvolver = Evolver.create("GameTurnEvolver", { noun: "gameSt
             const { turns, lastPlayer } = gameState;
             log.major(`Taking turn #${turns}`);
 
-            const { getRandomAvailableCoords, getSquare } = GameBoardRefinery(mutableGameState);
+            const { getRandomAvailableCoords, getSquare }= GameBoardRefinery.refine(mutableGameState);
 
             // Determine the mark for the next player
             const mark = lastPlayer === "X" ? "O" : "X";

@@ -2,10 +2,10 @@ import { Refinery } from "theseus-js";
 
 import type { Board, GameState } from "../../state/GameState";
 
-export const RenderRefinery = Refinery.create("RenderRefinery", { noun: "GameState" })
+export const RenderRefinery = Refinery.create("RenderRefinery", { noun: "gameState" })
 	.toRefine<GameState>()
 	.withForges({
-		renderToString: ({ immutableGameState: { board } }) => 
+		renderToString: ({ gameState: { board } }) => 
 		{
 			const reducer = (acc: string[], row: Board[number]) => 
 			{

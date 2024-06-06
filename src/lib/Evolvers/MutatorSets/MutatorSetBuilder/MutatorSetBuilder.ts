@@ -5,7 +5,7 @@ import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
-import { createDraft, finishDraft, type Draft } from "immer";
+import { cement, sandbox } from "@theseus/sandbox";
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
  * adding mutator functions to the evolver and executing these functions to mutate the evolver's state.
@@ -25,7 +25,7 @@ export class MutatorSetBuilder<
 {
 	protected __theseusId?: string;
 	protected data: Record<TParamNoun, TData>;
-	public fixedMutators: TMutators = {} as TMutators;
+	public mutatorsForProxy: TMutators = {} as TMutators;
 
 	constructor(
 		inputData: TData,
@@ -111,7 +111,7 @@ export class MutatorSetBuilder<
 		Object.assign(context, {
 			[selfPath]: (...args: any[]) => 
 			{
-				const draft = createDraft(this.data);
+				const draft = sandbox(this.data);
 				
 				let funcResult: SortaPromise<TData>;
 				try 
@@ -131,37 +131,23 @@ export class MutatorSetBuilder<
 					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
 				}
 
-				const funcAsPromise =
-                    funcResult instanceof Promise ? funcResult : Promise.resolve(funcResult);
-
-				funcAsPromise
-					.then((result) => 
-					{
-						if (this.__theseusId && result) 
-						{
-							log.verbose(`Function "${selfPath}" completed, sending to Observation.`);
-							void Theseus.updateInstance(this.__theseusId, result);
-						}
-					})
-					.catch((e) => 
-					{
-						throw e;
-					});
-
-
 				return this.extractDataFromDraftResult(draft, funcResult);
 			},
 		});
 	}
 
-	protected extractDataFromDraftResult(draft: Draft<Record<TParamNoun, TData>>, funcResult: SortaPromise<TData>)
+	protected extractDataFromDraftResult(draft: Record<TParamNoun, TData>, funcResult: SortaPromise<TData>)
 	{
 		const generateOutcome = (data: TData) => 
 		{
-			// @ts-expect-error - TS doesn't understand that the draft can be indexed
 			draft[this.paramNoun] = data;
-			const finishedDraft = finishDraft(draft) as Record<TParamNoun, TData>;
-			return finishedDraft[this.paramNoun];
+			const finishedDraft = cement(draft) as Record<TParamNoun, TData>;
+			const outcome = finishedDraft[this.paramNoun];
+			if (this.__theseusId && outcome) 
+			{
+				void Theseus.updateInstance(this.__theseusId, outcome);
+			}
+			return outcome;
 		};
 
 		return funcResult instanceof Promise 

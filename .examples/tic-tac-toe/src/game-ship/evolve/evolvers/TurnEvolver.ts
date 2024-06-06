@@ -12,28 +12,28 @@ export const TurnEvolver = Evolver.create("TurnEvolver", { noun: "gameState" })
 		/**
 		 * Set the winner of the game.
 		 */
-		setWinner: ({ mutableGameState }, reason: "stalemate" | "winner") => 
+		setWinner: ({ gameState }, reason: "stalemate" | "winner") => 
 		{
 			log.major(`Game over! ${reason}`);
-			mutableGameState.winner = reason === "winner" ? mutableGameState.lastPlayer : "stalemate";
-			return mutableGameState;
+			gameState.winner = reason === "winner" ? gameState.lastPlayer : "stalemate";
+			return gameState;
 		},
 		/**
 		 * Take the next turn at a random available square.
 		 */
-		nextTurn: ({ mutableGameState }): GameState => 
+		nextTurn: ({ gameState }): GameState => 
 		{
-			const { turns, lastPlayer } = mutableGameState;
+			const { turns, lastPlayer } = gameState;
 			log.major(`Taking turn #${turns}`);
 
-			const { getRandomAvailableSquare, getSquare } = SquaresRefinery.refine(mutableGameState);
+			const { getRandomAvailableSquare, getSquare } = SquaresRefinery.refine(gameState);
 
 			// Determine the mark for the next player
 			const mark = lastPlayer === "X" ? "O" : "X";
 			const coords = getRandomAvailableSquare();
 			if (!coords) 
 			{
-				return TurnEvolver.mutate(mutableGameState).via.setWinner("stalemate");
+				return TurnEvolver.mutate(gameState).via.setWinner("stalemate");
 			}
 
 			// Check if the square is available
@@ -44,15 +44,15 @@ export const TurnEvolver = Evolver.create("TurnEvolver", { noun: "gameState" })
 			}
 
 			// Set the mark on the board
-			BoardEvolver.mutate(mutableGameState)
+			BoardEvolver.mutate(gameState)
 				.via.setMark(coords, mark);
 
 			// Update the game metadata
-			MetaEvolver.evolve(mutableGameState)
+			MetaEvolver.evolve(gameState)
 				.via.iterateTurnCount()
 				.and.updateLastPlayer(mark)
 				.and.updateLastPlayedCoords(coords);
 
-			return mutableGameState;
+			return gameState;
 		},
 	});
