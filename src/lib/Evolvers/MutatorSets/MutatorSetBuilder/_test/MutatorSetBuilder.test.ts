@@ -47,6 +47,7 @@ describe("MutatorSetBuilder", function ()
 
     it("create method returns a new instance with mutators applied", function () 
     {
+    	console.log(builder);
     	// Assert the builder is correctly initialized
     	expect(builder).to.be.an.instanceof(MutatorSetBuilder);
     	expect(builder.increase(0)).to.deep.equal(initialData);

@@ -1,15 +1,14 @@
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
-import type { ParamNameData, Mutator } from "@Evolvers/Types/MutatorTypes";
+import type { Mutator, GenericMutator } from "@Evolvers/Types/MutatorTypes";
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-import { createDraft, finishDraft, type Draft } from "immer";
 
 const log = getTheseusLogger("Queue");
 
 interface Params<TData extends object, TParamNoun extends string> 
 {
 	paramNoun: TParamNoun;
-	setData: (data: ParamNameData<TData, TParamNoun>) => void;
-	getData: () => ParamNameData<TData, TParamNoun>;
+	setData: (data: TData) => void;
+	getData: () => TData;
 }
 
 export interface MutatorQueue<
@@ -32,7 +31,6 @@ export class ChainableMutatorQueue<
 {
 	private _isAsyncEncountered = false;
 	private _queue: SortaPromise<any> = Promise.resolve();
-	#draft: Draft<ParamNameData<TData, TParamNoun>>;
 
 	private constructor(private params: Params<TData, TParamNoun>) {}
 
@@ -91,21 +89,15 @@ export class ChainableMutatorQueue<
 
 	private buildQueueOperation(
 		selfPath: string,
-		mutator: Mutator<TData, TParamNoun, SortaPromise<TData>>,
-		args: any[],
+		mutator: GenericMutator<TData, SortaPromise<TData>>,
+		...args: any[]
 	) 
 	{
 		return () => 
 		{
 			log.verbose(`Executing queue operation ${selfPath}`, { args });
-			const data = this.params.getData();
 
-			log.verbose(`Creating draft for ${selfPath}`, data);
-			
-			this.#draft = createDraft(data);
-			log.verbose(`Draft created for ${selfPath}`, this.#draft);
-
-			const mutatorResult = mutator(this.#draft as ParamNameData<TData, TParamNoun>, ...args);
+			const mutatorResult = mutator(...args);
 			log.verbose(`Executed queue operation ${selfPath}`, { args });
 
 			if (mutatorResult === undefined || mutatorResult === null) 
@@ -127,13 +119,6 @@ export class ChainableMutatorQueue<
 		};
 	}
 
-	private inputToObject(input: TData): { [key in TParamNoun]: TData } 
-	{
-		return { [this.params.paramNoun]: input } as {
-			[key in TParamNoun]: TData;
-		};
-	}
-
 	public queueMutation<TFuncReturn extends Promise<TData>>(
 		mutatorPath: string,
 		func: Mutator<TData, TParamNoun, TFuncReturn>,
@@ -152,7 +137,7 @@ export class ChainableMutatorQueue<
 	{
 		log.verbose(`Request to queue ${mutatorPath}(${args}) received.`);
 
-		const operation = this.buildQueueOperation(mutatorPath, func, args);
+		const operation = this.buildQueueOperation(mutatorPath, func, ...args);
 
 		log.verbose(`Built operation for ${mutatorPath}`);
 	
@@ -198,13 +183,6 @@ export class ChainableMutatorQueue<
 		result: TData | Promise<TData>,
 	): SortaPromise<TData> 
 	{
-		const finalizeAndReturnData = (result: TData) => 
-		{
-			const finishedDraft = this.extractDataFromDraftResult(this.#draft, result);
-			this.params.setData(finishedDraft as ParamNameData<TData, TParamNoun>);
-			return this.params.getData()[this.params.paramNoun];
-		};
-
 		let outcome: SortaPromise<TData>;
 		if (result instanceof Promise) 
 		{
@@ -213,30 +191,19 @@ export class ChainableMutatorQueue<
 			{
 				log.verbose("Async operation resolved, setting data to result of operation", resolvedResult);
 
-				return finalizeAndReturnData(resolvedResult);
+				this.params.setData(resolvedResult);
+				return resolvedResult;
 			});
 		}
 		else 
 		{
 			log.verbose("Setting data to result of operation", result);
-			outcome = finalizeAndReturnData(result);
+			outcome = result;
+			this.params.setData(outcome);
 		}
 
 		return outcome;
 	}
-
-	protected extractDataFromDraftResult(draft: Draft<ParamNameData<TData, TParamNoun>>, funcResult: SortaPromise<TData>)
-	{
-		const generateOutcome = (d: Draft<ParamNameData<TData, TParamNoun>>) => (finishDraft(d) as ParamNameData<TData, TParamNoun>);
-
-		return funcResult instanceof Promise 
-			? funcResult.then((r: TData) => 
-			{
-				(draft as ParamNameData<TData, TParamNoun>)[this.params.paramNoun] = r;
-				return generateOutcome(draft);
-			}) 
-			: generateOutcome(draft);
-	};
 
 	public static create<TData extends object, TParamNoun extends string>(
 		params: Params<TData, TParamNoun>,

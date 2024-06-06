@@ -19,7 +19,27 @@
             "request": "launch",
             "name": "Run Mocha Tests",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["test", "--", "--grep", "\"should return correct values for non-function properties\""],
+            "runtimeArgs": ["test", "--"],//, "--grep", "\"should process synchronous mutators in sequence\""],
+            "internalConsoleOptions": "openOnSessionStart",
+            "cwd": "${workspaceFolder}",
+            "outputCapture": "std"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Run Sandbox Tests",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": ["--prefix","./packages/sandbox", "test", "--"],//, "--grep", "\"should process synchronous mutators in sequence\""],
+            "internalConsoleOptions": "openOnSessionStart",
+            "cwd": "${workspaceFolder}",
+            "outputCapture": "std"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Run tic-tac-toe",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": ["example:ttt"],//, "--grep", "\"should process synchronous mutators in sequence\""],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"

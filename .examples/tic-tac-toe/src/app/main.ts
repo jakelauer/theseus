@@ -8,6 +8,8 @@ GameShip.observe((state) =>
 {
 	onGameUpdated();
 
+	console.log(state.winner);
+
 	switch (state.winner) 
 	{
 		case "stalemate":
@@ -44,7 +46,7 @@ const onGameUpdated = () =>
 
 	const rendered = GameShip.refine.Render.renderToString();
 
-	observeLog.info("Board state\r\n%s\r\n", rendered);
+	observeLog.major("Board state\r\n%s\r\n", rendered);
 };
 
 GameShip.mutate.Turn.nextTurn();

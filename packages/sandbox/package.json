@@ -1,0 +1,23 @@
+{
+    "name": "@theseus/sandbox",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "test": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "clone-deep": "^4.0.1",
+        "uuid": "^9.0.1"
+    },
+    "devDependencies": {
+        "mocha": "^10.3.0",
+        "sinon": "^13.0.0",
+        "tsx": "4.11.2",
+        "typescript": "^5.4.2"
+    }
+}

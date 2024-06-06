@@ -1,0 +1,13 @@
+{
+    "compileOnSave": true,
+    "include": ["./lib/**/*", "./index.ts"],
+	"exclude": ["node_modules", "dist"],
+    "compilerOptions": {
+		"esModuleInterop": true,
+		"declaration": true,
+        "allowJs": true,
+        "rootDir": "./lib",
+        "baseUrl": "./lib",
+		"outDir": "./dist",
+    }
+}

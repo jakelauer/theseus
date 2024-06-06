@@ -32,7 +32,7 @@ describe("createChainingProxy", function ()
 	it("should allow method chaining and return proxy for chainable methods", function () 
 	{
 		const target: any = {
-			fixedMutators: {
+			mutatorsForProxy: {
 				chainableMethod: () => ({}),
 			},
 		};
@@ -126,9 +126,10 @@ describe("createChainingProxy", function ()
 
 	it("should maintain the order of queued mutations", function () 
 	{
+		const dataOrig = { data: { a: 1 } };
 		const order: number[] = [];
 		const target = {
-			fixedMutators: {
+			mutatorsForProxy: {
 				first: ({ data }: any) => 
 				{
 					order.push(1);
@@ -149,8 +150,8 @@ describe("createChainingProxy", function ()
 		});
 
 		proxy
-			.first()
-			.second();
+			.first(dataOrig)
+			.second({ data: { a: 1 } });
 		expect(order).to.deep.equal([1, 2]);
 	});
 

@@ -2,9 +2,11 @@ import winston from "winston";
 
 import { setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
 import winstonConfigBuilder from "@Shared/Log/winston-config-builder";
-import { logLevelFromFlag } from "@Shared/Log/log-level-from-flag";
+import { theseusArgs } from "@Shared/Log/theseus-args";
 
-setTheseusLogLevel(logLevelFromFlag ?? "warn");
+const logLevel = theseusArgs["theseus-log-level"];
+
+setTheseusLogLevel(logLevel ?? "warn");
 
 const rootLogger = winston.createLogger({
 	...winstonConfigBuilder().config,

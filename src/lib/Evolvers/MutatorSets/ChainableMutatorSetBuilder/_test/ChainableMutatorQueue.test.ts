@@ -4,7 +4,7 @@ import sinon from "sinon";
 
 import { ChainableMutatorQueue } from "../ChainableMutatorQueue";
 
-import type { ParamNameData, Mutator } from "@Evolvers/Types/MutatorTypes";
+import type { Mutator } from "@Evolvers/Types/MutatorTypes";
 
 chai.use(chaiAsPromised);
 
@@ -25,17 +25,16 @@ describe("ChainableMutatorQueue", function ()
 	it("should process synchronous mutators in sequence", function () 
 	{
 		const paramNoun = "testArg";
-		let testData: ParamNameData<{ value: number }, "testArg"> = { [paramNoun]: { value: 1 } };
-        type TData = typeof testData;
-        type TEvolverData = (typeof testData)[typeof paramNoun];
+		let testData: {value: number} = { value: 1 };
+        type TData ={value: number};
 
         const setData = (data: any) => 
         {
         	testData = data;
         };
         const getData = () => testData;
-        const syncMutator: Mutator<any, any, TEvolverData> = (
-        	{ testArg }: TData,
+        const syncMutator: Mutator<any, any, TData> = (
+        	testArg: TData,
         	increment: number,
         ) => 
         {
@@ -50,27 +49,26 @@ describe("ChainableMutatorQueue", function ()
         	setData: setData,
         });
 
-        void queue.queueMutation("syncMutatorPath", syncMutator, [1]);
-        void queue.queueMutation("syncMutatorPath", syncMutator, [2]);
+        void queue.queueMutation("syncMutatorPath", syncMutator, [testData, 1]);
+        void queue.queueMutation("syncMutatorPath", syncMutator, [testData, 2]);
 
-        expect(testData[paramNoun]).to.deep.equal({ value: 4 });
+        expect(testData).to.deep.equal({ value: 4 });
 	});
 
 	it("should handle asynchronous mutators correctly", async function () 
 	{
 		const paramNoun = "testArg";
-		let testData: ParamNameData<{ value: number }, "testArg"> = { [paramNoun]: { value: 1 } };
-        type TData = typeof testData;
-        type TEvolverData = (typeof testData)[typeof paramNoun];
+		let testData: {value: number} = { value: 1 };
+        type TData ={value: number};
 
         const setData = (data: any) => 
         {
-        	testData = data;
+        	testData = data.testArg;
         };
 
         const getData = () => testData;
-        const asyncMutator: Mutator<any, any, Promise<TEvolverData>> = async (
-        	{ testArg }: TData,
+        const asyncMutator: Mutator<any, any, Promise<TData>> = async (
+        	testArg: TData,
         	increment: number,
         ) => 
         {
@@ -90,10 +88,12 @@ describe("ChainableMutatorQueue", function ()
         	setData: setData,
         });
 
-        await queue.queueMutation("asyncMutatorPath", asyncMutator, [1]);
-        await queue.queueMutation("asyncMutatorPath", asyncMutator, [2]);
+        let q = queue.queueMutation("asyncMutatorPath", asyncMutator, [testData, 1]);
+        q = queue.queueMutation("asyncMutatorPath", asyncMutator, [testData, 2]);
 
-        expect(testData[paramNoun]).to.deep.equal({ value: 4 });
+        const result = await q;
+
+        expect(result).to.deep.equal({ value: 4 });
 	});
 
 	it("should log an error if a mutator returns undefined", function () 
