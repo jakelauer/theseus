@@ -9,6 +9,7 @@ import TheseusBuilder from "./TheseusBuilder";
 import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 import type { DestroyCallback } from "./lib/Broadcast/Broadcaster";
 import type { BaseParams, ITheseus } from "@Types/Theseus";
+import { cement, frost, sandbox } from "@theseus/sandbox";
 const log = getTheseusLogger("Observation");
 
 export class Theseus<
@@ -35,7 +36,7 @@ export class Theseus<
 
 	private setData = (data: TData) => 
 	{
-		this.internalState = data;
+		this.internalState = sandbox(data, { mode: "copy" });
 	};
 
 	/**
@@ -49,7 +50,7 @@ export class Theseus<
 		super(params?.broadcasterParams);
 
 		this.#uuid = uuidv4();
-		this.setData(data);
+		this.setData(frost(data));
 		Theseus.instancesById[this.#uuid] = this;
 	}
 
@@ -60,7 +61,8 @@ export class Theseus<
      */
 	private async update(data: TData) 
 	{
-		const newState = deepExtend(this.internalState, data);
+		deepExtend(this.internalState, data);
+		const newState = cement(this.internalState);
 
 		this.setData(newState);
 

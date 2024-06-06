@@ -123,7 +123,7 @@ export class ChainableMutatorSetBuilder<
 					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
 				}
 
-				return this.extractDataFromDraftResult(draft, funcResult);
+				return this.extractDataFromDraftResult(funcResult);
 			},
 		});
 	}

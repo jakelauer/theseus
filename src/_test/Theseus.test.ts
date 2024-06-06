@@ -18,7 +18,8 @@ describe("Observation", () =>
 
 	it("should initialize with provided initial data", () => 
 	{
-		expect(observation.state).to.deep.equal({ test: "initial" });
+		// JSON.stringify ignores symbols, which helpfully avoids sandbox symbols
+		expect(JSON.stringify(observation.state)).to.equal(JSON.stringify({ test: "initial" }));
 	});
 
 	it("should allow observers to subscribe and receive updates", async () => 
