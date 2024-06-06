@@ -4,3 +4,4 @@ packages:
     - "../../packages/gpt-zip"
     - "../../packages/publisher"
     - "../../packages/commitlint-config"
+    - "../../packages/sandbox"

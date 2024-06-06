@@ -5,8 +5,8 @@ import { cement } from "../../cement";
 
 describe("frost", function() 
 {
-	let originalObject: any;
-	let frostedProxy: any;
+	let originalObject: Record<"a"|"b", number>;
+	let frostedProxy: Record<"a"|"b", number>;
 
 	beforeEach(function() 
 	{
