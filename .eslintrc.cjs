@@ -6,6 +6,7 @@ module.exports = {
 			"./tsconfig.json",
 			"./packages/eslint-plugin-theseus/tsconfig.json",
 			"./packages/commitlint-config/tsconfig.json",
+			"./packages/sandbox/tsconfig.json",
 			"./.examples/tic-tac-toe/tsconfig.json",
 		],
         ecmaVersion: 2018,  

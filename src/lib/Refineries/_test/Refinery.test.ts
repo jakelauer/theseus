@@ -36,42 +36,8 @@ describe("Refinery Base", function ()
     			}),
     		});
     	const testData: TestData = { field: "test" };
-    	const result = testRefinery(testData).forge1(); // Assuming `applyForges` is a method to apply forges
+    	const result = testRefinery.refine(testData).forge1(); // Assuming `applyForges` is a method to apply forges
     	expect(result.field).to.equal("TEST");
-    });
-
-    it("should throw an error if a forge function modifies the imdata", function () 
-    {
-    	const testRefinery = Refinery.create("testRefinery", refineryDefinition)
-    		.toRefine<TestData>()
-    		.withForges({
-    			forge1: ({ testData }) => 
-    			{
-    				testData.field = testData.field.toUpperCase();
-    				return testData;
-    			},
-    		});
-    	const testData: TestData = { field: "test" };
-
-    	// This checks if the environment is strict, because in strict mode,
-    	// the assignment to the immutable property will throw a TypeError,
-    	// and in non-strict mode, the assignment will fail silently.
-    	const isStrict = (function () 
-    	{
-    		return !this;
-    	})();
-
-    	if (isStrict) 
-    	{
-    		expect(() => testRefinery(testData).forge1()).to.throw(
-    			TypeError,
-    			/^Cannot assign to read only property/,
-    		);
-    	}
-    	else 
-    	{
-    		expect(() => testRefinery(testData).forge1()).to.deep.equal(testData);
-    	}
     });
 
     it("should allow a refinery's instance to be callback directly and return the refined data", function () 
@@ -85,7 +51,7 @@ describe("Refinery Base", function ()
     			}),
     		});
     	const testData: TestData = { field: "test" };
-    	const result = testRefinery(testData).forge1();
+    	const result = testRefinery.refine(testData).forge1();
     	expect(result.field).to.equal("TEST");
     });
 });

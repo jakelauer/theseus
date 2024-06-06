@@ -1,12 +1,10 @@
 
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-
 import { ForgeSet } from "./ForgeSets/ForgeSet";
-
 import { normalizeRefineryName, type NormalizedRefineryName } from "./Util/normalizeRefineryName";
 import type { ForgeDefs, RefineObject, RefineryDefinition as RefineryOptions } from "./Types/RefineryTypes";
-import { freeze } from "immer";
-import structuredClone from "@ungap/structured-clone";
+import { sandbox } from "@theseus/sandbox";
+
 const log = getTheseusLogger("Refinery");
 
 /**
@@ -27,14 +25,12 @@ export type RefineryResult<
     TForges extends ForgeDefs<TData, TParamNoun>,
 > = RefineryInitializer<TData, TParamNoun, TForges>;
 
-const callableSymbol = Symbol("callable");
-
 export class Refinery<
     TData extends object,
     TRefineryName extends string,
     TParamNoun extends string,
     TForges extends ForgeDefs<TData, TParamNoun>,
-> extends Function
+>
 {
 	public readonly refineryName: NormalizedRefineryName<TRefineryName>;
 	public readonly paramNoun: TParamNoun;
@@ -42,27 +38,12 @@ export class Refinery<
 
 	private constructor(name: TRefineryName, forges: TForges, options: RefineryOptions<TParamNoun>) 
 	{
-		super();
-		
 		const normalizedName = this.normalizeName(name);
 
 		this.refineryName = normalizedName;
 		this.paramNoun = options.noun ?? ("input" as TParamNoun);;
 		this.forges = forges;
-
-		return new Proxy(this, {
-			apply: (target, _thisArg, argumentsList: any[]) => 
-			{
-			  if (argumentsList.length !== 1) 
-				{
-					throw new Error("CallableClass instances only accept a single argument.");
-			  }
-			  return target[callableSymbol](argumentsList[0]);
-			},
-		});
 	}
-
-	public [callableSymbol] = this.refine;
 
 	/**
      * Normalizes the refinery name by removing any 'refinery' prefix or suffix, ensuring a clean,
@@ -94,13 +75,11 @@ export class Refinery<
      */
 	public refine(input: TData) 
 	{
-		const clone = structuredClone(input);
-
-		freeze(clone, true);
+		const clone = sandbox(input);
 
 		// Create the actions which will be available when `for()` is called.
 		const forgeSet = ForgeSet.create<TData, TParamNoun, TForges>(
-			clone,
+			clone as TData,
 			this.paramNoun,
 			this.forges,
 		);
@@ -121,7 +100,7 @@ export class Refinery<
 			getForges: () => forgeSetGetter(),
 		};
 
-		return result as RefineObject<TData, TParamNoun, TForges>;
+		return result;
 	}
 
 	/** Retrieves the definitions of forges associated with this refinery. */

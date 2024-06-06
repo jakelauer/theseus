@@ -113,7 +113,7 @@ const gameState = { board: [
 ] };
 
 // Option 1: Calling the refinery instance directly
-const rendered = RenderRefinery(gameState).renderToString();
+const rendered= RenderRefinery.refine(gameState).renderToString();
 
 // Option 2: Using the `refine` method
 const rendered = RenderRefinery.refine(gameState).renderToString();
