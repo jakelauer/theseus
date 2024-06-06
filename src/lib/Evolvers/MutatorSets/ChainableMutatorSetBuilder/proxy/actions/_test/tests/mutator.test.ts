@@ -10,7 +10,7 @@ describe("MutatorAction", function()
 	beforeEach(function() 
 	{
 		mutatorAction = new MutatorAction();
-		params = { target: { fixedMutators: { mutate: () => {} } }, prop: "mutate", proxy: {} } as any;
+		params = { target: { mutatorsForProxy: { mutate: () => {} } }, prop: "mutate", proxy: {} } as any;
 	});
 
 	it("should return true for mutation properties in runTest", function() 

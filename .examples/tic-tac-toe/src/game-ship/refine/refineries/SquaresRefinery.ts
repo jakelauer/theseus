@@ -4,25 +4,25 @@ import type { CoordsArray, GameState } from "../../state/GameState";
 
 const log = getTheseusLogger("SquaresRefinery");
 
-export const SquaresRefinery = Refinery.create("SquaresRefinery", { noun: "GameState" })
+export const SquaresRefinery = Refinery.create("SquaresRefinery", { noun: "gameState" })
 	.toRefine<GameState>()
 	.withForges({
-		getSquare: ({ immutableGameState }, coords: [number, number]) => 
+		getSquare: ({ gameState }, coords: [number, number]) => 
 		{
 			const [row, col] = coords;
-			const square = immutableGameState.board[row][col];
+			const square = gameState.board[row][col];
 
 			return square;
 		},
-		getAvailableSquares: ({ immutableGameState }): CoordsArray => 
+		getAvailableSquares: ({ gameState }): CoordsArray => 
 		{
-			return immutableGameState.board.flatMap((row, rowIndex) => 
+			return gameState.board.flatMap((row, rowIndex) => 
             	row.map((square, colIndex) => !square ? [rowIndex, colIndex] : null),
 			).filter(Boolean) as CoordsArray;
 		},
-		getRandomAvailableSquare: ({ immutableGameState }) => 
+		getRandomAvailableSquare: ({ gameState }) => 
 		{
-			const availableSquares: CoordsArray = SquaresRefinery.refine(immutableGameState).getAvailableSquares();
+			const availableSquares: CoordsArray = SquaresRefinery.refine(gameState).getAvailableSquares();
 			const availableSquaresCount = availableSquares.length;
 
 			let result = undefined;

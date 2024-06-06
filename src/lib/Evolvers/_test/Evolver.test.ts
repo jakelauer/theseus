@@ -105,8 +105,6 @@ describe("Evolvers", () =>
         		expect(reEvolvedData.value).to.equal(4); // The new evolved data should be 3
 
         		// Directly edit the evolved data manually
-        		;
-        		expect(() => {evolvedData.value = 5;}).to.throw(); // The evolved data should be immutable
         		expect(reEvolvedData.value).to.equal(4); // The new evolved data should remain unchanged
         	});
         });

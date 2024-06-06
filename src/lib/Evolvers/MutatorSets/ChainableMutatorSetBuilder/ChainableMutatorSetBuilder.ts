@@ -6,8 +6,9 @@ import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
 import type { Chainable, ChainableMutators } from "@Evolvers/Types/ChainableTypes";
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 
-import type { GenericMutator, ParamNameData, MutatorDefs } from "../../Types/MutatorTypes";
+import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
 import { createChainingProxy } from "./proxy/chaining-proxy-manager";
+import { sandbox } from "@theseus/sandbox";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
@@ -53,17 +54,17 @@ export class ChainableMutatorSetBuilder<
 
 	private getData() 
 	{
-		return this.data;
+		return this.data[this.paramNoun];
 	}
 
-	private setData(data: ParamNameData<TData, TParamNoun>) 
+	private setData(data: TData) 
 	{
 		if (data instanceof Promise)
 		{
 			throw new Error("Cannot set data to a Promise.");
 		}
 
-		this.data = data;
+		this.data = this.inputToObject(data);
 	}
 
 	private get resultBase():Promise<TData> | TData 
@@ -102,23 +103,34 @@ export class ChainableMutatorSetBuilder<
 			[selfPath]: (...args: any[]) => 
 			{
 				this.calls++;
+				const draft = sandbox(this.data);
+				
+				let funcResult: SortaPromise<TData>;
+				try 
+				{
+					funcResult = mutator(draft, ...args);
+				}
+				catch (e) 
+				{
+					log.error(`Error in mutator function "${selfPath}"`, e);
+					throw e;
+				}
 
-				const [dataDraft, ...rest] = args;
+				log.debug(`Result of mutator "${selfPath}"`, funcResult);
 
-				log.debug(`Executing mutator ${selfPath}`, { args });
+				if (funcResult === undefined) 
+				{
+					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
+				}
 
-				const result = mutator(dataDraft, ...rest);
-
-				Object.assign(dataDraft[this.paramNoun], result);
-
-				return result;
+				return this.extractDataFromDraftResult(draft, funcResult);
 			},
 		});
 	}
 
 	protected override getSelfExtensionPoint() 
 	{
-		return this.fixedMutators;
+		return this.mutatorsForProxy;
 	}
 
 	/**

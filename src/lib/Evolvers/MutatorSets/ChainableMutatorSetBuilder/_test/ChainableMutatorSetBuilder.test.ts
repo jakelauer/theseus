@@ -146,6 +146,8 @@ describe("ChainableMutatorSet", function ()
 				.lastly.increment(2),
 		]);
 
+		console.log(results);
+
 		expect(results[0].value).to.equal(7);
 		expect(results[1].value).to.equal(17);
 	});

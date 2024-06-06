@@ -12,7 +12,7 @@ export class MutatorAction extends ProxyActions
 
 	public override runTest({ target, prop }: ProxyActionMapParameters): boolean 
 	{
-		return typeof target.fixedMutators?.[prop] === "function";
+		return typeof target.mutatorsForProxy?.[prop] === "function";
 	}
 	
 	public override process(params: ProxyActionMapParameters) 
@@ -26,7 +26,7 @@ export class MutatorAction extends ProxyActions
 		{
 			log.verbose(`Mutator "${prop}" requested`);
 
-			const execResult = proxyManager.queue.queueMutation(prop, target.fixedMutators[prop], args);
+			const execResult = proxyManager.queue.queueMutation(prop, target.mutatorsForProxy[prop], args);
 
 			if (proxyManager.isFinalChainLink) 
 			{

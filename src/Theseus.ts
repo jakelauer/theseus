@@ -18,7 +18,7 @@ export class Theseus<
 	extends Broadcaster<TData, TObserverType>
 	implements ITheseus<TData> 
 {
-	#internalState: TData;
+	private internalState: TData;
 	#uuid: string;
 
 	public static instancesById: Record<string, Theseus<any, any>> = {};
@@ -30,12 +30,12 @@ export class Theseus<
 
 	public get state() 
 	{
-		return this.#internalState;
+		return this.internalState;
 	}
 
 	private setData = (data: TData) => 
 	{
-		this.#internalState = data;
+		this.internalState = data;
 	};
 
 	/**
@@ -60,12 +60,12 @@ export class Theseus<
      */
 	private async update(data: TData) 
 	{
-		const newState = deepExtend(this.#internalState, data);
+		const newState = deepExtend(this.internalState, data);
 
 		this.setData(newState);
 
 		log.verbose(`Updated state for instance ${this.__uuid}`);
-		await this.broadcast(this.#internalState);
+		await this.broadcast(this.internalState);
 		log.verbose(`Broadcasted state for instance ${this.__uuid}`);
 
 		return true;
@@ -95,7 +95,7 @@ export class Theseus<
 			// Update the callback once any pending updates are completed
 			this.nextTick(() => 
 			{
-				observer.callback(this.#internalState);
+				observer.callback(this.internalState);
 			});
 		}
 

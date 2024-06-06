@@ -31,7 +31,7 @@ const refine = <
 			const result = refineries.reduce(
 				(acc, refinery) => 
 				{
-					const forgeSet = refinery(input);
+					const forgeSet = refinery.refine(input);
 
 					(acc as Record<NormalizedRefineryName<string>, any>)[refinery.refineryName] = forgeSet.getForges();
 
