@@ -1,3 +1,11 @@
+## [6.0.1](https://github.com/jakelauer/theseus-js/compare/v6.0.0...v6.0.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* **broadcast:** fix broadcaster to use the sandbox cemented result ra… ([#21](https://github.com/jakelauer/theseus-js/issues/21)) ([73dace6](https://github.com/jakelauer/theseus-js/commit/73dace60a2692a8581337f952e1f2ea87b41acb4))
+* **broadcast:** fix broadcaster to use the sandbox cemented result rather than the OG draft ([df56f80](https://github.com/jakelauer/theseus-js/commit/df56f8006badfdf282ef5519208efecd068c8898))
+
 # [6.0.0](https://github.com/jakelauer/theseus-js/compare/v5.0.1...v6.0.0) (2024-06-06)
 
 
