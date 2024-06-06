@@ -1,3 +1,10 @@
+## [6.0.2](https://github.com/jakelauer/theseus-js/compare/v6.0.1...v6.0.2) (2024-06-06)
+
+
+### Bug Fixes
+
+* **package.json:** remove postinstall from package.json ([4bdab8b](https://github.com/jakelauer/theseus-js/commit/4bdab8b9cfa439f17ac61f7a73a65af89c477766))
+
 ## [6.0.1](https://github.com/jakelauer/theseus-js/compare/v6.0.0...v6.0.1) (2024-06-06)
 
 
