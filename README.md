@@ -29,7 +29,7 @@ Theseus is built around several core concepts that differentiate it from other s
 -   **Fluent State Management:** Theseus introduces a fluent interface for state management, making the code
     more readable and expressive. This approach allows developers to chain state operations in a clear and
     logical sequence.
-
+ 
 ## Why Theseus?
 
 Compared to other state management libraries, Theseus offers:
