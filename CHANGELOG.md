@@ -1,3 +1,77 @@
+# 1.0.0 (2024-06-07)
+
+
+### Bug Fixes
+
+* ..a ([875ba84](https://github.com/jakelauer/theseus-js/commit/875ba84dfc01d26aed18fe1b2cfdb9524722e418))
+* **broadcast:** fix broadcaster to use the sandbox cemented result ra… ([#21](https://github.com/jakelauer/theseus-js/issues/21)) ([666c52c](https://github.com/jakelauer/theseus-js/commit/666c52c63e0e4b2417b39a5d35296cf55013e3a3))
+* **broadcast:** fix broadcaster to use the sandbox cemented result rather than the OG draft ([844787c](https://github.com/jakelauer/theseus-js/commit/844787ca146e6dc1f370167af031bf0bb8824bd4))
+* **chore:** chore ([3b69428](https://github.com/jakelauer/theseus-js/commit/3b694283b553c8a7a554a1030e795270773e3993))
+* **ci:** workspace fixes ([998768d](https://github.com/jakelauer/theseus-js/commit/998768d4af227b9eb4bb9915f73cc2c0fc4247bc))
+* **dependencies:** use bundledDependencies ([6e0dfd1](https://github.com/jakelauer/theseus-js/commit/6e0dfd1b5e04fdb57e11f935a256e6ac928461e4))
+* **logging:** fix log level settings ([d5ef730](https://github.com/jakelauer/theseus-js/commit/d5ef730cc6e4b14473bf47b234a4e65e24bdf392))
+* **package.json:** remove postinstall from package.json ([a52fed4](https://github.com/jakelauer/theseus-js/commit/a52fed40b15b1fa74a97638cba1f32a230006cbc))
+* **packages:** including packages in output ([64a4a06](https://github.com/jakelauer/theseus-js/commit/64a4a0618b5045f4513b287ab25dedb1215575de))
+* **release:** attempt to fix pnpm release ([897df80](https://github.com/jakelauer/theseus-js/commit/897df801b98145d01ec0642463608c2d332b8afe))
+* **release:** fixing release rules ([5609865](https://github.com/jakelauer/theseus-js/commit/56098650dbca29650aca6f7c00438c9e7feb9a21))
+* **release:** trigger patch release ([b02f034](https://github.com/jakelauer/theseus-js/commit/b02f03487b264edb168441d7404175365e345f0d))
+* **test:** fix mocha reference in sandbox test script ([2a4def1](https://github.com/jakelauer/theseus-js/commit/2a4def134c7ab36a50b1a8d038999ddbeee3f5ab))
+
+
+* Docs update (#15) ([1c06a0c](https://github.com/jakelauer/theseus-js/commit/1c06a0c4449dbdb525a7f546a9c55704f8035376)), closes [#15](https://github.com/jakelauer/theseus-js/issues/15)
+
+
+### Features
+
+* **commitlint:** commitlint config ([cd68170](https://github.com/jakelauer/theseus-js/commit/cd681706b96d797fb9a02e9f51f2e5e896174e83))
+* **fix:** fix ([27ef130](https://github.com/jakelauer/theseus-js/commit/27ef130ff3df5dbc95d95ef94c24086e770ea9f3))
+* **immutability:** immutability with immer ([#16](https://github.com/jakelauer/theseus-js/issues/16)) ([66f9715](https://github.com/jakelauer/theseus-js/commit/66f97150448864a0446e0f60b44e46cdcd942a3b))
+* **immutability:** replace immer with custom package ([d121ee5](https://github.com/jakelauer/theseus-js/commit/d121ee55adbe1c7783285a44db6ae349a6587e06))
+* **immutability:** replace immer with custom package ([#20](https://github.com/jakelauer/theseus-js/issues/20)) ([066e276](https://github.com/jakelauer/theseus-js/commit/066e276697d9c8839238176f9d1f49c5e1ae6779))
+* **nit:** release ([d5a7188](https://github.com/jakelauer/theseus-js/commit/d5a7188a17a635b1ffab79a991e10d97c35b4bab))
+* **pnpm build:** pnpm build fixes for ci ([a65d065](https://github.com/jakelauer/theseus-js/commit/a65d06596c8c99c7537f7db7bcad87bb004c93f8))
+* **refineries:** array-based refineries ([#14](https://github.com/jakelauer/theseus-js/issues/14)) ([302c587](https://github.com/jakelauer/theseus-js/commit/302c5878e2f042d5b16877353afb228cd3ec6b60))
+* **release:** release ([bbb7882](https://github.com/jakelauer/theseus-js/commit/bbb78827a05b8eb415c562c2bad5de4483a1a74d))
+
+
+### BREAKING CHANGES
+
+* **immutability:** immer replaced
+* refineries and complexes cannot be referenced int he same way
+
+* docs(tutorial): continuing tutorial
+
+Adding refineries to tutorial docs
+
+* docs(tutorial): more docs for tutorial
+
+added some information about the purpose of Theseus and why it exists
+
+* docs(tutorial): updating contents
+
+* docs(tutorial): swapping out the style tag
+
+* docs(tutorial): fix FIRM description
+
+* docs(tutorial): complexess
+
+Added evolver and refinery complex docs
+
+* docs(tutorial): updating readme
+
+* docs(docs): minor
+
+* fix(test): fixed data noun reference
+* **immutability:** No longer mutable anywhere, no more requirements for naming
+
+Co-authored-by: Jake Lauer <jakelauer@Jake-MacBook-M2-2.local>
+* **refineries:** refineries and complexes cannot be referenced int he same way
+
+Co-authored-by: Jake Lauer <jakelauer@Jake-MacBook-M2-2.local>
+* **nit:** Evolvers as arrays
+* **fix:** fix
+* **release:** release
+
 ## [6.0.5](https://github.com/jakelauer/theseus-js/compare/v6.0.4...v6.0.5) (2024-06-07)
 
 
