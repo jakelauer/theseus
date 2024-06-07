@@ -52,13 +52,13 @@ importers:
         specifier: ^13.0.0
         version: 13.0.0(semantic-release@23.1.1(typescript@5.4.5))
       '@theseus/commitlint-config':
-        specifier: workspace:latest
+        specifier: workspace:^1.0.0
         version: link:packages/commitlint-config
       '@theseus/gpt-zip':
-        specifier: workspace:latest
+        specifier: workspace:^1.0.0
         version: link:packages/gpt-zip
       '@theseus/sandbox':
-        specifier: workspace:latest
+        specifier: workspace:^1.0.0
         version: link:packages/sandbox
       '@types/chai':
         specifier: ^4.3.12
