@@ -1,5 +1,8 @@
 name: Build
 
+env:
+  HUSKY: 0
+
 on:
     workflow_dispatch: {}
     push:
