@@ -1,3 +1,11 @@
+## [6.0.5](https://github.com/jakelauer/theseus-js/compare/v6.0.4...v6.0.5) (2024-06-07)
+
+
+### Bug Fixes
+
+* **dependencies:** use bundledDependencies ([95c92f8](https://github.com/jakelauer/theseus-js/commit/95c92f883fd46a1d639a581c9ca89995d06d3cb9))
+* **test:** fix mocha reference in sandbox test script ([522e2bd](https://github.com/jakelauer/theseus-js/commit/522e2bd00e66e11908fe4df4f0e6531ec60ecf8f))
+
 ## [6.0.4](https://github.com/jakelauer/theseus-js/compare/v6.0.3...v6.0.4) (2024-06-07)
 
 
