@@ -1,3 +1,11 @@
+## [6.0.9](https://github.com/jakelauer/theseus-js/compare/v6.0.8...v6.0.9) (2024-06-07)
+
+
+### Bug Fixes
+
+* **npm:** remove prepublish ([a4ce296](https://github.com/jakelauer/theseus-js/commit/a4ce296752432eef5939583e07c29c87771083ee))
+* x ([655c840](https://github.com/jakelauer/theseus-js/commit/655c840966b6d61a5b49581112242df091d300a0))
+
 ## [6.0.8](https://github.com/jakelauer/theseus-js/compare/v6.0.7...v6.0.8) (2024-06-07)
 
 
