@@ -14,6 +14,9 @@ importers:
       deep-extend:
         specifier: ^0.6.0
         version: 0.6.0
+      theseus-sandbox:
+        specifier: workspace:*
+        version: link:packages/sandbox
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -159,9 +162,6 @@ importers:
       theseus-gpt-zip:
         specifier: workspace:./packages/gpt-zip
         version: link:packages/gpt-zip
-      theseus-sandbox:
-        specifier: workspace:./packages/sandbox
-        version: link:packages/sandbox
       tsx:
         specifier: ^4.11.0
         version: 4.11.0
