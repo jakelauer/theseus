@@ -5,7 +5,7 @@ import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
-import { cement, sandbox } from "@theseus/sandbox";
+import { cement, sandbox } from "theseus-sandbox";
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
  * adding mutator functions to the evolver and executing these functions to mutate the evolver's state.

@@ -54,15 +54,6 @@ importers:
       '@semantic-release/release-notes-generator':
         specifier: ^13.0.0
         version: 13.0.0(semantic-release@23.1.1(typescript@5.4.5))
-      '@theseus/commitlint-config':
-        specifier: workspace:./packages/commitlint-config
-        version: link:packages/commitlint-config
-      '@theseus/gpt-zip':
-        specifier: workspace:./packages/gpt-zip
-        version: link:packages/gpt-zip
-      '@theseus/sandbox':
-        specifier: workspace:./packages/sandbox
-        version: link:packages/sandbox
       '@types/chai':
         specifier: ^4.3.12
         version: 4.3.16
@@ -124,7 +115,7 @@ importers:
         specifier: ^10.4.1
         version: 10.4.3(eslint@8.57.0)
       eslint-plugin-theseus:
-        specifier: workspace:latest
+        specifier: workspace:./packages/eslint-plugin-theseus
         version: link:packages/eslint-plugin-theseus
       eslint-plugin-unused-imports:
         specifier: ^3.1.0
@@ -162,6 +153,15 @@ importers:
       sinon-chai:
         specifier: ^3.7.0
         version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+      theseus-commitlint-config:
+        specifier: workspace:./packages/commitlint-config
+        version: link:packages/commitlint-config
+      theseus-gpt-zip:
+        specifier: workspace:./packages/gpt-zip
+        version: link:packages/gpt-zip
+      theseus-sandbox:
+        specifier: workspace:./packages/sandbox
+        version: link:packages/sandbox
       tsx:
         specifier: ^4.11.0
         version: 4.11.0

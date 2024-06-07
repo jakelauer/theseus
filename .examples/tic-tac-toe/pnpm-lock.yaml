@@ -76,13 +76,13 @@ importers:
       '@semantic-release/release-notes-generator':
         specifier: ^13.0.0
         version: 13.0.0(semantic-release@23.1.1)
-      '@theseus/commitlint-config':
+      'theseus-commitlint-config':
         specifier: workspace:latest
         version: link:packages/commitlint-config
-      '@theseus/gpt-zip':
+      'theseus-gpt-zip':
         specifier: workspace:latest
         version: link:packages/gpt-zip
-      '@theseus/sandbox':
+      'theseus-sandbox':
         specifier: workspace:latest
         version: link:packages/sandbox
       '@types/chai':

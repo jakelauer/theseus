@@ -3,7 +3,7 @@ import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 import { ForgeSet } from "./ForgeSets/ForgeSet";
 import { normalizeRefineryName, type NormalizedRefineryName } from "./Util/normalizeRefineryName";
 import type { ForgeDefs, RefineObject, RefineryDefinition as RefineryOptions } from "./Types/RefineryTypes";
-import { sandbox } from "@theseus/sandbox";
+import { sandbox } from "theseus-sandbox";
 
 const log = getTheseusLogger("Refinery");
 

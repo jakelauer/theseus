@@ -8,7 +8,7 @@ import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
 import { createChainingProxy } from "./proxy/chaining-proxy-manager";
-import { sandbox } from "@theseus/sandbox";
+import { sandbox } from "theseus-sandbox";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.

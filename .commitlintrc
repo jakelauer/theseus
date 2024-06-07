@@ -1,2 +1,2 @@
 extends:
-  - '@theseus/commitlint-config'
+  - './packages/commitlint-config'
