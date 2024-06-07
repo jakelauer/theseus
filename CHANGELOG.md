@@ -1,3 +1,10 @@
+## [6.0.8](https://github.com/jakelauer/theseus-js/compare/v6.0.7...v6.0.8) (2024-06-07)
+
+
+### Bug Fixes
+
+* x ([db5ff73](https://github.com/jakelauer/theseus-js/commit/db5ff733cc12c790d12c535c81b43c2eb4f9f1c2))
+
 ## [6.0.7](https://github.com/jakelauer/theseus-js/compare/v6.0.6...v6.0.7) (2024-06-07)
 
 
