@@ -35,8 +35,7 @@
         "live": "tsc --watch --project ./tsconfig.json && resolve-tspaths",
         "clean": "rm -rf ./dist",
         "// ==== EXAMPLES ==== //": "",
-        "example:ttt": "pnpm --prefix ./.examples/tic-tac-toe start",
-        "// ==== HELPERS ==== //": ""
+        "example:ttt": "pnpm --prefix ./.examples/tic-tac-toe start"
     },
     "dependencies": {
         "@ungap/structured-clone": "^1.2.0",
@@ -94,6 +93,7 @@
         "prettier-eslint": "^16.3.0",
         "resolve-tspaths": "^0.8.18",
         "semantic-release": "^23.1.1",
+        "semantic-release-monorepo": "^8.0.2",
         "sinon": "^18.0.0",
         "sinon-chai": "^3.7.0",
         "tsx": "^4.11.0",
