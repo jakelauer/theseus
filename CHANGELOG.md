@@ -1,3 +1,10 @@
+## [6.0.10](https://github.com/jakelauer/theseus-js/compare/v6.0.9...v6.0.10) (2024-06-07)
+
+
+### Bug Fixes
+
+* **ci:** avoid husky in github actions ([f887a14](https://github.com/jakelauer/theseus-js/commit/f887a149b48e449e2454d6d44cc7c437e7412907))
+
 ## [6.0.9](https://github.com/jakelauer/theseus-js/compare/v6.0.8...v6.0.9) (2024-06-07)
 
 
