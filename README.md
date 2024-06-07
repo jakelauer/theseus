@@ -24,7 +24,7 @@ Theseus is built around several core concepts that differentiate it from other s
 
 -   **Refineries:** Complementing Evolvers, Refineries allow for the transformation and validation of state
     transitions. They ensure that state changes are not only predictable but also conform to defined
-    constraints and validations, enhancing the robustness of your application.
+    constraints and validations, enhancing the robustness of your application. 
 
 -   **Fluent State Management:** Theseus introduces a fluent interface for state management, making the code
     more readable and expressive. This approach allows developers to chain state operations in a clear and
