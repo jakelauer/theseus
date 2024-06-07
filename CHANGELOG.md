@@ -1,3 +1,10 @@
+## [6.0.3](https://github.com/jakelauer/theseus-js/compare/v6.0.2...v6.0.3) (2024-06-06)
+
+
+### Bug Fixes
+
+* **packages:** including packages in output ([3d3113f](https://github.com/jakelauer/theseus-js/commit/3d3113fa540d223d88b77c13dbdd42a8f9026e0e))
+
 ## [6.0.2](https://github.com/jakelauer/theseus-js/compare/v6.0.1...v6.0.2) (2024-06-06)
 
 
