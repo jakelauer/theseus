@@ -6,3 +6,4 @@
 *.map
 **/_test/**
 **/test/**
+**/packages/**
