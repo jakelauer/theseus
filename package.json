@@ -45,6 +45,11 @@
         "uuid": "^9.0.1",
         "winston": "^3.12.0"
     },
+    "bundledDependencies": [
+        "@theseus/commitlint-config",
+        "@theseus/gpt-zip",
+        "@theseus/sandbox"
+    ],
     "devDependencies": {
         "@commitlint/cli": "^19.3.0",
         "@commitlint/config-conventional": "^19.2.2",
@@ -56,9 +61,9 @@
         "@semantic-release/github": "^10.0.5",
         "@semantic-release/npm": "^12.0.1",
         "@semantic-release/release-notes-generator": "^13.0.0",
-        "@theseus/commitlint-config": "workspace:^1.0.0",
-        "@theseus/gpt-zip": "workspace:^1.0.0",
-        "@theseus/sandbox": "workspace:^1.0.0",
+        "@theseus/commitlint-config": "workspace:latest",
+        "@theseus/gpt-zip": "workspace:latest",
+        "@theseus/sandbox": "workspace:latest",
         "@types/chai": "^4.3.12",
         "@types/chai-as-promised": "^7.1.8",
         "@types/deep-equal": "^1.0.4",
