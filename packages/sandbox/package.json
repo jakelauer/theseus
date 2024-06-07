@@ -5,7 +5,7 @@
     "main": "./dist/index.js",
     "scripts": {
         "build": "tsc",
-        "test": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs"
+        "test": "mocha --require tsx --config ./.mocharc.cjs"
     },
     "keywords": [],
     "author": "",
