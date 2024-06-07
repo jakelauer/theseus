@@ -1,3 +1,10 @@
+## [6.0.4](https://github.com/jakelauer/theseus-js/compare/v6.0.3...v6.0.4) (2024-06-07)
+
+
+### Bug Fixes
+
+* **ci:** workspace fixes ([4f120d8](https://github.com/jakelauer/theseus-js/commit/4f120d852f220c8364dc66979fac0958443093ea))
+
 ## [6.0.3](https://github.com/jakelauer/theseus-js/compare/v6.0.2...v6.0.3) (2024-06-06)
 
 
