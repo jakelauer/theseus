@@ -1,3 +1,12 @@
+## [6.0.12](https://github.com/jakelauer/theseus-js/compare/v6.0.11...v6.0.12) (2024-06-08)
+
+
+### Bug Fixes
+
+* **ci:** ci ([b51a341](https://github.com/jakelauer/theseus-js/commit/b51a3412004404860d4a163b14788e6a45504e70))
+* **ci:** fix test and buil ([0d99c89](https://github.com/jakelauer/theseus-js/commit/0d99c8918d9853c297536c058e2996991348865a))
+* **x:** x ([2420c7d](https://github.com/jakelauer/theseus-js/commit/2420c7d81a560878c0cb819d0a11c742cb6c2b4c))
+
 ## [6.0.11](https://github.com/jakelauer/theseus-js/compare/v6.0.10...v6.0.11) (2024-06-07)
 
 
