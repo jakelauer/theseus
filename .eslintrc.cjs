@@ -4,6 +4,7 @@ module.exports = {
     parserOptions: {  
         project: [
 			"./tsconfig.json",
+			"./tsconfig.tsup.json",
 			"./packages/eslint-plugin-theseus/tsconfig.json",
 			"./packages/commitlint-config/tsconfig.json",
 			"./packages/sandbox/tsconfig.json",

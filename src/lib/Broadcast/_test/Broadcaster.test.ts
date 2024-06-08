@@ -1,11 +1,15 @@
 import { expect } from "chai";
 import { beforeEach, describe, it } from "mocha";
+import chaiAsPromised from "chai-as-promised";
 
 import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 
 import { Broadcaster } from "../Broadcaster";
 
 import type { BroadcasterParams } from "../Broadcaster";
+
+chai.use(chaiAsPromised);
+
 // Mock observer class for testing
 class MockObserver extends BroadcasterObserver<any> 
 {

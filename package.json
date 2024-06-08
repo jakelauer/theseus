@@ -27,7 +27,7 @@
         "test:base": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs",
         "test": "pnpm test:pkg && pnpm test:base",
         "// ==== BUILD ==== //": "",
-        "build:base": "tsc --project ./tsconfig.json && resolve-tspaths",
+        "build:base": "tsup && resolve-tspaths",
         "build:ci": "pnpm build:base",
         "build:ci:pkg": "pnpm build:pkg",
         "build": "pnpm lint-fix && pnpm build:pkg && pnpm build:base",
@@ -39,8 +39,8 @@
     },
     "dependencies": {
         "@ungap/structured-clone": "^1.2.0",
-        "theseus-sandbox": "workspace:*",
         "deep-extend": "^0.6.0",
+        "theseus-sandbox": "workspace:*",
         "uuid": "^9.0.1",
         "winston": "^3.12.0"
     },
@@ -56,8 +56,6 @@
         "@semantic-release/github": "^10.0.5",
         "@semantic-release/npm": "^12.0.1",
         "@semantic-release/release-notes-generator": "^13.0.0",
-        "theseus-commitlint-config": "workspace:./packages/commitlint-config",
-        "theseus-gpt-zip": "workspace:./packages/gpt-zip",
         "@types/chai": "^4.3.12",
         "@types/chai-as-promised": "^7.1.8",
         "@types/deep-equal": "^1.0.4",
@@ -80,6 +78,7 @@
         "eslint-plugin-mocha": "^10.4.1",
         "eslint-plugin-theseus": "workspace:./packages/eslint-plugin-theseus",
         "eslint-plugin-unused-imports": "^3.1.0",
+        "glob": "^10.4.1",
         "husky": "^8.0.3",
         "lint-staged": "^14.0.1",
         "mocha": "^10.3.0",
@@ -91,6 +90,9 @@
         "semantic-release-monorepo": "^8.0.2",
         "sinon": "^18.0.0",
         "sinon-chai": "^3.7.0",
+        "theseus-commitlint-config": "workspace:./packages/commitlint-config",
+        "theseus-gpt-zip": "workspace:./packages/gpt-zip",
+        "tsup": "^8.1.0",
         "tsx": "^4.11.0",
         "typescript": "^5.4.5"
     },
@@ -100,7 +102,8 @@
             "eslint --fix --resolve-plugins-relative-to=./"
         ]
     },
-    "main": "dist/index.js",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
     "directories": {
         "dist": "dist"
     },
