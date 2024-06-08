@@ -1,3 +1,16 @@
+# [7.0.0](https://github.com/jakelauer/theseus-js/compare/v6.0.14...v7.0.0) (2024-06-08)
+
+
+### Bug Fixes
+
+* **output:** cjs + esm ([9c2ad64](https://github.com/jakelauer/theseus-js/commit/9c2ad641db02e912c6e7a5552cbf734f03f1765d))
+* **test:** fix missing chai ref ([7f665db](https://github.com/jakelauer/theseus-js/commit/7f665db6d185f270760f4124787ebbe91bc9e132))
+
+
+### BREAKING CHANGES
+
+* **output:** cjs and esm both present
+
 ## [6.0.14](https://github.com/jakelauer/theseus-js/compare/v6.0.13...v6.0.14) (2024-06-08)
 
 
