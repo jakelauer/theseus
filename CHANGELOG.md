@@ -1,3 +1,10 @@
+## [6.0.13](https://github.com/jakelauer/theseus-js/compare/v6.0.12...v6.0.13) (2024-06-08)
+
+
+### Bug Fixes
+
+* **publish:** remove npm and use pnpm ([7290086](https://github.com/jakelauer/theseus-js/commit/72900866250b3fca7f1c1864ab6542955dbc5a84))
+
 ## [6.0.12](https://github.com/jakelauer/theseus-js/compare/v6.0.11...v6.0.12) (2024-06-08)
 
 
