@@ -1,3 +1,10 @@
+## [6.0.14](https://github.com/jakelauer/theseus-js/compare/v6.0.13...v6.0.14) (2024-06-08)
+
+
+### Bug Fixes
+
+* **testing change to sandbox:** sandbox ([b288c70](https://github.com/jakelauer/theseus-js/commit/b288c700f71ef34959a6af85c4a1ac41233e2d69))
+
 ## [6.0.13](https://github.com/jakelauer/theseus-js/compare/v6.0.12...v6.0.13) (2024-06-08)
 
 
