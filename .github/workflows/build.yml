@@ -45,10 +45,20 @@ jobs:
 
       - name: Determine semantic-release command
         id: set-release-command
-        run: echo "::set-output name=command::$(if [[ $GITHUB_REF == 'refs/heads/main' ]]; then echo 'npx --no-install semantic-release -e semantic-release-monorepo && pnpm -r --workspace-concurrency=1 exec -- npx --no-install semantic-release -e semantic-release-monorepo'; else echo 'npx semantic-release --dry-run'; fi)"
+        run: echo "::set-output name=command::$(if [[ $GITHUB_REF == 'refs/heads/main' ]]; then echo 'npx semantic-release'; else echo 'npx semantic-release --dry-run'; fi)"
+
+      - name: Determine monorepo semantic-release command
+        id: set-monorepo-release-command
+        run: echo "::set-output name=command::$(if [[ $GITHUB_REF == 'refs/heads/main' ]]; then echo 'pnpm -r --workspace-concurrency=1 exec -- npx semantic-release -e semantic-release-monorepo'; else echo 'pnpm -r --workspace-concurrency=1 exec -- npx semantic-release -e semantic-release-monorepo --dry-run'; fi)"
 
       - name: Run semantic-release
         run: ${{ steps.set-release-command.outputs.command }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: Run monorepo semantic-release
+        run: ${{ steps.set-monorepo-release-command.outputs.command }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

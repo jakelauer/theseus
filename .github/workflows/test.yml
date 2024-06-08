@@ -33,5 +33,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Run build
+        run: pnpm build:ci:pkg  # Assuming pnpm and node_modules are correctly configured to be available
+
       - name: Run tests
         run: pnpm test  # Assuming pnpm and node_modules are correctly configured to be available
