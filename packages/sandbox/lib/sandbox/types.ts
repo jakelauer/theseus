@@ -36,7 +36,7 @@ export interface SandboxProxyProps<T> {
         /**
          * A record of changes made to the sandbox proxy.
          */
-        changes: Record<string | symbol, any>;
+        changes: Partial<T>;
         /**
          * The original object being proxied.
          */

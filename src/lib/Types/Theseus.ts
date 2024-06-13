@@ -26,6 +26,7 @@ export type BuildFromComplex<TData, TComplex extends EvolverComplex> = {
 export interface ITheseus<TData> {
     __uuid: string;
     state: TData;
+	getChanges: () => Partial<TData>;
     observe: (callback: (newData: TData) => void, updateImmediately?: boolean) => DestroyCallback;
 }
 

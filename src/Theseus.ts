@@ -9,7 +9,8 @@ import TheseusBuilder from "./TheseusBuilder";
 import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 import type { DestroyCallback } from "./lib/Broadcast/Broadcaster";
 import type { BaseParams, ITheseus } from "@Types/Theseus";
-import { cement, frost, sandbox } from "theseus-sandbox";
+import { cement, frost, sandbox, getSandboxChanges } from "theseus-sandbox";
+
 const log = getTheseusLogger("Observation");
 
 export class Theseus<
@@ -23,6 +24,21 @@ export class Theseus<
 	#uuid: string;
 
 	public static instancesById: Record<string, Theseus<any, any>> = {};
+
+	/**
+     * Creates an Observation instance
+     *
+     * @param initialData The starting data (can be null)
+     * @param params
+     */
+	constructor(data: TData, params?: BaseParams<TData, TObserverType>) 
+	{
+		super(params?.broadcasterParams);
+
+		this.#uuid = uuidv4();
+		this.setData(frost(data));
+		Theseus.instancesById[this.#uuid] = this;
+	}
 
 	public get __uuid() 
 	{
@@ -40,18 +56,11 @@ export class Theseus<
 	};
 
 	/**
-     * Creates an Observation instance
-     *
-     * @param initialData The starting data (can be null)
-     * @param params
-     */
-	constructor(data: TData, params?: BaseParams<TData, TObserverType>) 
+	 * Get the changes that have been made to the store since the last time this method was called.
+	 */
+	public getChanges(): Partial<TData>
 	{
-		super(params?.broadcasterParams);
-
-		this.#uuid = uuidv4();
-		this.setData(frost(data));
-		Theseus.instancesById[this.#uuid] = this;
+		return getSandboxChanges(this.internalState);
 	}
 
 	/**

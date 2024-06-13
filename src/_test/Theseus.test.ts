@@ -4,6 +4,7 @@ import { beforeEach, describe, it } from "mocha";
 import sinon from "sinon";
 
 import { Theseus } from "@/Theseus";
+import theseus, { Evolver } from "..";
 
 chai.use(chaiAsPromised);
 
@@ -77,6 +78,27 @@ describe("Observation", () =>
 		// Since updateInstance is async, we may need to wait or use fake timers
 		// This example assumes immediate update for simplicity
 		expect(callback.calledWith({ test: "static update" })).to.be.true;
+
+		return;
+	});
+
+	it("should correctly return changes made to the state when requested", async () => 
+	{
+		const instance = theseus({ test: "initial" }).maintainWith({
+			evolvers: [
+				Evolver.create("TestEvolver", { noun: "data" }).toEvolve<{ test: string }>().withMutators({
+					reverse: ({ data }) => 
+					{
+						data.test = data.test.split("").reverse().join("");
+						return data;
+					},
+				}),
+			],
+		});
+		instance.evolve.Test.reverse();
+
+		const changes = instance.getChanges();
+		expect(changes).to.deep.equal({ test: "laitini" });
 
 		return;
 	});

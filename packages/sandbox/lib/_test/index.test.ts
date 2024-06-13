@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as cement from "../cement";
 import * as reject from "../reject";
-import * as sandbox from "../sandbox";
+import * as sandbox from "../sandbox/sandbox";
 
 describe("lib index", function() 
 {

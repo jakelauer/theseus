@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { reject } from "../";
-import { isSandboxProxy } from "../../sandbox";
 import { CONSTANTS } from "../../constants";
+import { isSandboxProxy } from "../../sandbox/is-sandbox-proxy";
 
 describe("reject", function() 
 {

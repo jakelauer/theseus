@@ -1,6 +1,6 @@
 import { CONSTANTS, SANDBOX_VERIFIABLE_PROP_SYMBOL } from "../constants";
 import { generateVerificationProperty, getVerificationValueFromObject } from "../frost/properties";
-import { isSandboxProxy } from "../sandbox";
+import { isSandboxProxy } from "../sandbox/is-sandbox-proxy";
 
 /**
  * Finalizes the changes made in a sandbox proxy object and returns a new object with those changes applied.

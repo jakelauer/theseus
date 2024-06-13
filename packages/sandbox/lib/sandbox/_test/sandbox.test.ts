@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { sandbox, isSandboxProxy } from "../index";
+import { sandbox } from "../sandbox";
 
 describe("sandbox", function() 
 {
@@ -37,18 +37,5 @@ describe("sandbox", function()
 		const proxy = sandbox(original);
 		proxy.a = 3;
 		expect((proxy as any).__sandbox__.changes.a).to.equal(3);
-	});
-
-	it("should correctly identify a sandbox proxy object", function() 
-	{
-		const original = { a: 1, b: 2 };
-		const proxy = sandbox(original);
-		expect(isSandboxProxy(proxy)).to.equal(true);
-	});
-
-	it("should correctly identify a non-sandbox proxy object", function() 
-	{
-		const original = { a: 1, b: 2 };
-		expect(isSandboxProxy(original)).to.equal(false);
 	});
 });

@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { frost } from "../index";
-import { sandbox } from "../../sandbox";
+import { sandbox } from "../../sandbox/sandbox";
 import { cement } from "../../cement";
 
 describe("frost", function() 
