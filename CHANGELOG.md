@@ -1,3 +1,10 @@
+# [7.1.0](https://github.com/jakelauer/theseus-js/compare/v7.0.0...v7.1.0) (2024-06-13)
+
+
+### Features
+
+* **component:** add ability to get changes from sandbox ([f3ca5bc](https://github.com/jakelauer/theseus-js/commit/f3ca5bc60b89e05d5fc7f9ee400d8a64f6d4c49e))
+
 # [7.0.0](https://github.com/jakelauer/theseus-js/compare/v6.0.14...v7.0.0) (2024-06-08)
 
 
