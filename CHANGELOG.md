@@ -1,3 +1,10 @@
+## [7.1.1](https://github.com/jakelauer/theseus-js/compare/v7.1.0...v7.1.1) (2024-06-14)
+
+
+### Bug Fixes
+
+* **sandbox:** set mode to copy ([03e2785](https://github.com/jakelauer/theseus-js/commit/03e2785821d770315a5bc774441edc03d09ce6be))
+
 # [7.1.0](https://github.com/jakelauer/theseus-js/compare/v7.0.0...v7.1.0) (2024-06-13)
 
 
