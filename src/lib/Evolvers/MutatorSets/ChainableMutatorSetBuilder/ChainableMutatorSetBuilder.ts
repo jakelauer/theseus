@@ -103,7 +103,7 @@ export class ChainableMutatorSetBuilder<
 			[selfPath]: (...args: any[]) => 
 			{
 				this.calls++;
-				const draft = sandbox(this.data);
+				const draft = sandbox(this.data, { mode: "copy" });
 				
 				let funcResult: SortaPromise<TData>;
 				try 

@@ -111,7 +111,7 @@ export class MutatorSetBuilder<
 		Object.assign(context, {
 			[selfPath]: (...args: any[]) => 
 			{
-				const draft = sandbox(this.data);
+				const draft = sandbox(this.data, { mode: "copy" });
 				
 				let funcResult: SortaPromise<TData>;
 				try 

@@ -75,7 +75,7 @@ export class Refinery<
      */
 	public refine(input: TData) 
 	{
-		const clone = sandbox(input);
+		const clone = sandbox(input, { mode: "copy" });
 
 		// Create the actions which will be available when `for()` is called.
 		const forgeSet = ForgeSet.create<TData, TParamNoun, TForges>(
