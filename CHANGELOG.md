@@ -1,3 +1,10 @@
+# [7.2.0](https://github.com/jakelauer/theseus-js/compare/v7.1.1...v7.2.0) (2024-06-15)
+
+
+### Features
+
+* **sandbox:** use recursive proxies ([35b4173](https://github.com/jakelauer/theseus-js/commit/35b417397912ec1ff32b491cd59600e13dd29992))
+
 ## [7.1.1](https://github.com/jakelauer/theseus-js/compare/v7.1.0...v7.1.1) (2024-06-14)
 
 
