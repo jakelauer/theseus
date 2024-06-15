@@ -36,15 +36,19 @@ function objectPropertiesAreSandboxProxy(o: any)
  * @param {T} obj - The object to check.
  * @returns {obj is SandboxProxy<T>} - True if the object is a sandbox proxy, false otherwise.
  */
-export function isSandboxProxy<T extends object>(obj: T): obj is SandboxProxy<T> 
+export function isSandboxProxy<T extends object>(obj: T, recursive = true): obj is SandboxProxy<T> 
 {
 
 	const rootIsSandboxProxy = hasSandboxProxyPrefix(obj);
-	const propertiesAreSandboxProxy = objectPropertiesAreSandboxProxy(obj);
+	let propertiesAreSandboxProxy = true;
 
-	if (rootIsSandboxProxy && !propertiesAreSandboxProxy)
+	if (recursive) 
 	{
-		console.warn("Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.");
+		propertiesAreSandboxProxy = objectPropertiesAreSandboxProxy(obj);
+		if (rootIsSandboxProxy && !propertiesAreSandboxProxy)
+		{
+			console.warn("Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.");
+		}
 	}
 
 	return rootIsSandboxProxy && propertiesAreSandboxProxy;

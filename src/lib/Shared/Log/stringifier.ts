@@ -14,7 +14,7 @@ const expand = (str: string) =>
 
 export const stringifier = (obj: object) => 
 {
-	if (isSandboxProxy(obj))
+	if (isSandboxProxy(obj, false))
 	{
 		return "SandboxProxy";
 	}
