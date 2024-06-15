@@ -1,3 +1,11 @@
+## [7.2.1](https://github.com/jakelauer/theseus-js/compare/v7.2.0...v7.2.1) (2024-06-15)
+
+
+### Bug Fixes
+
+* **sandbox:** fix logging issues ([1887213](https://github.com/jakelauer/theseus-js/commit/18872138d89cc6918d76383e3676b60009ac05c4))
+* **stringifier:** fix stringifier skipping sandbox proxy ([3460855](https://github.com/jakelauer/theseus-js/commit/3460855d09c1497d1f2788386ae36c0f96765c6d))
+
 # [7.2.0](https://github.com/jakelauer/theseus-js/compare/v7.1.1...v7.2.0) (2024-06-15)
 
 
