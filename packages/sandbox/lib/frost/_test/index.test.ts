@@ -93,6 +93,10 @@ describe("frost", function()
 		expect(JSON.stringify(result))
 			.not.to.equal(JSON.stringify(frostedProxy))
 			.not.to.equal(JSON.stringify(originalObject));
+
+		expect(result.a).to.equal(5);
+		expect(frostedProxy.a).to.equal(1);
+		expect(originalObject.a).to.equal(1);
 	});
 
 });

@@ -8,7 +8,7 @@ import { propertyStartsWith, extractVerificationPropValues } from "../properties
  * throw an error. If called from within the sandbox, the sandbox will provide
  * the necessary verification to allow the deletion.
  * 
- * Inside the sandbox, the property can be deleted by calling `delete myObject.__sandbox__.prop`.
+ * Inside the sandbox, the property can be deleted by calling `delete myObject[CONSTANTS.SANDBOX_SYMBOL].prop`.
  */
 export function proxyDelete<T>(target: T, ostensibleProp: string | symbol): boolean
 {
@@ -18,7 +18,7 @@ export function proxyDelete<T>(target: T, ostensibleProp: string | symbol): bool
 		
 		return true;
 	}
-	else if (propertyStartsWith(ostensibleProp, CONSTANTS.PROP_PREFIX))
+	else if (propertyStartsWith(ostensibleProp, CONSTANTS.PREFIX))
 	{
 		const propString = typeof ostensibleProp === "symbol" ? ostensibleProp.description : ostensibleProp;
 		const propContents = extractVerificationPropValues(propString);

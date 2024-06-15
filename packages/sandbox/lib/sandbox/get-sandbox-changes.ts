@@ -8,12 +8,7 @@ export function getSandboxChanges<T extends object>(potentialSandboxProxy: T)
 {
 	if (isSandboxProxy(potentialSandboxProxy))
 	{
-		const {
-			__sandbox__,
-			...changes
-		} = potentialSandboxProxy[CONSTANTS.PROP_PREFIX].changes as any;
-
-		return changes;
+		return potentialSandboxProxy[CONSTANTS.SANDBOX_SYMBOL].changes as any;
 	}
 	else 
 	{

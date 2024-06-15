@@ -8,7 +8,7 @@ describe("reject", function()
 	it("should return the original object if it is a sandbox proxy", function() 
 	{
 		const original = { key: "value" };
-		const proxy = { [CONSTANTS.PROP_PREFIX]: { original } };
+		const proxy = { [CONSTANTS.SANDBOX_SYMBOL]: { original } };
     
 		// Mock the isSandboxProxy function to return true
 		isSandboxProxy(proxy);

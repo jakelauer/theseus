@@ -1,6 +1,7 @@
 import { CONSTANTS, SANDBOX_VERIFIABLE_PROP_SYMBOL } from "../constants";
 import { generateVerificationProperty, getVerificationValueFromObject } from "../frost/properties";
 import { isSandboxProxy } from "../sandbox/is-sandbox-proxy";
+import structuredClone from "@ungap/structured-clone";
 
 /**
  * Finalizes the changes made in a sandbox proxy object and returns a new object with those changes applied.
@@ -20,15 +21,20 @@ export function cement<T extends object>(obj: T): T
 			params: {
 				mode,
 			},
-		} = obj[CONSTANTS.PROP_PREFIX];
+		} = obj[CONSTANTS.SANDBOX_SYMBOL];
 
-		const toModify = mode === "modify" ? original : { ...original };
+		const toModify = mode === "modify" ? original : structuredClone(original, { lossy: true });
 
 		return applyChanges(toModify, changes);
+	}
+	else 
+	{
+		throw new Error("Cannot cement an object that is not a sandbox.");
 	}
 
 	return obj;
 }
+
 /**
  * Applies changes to a target object.
  *
@@ -47,14 +53,24 @@ function applyChanges<T extends object>(target: T, changes: Record<string | symb
 		{
 			handleDeletion(target, key, targetIsFrost);
 		}
-		else if (value !== target[key] && key !== CONSTANTS.PROP_PREFIX)
+		else if (isSandboxProxy(value)) 
+		{
+			// If the value is a sandbox proxy, finalize its changes recursively
+			target[key] = cement(value);
+		}
+		else if (typeof value === "object" && value !== null && typeof target[key] === "object" && target[key] !== null) 
+		{
+			// If the value is a nested object, apply changes recursively
+			applyChanges(target[key], value);
+		}
+		else if (value !== target[key]) 
 		{
 			handleChange(target, key, value, targetIsFrost);
 		}
 	}
 
 	delete target[CONSTANTS.SETTER];
-	delete target[CONSTANTS.PROP_PREFIX];
+	delete target[CONSTANTS.SANDBOX_SYMBOL];
 	delete target[CONSTANTS.VERIFICATION.BASIS_SYMBOL];
 
 	return target;
@@ -74,9 +90,9 @@ function handleDeletion<T extends object>(target: T, originalKey: string, isFros
 	delete target[key];
 }
 
-function handleChange<T extends object>(target: T, originalKey: string, originalValue: any, isFrost: boolean): void
+function handleChange<T extends object>(target: T, originalKey: string, originalValue: any, isFrost: boolean): void 
 {
-	if (isFrost)
+	if (isFrost) 
 	{
 		target[CONSTANTS.SETTER] = {
 			prop: originalKey,

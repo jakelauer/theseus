@@ -1,5 +1,7 @@
 import { expect } from "chai";
 import { sandbox } from "../sandbox";
+import { isSandboxProxy } from "../is-sandbox-proxy";
+import { CONSTANTS } from "../../constants";
 
 describe("sandbox", function() 
 {
@@ -36,6 +38,31 @@ describe("sandbox", function()
 		const original = { a: 1, b: 2 };
 		const proxy = sandbox(original);
 		proxy.a = 3;
-		expect((proxy as any).__sandbox__.changes.a).to.equal(3);
+		expect((proxy as any)[CONSTANTS.SANDBOX_SYMBOL].changes.a).to.equal(3);
+	});
+
+	it("should create a proxy of nested objects as well", function()
+	{
+		const original = { a: { b: 1, c: 2 } };
+		const proxy = sandbox(original);
+
+		const recursiveCheckIfProxy = (obj: any) => 
+		{
+			if (typeof obj === "object" && obj !== null) 
+			{
+				expect(isSandboxProxy(obj)).to.be.true;
+				for (const key in obj) 
+				{
+					recursiveCheckIfProxy(obj[key]);
+				}
+			}
+		};
+	});
+
+	it("should not proxy the sandbox symbol", function()
+	{
+		const original = { a: 1, b: 2 };
+		const proxy = sandbox(original);
+		expect(proxy[CONSTANTS.SANDBOX_SYMBOL][CONSTANTS.SANDBOX_SYMBOL]).to.be.undefined;
 	});
 });

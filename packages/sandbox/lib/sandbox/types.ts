@@ -28,7 +28,7 @@ export interface SandboxProxyProps<T> {
     /**
      * The sandbox metadata.
      */
-    [CONSTANTS.PROP_PREFIX]: {
+    [CONSTANTS.SANDBOX_SYMBOL]: {
         /**
          * A unique identifier for the sandbox instance.
          */

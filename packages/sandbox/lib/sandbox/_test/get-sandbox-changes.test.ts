@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { getSandboxChanges } from "../get-sandbox-changes";
+import { CONSTANTS } from "../../constants";
 
 describe("getSandboxChanges", function() 
 {
@@ -7,7 +8,7 @@ describe("getSandboxChanges", function()
 	{
 		const changes = { some: "changes" };
 		const sandboxProxy = {
-			__sandbox__: {
+			[CONSTANTS.SANDBOX_SYMBOL]: {
 				changes,
 			},
 		};

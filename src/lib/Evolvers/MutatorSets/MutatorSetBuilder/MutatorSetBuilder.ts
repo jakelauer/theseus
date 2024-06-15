@@ -5,7 +5,7 @@ import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
-import { cement, sandbox } from "theseus-sandbox";
+import { cement, isSandboxProxy, sandbox } from "theseus-sandbox";
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
  * adding mutator functions to the evolver and executing these functions to mutate the evolver's state.
@@ -140,7 +140,7 @@ export class MutatorSetBuilder<
 	{
 		const generateOutcome = (data: TData) => 
 		{
-			const finishedDraft = cement(data) as Record<TParamNoun, TData>;
+			const finishedDraft = isSandboxProxy(data) ? cement(data) as Record<TParamNoun, TData> : data;
 			if (this.__theseusId && finishedDraft) 
 			{
 				void Theseus.updateInstance(this.__theseusId, finishedDraft);

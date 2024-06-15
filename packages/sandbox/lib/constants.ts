@@ -1,13 +1,18 @@
 const prefix = "__sandbox__";
 const sandboxVerificationSymbol = Symbol("__sandbox__verification");
 const sandboxVerificationRegexPattern = "_verify_([^_]+)__([a-zA-Z_$][a-zA-Z0-9_$]*)$";
+const sandboxSymbol = Symbol(prefix);
 
 interface SandboxConstants
 {
 	/**
 	 * The prefix used for sandbox properties.
 	 */
-	PROP_PREFIX: typeof prefix;
+	PREFIX: typeof prefix;
+	/**
+	 * The symbol used to indicate a sandbox object.
+	 */
+	readonly SANDBOX_SYMBOL: typeof sandboxSymbol;
 	/**
 	 * The name of the property which indicates if the object is frosty.
 	 */
@@ -16,6 +21,7 @@ interface SandboxConstants
 	 * The name of the setter property.
 	 */
 	SETTER: `${typeof prefix}set`;
+
 	/**
 	 * Constants related to verification.
 	 */
@@ -42,7 +48,8 @@ interface SandboxConstants
 }
 
 export const CONSTANTS: SandboxConstants = {
-	PROP_PREFIX: prefix,	
+	PREFIX: prefix,	
+	SANDBOX_SYMBOL: sandboxSymbol,
 	SETTER: `${prefix}set`,
 	IS_FROSTY_PROP: `${prefix}frosty`,
 	VERIFICATION: {

@@ -13,7 +13,7 @@ export function reject<T extends object>(obj: T): T
 {
 	if (isSandboxProxy(obj)) 
 	{
-		const original = obj[CONSTANTS.PROP_PREFIX].original as T;
+		const original = obj[CONSTANTS.SANDBOX_SYMBOL].original as T;
 		return original;
 	}
 

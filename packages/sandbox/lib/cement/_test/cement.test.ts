@@ -10,7 +10,7 @@ describe("cement", function()
 		const original = { key1: "value1", key2: "value2" };
 		const changes = { key2: "newValue2", key3: "value3" };
 		const proxy = { 
-			[CONSTANTS.PROP_PREFIX]: { 
+			[CONSTANTS.SANDBOX_SYMBOL]: { 
 				original, 
 				changes, 
 				params: { mode: "modify" }, 
@@ -29,7 +29,7 @@ describe("cement", function()
 		const original = { key1: "value1", key2: "value2" };
 		const changes = { key2: "newValue2", key3: "value3" };
 		const proxy = { 
-			[CONSTANTS.PROP_PREFIX]: { 
+			[CONSTANTS.SANDBOX_SYMBOL]: { 
 				original, 
 				changes, 
 				params: { mode: "copy" }, 
@@ -37,7 +37,7 @@ describe("cement", function()
 		};
 
 		// Mock the isSandboxProxy function to return true
-		isSandboxProxy(proxy);
+		
 		const result = cement(proxy);
 		expect(result).to.deep.equal({ key1: "value1", key2: "newValue2", key3: "value3" });
 		expect(result).to.not.equal(original);  // Ensure that the result is a new object
@@ -47,7 +47,24 @@ describe("cement", function()
 	{
 		const obj = { key: "value" };
 		// Mock the isSandboxProxy function to return false
-		isSandboxProxy(obj);
-		expect(cement(obj)).to.equal(obj);
+		expect(() => cement(obj)).to.throw("Cannot cement an object that is not a sandbox.");
+	});
+
+	it("should apply changes to a target object with nested objects which have changes", function()
+	{
+		const original = { key1: "value1", key2: { key3: "value3" } };
+		const changes = { key2: { key3: "newValue3", key4: "value" } };
+		const proxy = { 
+			[CONSTANTS.SANDBOX_SYMBOL]: { 
+				original, 
+				changes, 
+				params: { mode: "copy" }, 
+			}, 
+		};
+
+		const result = cement(proxy) as any;
+		expect(result).to.deep.equal({ key1: "value1", key2: { key3: "newValue3", key4: "value" } });
+		expect(result.key2).to.not.equal(original.key2);  // Ensure that the nested object is a new object
+		expect(result).to.not.equal(original);  // Ensure that the nested object is a new object
 	});
 });
