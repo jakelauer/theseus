@@ -1,3 +1,10 @@
+## [7.2.2](https://github.com/jakelauer/theseus-js/compare/v7.2.1...v7.2.2) (2024-06-15)
+
+
+### Bug Fixes
+
+* **sandbox:** fix logging result ([afabdcf](https://github.com/jakelauer/theseus-js/commit/afabdcf19918f02f57fc51a9e862fac9f9bd6d26))
+
 ## [7.2.1](https://github.com/jakelauer/theseus-js/compare/v7.2.0...v7.2.1) (2024-06-15)
 
 
