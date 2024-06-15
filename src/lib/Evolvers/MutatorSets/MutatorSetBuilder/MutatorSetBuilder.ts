@@ -124,7 +124,7 @@ export class MutatorSetBuilder<
 					throw e;
 				}
 
-				log.debug(`Result of mutator "${selfPath}"`, funcResult);
+				log.debug(`Result of mutator "${selfPath}"`);
 
 				if (funcResult === undefined) 
 				{
