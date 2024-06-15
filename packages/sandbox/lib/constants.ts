@@ -2,6 +2,7 @@ const prefix = "__sandbox__";
 const sandboxVerificationSymbol = Symbol("__sandbox__verification");
 const sandboxVerificationRegexPattern = "_verify_([^_]+)__([a-zA-Z_$][a-zA-Z0-9_$]*)$";
 const sandboxSymbol = Symbol(prefix);
+const deletionSymbol = Symbol(`${prefix}delete`);
 
 interface SandboxConstants
 {
@@ -21,6 +22,11 @@ interface SandboxConstants
 	 * The name of the setter property.
 	 */
 	SETTER: `${typeof prefix}set`;
+
+	/**
+	 * The symbol used to indicate a deletion.
+	 */
+	DELETION_SYMBOL: typeof deletionSymbol;
 
 	/**
 	 * Constants related to verification.
@@ -52,6 +58,7 @@ export const CONSTANTS: SandboxConstants = {
 	SANDBOX_SYMBOL: sandboxSymbol,
 	SETTER: `${prefix}set`,
 	IS_FROSTY_PROP: `${prefix}frosty`,
+	DELETION_SYMBOL: deletionSymbol,
 	VERIFICATION: {
 		BASIS_SYMBOL: sandboxVerificationSymbol,
 		CHECK_PROP_PREFIX: `${prefix}verify_`,

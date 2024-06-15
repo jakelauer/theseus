@@ -31,8 +31,6 @@ export function cement<T extends object>(obj: T): T
 	{
 		throw new Error("Cannot cement an object that is not a sandbox.");
 	}
-
-	return obj;
 }
 
 /**
@@ -46,27 +44,36 @@ export function cement<T extends object>(obj: T): T
 function applyChanges<T extends object>(target: T, changes: Record<string | symbol, any>): T 
 {
 	const targetIsFrost = (target as any)[CONSTANTS.IS_FROSTY_PROP];
-    
-	for (const [key, value] of Object.entries(changes)) 
+
+	const allKeys = new Set([...Object.keys(target), ...Object.keys(changes)]);
+
+	for (const key of allKeys) 
 	{
-		if (value === undefined) 
+		const oldValue = target[key];
+		const newValue = changes[key];
+
+		// If the key is not in the target object, add it
+		if (!Object.prototype.hasOwnProperty.call(target, key))
+		{
+			const newValue = changes[key];
+			handleSet(target, key, newValue, targetIsFrost);
+		}
+		// If the value is a nested object, apply changes recursively
+		else if (isSandboxProxy(oldValue)) 
+		{
+			handleSet(target, key, cement(oldValue), targetIsFrost);
+		}
+		// If the value is a deletion symbol, delete the property
+		else if (newValue === CONSTANTS.DELETION_SYMBOL) 
 		{
 			handleDeletion(target, key, targetIsFrost);
 		}
-		else if (isSandboxProxy(value)) 
+		// if the key is in changes, apply the change
+		else if (Object.prototype.hasOwnProperty.call(changes, key))
 		{
-			// If the value is a sandbox proxy, finalize its changes recursively
-			target[key] = cement(value);
+			handleSet(target, key, newValue, targetIsFrost);
 		}
-		else if (typeof value === "object" && value !== null && typeof target[key] === "object" && target[key] !== null) 
-		{
-			// If the value is a nested object, apply changes recursively
-			applyChanges(target[key], value);
-		}
-		else if (value !== target[key]) 
-		{
-			handleChange(target, key, value, targetIsFrost);
-		}
+		// otherwise, do nothing
 	}
 
 	delete target[CONSTANTS.SETTER];
@@ -90,18 +97,18 @@ function handleDeletion<T extends object>(target: T, originalKey: string, isFros
 	delete target[key];
 }
 
-function handleChange<T extends object>(target: T, originalKey: string, originalValue: any, isFrost: boolean): void 
+function handleSet<T extends object>(target: T, key: string, newValue: any, isFrost: boolean): void 
 {
 	if (isFrost) 
 	{
 		target[CONSTANTS.SETTER] = {
-			prop: originalKey,
-			value: originalValue,
+			prop: key,
+			value: newValue,
 			[SANDBOX_VERIFIABLE_PROP_SYMBOL]: getVerificationValueFromObject(target),
 		};
 	}
 	else 
 	{
-		target[originalKey] = originalValue;
+		target[key] = newValue;
 	}
 }

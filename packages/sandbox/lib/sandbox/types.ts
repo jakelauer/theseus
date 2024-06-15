@@ -52,3 +52,11 @@ export interface SandboxProxyProps<T> {
  * @template T - The type of the original object.
  */
 export type SandboxProxy<T> = T & SandboxProxyProps<T>;
+
+
+export type Metadata<T extends object> = {
+	id: string;
+	changes: Record<string, any>;
+	original: T;
+	params: SandboxParams;
+};

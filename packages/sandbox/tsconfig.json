@@ -6,6 +6,8 @@
 		"esModuleInterop": true,
 		"declaration": true,
         "allowJs": true,
+		"moduleResolution": "Node",
+		"target": "ES2020",
         "rootDir": "./lib",
         "baseUrl": "./lib",
 		"outDir": "./dist",

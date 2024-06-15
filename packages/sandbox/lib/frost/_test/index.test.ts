@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { frost } from "../index";
+import { frost } from "../";
 import { sandbox } from "../../sandbox/sandbox";
 import { cement } from "../../cement";
 

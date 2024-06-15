@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { sandbox } from "../sandbox";
 import { isSandboxProxy } from "../is-sandbox-proxy";
 import { CONSTANTS } from "../../constants";
+import { cement } from "../../cement";
 
 describe("sandbox", function() 
 {
@@ -64,5 +65,58 @@ describe("sandbox", function()
 		const original = { a: 1, b: 2 };
 		const proxy = sandbox(original);
 		expect(proxy[CONSTANTS.SANDBOX_SYMBOL][CONSTANTS.SANDBOX_SYMBOL]).to.be.undefined;
+	});
+
+	it("should sandbox changes that replace nested objects", function() 
+	{
+		const original: any = { a: { b: 1, c: 2 } };
+		const proxy = sandbox(original);
+		proxy.a = { d: 3, e: 4 };
+		expect(isSandboxProxy(proxy.a)).to.be.true;
+
+	});
+
+	it("should sandbox arrays nested in objects", function()
+	{
+		const original: any = { a: [1, 2, 3] };
+		const proxy = sandbox(original);
+		expect(isSandboxProxy(proxy.a)).to.be.true;
+	});
+
+	it("should sandbox objects nested in arrays nested in objects", function() 
+	{
+		const original: any = { a: [{ b: 1 }, { c: 2 }] };
+		const proxy = sandbox(original);
+		expect(isSandboxProxy(proxy.a[0])).to.be.true;
+		expect(isSandboxProxy(proxy.a[1])).to.be.true;
+	});
+
+	it("should correctly process changes to objects nested in arrays nested in objects", function() 
+	{
+		const original: any = { a: [{ b: 1 }, { c: 2 }] };
+		const proxy = sandbox(original);
+		proxy.a[0].b = 3;
+		expect(proxy.a[0].b).to.equal(3);
+		expect(original.a[0].b).to.equal(1);
+
+		const result = cement(proxy);
+
+		expect(result.a[0].b).to.equal(3, "cemented object should keep the changes from the sandbox");
+		expect(original.a[0].b).to.equal(3);
+		expect(result).to.equal(original);
+	});
+
+	it("should correctly process changes to objects nested in arrays nested in objects, and keep the original intact in copy mode", function() 
+	{
+		const original: any = { a: [{ b: 1 }, { c: 2 }] };
+		const proxy = sandbox(original, { mode: "copy" });
+		proxy.a[0].b = 3;
+		expect(proxy.a[0].b).to.equal(3);
+		expect(original.a[0].b).to.equal(1);
+
+		const result = cement(proxy);
+
+		expect(result.a[0].b).to.equal(3, "cemented object should keep the changes from the sandbox");
+		expect(original.a[0].b).to.equal(1);
 	});
 });
