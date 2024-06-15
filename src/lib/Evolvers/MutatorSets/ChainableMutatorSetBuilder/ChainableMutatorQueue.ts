@@ -189,7 +189,7 @@ export class ChainableMutatorQueue<
 			log.verbose("Async operation detected, waiting for resolution before setting...");
 			outcome = result.then((resolvedResult) =>
 			{
-				log.verbose("Async operation resolved, setting data to result of operation", resolvedResult);
+				log.verbose("Async operation resolved, setting data to result of operation");
 
 				this.params.setData(resolvedResult);
 				return resolvedResult;
@@ -197,7 +197,7 @@ export class ChainableMutatorQueue<
 		}
 		else 
 		{
-			log.verbose("Setting data to result of operation", result);
+			log.verbose("Setting data to result of operation");
 			outcome = result;
 			this.params.setData(outcome);
 		}

@@ -116,8 +116,6 @@ export class ChainableMutatorSetBuilder<
 					throw e;
 				}
 
-				log.debug(`Result of mutator "${selfPath}"`, funcResult);
-
 				if (funcResult === undefined) 
 				{
 					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);

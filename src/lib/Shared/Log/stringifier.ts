@@ -1,3 +1,5 @@
+import { isSandboxProxy } from "theseus-sandbox";
+
 const isPrimitive = (obj: object) =>
 	obj === null || ["string", "number", "boolean", "object"].includes(typeof obj);
 
@@ -12,6 +14,11 @@ const expand = (str: string) =>
 
 export const stringifier = (obj: object) => 
 {
+	if (isSandboxProxy(obj))
+	{
+		return "SandboxProxy";
+	}
+
 	try 
 	{
 		return expand(JSON.stringify(obj, replacer, 2));

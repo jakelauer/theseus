@@ -58,13 +58,13 @@ export class Broadcaster<
 		this.pendingUpdates[updateGuid] = Promise.all(
 			broadcastTo.map((observer) => 
 			{
-				log.verbose("Broadcasting to observer", { observer: observer.update });
+				log.verbose("Broadcasting to observer");
 				return observer.update(data);
 			}),
 		)
-			.then((result) => 
+			.then(() => 
 			{
-				log.verbose("Completed pending update", { updateGuid, result });
+				log.verbose("Completed pending update", { updateGuid });
 				delete this.pendingUpdates[updateGuid];
 			})
 			.catch((error) => 
