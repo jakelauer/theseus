@@ -2,11 +2,15 @@
     "name": "theseus-sandbox",
     "version": "1.0.1",
     "description": "",
-    "main": "./dist/index.js",
+    "main": "./lib/index.ts",
+    "type": "module",
     "scripts": {
         "build": "tsc",
         "test": "mocha --require tsx --config ./.mocharc.cjs"
     },
+    "files": [
+        "dist"
+    ],
     "keywords": [],
     "author": "",
     "license": "ISC",

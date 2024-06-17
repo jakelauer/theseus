@@ -23,6 +23,7 @@
         "lint-fix": "eslint ./ --fix --resolve-plugins-relative-to=./",
         "test:debug": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs --theseus-log-level debug",
         "test:pkg": "pnpm -r run test",
+        "test:pkg:sandbox": "pnpm -r run test",
         "test:base": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs",
         "test": "pnpm test:pkg && pnpm test:base",
         "// ==== BUILD ==== //": "",
@@ -34,7 +35,9 @@
         "live": "tsc --watch --project ./tsconfig.json && resolve-tspaths",
         "clean": "rm -rf ./dist",
         "// ==== EXAMPLES ==== //": "",
-        "example:ttt": "pnpm --prefix ./.examples/tic-tac-toe start"
+        "example:ttt": "pnpm --prefix ./.examples/tic-tac-toe start",
+        "// === HELPERS === //": "",
+        "package": "sh -c 'pnpm --prefix ./packages/$0 run $1'"
     },
     "dependencies": {
         "@ungap/structured-clone": "^1.2.0",

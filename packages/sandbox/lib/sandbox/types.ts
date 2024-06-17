@@ -44,6 +44,8 @@ export interface SandboxProxyProps<T> {
 
 		params: SandboxParams;
     };
+
+	[CONSTANTS.VERIFICATION.BASIS_SYMBOL]: string;
 }
 
 /**
@@ -52,3 +54,11 @@ export interface SandboxProxyProps<T> {
  * @template T - The type of the original object.
  */
 export type SandboxProxy<T> = T & SandboxProxyProps<T>;
+
+
+export type Metadata<T extends object> = {
+	id: string;
+	changes: Partial<T>;
+	original: T;
+	params: SandboxParams;
+};

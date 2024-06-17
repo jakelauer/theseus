@@ -17,9 +17,19 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Run Mocha Tests",
+            "name": "Run All Tests",
             "runtimeExecutable": "pnpm",
             "runtimeArgs": ["test", "--"],//, "--grep", "\"should process synchronous mutators in sequence\""],
+            "internalConsoleOptions": "openOnSessionStart",
+            "cwd": "${workspaceFolder}",
+            "outputCapture": "std"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Run Base Tests",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": ["test:base", "--timeout", "60000"],// "--", "--grep", "\"should correctly return changes made to the state when requested\""],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"

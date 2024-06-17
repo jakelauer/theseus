@@ -1,4 +1,4 @@
-import { Evolver, EvolverComplex, Refinery, RefineryComplex } from "../lib/index";
+import { Evolver, EvolverComplex, Refinery, RefineryComplex } from "../lib";
 
 export interface MockData {
     touched: boolean;

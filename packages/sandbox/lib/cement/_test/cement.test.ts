@@ -1,7 +1,7 @@
 import { expect } from "chai";
-import { cement } from "../";
+import { cement } from "../cement";
 import { CONSTANTS } from "../../constants";
-import { isSandboxProxy } from "../../sandbox/is-sandbox-proxy";
+import { isSandboxProxy, sandbox } from "../../sandbox";
 
 describe("cement", function() 
 {
@@ -17,8 +17,6 @@ describe("cement", function()
 			}, 
 		};
 
-		// Mock the isSandboxProxy function to return true
-		isSandboxProxy(proxy);
 		const result = cement(proxy);
 		expect(result).to.equal(original);  // Ensure that the result is the original object
 		expect(result).to.deep.equal({ key1: "value1", key2: "newValue2", key3: "value3" });
@@ -66,5 +64,26 @@ describe("cement", function()
 		expect(result).to.deep.equal({ key1: "value1", key2: { key3: "newValue3", key4: "value" } });
 		expect(result.key2).to.not.equal(original.key2);  // Ensure that the nested object is a new object
 		expect(result).to.not.equal(original);  // Ensure that the nested object is a new object
+	});
+
+	it("should find no remaining sandboxes in nested functions", function()
+	{
+		const original = { key1: "value1", key2: { key3: "value3" } };
+		const sb = sandbox(original);
+		sb.key2.key3 = "replacement";
+		const result = cement(sb);
+		expect(result).to.deep.equal({ key1: "value1", key2: { key3: "replacement" } });
+
+		const checkForSandbox = (obj: any) =>
+		{
+			if (typeof obj === "object")
+			{
+				expect(isSandboxProxy(obj)).to.be.false;
+				for (const key in obj)
+				{
+					checkForSandbox(obj[key]);
+				}
+			}
+		};
 	});
 });

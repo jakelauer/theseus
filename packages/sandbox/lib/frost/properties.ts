@@ -24,7 +24,7 @@ export function extractVerificationPropValues(input: string)
 }
 
 export function generateVerificationProperty(verificationValue: string, propertyName: string): string;
-export function generateVerificationProperty(obj: object, propertyName): string;
+export function generateVerificationProperty(obj: object, propertyName: string): string;
 export function generateVerificationProperty(
 	arg1: string | object,
 	arg2: string,
@@ -43,7 +43,7 @@ export function generateVerificationProperty(
 	throw new Error("Invalid arguments");
 }
 
-export function getVerificationValueFromObject(target: object): string 
+export function getVerificationValueFromObject(target: any): string 
 {
 	if (Object.prototype.hasOwnProperty.call(target, CONSTANTS.VERIFICATION.BASIS_SYMBOL))
 	{

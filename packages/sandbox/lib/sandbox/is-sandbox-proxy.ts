@@ -2,12 +2,12 @@ import { CONSTANTS } from "../constants";
 import type { SandboxProxy } from "./types";
 
 
-function hasSandboxProxyPrefix(o: any): boolean 
+function hasSandboxProxyPrefix(o?: any): boolean 
 {
 	return o && typeof o === "object" && !!o[CONSTANTS.SANDBOX_SYMBOL];
 }
 
-function objectPropertiesAreSandboxProxy(o: any)
+function objectPropertiesAreSandboxProxy(o?: any): boolean
 {
 	if (!o || typeof o !== "object")
 	{
@@ -36,9 +36,8 @@ function objectPropertiesAreSandboxProxy(o: any)
  * @param {T} obj - The object to check.
  * @returns {obj is SandboxProxy<T>} - True if the object is a sandbox proxy, false otherwise.
  */
-export function isSandboxProxy<T extends object>(obj: T, recursive = true): obj is SandboxProxy<T> 
+export const isSandboxProxy = <T extends object>(obj?: T, recursive = true): obj is SandboxProxy<T> =>
 {
-
 	const rootIsSandboxProxy = hasSandboxProxyPrefix(obj);
 	let propertiesAreSandboxProxy = true;
 
@@ -52,4 +51,4 @@ export function isSandboxProxy<T extends object>(obj: T, recursive = true): obj 
 	}
 
 	return rootIsSandboxProxy && propertiesAreSandboxProxy;
-}
+};

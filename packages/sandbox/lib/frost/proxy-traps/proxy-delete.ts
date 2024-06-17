@@ -10,17 +10,31 @@ import { propertyStartsWith, extractVerificationPropValues } from "../properties
  * 
  * Inside the sandbox, the property can be deleted by calling `delete myObject[CONSTANTS.SANDBOX_SYMBOL].prop`.
  */
-export function proxyDelete<T>(target: T, ostensibleProp: string | symbol): boolean
+export function proxyDelete(target: any, ostensibleProp: string | symbol): boolean
 {
-	if (ostensibleProp === CONSTANTS.VERIFICATION.BASIS_SYMBOL)
+	const deletableConstants = {
+		[CONSTANTS.SANDBOX_SYMBOL]: true,
+		[CONSTANTS.VERIFICATION.BASIS_SYMBOL]: true,
+		[CONSTANTS.SETTER_SYMBOL]: true,
+	};
+
+	const isSpecialSymbol = typeof ostensibleProp === "symbol" && Object.getOwnPropertySymbols(deletableConstants).includes(ostensibleProp);
+
+	// Allow deletion of constants for sandbox
+	if (isSpecialSymbol)
 	{
-		delete target[CONSTANTS.VERIFICATION.BASIS_SYMBOL];
+		delete target[ostensibleProp];
 		
 		return true;
 	}
 	else if (propertyStartsWith(ostensibleProp, CONSTANTS.PREFIX))
 	{
 		const propString = typeof ostensibleProp === "symbol" ? ostensibleProp.description : ostensibleProp;
+		if (!propString)
+		{
+			throw new Error("Property string is empty");
+		}
+		
 		const propContents = extractVerificationPropValues(propString);
 		if (propContents)
 		{

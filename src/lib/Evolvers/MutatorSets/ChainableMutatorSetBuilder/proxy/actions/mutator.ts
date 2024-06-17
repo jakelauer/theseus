@@ -2,6 +2,7 @@ import { Theseus } from "@/Theseus";
 import { getTheseusLogger } from "../../../../../Shared";
 import { ProxyActions, ProxyActionType } from "../proxy-actions";
 import type { ProxyActionMapParameters } from "../proxy-action-map";
+import { cement } from "theseus-sandbox";
 
 
 const log = getTheseusLogger("mutator-proxy-action");
@@ -26,18 +27,27 @@ export class MutatorAction extends ProxyActions
 		{
 			log.verbose(`Mutator "${prop}" requested`);
 
-			const execResult = proxyManager.queue.queueMutation(prop, target.mutatorsForProxy[prop], args);
+			const queueResult = proxyManager.queue.queueMutation(prop, target.mutatorsForProxy[prop], args);
 
 			if (proxyManager.isFinalChainLink) 
 			{
-				if (proxyManager.params.observationId) 
+				const complete = (execResult: any) => 
 				{
-					void Theseus.updateInstance(proxyManager.params.observationId, execResult);
-				}
+					const cementedResult = cement(execResult);
 
-				//this.log.verbose(`.lastly mode active, returning result of queued operations after prop ${prop}`, execResult);
+					if (proxyManager.params.observationId) 
+					{
+						void Theseus.updateInstance(proxyManager.params.observationId, cementedResult);
+					}
 
-				return proxyManager.finalizeAndReset(execResult);
+					//this.log.verbose(`.lastly mode active, returning result of queued operations after prop ${prop}`, execResult);
+
+					return proxyManager.finalizeAndReset(cementedResult);
+				};
+
+				return queueResult instanceof Promise 
+					? queueResult.then(complete) 
+					: complete(queueResult);
 			}
 
 			return proxy;
