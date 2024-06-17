@@ -1,3 +1,17 @@
+# [7.3.0](https://github.com/jakelauer/theseus-js/compare/v7.2.2...v7.3.0) (2024-06-17)
+
+
+### Bug Fixes
+
+* **theseus:** remove getChanges() from theseus level ([1c61462](https://github.com/jakelauer/theseus-js/commit/1c61462a71f004e7c2e4facf476fe88aab5f2cf0))
+
+
+### Features
+
+* **sandbox/cement/frost:** add recursive behavior to all aspects of sandbox ([d0640ad](https://github.com/jakelauer/theseus-js/commit/d0640ad2cb1da90f7aba15a2a0e05228b360847e))
+* **sandbox/cement/frost:** add recursive behavior to all aspects of sandbox ([#22](https://github.com/jakelauer/theseus-js/issues/22)) ([d249339](https://github.com/jakelauer/theseus-js/commit/d2493391a343bafb8bb637b1487d81c4759d5da8))
+* **sandbox:** allow getting in-progress changes ([9547b60](https://github.com/jakelauer/theseus-js/commit/9547b60ef4c82b7f7a3b546123a1ec42c56f8a7c))
+
 ## [7.2.2](https://github.com/jakelauer/theseus-js/compare/v7.2.1...v7.2.2) (2024-06-15)
 
 
