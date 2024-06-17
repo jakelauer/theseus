@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { reject } from "../";
+import { reject } from "../reject";
 import { CONSTANTS } from "../../constants";
 import { isSandboxProxy } from "../../sandbox/is-sandbox-proxy";
 

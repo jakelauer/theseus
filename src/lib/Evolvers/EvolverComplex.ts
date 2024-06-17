@@ -35,6 +35,11 @@ export const generateEvolveMethods = <
         {} as MutatorsFormatted<TData, TParamNoun, TEvolvers>,
 	);
 
+	(result as any)["getChanges"] = () => 
+	{
+		console.log("XXX");
+	};
+
 	return result;
 };
 

@@ -8,7 +8,7 @@ import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
 import { createChainingProxy } from "./proxy/chaining-proxy-manager";
-import { sandbox } from "theseus-sandbox";
+import { getSandboxChanges, sandbox } from "theseus-sandbox";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
@@ -64,7 +64,16 @@ export class ChainableMutatorSetBuilder<
 			throw new Error("Cannot set data to a Promise.");
 		}
 
-		this.data = this.inputToObject(data);
+		this.data[this.paramNoun] = data;
+	}
+
+	/**
+	 * Get the changes that have been made to the store since the last time this method was called.
+	 */
+	public getChanges(): Partial<TData>
+	{
+		console.log("Getting changes for instance", this.data[this.paramNoun]);
+		return getSandboxChanges(this.data[this.paramNoun]);
 	}
 
 	private get resultBase():Promise<TData> | TData 
@@ -121,7 +130,9 @@ export class ChainableMutatorSetBuilder<
 					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
 				}
 
-				return this.extractDataFromDraftResult(funcResult);
+				const outcomeData = this.applyResultDataToDraft(draft[this.paramNoun], funcResult);
+
+				return this.extractDataFromDraftResult(outcomeData);
 			},
 		});
 	}
@@ -130,6 +141,11 @@ export class ChainableMutatorSetBuilder<
 	{
 		return this.mutatorsForProxy;
 	}
+
+	protected override extractDataFromDraftResult(funcResult: SortaPromise<TData>)
+	{
+		return funcResult;
+	};
 
 	/**
      * Factory method to create an instance of ChainableMutatorSet with specified initial data, argument name,

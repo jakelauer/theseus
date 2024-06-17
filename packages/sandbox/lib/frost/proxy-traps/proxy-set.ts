@@ -2,7 +2,7 @@ import { assertValidVerificationProperty } from "../assertions";
 import { SANDBOX_VERIFIABLE_PROP_SYMBOL, CONSTANTS } from "../../constants";
 import type { SandboxSettable } from "../types";
 
-export function proxySet<T>(target: T, ostensibleProp: string | symbol, ostensibleValue: any): boolean
+export function proxySet(target: any, ostensibleProp: string | symbol, ostensibleValue: any): boolean
 {
 	// Set the verification property
 	if (ostensibleProp === CONSTANTS.VERIFICATION.BASIS_SYMBOL) 
@@ -11,7 +11,7 @@ export function proxySet<T>(target: T, ostensibleProp: string | symbol, ostensib
 
 		return true;
 	}
-	else if (ostensibleProp == CONSTANTS.SETTER && !!target[CONSTANTS.VERIFICATION.BASIS_SYMBOL]) 
+	else if (ostensibleProp == CONSTANTS.SETTER_SYMBOL && !!target[CONSTANTS.VERIFICATION.BASIS_SYMBOL]) 
 	{
 		const {
 			prop,
@@ -20,7 +20,7 @@ export function proxySet<T>(target: T, ostensibleProp: string | symbol, ostensib
 
 		assertValidVerificationProperty(target, ostensibleValue[SANDBOX_VERIFIABLE_PROP_SYMBOL]);
 
-		target[prop as keyof T] = value;
+		target[prop] = value;
 
 		return true;
 	}

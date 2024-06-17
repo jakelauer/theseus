@@ -84,12 +84,13 @@ describe("Observation", () =>
 
 	it("should correctly return changes made to the state when requested", async () => 
 	{
-		const instance = theseus({ test: "initial" }).maintainWith({
+		const data = { myString: "happy" };
+		const instance = theseus(data).maintainWith({
 			evolvers: [
-				Evolver.create("TestEvolver", { noun: "data" }).toEvolve<{ test: string }>().withMutators({
+				Evolver.create("TestEvolver", { noun: "data" }).toEvolve<{ myString: string }>().withMutators({
 					reverse: ({ data }) => 
 					{
-						data.test = data.test.split("").reverse().join("");
+						data.myString = data.myString.split("").reverse().join("");
 						return data;
 					},
 				}),
@@ -97,8 +98,8 @@ describe("Observation", () =>
 		});
 		instance.evolve.Test.reverse();
 
-		const changes = instance.getChanges();
-		expect(changes).to.deep.equal({ test: "laitini" });
+		const changes = instance.evolve.Test.getChanges();
+		expect(changes).to.deep.equal({ myString: "yppah" });
 
 		return;
 	});

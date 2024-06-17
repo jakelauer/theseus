@@ -131,16 +131,21 @@ export class MutatorSetBuilder<
 					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
 				}
 
-				return this.extractDataFromDraftResult(funcResult);
+				const outcomeData = this.applyResultDataToDraft(draft[this.paramNoun], funcResult);
+
+				return this.extractDataFromDraftResult(outcomeData);
 			},
 		});
 	}
 
-	protected extractDataFromDraftResult(funcResult: SortaPromise<TData>)
+	protected extractDataFromDraftResult(outcomeData: SortaPromise<TData>)
 	{
-		const generateOutcome = (data: TData) => 
+		const generateOutcome = (generatedData: TData) => 
 		{
-			const finishedDraft = isSandboxProxy(data) ? cement(data) as Record<TParamNoun, TData> : data;
+			const finishedDraft = isSandboxProxy(generatedData) 
+				? cement(generatedData) as Record<TParamNoun, TData> 
+				: generatedData;
+				
 			if (this.__theseusId && finishedDraft) 
 			{
 				void Theseus.updateInstance(this.__theseusId, finishedDraft);
@@ -148,13 +153,23 @@ export class MutatorSetBuilder<
 			return finishedDraft;
 		};
 
-		return funcResult instanceof Promise 
-			? funcResult.then((result: TData) => 
-			{
-				return generateOutcome(result);
-			}) 
-			: generateOutcome(funcResult);
+		return outcomeData instanceof Promise 
+			? outcomeData.then(generateOutcome) 
+			: generateOutcome(outcomeData);
 	};
+
+	protected applyResultDataToDraft(draft: TData, result: SortaPromise<TData>)
+	{
+		const generateOutcome = (generatedData: TData) => 
+		{
+			Object.assign(draft, generatedData);
+			return draft;
+		};
+
+		return result instanceof Promise 
+			? result.then(generateOutcome) 
+			: generateOutcome(result);
+	}
 
 	/**
      * Transforms the input data into the structured format expected by the mutators, keyed by the parameter

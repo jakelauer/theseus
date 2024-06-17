@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { sandbox } from "../sandbox";
 import { isSandboxProxy } from "../is-sandbox-proxy";
 import { CONSTANTS } from "../../constants";
-import { cement } from "../../cement";
+import { cement } from "../../cement/cement";
 
 describe("sandbox", function() 
 {
@@ -63,7 +63,7 @@ describe("sandbox", function()
 	it("should not proxy the sandbox symbol", function()
 	{
 		const original = { a: 1, b: 2 };
-		const proxy = sandbox(original);
+		const proxy = sandbox(original) as any;
 		expect(proxy[CONSTANTS.SANDBOX_SYMBOL][CONSTANTS.SANDBOX_SYMBOL]).to.be.undefined;
 	});
 

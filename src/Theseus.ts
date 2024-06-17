@@ -9,7 +9,7 @@ import TheseusBuilder from "./TheseusBuilder";
 import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 import type { DestroyCallback } from "./lib/Broadcast/Broadcaster";
 import type { BaseParams, ITheseus } from "@Types/Theseus";
-import { cement, frost, sandbox, getSandboxChanges } from "theseus-sandbox";
+import { cement, frost, sandbox } from "theseus-sandbox";
 
 const log = getTheseusLogger("Observation");
 
@@ -52,16 +52,9 @@ export class Theseus<
 
 	private setData = (data: TData) => 
 	{
+		console.log("Setting data for instance");
 		this.internalState = sandbox(data, { mode: "copy" });
 	};
-
-	/**
-	 * Get the changes that have been made to the store since the last time this method was called.
-	 */
-	public getChanges(): Partial<TData>
-	{
-		return getSandboxChanges(this.internalState);
-	}
 
 	/**
      * Update the store with new data, and update subscribers.

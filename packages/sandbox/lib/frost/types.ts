@@ -10,5 +10,10 @@ export interface SandboxSettable
 
 export interface SandboxSetter
 {
-	[CONSTANTS.SETTER]: SandboxSettable;
+	[CONSTANTS.SETTER_SYMBOL]: SandboxSettable;
+}
+
+export type FrostProxy<T extends object> = T & {
+	[CONSTANTS.VERIFICATION.BASIS_SYMBOL]: string;
+	[CONSTANTS.IS_FROSTY_PROP]: true;
 }

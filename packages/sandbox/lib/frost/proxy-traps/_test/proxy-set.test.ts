@@ -4,12 +4,13 @@ import { expect } from "chai";
 import { SANDBOX_VERIFIABLE_PROP_SYMBOL, CONSTANTS } from "../../../constants";
 import { proxySet } from "../proxy-set";
 import type { SandboxSettable } from "../../types";
+import type { SandboxProxy } from "../../../sandbox";
 
 describe("proxySet", function() 
 {
 	it("should set the verification property", function() 
 	{
-		const target = {};
+		const target: SandboxProxy<any> = {};
 		const ostensibleProp = CONSTANTS.VERIFICATION.BASIS_SYMBOL;
 		const ostensibleValue = 123;
 
@@ -19,7 +20,7 @@ describe("proxySet", function()
 
 	it("should set the sandbox setter property", function() 
 	{
-		const target = {
+		const target: any = {
 			[CONSTANTS.VERIFICATION.BASIS_SYMBOL]: "123",
 		};
 		const value: SandboxSettable = {
@@ -28,7 +29,7 @@ describe("proxySet", function()
 			[SANDBOX_VERIFIABLE_PROP_SYMBOL]: "123",
 		};
 
-		const result = proxySet(target, CONSTANTS.SETTER, value);
+		const result = proxySet(target, CONSTANTS.SETTER_SYMBOL, value);
 		expect(result).to.be.true;
 		expect(target["key"]).to.equal("newValue");
 	});

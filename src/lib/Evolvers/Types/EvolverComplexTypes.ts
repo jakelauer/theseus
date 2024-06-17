@@ -52,7 +52,7 @@ type MacroMutatorsRemapped<
         TData,
         TParamNoun,
         ExtractEvolverByName<TEvolvers[number], K>
-    >;
+    > & {getChanges: () => Partial<TData>};
 };
 
 type ExtractEvolverByName<TEvolvers, Name> = TEvolvers extends { evolverName: Name } ? TEvolvers : never;

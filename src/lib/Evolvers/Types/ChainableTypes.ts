@@ -48,7 +48,9 @@ type SyncChainable<
     IsFinal extends FinalTracker = "notFinal",
 > = MutatorCallable<
     TMutator,
-    IsFinal extends "final" ? TData : Record<"and", ChainableMutators<TData, TParamNoun, TMutators, IsFinal, IsAsync>> 
+    IsFinal extends "final" 
+		? TData 
+		: Record<"and", ChainableMutators<TData, TParamNoun, TMutators, IsFinal, IsAsync>>
 	& Record<"result", TData> 
 	& Record<"lastly", ChainableMutators<TData, TParamNoun, TMutators, "final", IsAsync>>
 >;
@@ -135,7 +137,7 @@ export type ChainableMutators<
         // For nested mutator objects, recursively apply ChainableMutators to enable deep chaining.
         ChainableMutators<TData, TParamNoun, TMutators[K], IsFinal, IsAsync>
     :   never;
-};
+}
 
 // Interface defining the capability to retrieve the final form of the mutated data.
 export interface Chainable<TData extends object> {

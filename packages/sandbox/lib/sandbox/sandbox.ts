@@ -63,7 +63,7 @@ function createProxy<T extends object>(obj: T, proxyMap: WeakMap<object, object>
 	{
 		if (typeof value === "object") 
 		{
-			proxy[key] = createProxy(value, proxyMap, params);
+			proxy[key as keyof T] = createProxy(value, proxyMap, params);
 		}
 	}
 
@@ -111,7 +111,21 @@ function handleSet(prop: string | symbol, value: any, metadata: any, proxyMap: W
 	{
 		value = createProxy(value, proxyMap, metadata.params);
 	}
-	metadata.changes[prop] = value;
+
+	const symbolsSkipSet = {
+		[CONSTANTS.SANDBOX_SYMBOL]: true,
+		[CONSTANTS.VERIFICATION.BASIS_SYMBOL]: true,
+		[CONSTANTS.SETTER_SYMBOL]: true,
+	};
+
+	const isSpecialSymbol = typeof prop === "symbol" && Object.getOwnPropertySymbols(symbolsSkipSet).includes(prop);
+
+	// make sure prop isn't one of the special symbols
+	if (!isSpecialSymbol)
+	{
+		metadata.changes[prop] = value;
+	}
+
 	return true;
 }
 

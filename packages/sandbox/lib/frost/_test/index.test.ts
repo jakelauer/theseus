@@ -1,12 +1,12 @@
 import { expect } from "chai";
-import { frost } from "../";
+import { frost } from "../frost";
 import { sandbox } from "../../sandbox/sandbox";
-import { cement } from "../../cement";
+import { cement } from "../../cement/cement";
 
 describe("frost", function() 
 {
-	let originalObject: Record<"a"|"b", number>;
-	let frostedProxy: Record<"a"|"b", number>;
+	let originalObject: {[key: string]: number};
+	let frostedProxy: {[key: string]: number};
 
 	beforeEach(function() 
 	{
