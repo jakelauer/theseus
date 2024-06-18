@@ -1,3 +1,10 @@
+## [7.4.1](https://github.com/jakelauer/theseus-js/compare/v7.4.0...v7.4.1) (2024-06-18)
+
+
+### Bug Fixes
+
+* **eslint:** attempt to fix eslint plugin ([7ba7cb8](https://github.com/jakelauer/theseus-js/commit/7ba7cb8d9c252fec0892922012dec6a87374842d))
+
 # [7.4.0](https://github.com/jakelauer/theseus-js/compare/v7.3.3...v7.4.0) (2024-06-18)
 
 
