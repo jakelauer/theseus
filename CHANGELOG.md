@@ -1,3 +1,15 @@
+# [7.4.0](https://github.com/jakelauer/theseus-js/compare/v7.3.3...v7.4.0) (2024-06-18)
+
+
+### Bug Fixes
+
+* **secret:** remove ([4d08be4](https://github.com/jakelauer/theseus-js/commit/4d08be44b167bfd1b8c702a3d86321f94632b8d6))
+
+
+### Features
+
+* **publishing:** eslint-plugin-theseus ([e44388f](https://github.com/jakelauer/theseus-js/commit/e44388fd742cc3046431a6ee8bfb2d2a1e4b5e0c))
+
 ## [7.3.3](https://github.com/jakelauer/theseus-js/compare/v7.3.2...v7.3.3) (2024-06-18)
 
 
