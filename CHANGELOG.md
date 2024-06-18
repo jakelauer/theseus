@@ -1,3 +1,10 @@
+## [7.4.3](https://github.com/jakelauer/theseus-js/compare/v7.4.2...v7.4.3) (2024-06-18)
+
+
+### Bug Fixes
+
+* **fix:** fix ([266bfbc](https://github.com/jakelauer/theseus-js/commit/266bfbc74a9e1b2e690a35ff69a5c833b1f2dc04))
+
 ## [7.4.2](https://github.com/jakelauer/theseus-js/compare/v7.4.1...v7.4.2) (2024-06-18)
 
 
