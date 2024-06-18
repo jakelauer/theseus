@@ -1,3 +1,10 @@
+## [7.4.4](https://github.com/jakelauer/theseus-js/compare/v7.4.3...v7.4.4) (2024-06-18)
+
+
+### Bug Fixes
+
+* **npmrc:** remove unused props ([0d1671b](https://github.com/jakelauer/theseus-js/commit/0d1671ba017b6142a984f99f0c01a77bea9208c0))
+
 ## [7.4.3](https://github.com/jakelauer/theseus-js/compare/v7.4.2...v7.4.3) (2024-06-18)
 
 
