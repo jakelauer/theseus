@@ -1,3 +1,10 @@
+## [7.3.3](https://github.com/jakelauer/theseus-js/compare/v7.3.2...v7.3.3) (2024-06-18)
+
+
+### Bug Fixes
+
+* **release:** need to force a release ([c4e0a30](https://github.com/jakelauer/theseus-js/commit/c4e0a3098caf729c07e149bb1d3b4f85d57ab9a4))
+
 ## [7.3.2](https://github.com/jakelauer/theseus-js/compare/v7.3.1...v7.3.2) (2024-06-18)
 
 
