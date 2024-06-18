@@ -1,3 +1,10 @@
+## [7.3.2](https://github.com/jakelauer/theseus-js/compare/v7.3.1...v7.3.2) (2024-06-18)
+
+
+### Bug Fixes
+
+* **sandbox:** fix main/module in package.json ([99090e2](https://github.com/jakelauer/theseus-js/commit/99090e231780325e4e09342fc4268ed4e944489d))
+
 ## [7.3.1](https://github.com/jakelauer/theseus-js/compare/v7.3.0...v7.3.1) (2024-06-17)
 
 
