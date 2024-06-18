@@ -2,7 +2,8 @@
     "name": "theseus-sandbox",
     "version": "1.0.1",
     "description": "",
-    "main": "./lib/index.ts",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
     "publishConfig": {
         "main": "./dist/index.js"
     },
