@@ -1,8 +1,0 @@
-.*
-**/tsconfig.json
-**/node_modules
-**/pnpm-workspace.yaml
-*.map
-**/_test/**
-**/test/**
-**/packages/**

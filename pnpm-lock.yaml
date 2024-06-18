@@ -115,7 +115,7 @@ importers:
         specifier: ^10.4.1
         version: 10.4.3(eslint@8.57.0)
       eslint-plugin-theseus:
-        specifier: workspace:./packages/eslint-plugin-theseus
+        specifier: workspace:~
         version: link:packages/eslint-plugin-theseus
       eslint-plugin-unused-imports:
         specifier: ^3.1.0
@@ -160,13 +160,13 @@ importers:
         specifier: ^3.7.0
         version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
       theseus-commitlint-config:
-        specifier: workspace:./packages/commitlint-config
+        specifier: workspace:~
         version: link:packages/commitlint-config
       theseus-gpt-zip:
-        specifier: workspace:./packages/gpt-zip
+        specifier: workspace:~
         version: link:packages/gpt-zip
       theseus-sandbox:
-        specifier: workspace:./packages/sandbox
+        specifier: workspace:~
         version: link:packages/sandbox
       tsup:
         specifier: ^8.1.0

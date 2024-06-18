@@ -1,11 +1,9 @@
 {
     "name": "eslint-plugin-theseus",
+    "private": true,
     "version": "1.0.0",
     "description": "",
     "main": "lib/index.js",
-    "files": [
-        "lib"
-    ],
     "scripts": {
         "build": "echo 'no build'",
         "test": "mocha '**/_test/*.test.js'"
