@@ -3,12 +3,10 @@ module.exports = {
 	//ignorePatterns: ["*.js"],
     parserOptions: {  
         project: [
-			"./tsconfig.json",
-			"./tsconfig.tsup.json",
-			"./packages/eslint-plugin-theseus/tsconfig.json",
-			"./packages/commitlint-config/tsconfig.json",
-			"./packages/sandbox/tsconfig.json",
-			"./.examples/tic-tac-toe/tsconfig.json",
+			"./**/tsconfig.json",
+			"./**/tsconfig.*.json",
+			"./.examples/**/tsconfig.json",
+			"./.examples/**/tsconfig.*.json",
 		],
         ecmaVersion: 2018,  
         sourceType: "module",  

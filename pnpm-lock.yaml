@@ -238,6 +238,9 @@ importers:
       sinon-chai:
         specifier: ^3.7.0
         version: 3.7.0(chai@4.4.1)(sinon@18.0.0)
+      tsup:
+        specifier: ^8.1.0
+        version: 8.1.0(typescript@5.4.5)
       tsx:
         specifier: 4.11.2
         version: 4.11.2

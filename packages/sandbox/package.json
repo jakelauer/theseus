@@ -4,12 +4,9 @@
     "description": "",
     "main": "dist/index.cjs",
     "module": "dist/index.js",
-    "publishConfig": {
-        "main": "./dist/index.js"
-    },
     "type": "module",
     "scripts": {
-        "build": "tsc",
+        "build": "tsup",
         "test": "mocha --require tsx --config ./.mocharc.cjs"
     },
     "files": [
@@ -28,6 +25,7 @@
         "mocha": "^10.3.0",
         "sinon": "^18.0.0",
         "sinon-chai": "^3.7.0",
+        "tsup": "^8.1.0",
         "tsx": "4.11.2",
         "typescript": "^5.4.2"
     }
