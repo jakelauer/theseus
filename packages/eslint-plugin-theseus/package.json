@@ -1,6 +1,5 @@
 {
     "name": "eslint-plugin-theseus",
-    "private": true,
     "version": "1.0.0",
     "description": "",
     "main": "lib/index.js",
