@@ -1,3 +1,10 @@
+## [7.4.5](https://github.com/jakelauer/theseus-js/compare/v7.4.4...v7.4.5) (2024-06-18)
+
+
+### Bug Fixes
+
+* **eslint:** fix ([df2911c](https://github.com/jakelauer/theseus-js/commit/df2911cb49870a0077917246b52109f50730f8f7))
+
 ## [7.4.4](https://github.com/jakelauer/theseus-js/compare/v7.4.3...v7.4.4) (2024-06-18)
 
 
