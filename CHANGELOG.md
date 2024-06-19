@@ -1,3 +1,10 @@
+## [7.4.7](https://github.com/jakelauer/theseus-js/compare/v7.4.6...v7.4.7) (2024-06-19)
+
+
+### Bug Fixes
+
+* **sandbox:** prevent sandboxing invalid objects (null, etc) ([5ecaf99](https://github.com/jakelauer/theseus-js/commit/5ecaf998785be2d7c3b27240fba87669469008c7))
+
 ## [7.4.6](https://github.com/jakelauer/theseus-js/compare/v7.4.5...v7.4.6) (2024-06-18)
 
 
