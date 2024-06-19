@@ -1,26 +1,26 @@
 {
     "name": "examples-tic-tac-toe",
-    "type": "module",
     "private": true,
     "version": "1.0.0",
     "description": "A fun tic-tac-toe game.",
     "author": "Jake Lauer",
     "license": "MIT",
     "dependencies": {
-        "theseus-js": "workspace:latest"
+        "theseus-js": "7.4.7"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^6.21.0",
         "@typescript-eslint/parser": "^6.21.0",
+        "concurrently": "8.2.2",
         "eslint": "^8.57.0",
-        "eslint-plugin-theseus": "workspace:latest",
-        "pino-pretty": "5.0.0",
-        "tsx": "^4.11.0"
+        "eslint-plugin-theseus": "1.0.0",
+        "nodemon": "3.1.3",
+        "tsup": "^8.1.0"
     },
     "scripts": {
         "root-build": "pnpm --prefix ../../ build:base",
-        "start-raw": "node --import=tsx ./src/app/main.ts",
-        "start": "pnpm root-build && pnpm start-raw"
+        "start": "concurrently \"pnpm tsup --watch\" \"nodemon --watch dist --exec node dist/index.js\"",
+        "build": "tsup"
     },
     "main": "index.ts"
 }
