@@ -61,13 +61,19 @@ function createProxy<T extends object>(obj: T, proxyMap: WeakMap<object, object>
 
 	for (const [key, value] of Object.entries(obj)) 
 	{
-		if (typeof value === "object") 
+		if (isValidObject(value)) 
 		{
 			proxy[key as keyof T] = createProxy(value, proxyMap, params);
 		}
 	}
 
 	return proxy;
+}
+
+function isValidObject(obj: any)
+{
+	const type = typeof obj;
+	return type === "function" || type === "object" && !!obj;
 }
 
 function createMetadata<T extends object>(obj: T, params: SandboxParams): Metadata<T>

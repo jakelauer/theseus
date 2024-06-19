@@ -50,5 +50,5 @@ export const isSandboxProxy = <T extends object>(obj?: T, recursive = true): obj
 		}
 	}
 
-	return rootIsSandboxProxy && propertiesAreSandboxProxy;
+	return Boolean(rootIsSandboxProxy && propertiesAreSandboxProxy);
 };

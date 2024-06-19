@@ -119,4 +119,12 @@ describe("sandbox", function()
 		expect(result.a[0].b).to.equal(3, "cemented object should keep the changes from the sandbox");
 		expect(original.a[0].b).to.equal(1);
 	});
+
+	it("should not sandbox nullish values", function()
+	{
+		const original: any = { a: null };
+		let proxy: any;
+		expect(() => {proxy = sandbox(original);}).not.to.throw();
+		expect(isSandboxProxy(proxy.a)).to.be.false;
+	});
 });
