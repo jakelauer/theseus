@@ -1,3 +1,10 @@
+## [7.4.6](https://github.com/jakelauer/theseus-js/compare/v7.4.5...v7.4.6) (2024-06-18)
+
+
+### Bug Fixes
+
+* **ci:** ci ([900e985](https://github.com/jakelauer/theseus-js/commit/900e98595ab9726f3848410a8d1653c554bc4f5f))
+
 ## [7.4.5](https://github.com/jakelauer/theseus-js/compare/v7.4.4...v7.4.5) (2024-06-18)
 
 
