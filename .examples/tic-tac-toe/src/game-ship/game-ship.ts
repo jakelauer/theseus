@@ -1,4 +1,4 @@
-import theseus from "theseus-js";
+import {theseus} from "theseus-js";
 
 import { GameRefineryComplex } from "./refine/GameRefineryComplex";
 import { initialGameState } from "./state/GameState";

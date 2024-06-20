@@ -1,26 +1,28 @@
-import { getTheseusLogger } from "../../../../dist";
+import { getTheseusLogger } from "theseus-js";
 import { GameShip } from "../game-ship/game-ship";
 import type { MarkType } from "../game-ship/state/GameState";
+import { onWinner } from "./on-winner";
+import { onGameUpdated } from "./on-game-updated";
 
-const observeLog = getTheseusLogger("Observe");
+const log = getTheseusLogger("Observe");
 
-export default function(onUpdate: () => void, onWinner: (winner: MarkType) => void)
+export default function()
 {
 	GameShip.observe((state) => 
 	{
-		onUpdate();
+		onGameUpdated();
 			
 		switch (state.winner) 
 		{
 			case "stalemate":
-				observeLog.major("Stalemate detected! Game over.");
+				log.major("Stalemate detected! Game over.");
 				break;
 			case "X":
 			case "O":
-				onWinner(state.winner);
+				onWinner();
 				break;
 			default:
-				observeLog.major("Move detected! Taking next turn...");
+				log.major("Move detected! Taking next turn...");
 				GameShip.mutate.Turn.nextTurn();
 				break;
 		}
