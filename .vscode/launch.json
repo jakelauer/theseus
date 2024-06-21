@@ -29,7 +29,7 @@
             "request": "launch",
             "name": "Run Base Tests",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["test:base", "--timeout", "60000"],// "--", "--grep", "\"should correctly return changes made to the state when requested\""],
+            "runtimeArgs": ["test:base", "--timeout", "60000", "--", "--grep", "\"should correctly handle instance retrieval and updates by ID\""],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"

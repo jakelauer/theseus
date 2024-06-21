@@ -31,12 +31,12 @@ export class MutatorSetBuilder<
 		inputData: TData,
         protected readonly paramNoun: TParamNoun,
         protected readonly mutators: TMutators,
-        observationId?: string,
+        theseusId?: string,
 	) 
 	{
+		this.__theseusId = theseusId;
 		this.data = this.inputToObject(inputData);
 		this.extendSelfWithMutators(mutators);
-		this.__theseusId = observationId;
 	}
 
 	public __setTheseusId(id: string) 
@@ -111,6 +111,7 @@ export class MutatorSetBuilder<
 		Object.assign(context, {
 			[selfPath]: (...args: any[]) => 
 			{
+				Theseus.incrementStackDepth(this.__theseusId);
 				const draft = sandbox(this.data, { mode: "copy" });
 				
 				let funcResult: SortaPromise<TData>;
@@ -124,18 +125,29 @@ export class MutatorSetBuilder<
 					throw e;
 				}
 
-				log.debug(`Result of mutator "${selfPath}"`);
-
 				if (funcResult === undefined) 
 				{
 					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
 				}
 
 				const outcomeData = this.applyResultDataToDraft(draft[this.paramNoun], funcResult);
+				this.decrementAfter(outcomeData);
 
 				return this.extractDataFromDraftResult(outcomeData);
 			},
 		});
+	}
+
+	protected decrementAfter(outcome: SortaPromise<any>)
+	{
+		const doDecrement = () => 
+		{
+			Theseus.decrementStackDepth(this.__theseusId);
+		};
+
+		outcome instanceof Promise
+			? outcome.finally(doDecrement).catch(console.error)
+			: doDecrement();
 	}
 
 	protected extractDataFromDraftResult(outcomeData: SortaPromise<TData>)
@@ -197,9 +209,9 @@ export class MutatorSetBuilder<
         TData extends object,
         TParamNoun extends string,
         TMutators extends MutatorDefs<TData, TParamNoun>,
-    >(data: TData, paramNoun: TParamNoun, mutators: TMutators, observationId?: string) 
+    >(data: TData, paramNoun: TParamNoun, mutators: TMutators, theseusId?: string) 
 	{
-		const builder = new MutatorSetBuilder(data, paramNoun, mutators, observationId);
+		const builder = new MutatorSetBuilder(data, paramNoun, mutators, theseusId);
 
 		return this.castToMutators(builder);
 	}

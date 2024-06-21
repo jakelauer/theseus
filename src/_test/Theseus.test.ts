@@ -1,10 +1,10 @@
 import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { beforeEach, describe, it } from "mocha";
-import sinon from "sinon";
+import sinon, { type SinonSpy } from "sinon";
 
 import { Theseus } from "@/Theseus";
-import theseus, { Evolver } from "..";
+import { theseus, Evolver } from "..";
 
 chai.use(chaiAsPromised);
 
@@ -14,7 +14,7 @@ describe("Observation", () =>
 
 	beforeEach(() => 
 	{
-		observation = new Theseus<{ test: string }>({ test: "initial" });
+		observation = Theseus.__private_create<{ test: string }>({ test: "initial" });
 	});
 
 	it("should initialize with provided initial data", () => 
@@ -103,4 +103,60 @@ describe("Observation", () =>
 
 		return;
 	});
+
+	it("should not broadcast changes when evolver is called from within an evolver", async function() 
+	{
+		const data = { myString: "happy" };
+		const instance = theseus(data).maintainWith({
+			evolvers: [
+				Evolver.create("TestEvolver", { noun: "data" }).toEvolve<{ myString: string }>().withMutators({
+					reverse: ({ data }) => 
+					{
+						data.myString = data.myString.split("").reverse().join("");
+						return data;
+					},
+					doubleReverse: ({ data }) => 
+					{
+						instance.mutate.Test.reverse();
+						instance.mutate.Test.reverse();
+						return data;
+					},
+				}),
+			],
+		});
+	
+		const callback: SinonSpy = sinon.spy();
+
+		instance.observe(() => 
+		{
+			callback();
+		});
+	
+		instance.mutate.Test.doubleReverse();
+
+		// Use a promise to wait until the callback is called or the timeout is reached
+		await new Promise<void>((resolve, reject) => 
+		{
+			const interval = setInterval(() => 
+			{
+				if (callback.callCount > 0) 
+				{
+					clearInterval(interval);
+					callback.callCount === 1 
+						? resolve() 
+						: reject(new Error(`Callback was called ${callback.callCount} times`));
+				}
+			}, 50);
+
+			setTimeout(() => 
+			{
+				clearInterval(interval);
+				callback.callCount === 1 
+					? resolve()
+					: reject(new Error(`Callback was called ${callback.callCount} times`));
+			}, 1000);
+		});
+
+		expect(callback.callCount).to.be.equal(1);
+	  }).timeout(2000); // Ensure the test has enough time to complete
 });

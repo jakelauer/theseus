@@ -67,7 +67,7 @@ export default <TData extends object>(data: TData) => ({
 	) => 
 	{
 		const { evolvers, refineries, ...rest } = params;
-		const theseusInstance = new Theseus<TData, TObserverType>(data, rest);
+		const theseusInstance = Theseus.__private_create<TData, TObserverType>(data, rest);
 
         type ParamsAbbrev = TheseusParams<
             TData,
@@ -106,6 +106,8 @@ export default <TData extends object>(data: TData) => ({
         		(evolver: EvolverInstance<TData, string,  TParamNoun, TMutators>) =>
         			evolver.__setTheseusId(innerInstance.__uuid),
         	);
+
+        	evolverComplex.addTheseusId(innerInstance.__uuid);
 
         	let extension: BaseExtension = {
         		evolve: evolverComplex.evolve(innerInstance.state),

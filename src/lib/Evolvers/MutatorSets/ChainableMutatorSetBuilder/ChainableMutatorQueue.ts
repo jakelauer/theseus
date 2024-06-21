@@ -7,6 +7,7 @@ const log = getTheseusLogger("Queue");
 interface Params<TData extends object, TParamNoun extends string> 
 {
 	paramNoun: TParamNoun;
+	__theseusId?: string;
 	setData: (data: TData) => void;
 	getData: () => TData;
 }
@@ -32,7 +33,9 @@ export class ChainableMutatorQueue<
 	private _isAsyncEncountered = false;
 	private _queue: SortaPromise<any> = Promise.resolve();
 
-	private constructor(private params: Params<TData, TParamNoun>) {}
+	private constructor(private params: Params<TData, TParamNoun>) 
+	{
+	}
 
 	public get asyncEncountered() 
 	{
@@ -145,7 +148,7 @@ export class ChainableMutatorQueue<
 		const queueOutput = this._isAsyncEncountered
 			? this.queueAfterAsyncEncountered(operation, mutatorPath)
 			: this.queueBeforeAsyncEncountered(operation, mutatorPath);
-				
+
 		return queueOutput as TFuncReturn;
 	}
 	

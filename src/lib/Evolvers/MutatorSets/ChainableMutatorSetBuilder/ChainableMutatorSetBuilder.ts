@@ -6,9 +6,9 @@ import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
 import type { Chainable, ChainableMutators } from "@Evolvers/Types/ChainableTypes";
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 
-import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
+import type { MutatorDefs } from "../../Types/MutatorTypes";
 import { createChainingProxy } from "./proxy/chaining-proxy-manager";
-import { getSandboxChanges, sandbox } from "theseus-sandbox";
+import { getSandboxChanges } from "theseus-sandbox";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
@@ -28,21 +28,20 @@ export class ChainableMutatorSetBuilder<
 	extends MutatorSetBuilder<TData, TParamNoun, TMutators>
 	implements Chainable<TData> 
 {
-	private calls = 0;
-
 	private mutatorQueue: ChainableMutatorQueue<TData, TParamNoun>;
 
 	// Created by createChainingProxy; always matches the type of the current instance
 	private chainingProxy: typeof this;
 
-	constructor(inputData: TData, paramNoun: TParamNoun, mutators: TMutators) 
+	constructor(inputData: TData, paramNoun: TParamNoun, mutators: TMutators, theseusId?: string) 
 	{
-		super(inputData, paramNoun, mutators);
+		super(inputData, paramNoun, mutators, theseusId);
 
 		this.mutatorQueue = ChainableMutatorQueue.create({
 			paramNoun,
 			getData: this.getData.bind(this),
 			setData: this.setData.bind(this),
+			__theseusId: theseusId,
 		});
 
 		this.chainingProxy = createChainingProxy({
@@ -72,7 +71,6 @@ export class ChainableMutatorSetBuilder<
 	 */
 	public getChanges(): Partial<TData>
 	{
-		console.log("Getting changes for instance", this.data[this.paramNoun]);
 		return getSandboxChanges(this.data[this.paramNoun]);
 	}
 
@@ -91,50 +89,6 @@ export class ChainableMutatorSetBuilder<
 	public get resultAsync(): Promise<TData> 
 	{
 		return this.resultBase as Promise<TData>;
-	}
-
-	/**
-     * Overrides addFunctionToSelf to support chainable operations. If the operation is asynchronous (returns
-     * a Promise), it returns the Promise directly. Otherwise, it enhances the returned object with a
-     * chainable interface.
-     *
-     * @param context The object context to which the mutator function is added.
-     * @param selfPath The path (name) under which the mutator function is stored in the context.
-     * @param mutator The mutator function to be executed.
-     */
-	protected override addFunctionToSelf(
-		context: any,
-		selfPath: string,
-		mutator: GenericMutator<TData, SortaPromise<TData>>,
-	) 
-	{
-		Object.assign(context, {
-			[selfPath]: (...args: any[]) => 
-			{
-				this.calls++;
-				const draft = sandbox(this.data, { mode: "copy" });
-				
-				let funcResult: SortaPromise<TData>;
-				try 
-				{
-					funcResult = mutator(draft, ...args);
-				}
-				catch (e) 
-				{
-					log.error(`Error in mutator function "${selfPath}"`, e);
-					throw e;
-				}
-
-				if (funcResult === undefined) 
-				{
-					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
-				}
-
-				const outcomeData = this.applyResultDataToDraft(draft[this.paramNoun], funcResult);
-
-				return this.extractDataFromDraftResult(outcomeData);
-			},
-		});
 	}
 
 	protected override getSelfExtensionPoint() 
@@ -156,13 +110,13 @@ export class ChainableMutatorSetBuilder<
      * @param mutators Definitions of mutators to apply to the state.
      * @returns An instance of ChainableMutatorSet configured with the provided parameters.
      */
-	public static  createChainable<
+	public static createChainable<
         TData extends object,
         TParamNoun extends string,
         TMutators extends MutatorDefs<TData, TParamNoun>,
-    >(data: TData, paramNoun: TParamNoun, mutators: TMutators) 
+    >(data: TData, paramNoun: TParamNoun, mutators: TMutators, theseusId?: string) 
 	{
-		const chain = new ChainableMutatorSetBuilder(data, paramNoun, mutators);
+		const chain = new ChainableMutatorSetBuilder(data, paramNoun, mutators, theseusId);
 		const proxy = chain.chainingProxy;
 		return this.castToChainableMutators(proxy);
 	}

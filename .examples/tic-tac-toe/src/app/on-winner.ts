@@ -1,6 +1,5 @@
 import { getTheseusLogger } from "theseus-js";
 import { GameShip } from "../game-ship/game-ship";
-import { MarkType } from "../game-ship/state/GameState";
 
 const log = getTheseusLogger("OnWinner");
 
