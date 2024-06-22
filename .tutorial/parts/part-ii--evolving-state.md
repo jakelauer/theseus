@@ -129,7 +129,7 @@ const onMoveUnavailable = () => {
 ### Evolutions (multiple changes)
 
 Evolutions allow for chaining many methods in a single call. Each method returns the other mutators. In order to get the
-final resulting object, simply end the chain with `result` or `resultAsync` (depending on whether any item in the chain
+final resulting object, simply end the chain with `result` or `endAsync` (depending on whether any item in the chain
 is asynchronous).
 
 All chained methods will be run in order, serially.
@@ -137,8 +137,10 @@ All chained methods will be run in order, serially.
 ```typescript
 // No more viable moves are available
 const onTurnTaken = (previousGameState: GameState) => {
-    return GameMetaEvolver.evolve(previousGameState).via.updateLastPlayer(mark).and.updateLastPlayedCoords(coords)
-        .result;
+    return GameMetaEvolver.evolve(previousGameState)
+		.via.updateLastPlayer(mark)
+		.and.updateLastPlayedCoords(coords)
+        .end();
 };
 ```
 
@@ -164,7 +166,7 @@ because the data being evolved is mutable.
 A chain of mutations becomes asynchronous if _any part_ of the chain is asynchronous, regardless of where it is in the
 chain. In that case, the chain must be awaited, or the returned data may not be fully modified at return time.
 
-For this reason, it's advisable to use `result` and `resultAsync` even when it's unnecessary, as a visual reminder to
+For this reason, it's advisable to use `result` and `endAsync` even when it's unnecessary, as a visual reminder to
 avoid asynchronous race conditions.
 
 ```typescript
@@ -175,7 +177,7 @@ avoid asynchronous race conditions.
 				.via.asyncAddPlayer()
 				.via.asyncUpdateLastPlayer(mark)
 				.and.asyncUpdateLastPlayedCoords(coords)
-				.resultAsync;
+				.endAsync();
 
 			console.log(result)
 
@@ -190,7 +192,7 @@ avoid asynchronous race conditions.
 				.via.asyncAddPlayer()
 				.via.asyncUpdateLastPlayer(mark)
 				.and.asyncUpdateLastPlayedCoords(coords)
-				.resultAsync
+				.endAsync()
 				.then(result => {
 					
 					console.log(result);

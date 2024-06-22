@@ -11,8 +11,8 @@ export class ChainTerminationAction extends ProxyActions
 {
 	public override type: ProxyActionType = ProxyActionType.chainTermination;
 	private readonly matchAgainstProps = new Map<PropName, ProcessReturnsProxy>([
-		["result", false],
-		["resultAsync", false],
+		["end", false],
+		["endAsync", false],
 		["lastly", true],
 	]);
 
@@ -20,12 +20,10 @@ export class ChainTerminationAction extends ProxyActions
 	{
 		const propMatches = this.matchAgainstProps.has(prop);
 
-		log.trace(`Chain termination action test result for property "${prop}":`);
-
 		return propMatches;
 	}
 	
-	public override process({ prop, proxyManager, proxy }: ProxyActionMapParameters) 
+	public process({ prop, proxyManager, proxy }: ProxyActionMapParameters) 
 	{
 		const processReturnsProxy = this.matchAgainstProps.get(prop) ?? false;
 
@@ -37,11 +35,12 @@ export class ChainTerminationAction extends ProxyActions
 		}
 
 		const toReturn = proxyManager.queue.asyncEncountered 
-			? proxyManager.queue.queue 
-			: proxyManager.params.target
-				.result;
+			? () => proxyManager.queue.queue
+			: () => proxyManager.params.target.end();
 
-		log.verbose(`Returning result for property "${prop}". Async: ${proxyManager.queue.asyncEncountered}`, {
+		const asyncLabel = proxyManager.queue.asyncEncountered ? "🕐ASYNC" : "";
+
+		log.verbose(`[${prop}${asyncLabel}] processed`, {
 			toReturn,
 		});
 

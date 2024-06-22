@@ -30,7 +30,7 @@ export abstract class ProxyActions
 
 		if (outcome)
 		{
-			log.debug(`Action type for "${params.prop}" is "${ProxyActionType[this.type]}"`);
+			log.verbose(`[${params.prop}] type: ${ProxyActionType[this.type]}`);
 		}
 
 		return outcome;

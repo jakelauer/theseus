@@ -114,14 +114,14 @@ export default <TData extends object>(data: TData) => ({
         		mutate: evolverComplex.mutate(innerInstance.state),
         	};
 
-        	log.debug(
+        	log.verbose(
         		`Added evolvers and mutators to extension for Theseus instance ${innerInstance.__uuid}`,
         		extension,
         	);
 
         	if (refineries) 
         	{
-        		log.debug(
+        		log.verbose(
         			`Refineries found, adding to extension for Theseus instance ${innerInstance.__uuid}`,
         		);
         		const complex: RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries> =
@@ -142,7 +142,7 @@ export default <TData extends object>(data: TData) => ({
                     },
         		) as Extension;
 
-        		log.debug(
+        		log.verbose(
         			`Added refineries to extension for Theseus instance ${innerInstance.__uuid}`,
         			extension,
         		);
@@ -151,18 +151,18 @@ export default <TData extends object>(data: TData) => ({
         	return extension as Extension;
         };
 
-        log.debug(
+        log.verbose(
         	`Extending Theseus instance ${theseusInstance.__uuid} with evolvers and refineries`,
         	theseusInstance,
         );
 
         const extension = addEvolversAndRefineries(theseusInstance, evolvers, refineries);
 
-        log.debug(`Built extension for Theseus instance ${theseusInstance.__uuid}`, extension);
+        log.verbose(`Built extension for Theseus instance ${theseusInstance.__uuid}`, extension);
 
         const theseusExtended = extendTheseusWith<ITheseus<TData>, Extension>(theseusInstance, extension);
 
-        log.debug(`Theseus instance ${theseusInstance.__uuid} is ready`, theseusExtended);
+        log.verbose(`Theseus instance ${theseusInstance.__uuid} is ready`, theseusExtended);
 
         return theseusExtended;
 	},

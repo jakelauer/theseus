@@ -70,11 +70,13 @@ export class ChainableMutatorQueue<
 		mutatorResult: Promise<TData>,
 	) 
 	{
+		log.verbose(
+			`[🐢 ${selfPath}] Queued operation ${selfPath} is async. Further queued operations will run asynchronously.`,
+		);
+
 		// Async operation encountered, switch to queuing mode
 		this._isAsyncEncountered = true;
-		log.trace(
-			`mutatorResult for ${selfPath} is a Promise. Set isAsyncEncountered to true.`,
-		);
+
 		return mutatorResult.then((result) => 
 		{
 			this.assertObjectResult(selfPath, result);
@@ -85,6 +87,10 @@ export class ChainableMutatorQueue<
 
 	private buildSyncOperation(selfPath: string, mutatorResult: TData) 
 	{
+		log.verbose(
+			`[🐇 ${selfPath}] Queued operation ${selfPath} is synchronous.`,
+		);
+
 		this.assertObjectResult(selfPath, mutatorResult);
 		log.verbose(`{SYNC} ${selfPath} = `, mutatorResult);
 		return mutatorResult;
@@ -98,10 +104,10 @@ export class ChainableMutatorQueue<
 	{
 		return () => 
 		{
-			log.verbose(`Executing queue operation ${selfPath}`, { args });
+			log.debug(`[${selfPath}] Operation execution starting`, { args });
 
 			const mutatorResult = mutator(...args);
-			log.verbose(`Executed queue operation ${selfPath}`, { args });
+			log.debug(`[${selfPath}] Operation finished executing`, { args });
 
 			if (mutatorResult === undefined || mutatorResult === null) 
 			{
@@ -109,12 +115,6 @@ export class ChainableMutatorQueue<
 					`Mutator ${selfPath} returned ${mutatorResult}. Mutators must return a value compatible with the data type.`,
 				);
 			}
-
-			log.verbose(
-				`Queued operation ${selfPath} is async: ${
-					mutatorResult instanceof Promise
-				}`,
-			);
 
 			return mutatorResult instanceof Promise
 				? this.buildAsyncOperation(selfPath, mutatorResult)
@@ -138,7 +138,7 @@ export class ChainableMutatorQueue<
 		args: any[],
 	): TFuncReturn 
 	{
-		log.verbose(`Request to queue ${mutatorPath}(${args}) received.`);
+		log.debug(`Request to queue ${mutatorPath}(${args}) received.`);
 
 		const operation = this.buildQueueOperation(mutatorPath, func, ...args);
 
@@ -146,33 +146,33 @@ export class ChainableMutatorQueue<
 	
 		// Delegate to a specialized method based on whether async operations have been encountered before.
 		const queueOutput = this._isAsyncEncountered
-			? this.queueAfterAsyncEncountered(operation, mutatorPath)
-			: this.queueBeforeAsyncEncountered(operation, mutatorPath);
+			? this.addToAsyncQueue(operation, mutatorPath)
+			: this.addToSynchronousQueue(operation, mutatorPath);
 
 		return queueOutput as TFuncReturn;
 	}
 	
-	private queueAfterAsyncEncountered(operation: () => SortaPromise<TData>, mutatorPath: string): Promise<TData> 
+	private addToAsyncQueue(operation: () => SortaPromise<TData>, mutatorPath: string): Promise<TData> 
 	{
-		log.verbose(`Queueing operation ${mutatorPath} after pre-existing async operation`);
+		log.debug(`🐢 [${mutatorPath}] Queueing operation after prior queue promises resolve`);
 		this._queue = this._queue.then(() => 
 		{
-			log.verbose(`Executing queued operation ${mutatorPath} after pre-existing async operation`);
+			log.debug(`🐢 [${mutatorPath}] Executing queued async operation`);
 			const result = operation();
 			return this.setDataWithResult(result);
 		});
 		return this._queue;
 	}
 	
-	private queueBeforeAsyncEncountered(
+	private addToSynchronousQueue(
 		operation: () => SortaPromise<TData>, 
 		mutatorPath: string): SortaPromise<TData> 
 	{
-		log.verbose(`Queueing operation ${mutatorPath}`);
+		log.debug(`🐇 [${mutatorPath}] Operation will be executed immediately`);
 		const result = operation();
 		if (result instanceof Promise) 
 		{
-			log.verbose(`Queueing operation ${mutatorPath} as a Promise. All subsequent operations will be queued.`);
+			log.debug(`🐇➡️🐢 [${mutatorPath}] Operation returned a promise, so we will create an async queue.`);
 			this._queue = this.setDataWithResult(result);
 			return this._queue;
 		}
@@ -189,7 +189,6 @@ export class ChainableMutatorQueue<
 		let outcome: SortaPromise<TData>;
 		if (result instanceof Promise) 
 		{
-			log.verbose("Async operation detected, waiting for resolution before setting...");
 			outcome = result.then((resolvedResult) =>
 			{
 				log.verbose("Async operation resolved, setting data to result of operation");

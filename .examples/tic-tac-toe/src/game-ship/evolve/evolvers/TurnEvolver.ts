@@ -52,7 +52,7 @@ export const TurnEvolver = Evolver.create("TurnEvolver", { noun: "gameState" })
 				.via.iterateTurnCount()
 				.and.updateLastPlayer(mark)
 				.and.updateLastPlayedCoords(coords)
-				.result;
+				.end();
 
 			return gameState;
 		},

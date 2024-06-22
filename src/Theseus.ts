@@ -37,7 +37,7 @@ export class Theseus<
 		super(params?.broadcasterParams);
 
 		this.#uuid = uuidv4();
-		this.setData(frost(data));
+		this.setData(data);
 		Theseus.instancesById[this.#uuid] = this;
 	}
 
@@ -61,7 +61,7 @@ export class Theseus<
 
 	private setData = (data: TData) => 
 	{
-		this.internalState = sandbox(data, { mode: "copy" });
+		this.internalState = sandbox(frost(data), { mode: "copy" });
 	};
 
 	/**
@@ -78,6 +78,7 @@ export class Theseus<
 
 		log.verbose(`Updated state for instance ${this.__uuid}`);
 		await this.broadcast(this.internalState);
+		
 		log.verbose(`Broadcasted state for instance ${this.__uuid}`);
 
 		return true;

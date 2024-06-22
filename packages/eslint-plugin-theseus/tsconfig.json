@@ -1,6 +1,7 @@
 {
     "compileOnSave": false,
-    "include": ["./lib/**/*"],
+    "include": ["./lib/rules/*"],
+	"exclude": ["./lib/_test/*.js"],
     "compilerOptions": {
         "allowJs": true,
         "rootDir": "./lib",

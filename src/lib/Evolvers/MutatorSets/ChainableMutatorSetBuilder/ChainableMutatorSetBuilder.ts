@@ -8,7 +8,7 @@ import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 
 import type { MutatorDefs } from "../../Types/MutatorTypes";
 import { createChainingProxy } from "./proxy/chaining-proxy-manager";
-import { getSandboxChanges } from "theseus-sandbox";
+import { cement, frost, getSandboxChanges } from "theseus-sandbox";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
@@ -71,6 +71,7 @@ export class ChainableMutatorSetBuilder<
 	 */
 	public getChanges(): Partial<TData>
 	{
+		log.verbose("Getting changes for instance", this.data[this.paramNoun]);
 		return getSandboxChanges(this.data[this.paramNoun]);
 	}
 
@@ -81,12 +82,17 @@ export class ChainableMutatorSetBuilder<
 			: this.data[this.paramNoun];
 	}
 
-	public get result() 
+	public end() 
 	{
-		return this.resultBase as TData;
+		if ((this.resultBase instanceof Promise))
+		{
+			throw new Error("Cannot call end() on a chain that has encountered an async operation. Use endAsync() instead.");
+		}
+		
+		return frost(cement(this.resultBase)) as TData;
 	}
 
-	public get resultAsync(): Promise<TData> 
+	public endAsync(): Promise<TData> 
 	{
 		return this.resultBase as Promise<TData>;
 	}

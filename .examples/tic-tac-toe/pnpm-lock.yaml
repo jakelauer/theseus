@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       theseus-js:
-        specifier: workspace:latest
+        specifier: workspace:*
         version: link:../..
     devDependencies:
       '@typescript-eslint/eslint-plugin':

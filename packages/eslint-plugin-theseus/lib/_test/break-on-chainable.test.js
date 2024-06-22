@@ -17,10 +17,15 @@ ruleTester.run("break-on-chainable", rule, {
 			code: "obj.via.thing()\n.lastly.thing()",
 		},
 		{
-			code: "obj.via.thing()\n.result",
+			// If an ending method is used without chaining, don't force a line break
+			code: "obj.via.thing().end()",
 		},
 		{
-			code: "obj.via.thing()\n.resultAsync",
+			code: "obj.via.thing().endAsync()",
+		},
+		{
+			// If no `.via` is present, we're not interested in the chain
+			code: "obj.thing().and.anotherThing().lastly.thing();",
 		},
 	],
 	invalid: [
@@ -33,26 +38,28 @@ ruleTester.run("break-on-chainable", rule, {
 			output: "obj.via.thing()\n.and.anotherThing()\n.lastly.thing();",
 		},
 		{
-			code: "obj.via.thing().result;",
+			code: "obj.via.thing().and.thing().end();",
 			errors: [
-				{ message: "Expected line break before `.result`." },
+				{ message: "Expected line break before `.and`." },
+				{ message: "Expected line break before `.end`." },
 			],
-			output: "obj.via.thing()\n.result;",
+			output: "obj.via.thing()\n.and.thing()\n.end();",
 		},
 		{
-			code: "obj.via.thing().resultAsync;",
+			code: "obj.via.thing().and.thing().endAsync();",
 			errors: [
-				{ message: "Expected line break before `.resultAsync`." },
+				{ message: "Expected line break before `.and`." },
+				{ message: "Expected line break before `.endAsync`." },
 			],
-			output: "obj.via.thing()\n.resultAsync;",
+			output: "obj.via.thing()\n.and.thing()\n.endAsync();",
 		},
 		{
-			code: "GameMeta.iterateTurnCount().and.updateLastPlayer(mark).and.updateLastPlayedCoords(coords);",
+			code: "GameMeta.evolve.iterateTurnCount().and.updateLastPlayer(mark).and.updateLastPlayedCoords(coords);",
 			errors: [
 				{ message: "Expected line break before `.and`." },
 				{ message: "Expected line break before `.and`." },
 			],
-			output: "GameMeta.iterateTurnCount()\n.and.updateLastPlayer(mark)\n.and.updateLastPlayedCoords(coords);",
+			output: "GameMeta.evolve.iterateTurnCount()\n.and.updateLastPlayer(mark)\n.and.updateLastPlayedCoords(coords);",
 		},
 	],
 });

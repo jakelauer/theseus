@@ -112,7 +112,9 @@ export class MutatorSetBuilder<
 			[selfPath]: (...args: any[]) => 
 			{
 				Theseus.incrementStackDepth(this.__theseusId);
-				const draft = sandbox(this.data, { mode: "copy" });
+				const draft = isSandboxProxy(this.data[this.paramNoun]) 
+					? this.data 
+					: sandbox(this.data, { mode: "copy" });
 				
 				let funcResult: SortaPromise<TData>;
 				try 
@@ -130,8 +132,8 @@ export class MutatorSetBuilder<
 					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
 				}
 
-				const outcomeData = this.applyResultDataToDraft(draft[this.paramNoun], funcResult);
-				this.decrementAfter(outcomeData);
+				let outcomeData = this.applyResultDataToDraft(draft[this.paramNoun], funcResult);
+				outcomeData = this.decrementAfter(outcomeData);
 
 				return this.extractDataFromDraftResult(outcomeData);
 			},
@@ -145,9 +147,21 @@ export class MutatorSetBuilder<
 			Theseus.decrementStackDepth(this.__theseusId);
 		};
 
-		outcome instanceof Promise
-			? outcome.finally(doDecrement).catch(console.error)
-			: doDecrement();
+		let result = outcome;
+		if (outcome instanceof Promise) 
+		{
+			result = outcome.then((data) => 
+			{
+				doDecrement();
+				return data;
+			});
+		}
+		else 
+		{
+			doDecrement();
+		}
+
+		return result;
 	}
 
 	protected extractDataFromDraftResult(outcomeData: SortaPromise<TData>)
@@ -166,7 +180,9 @@ export class MutatorSetBuilder<
 		};
 
 		return outcomeData instanceof Promise 
-			? outcomeData.then(generateOutcome) 
+			? outcomeData
+				.then(generateOutcome)
+				.finally(() => this.decrementAfter(outcomeData))
 			: generateOutcome(outcomeData);
 	};
 

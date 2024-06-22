@@ -322,7 +322,7 @@ const BathroomEvolver = Evolver.create("BathroomEvolver", { noun: "room" })
 				.and.cleanWindow()
 				.and.wipeCounter();
 
-			await OdorEvolver.mutate(mutableRoom).via.deodorizerSpray().resultAsync;
+			await OdorEvolver.mutate(mutableRoom).via.deodorizerSpray().endAsync();
 
 			return mutableRoom;
 		},

@@ -61,7 +61,7 @@ describe("Observation", () =>
 		observation.observe(callback);
 
 		await observation["update"]({ test: "new value" });
-		expect(observation.state).to.deep.equal({ test: "new value" });
+		expect(JSON.stringify(observation.state)).to.deep.equal(JSON.stringify({ test: "new value" }));
 		expect(callback.calledWith({ test: "new value" })).to.be.true;
 
 		return;

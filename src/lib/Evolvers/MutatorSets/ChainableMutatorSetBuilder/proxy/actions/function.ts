@@ -1,6 +1,7 @@
 import { getTheseusLogger } from "../../../../../Shared";
 import type { ProxyActionMapParameters } from "../proxy-action-map";
 import { ProxyActions, ProxyActionType } from "../proxy-actions";
+import { ChainTerminationAction } from "./chain-termination";
 
 const log = getTheseusLogger("function-proxy-action");
 
@@ -8,9 +9,11 @@ export class FunctionAction extends ProxyActions
 {
 	public override type: ProxyActionType = ProxyActionType.function;
 
-	public override runTest({ target, prop }: ProxyActionMapParameters): boolean 
+	public override runTest(params: ProxyActionMapParameters): boolean 
 	{
-		return typeof target[prop] === "function";
+		const { target, prop } = params;
+		const chainTerminationAction = new ChainTerminationAction();
+		return typeof target[prop] === "function" && !chainTerminationAction.test(params, ProxyActionType.chainTermination);
 	}
 	
 	public override process({ target, prop }: ProxyActionMapParameters) 
