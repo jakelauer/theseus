@@ -164,4 +164,19 @@ describe("ChainableMutatorQueue", function ()
 
 		return;
 	});
+
+	it("should have a theseus ID if created by Theseus", function ()
+	{
+		const paramNoun = "testArg";
+		const setData = sinon.stub();
+		const getData = sinon.stub().returns({ [paramNoun]: { value: 0 } });
+		const queue = ChainableMutatorQueue.create({
+			paramNoun,
+			getData: getData,
+			setData: setData,
+			__theseusId: "testId",
+		});
+
+		expect(queue["params"]).to.have.property("__theseusId", "testId");
+	});
 });

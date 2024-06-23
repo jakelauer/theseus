@@ -81,12 +81,15 @@ describe("Evolvers", () =>
 
         describe("Immutable return", () => 
         {
-        	it("should return a new object copy that won't change after further evolutions", () => 
+        	it("should return the same object which can be further evolved", () => 
         	{
         		const testEvolver = Evolver.create("testEvolver")
         			.toEvolve<TestData>()
         			.withMutators({
-        				increment: ({ input }, by: number) => ({ value: input.value + by }),
+        				increment: ({ input }, by: number) =>
+        				{ 
+        					return { value: input.value + by };
+        				},
         			});
 
         		const initialData = { value: 1 };
@@ -94,18 +97,20 @@ describe("Evolvers", () =>
         		const initialDataEvolver = testEvolver.evolve(initialData);
 
         		// Evolve the initial data from 1 to 2
-        		const evolvedData = initialDataEvolver.via.increment(1)
-        			.result;
+        		const evolvedData = initialDataEvolver.via.increment(1).end();
         		expect(evolvedData.value).to.equal(2); // The evolved data should be 2
 
         		// Create a second copy of the evolved data and evolve it again
-        		const reEvolvedData = initialDataEvolver.via.increment(2)
-        			.result;
-        		expect(evolvedData.value).to.equal(2); // The original evolved data should remain unchanged
-        		expect(reEvolvedData.value).to.equal(4); // The new evolved data should be 3
+        		const reEvolvedData = initialDataEvolver.via.increment(2).end();
+        		expect(reEvolvedData).to.equal(evolvedData, "The new evolved data should be the same object");
+        		expect(evolvedData.value).to.equal(4, "The original evolved data should be changed");
+        		expect(reEvolvedData.value).to.equal(4);
 
         		// Directly edit the evolved data manually
-        		expect(reEvolvedData.value).to.equal(4); // The new evolved data should remain unchanged
+        		expect(() => 
+        		{
+        			reEvolvedData.value = 5;
+        		}).to.throw("Cannot modify property \"value\" of the original object."); // The new evolved data should remain unchanged
         	});
         });
 
@@ -194,12 +199,12 @@ describe("Evolvers", () =>
         				}),
         			});
 
-        		const resultA = await AsyncEvolver.evolve({ name: "test" })
+        		const resultA = await AsyncEvolver.evolve({ name: "1234" })
         			.via.asyncMakeNameLowerCase()
         			.and.asyncMakeNameUpperCase()
         			.and.asyncReverseName()
         			.lastly.syncReplaceVowels();
-        		expect(resultA.name).to.equal("TS*T");
+        		expect(resultA.name).to.equal("4321");
 
         		const resultB = await AsyncEvolver.evolve({ name: "test" })
         			.via.syncReplaceVowels()

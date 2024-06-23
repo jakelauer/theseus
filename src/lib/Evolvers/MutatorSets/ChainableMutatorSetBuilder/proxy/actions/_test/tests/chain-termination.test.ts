@@ -12,7 +12,7 @@ describe("ChainTerminationAction", function()
 	{
 		chainTerminationAction = new ChainTerminationAction();
 		params = { 
-			prop: "result", 
+			prop: "end", 
 			proxy: {} as any, 
 			proxyManager: { 
 				onChainEnd: () => {}, 
@@ -40,10 +40,15 @@ describe("ChainTerminationAction", function()
 		const proxyManager = {
 			onChainEnd: sinon.spy(),
 			queue: { asyncEncountered: false, queue: [] },
-			params: { target: { result: "resultValue" } },
+			params: { 
+				target: {
+					 end: () => "resultValue", 
+				}, 
+			},
 		};
 		params.proxyManager = proxyManager as any;
-		expect(chainTerminationAction.process(params)).to.equal("resultValue");
+		const processResult = chainTerminationAction.process(params) as any;
+		expect(processResult()).to.equal("resultValue");
 		sinon.assert.calledOnce(proxyManager.onChainEnd);
 	});
 });

@@ -12,12 +12,12 @@ const logFilter = theseusArgs["theseus-log-filter"];
 
 const filterLogs = format((info) => 
 {
-	if (info.message.includes("toSJ"))
+	if (info.message.includes("toJSON"))
 	{
 		return false;
 	}
 
-	if (logFilter && info.message.match(logFilter))
+	if (logFilter && !info.message.match(logFilter))
 	{
 		return false;
 	}

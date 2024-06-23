@@ -7,7 +7,7 @@
     "author": "Jake Lauer",
     "license": "MIT",
     "dependencies": {
-        "theseus-js": "workspace:latest"
+        "theseus-js": "workspace:*"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^6.21.0",

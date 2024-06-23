@@ -30,7 +30,7 @@ type MutatorCallable<TMutator extends (...args: any[]) => any, TReturn> = FuncMi
  *
  *   - If not final (`IsFinal` is "notFinal"), it continues the chain by returning an object with `.and` for
  *       chaining further synchronous operations, and `.lastly` for transitioning to the final operation. It
- *       also includes `.result` to retrieve the current state at any point in the chain.
+ *       also includes `.end()` to retrieve the current state at any point in the chain.
  *   - If marked as final (`IsFinal` is "final"), it simplifies the return type to directly return the mutated
  *       data type `TData`, indicating that no further chaining is possible and the chain must be concluded.
  *
@@ -51,7 +51,7 @@ type SyncChainable<
     IsFinal extends "final" 
 		? TData 
 		: Record<"and", ChainableMutators<TData, TParamNoun, TMutators, IsFinal, IsAsync>>
-	& Record<"result", TData> 
+	& Record<"end", () => TData> 
 	& Record<"lastly", ChainableMutators<TData, TParamNoun, TMutators, "final", IsAsync>>
 >;
 
@@ -60,7 +60,7 @@ export type FinishChain<
     TParamNoun extends string,
     TMutators extends MutatorDefChild<TData, TParamNoun>,
     IsAsync extends AsyncTracker,
-> = Record<"resultAsync", Promise<TData>> &
+> = Record<"endAsync", () => Promise<TData>> &
     Record<"lastly", ChainableMutators<TData, TParamNoun, TMutators, "final", IsAsync>>;
 
 type AsyncChainable<
@@ -97,7 +97,7 @@ type IsChainAsync<TMutators, PrevAsync extends AsyncTracker> = {
  *
  *   The type dynamically constructs an object where each key corresponds to a mutator operation. Depending on
  *   the mutator function's return type (Promise or direct value), the structure adjusts to either continue
- *   the chain with `.and` and `.lastly` properties or to provide a method `.result` for retrieving the
+ *   the chain with `.and` and `.lastly` properties or to provide a method `.end()` for retrieving the
  *   final mutated state.
  *
  *   If a mutator returns a Promise, the chain is marked as async, and subsequent operations must handle the
@@ -141,8 +141,8 @@ export type ChainableMutators<
 
 // Interface defining the capability to retrieve the final form of the mutated data.
 export interface Chainable<TData extends object> {
-    result: TData;
-    resultAsync: Promise<TData>;
+    end: () => TData;
+    endAsync: () => Promise<TData>;
 }
 
 export type FinalMutators<

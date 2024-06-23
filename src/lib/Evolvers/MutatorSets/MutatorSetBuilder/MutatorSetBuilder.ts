@@ -5,7 +5,7 @@ import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
-import { cement, isSandboxProxy, sandbox } from "theseus-sandbox";
+import { cement, frost, isSandboxProxy, sandbox } from "theseus-sandbox";
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
  * adding mutator functions to the evolver and executing these functions to mutate the evolver's state.
@@ -24,19 +24,31 @@ export class MutatorSetBuilder<
 > 
 {
 	protected __theseusId?: string;
-	protected data: Record<TParamNoun, TData>;
+	protected _data: Record<TParamNoun, TData>;
 	public mutatorsForProxy: TMutators = {} as TMutators;
 
 	constructor(
 		inputData: TData,
         protected readonly paramNoun: TParamNoun,
         protected readonly mutators: TMutators,
-        observationId?: string,
+        theseusId?: string,
 	) 
 	{
-		this.data = this.inputToObject(inputData);
+		this.__theseusId = theseusId;
+		this.setInitialData(inputData);
 		this.extendSelfWithMutators(mutators);
-		this.__theseusId = observationId;
+	}
+
+	protected get data() 
+	{
+		return this._data;
+	}
+
+	private setInitialData(data: TData)
+	{
+		const wrappedInput = this.inputToObject(data);
+		const frosted = frost(wrappedInput);
+		this._data = frosted as Record<TParamNoun, TData>;
 	}
 
 	public __setTheseusId(id: string) 
@@ -44,9 +56,33 @@ export class MutatorSetBuilder<
 		this.__theseusId = id;
 	}
 
-	public replaceData(data: TData) 
+	public reset(data: TData) 
 	{
-		this.data = this.inputToObject(data);
+		log.verbose("Resetting data to initial state");
+		this.setInitialData(data);
+	}
+
+	public setData(data: TData) 
+	{
+		if (data instanceof Promise)
+		{
+			throw new Error("Cannot set data to a Promise.");
+		}
+
+		this._data = this.augmentData(data);
+		this.cementData();
+	}
+
+	protected augmentData(data: TData)
+	{
+		const sb = sandbox(this.data);
+		sb[this.paramNoun] = data;
+		return sb;
+	}
+
+	public cementData()
+	{
+		this._data = cement(this.data);
 	}
 
 	protected getSelfExtensionPoint(): any 
@@ -111,7 +147,10 @@ export class MutatorSetBuilder<
 		Object.assign(context, {
 			[selfPath]: (...args: any[]) => 
 			{
-				const draft = sandbox(this.data, { mode: "copy" });
+				Theseus.incrementStackDepth(this.__theseusId);
+				const draft = isSandboxProxy(this.data[this.paramNoun]) 
+					? this.data 
+					: sandbox(this.data, { mode: "copy" });
 				
 				let funcResult: SortaPromise<TData>;
 				try 
@@ -124,18 +163,41 @@ export class MutatorSetBuilder<
 					throw e;
 				}
 
-				log.debug(`Result of mutator "${selfPath}"`);
-
 				if (funcResult === undefined) 
 				{
 					log.error(`Function "${selfPath}" returned undefined. This is likely an error.`);
 				}
 
-				const outcomeData = this.applyResultDataToDraft(draft[this.paramNoun], funcResult);
+				let outcomeData = this.applyResultDataToDraft(draft[this.paramNoun], funcResult);
+				outcomeData = this.decrementAfter(outcomeData);
 
 				return this.extractDataFromDraftResult(outcomeData);
 			},
 		});
+	}
+
+	protected decrementAfter(outcome: SortaPromise<any>)
+	{
+		const doDecrement = () => 
+		{
+			Theseus.decrementStackDepth(this.__theseusId);
+		};
+
+		let result = outcome;
+		if (outcome instanceof Promise) 
+		{
+			result = outcome.then((data) => 
+			{
+				doDecrement();
+				return data;
+			});
+		}
+		else 
+		{
+			doDecrement();
+		}
+
+		return result;
 	}
 
 	protected extractDataFromDraftResult(outcomeData: SortaPromise<TData>)
@@ -154,7 +216,9 @@ export class MutatorSetBuilder<
 		};
 
 		return outcomeData instanceof Promise 
-			? outcomeData.then(generateOutcome) 
+			? outcomeData
+				.then(generateOutcome)
+				.finally(() => this.decrementAfter(outcomeData))
 			: generateOutcome(outcomeData);
 	};
 
@@ -163,8 +227,12 @@ export class MutatorSetBuilder<
 		const generateOutcome = (generatedData: TData) => 
 		{
 			Object.assign(draft, generatedData);
+
+			draft = sandbox(draft);
+
 			return draft;
 		};
+
 
 		return result instanceof Promise 
 			? result.then(generateOutcome) 
@@ -197,9 +265,9 @@ export class MutatorSetBuilder<
         TData extends object,
         TParamNoun extends string,
         TMutators extends MutatorDefs<TData, TParamNoun>,
-    >(data: TData, paramNoun: TParamNoun, mutators: TMutators, observationId?: string) 
+    >(data: TData, paramNoun: TParamNoun, mutators: TMutators, theseusId?: string) 
 	{
-		const builder = new MutatorSetBuilder(data, paramNoun, mutators, observationId);
+		const builder = new MutatorSetBuilder(data, paramNoun, mutators, theseusId);
 
 		return this.castToMutators(builder);
 	}

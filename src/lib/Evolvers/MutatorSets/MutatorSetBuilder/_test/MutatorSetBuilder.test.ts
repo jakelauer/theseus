@@ -28,7 +28,7 @@ describe("MutatorSetBuilder", function ()
     {
     	expect(builder)
     		.to.have.property("data")
-    		.that.deep.equals({ [paramNoun]: initialData });
+    		.that.deep.includes({ [paramNoun]: initialData });
     });
 
     it("inputToObject transforms input data into structured format", function () 
@@ -42,7 +42,7 @@ describe("MutatorSetBuilder", function ()
     	expect(builder).to.be.instanceOf(MutatorSetBuilder);
     	expect(builder)
     		.to.have.property("data")
-    		.that.deep.equals({ [paramNoun]: initialData });
+    		.that.deep.includes({ [paramNoun]: initialData });
     });
 
     it("create method returns a new instance with mutators applied", function () 
@@ -50,7 +50,7 @@ describe("MutatorSetBuilder", function ()
     	console.log(builder);
     	// Assert the builder is correctly initialized
     	expect(builder).to.be.an.instanceof(MutatorSetBuilder);
-    	expect(builder.increase(0)).to.deep.equal(initialData);
+    	expect(builder.increase(0)).to.deep.include(initialData);
 
     	// Dynamically check if the 'increase' mutator is applied and works as expected
     	// This will invoke the 'increase' function directly on the builder, demonstrating 

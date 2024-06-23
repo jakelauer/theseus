@@ -23,7 +23,7 @@ export class Evolver<
     TMutators extends MutatorDefs<TData, TParamNoun>,
 > 
 {
-	#observationId?: string;
+	#theseusId?: string;
 	public readonly evolverName: NormalizedEvolverName<TEvolverName>;
 	protected readonly paramNoun: TParamNoun;
 	protected readonly mutators: TMutators;
@@ -54,7 +54,7 @@ export class Evolver<
 
 	public __setTheseusId(id: string) 
 	{
-		this.#observationId = id;
+		this.#theseusId = id;
 	}
 
 	private assertValidMutators(mutators: TMutators) 
@@ -112,15 +112,17 @@ export class Evolver<
             	input,
             	this.paramNoun,
             	this.mutators,
-            	this.#observationId,
+            	this.#theseusId,
             );
 
 		if (!this.cachedMutatorSet) 
 		{
 			this.cachedMutatorSet = mutatorSet;
 		}
-
-		(mutatorSet as MutatorSetBuilder<any, any, any>).replaceData(input);
+		else 
+		{
+			(mutatorSet as MutatorSetBuilder<any, any, any>).reset(input);
+		}
 
 		const mutatorSetGetter = () => mutatorSet;
 		const result = Object.defineProperties<
@@ -150,14 +152,18 @@ export class Evolver<
             	input,
             	this.paramNoun,
             	this.mutators,
+            	this.#theseusId,
             );
 
 		if (!this.cachedChainableMutatorSet) 
 		{
 			this.cachedChainableMutatorSet = mutatorSet;
 		}
+		else 
+		{
+			(mutatorSet as ChainableMutatorSetBuilder<any, any, any>).reset(input);
+		}
 
-		(mutatorSet as ChainableMutatorSetBuilder<any, any, any>).replaceData(input);
 
 		const mutatorSetGetter = () => mutatorSet;
 

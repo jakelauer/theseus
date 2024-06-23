@@ -65,7 +65,7 @@ describe("ChainableMutatorSet", function ()
 		const output = await chainableMutatorSet
 			.asyncIncrement(1)
 			.and.increment(2)
-			.resultAsync;
+			.endAsync();
 
 		expect(output?.value).to.equal(3);
 
@@ -76,7 +76,7 @@ describe("ChainableMutatorSet", function ()
 	{
 		// Assuming result returns the entire TestData object or specifically the testData part
 		expect(chainableMutatorSet.increment(3)
-			.result.value).to.equal(3);
+			.end().value).to.equal(3);
 	});
 
 	// Testing the factory method's successful creation of a ChainableMutatorSet instance
@@ -86,7 +86,7 @@ describe("ChainableMutatorSet", function ()
 		// This test verifies its correctness post-creation.
 		expect(chainableMutatorSet).to.be.an.instanceof(ChainableMutatorSetBuilder);
 		expect(chainableMutatorSet.increment(5)
-			.result.value).to.equal(5);
+			.end().value).to.equal(5);
 	});
 
 	// Testing the overridden create method to ensure it throws an error for non-chainable mutator sets

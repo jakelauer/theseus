@@ -6,7 +6,7 @@
             "request": "launch",
             "name": "Debug ESLint",
             "program": "${workspaceFolder}/node_modules/eslint/bin/eslint.js",
-            "args": ["--no-ignore", "packages/eslint-plugin-theseus/lib/tests/break-on-chainable-testfile.js"], // Adjust this to point to your JavaScript files
+            "args": ["--no-ignore", "packages/eslint-plugin-theseus/lib/_test/break-on-chainable.sandbox.js"], // Adjust this to point to your JavaScript files
             "stopOnEntry": false,
             "cwd": "${workspaceFolder}",
             "runtimeArgs": ["--nolazy", "--inspect-brk"],
@@ -29,7 +29,17 @@
             "request": "launch",
             "name": "Run Base Tests",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["test:base", "--timeout", "60000"],// "--", "--grep", "\"should correctly return changes made to the state when requested\""],
+            "runtimeArgs": ["test:base", "--timeout", "60000"],
+            "internalConsoleOptions": "openOnSessionStart",
+            "cwd": "${workspaceFolder}",
+            "outputCapture": "std"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Run Base Test (single)",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": ["test:base", "--timeout", "60000", "--", "--grep", "\"should return a new object copy that won't change after further evolutions\""],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"
@@ -39,7 +49,7 @@
             "request": "launch",
             "name": "Run Sandbox Tests",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["--prefix","./packages/sandbox", "test", "--"],//, "--grep", "\"should process synchronous mutators in sequence\""],
+            "runtimeArgs": ["--prefix","./packages/sandbox", "test", "--", "--grep", "\"should allow cementing of a frosted sandbox with deletion\""],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"

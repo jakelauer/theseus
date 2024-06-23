@@ -41,7 +41,7 @@ export class ProxyActionMap
 			return acc;
 		}, ProxyActionType.none);
 
-		log.debug(`Action determined for property "${params.prop}": ${ProxyActions.flagNames(requestType)}`);
+		log.verbose(`Action determined for property "${params.prop}": ${ProxyActions.flagNames(requestType)}`);
 
 		return requestType;
 	}
@@ -57,11 +57,9 @@ export class ProxyActionMap
 			{
 				const forType = action.type & requestType;
 
-				log.verbose(`Processing action "${ProxyActionType[forType]}" processed for property "${prop}"`);
-
 				const actionResult = action.process(params, forType);
 
-				log.verbose(`Action "${ProxyActionType[forType]}" processed for property "${prop}"`);
+				log.verbose(`[${prop}] processed as "${ProxyActionType[forType]}"`);
 
 				if (typeof actionResult !== "undefined") 
 				{

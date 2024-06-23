@@ -24,6 +24,7 @@ export class Theseus<
 	#uuid: string;
 
 	public static instancesById: Record<string, Theseus<any, any>> = {};
+	public static stackDepthsById: Record<string, number> = {};
 
 	/**
      * Creates an Observation instance
@@ -31,13 +32,21 @@ export class Theseus<
      * @param initialData The starting data (can be null)
      * @param params
      */
-	constructor(data: TData, params?: BaseParams<TData, TObserverType>) 
+	private constructor(data: TData, params?: BaseParams<TData, TObserverType>) 
 	{
 		super(params?.broadcasterParams);
 
 		this.#uuid = uuidv4();
-		this.setData(frost(data));
+		this.setData(data);
 		Theseus.instancesById[this.#uuid] = this;
+	}
+
+	public static __private_create<
+		TData extends object,
+		TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
+	>(data: TData, params?: BaseParams<TData, TObserverType>) 
+	{
+		return new Theseus(data, params);
 	}
 
 	public get __uuid() 
@@ -52,8 +61,7 @@ export class Theseus<
 
 	private setData = (data: TData) => 
 	{
-		console.log("Setting data for instance");
-		this.internalState = sandbox(data, { mode: "copy" });
+		this.internalState = sandbox(frost(data), { mode: "copy" });
 	};
 
 	/**
@@ -70,6 +78,7 @@ export class Theseus<
 
 		log.verbose(`Updated state for instance ${this.__uuid}`);
 		await this.broadcast(this.internalState);
+		
 		log.verbose(`Broadcasted state for instance ${this.__uuid}`);
 
 		return true;
@@ -82,6 +91,37 @@ export class Theseus<
 		void Promise.allSettled(pendingUpdatePromises).finally(callback);
 	}
 
+	public static incrementStackDepth(theseusId: string | undefined)
+	{
+		if (theseusId) 
+		{
+			if (!Theseus.stackDepthsById[theseusId]) 
+			{
+				Theseus.stackDepthsById[theseusId] = 0;
+			}
+			Theseus.stackDepthsById[theseusId]++;
+		}
+		else 
+		{
+			log.verbose("No theseusId provided. Skipping stack depth increment.");
+		}
+	}
+
+	public static decrementStackDepth(theseusId: string | undefined)
+	{
+		if (theseusId) 
+		{
+			const oldDepth = Theseus.stackDepthsById[theseusId] ?? 0;
+			const newDepth = Math.max(oldDepth - 1, 0);
+
+			Theseus.stackDepthsById[theseusId] = newDepth;
+		}
+		else 
+		{
+			log.verbose("No theseusId provided. Skipping stack depth decrement.");
+		}
+	}
+
 	/**
      * Observe this data store. Call the returned callback to destroy.
      *
@@ -90,7 +130,7 @@ export class Theseus<
      * @param props The further input about the observer, if any
      * @param callback
      */
-	public override observe(callback: (newData: TData) => void, updateImmediately = true): DestroyCallback 
+	public override observe(callback: (newData: TData) => void, updateImmediately = false): DestroyCallback 
 	{
 		const { destroy, observer } = this.saveObserver(callback);
 
@@ -114,8 +154,16 @@ export class Theseus<
 	public static async updateInstance(theseusId: string, data: any) 
 	{
 		log.verbose(`Updating instance ${theseusId}`);
-		const instance = Theseus.getInstance(theseusId);
-		return await instance.update(data);
+		const stackDepth = Theseus.stackDepthsById[theseusId] ?? 0;
+		if (stackDepth === 0)
+		{
+			const instance = Theseus.getInstance(theseusId);
+			return await instance.update(data);
+		}
+		else 
+		{
+			log.verbose(`Instance ${theseusId} is currently being updated. Skipping. Current stack depth: ${this.stackDepthsById[theseusId]}`);
+		}
 	}
 }
 export type TheseusInstance = typeof Theseus;

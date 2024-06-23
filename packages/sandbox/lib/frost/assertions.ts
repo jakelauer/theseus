@@ -3,7 +3,7 @@ import type { SandboxSettable } from "./types";
 
 export const assertValidVerificationProperty = (verificationOwnerObj: any, valueToCheck: any): verificationOwnerObj is SandboxSettable => 
 {
-	const expectedValue = verificationOwnerObj[CONSTANTS.VERIFICATION.BASIS_SYMBOL];
+	const expectedValue = verificationOwnerObj[CONSTANTS.FROST.BASIS_SYMBOL];
 
 	if (expectedValue !== valueToCheck)
 	{

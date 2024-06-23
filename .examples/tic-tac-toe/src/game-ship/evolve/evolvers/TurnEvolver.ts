@@ -51,7 +51,8 @@ export const TurnEvolver = Evolver.create("TurnEvolver", { noun: "gameState" })
 			MetaEvolver.evolve(gameState)
 				.via.iterateTurnCount()
 				.and.updateLastPlayer(mark)
-				.and.updateLastPlayedCoords(coords);
+				.and.updateLastPlayedCoords(coords)
+				.end();
 
 			return gameState;
 		},

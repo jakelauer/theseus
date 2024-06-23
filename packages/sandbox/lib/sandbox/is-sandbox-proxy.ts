@@ -2,7 +2,7 @@ import { CONSTANTS } from "../constants";
 import type { SandboxProxy } from "./types";
 
 
-function hasSandboxProxyPrefix(o?: any): boolean 
+export function objectRootIsSandboxProxy(o?: any): boolean 
 {
 	return o && typeof o === "object" && !!o[CONSTANTS.SANDBOX_SYMBOL];
 }
@@ -22,7 +22,7 @@ function objectPropertiesAreSandboxProxy(o?: any): boolean
 	{
 		if (Object.prototype.hasOwnProperty.call(o, key) && typeof o[key] === "object") 
 		{
-			propertiesAreSandboxProxy = propertiesAreSandboxProxy && objectPropertiesAreSandboxProxy(o[key]);
+			propertiesAreSandboxProxy = propertiesAreSandboxProxy && objectRootIsSandboxProxy(o) && objectPropertiesAreSandboxProxy(o[key]);
 		}
 	}
 
@@ -30,17 +30,52 @@ function objectPropertiesAreSandboxProxy(o?: any): boolean
 }
 
 /**
- * || * Determines if the given object is a sandbox proxy.
+ * Determines if the given object is a sandbox proxy (deep check, checks the root object and all inner objects).
  *
  * @template T - The type of the object.
  * @param {T} obj - The object to check.
  * @returns {obj is SandboxProxy<T>} - True if the object is a sandbox proxy, false otherwise.
  */
-export const isSandboxProxy = <T extends object>(obj?: T, recursive = true): obj is SandboxProxy<T> =>
+export const isDeepSandboxProxy = <T extends object>(obj?: T): obj is SandboxProxy<T> =>
 {
-	const rootIsSandboxProxy = hasSandboxProxyPrefix(obj);
-	let propertiesAreSandboxProxy = true;
+	const status = sandboxProxyStatus(obj, true);
 
+	return Boolean(status.root && status.properties);
+};
+
+/**
+ * Determines if the given object is a sandbox proxy (shallow check, only checks the root object).
+ */
+export const isShallowSandboxProxy = <T extends object>(obj?: T): obj is SandboxProxy<T> =>
+{
+	return objectRootIsSandboxProxy(obj);
+};
+
+/**
+ * Determines if the given object is a sandbox proxy (deep check).
+ */
+export const isSandboxProxy = isDeepSandboxProxy;
+
+/**
+ * Determines if the given object contains a sandbox proxy at any level.
+ */
+export const containsSandboxProxy = <T extends object>(obj?: T): boolean => 
+{
+	const status = sandboxProxyStatus(obj, true);
+
+	return Boolean(status.root || status.properties);
+};
+
+interface SandboxProxyStatus{
+	root: boolean;
+	properties: boolean;
+}
+
+export const sandboxProxyStatus = <T extends object>(obj?: T, recursive = true):SandboxProxyStatus  =>
+{
+	const rootIsSandboxProxy = objectRootIsSandboxProxy(obj);
+	let propertiesAreSandboxProxy = true;
+	
 	if (recursive) 
 	{
 		propertiesAreSandboxProxy = objectPropertiesAreSandboxProxy(obj);
@@ -49,6 +84,9 @@ export const isSandboxProxy = <T extends object>(obj?: T, recursive = true): obj
 			console.warn("Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.");
 		}
 	}
-
-	return Boolean(rootIsSandboxProxy && propertiesAreSandboxProxy);
+	
+	return {
+		root: !!rootIsSandboxProxy,
+		properties: !!propertiesAreSandboxProxy,
+	};
 };

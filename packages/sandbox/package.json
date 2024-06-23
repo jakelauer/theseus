@@ -7,7 +7,7 @@
     "type": "module",
     "scripts": {
         "build": "tsup",
-        "test": "mocha --require tsx --config ./.mocharc.cjs"
+        "test": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs"
     },
     "files": [
         "dist"

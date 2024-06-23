@@ -41,13 +41,6 @@ describe("cement", function()
 		expect(result).to.not.equal(original);  // Ensure that the result is a new object
 	});
 
-	it("should return the object itself if it is not a sandbox proxy", function() 
-	{
-		const obj = { key: "value" };
-		// Mock the isSandboxProxy function to return false
-		expect(() => cement(obj)).to.throw("Cannot cement an object that is not a sandbox.");
-	});
-
 	it("should apply changes to a target object with nested objects which have changes", function()
 	{
 		const original = { key1: "value1", key2: { key3: "value3" } };

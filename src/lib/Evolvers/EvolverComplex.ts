@@ -112,6 +112,10 @@ export const create = <TData extends object>() => ({
 		        mutate: mutate(input).withEvolvers(evolvers),
 		        evolve: evolve(input).withEvolvers(evolvers),
 		    }),
+			addTheseusId: (theseusId: string) => 
+			{
+				evolvers.forEach((evolver) => evolver.__setTheseusId(theseusId));
+			},
 		} as EvolverComplexInstance<TData, TParamNoun, any, TEvolvers>;
 	},
 });
@@ -136,4 +140,5 @@ export type EvolverComplexInstance<
         mutate: MutatorsFormatted<TData, TParamNoun, TEvolvers>;
         evolve: MacroMutatorsFormatted<TData, TParamNoun, TEvolvers>;
     };
+	addTheseusId: (theseusId: string) => void;
 };

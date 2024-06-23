@@ -53,7 +53,7 @@ export class Refinery<
 	{
 		const trimmed = normalizeRefineryName(name);
 
-		log.debug(`Normalizing refinery name: ${name} -> ${trimmed}`);
+		log.verbose(`Normalizing refinery name: ${name} -> ${trimmed}`);
 
 		this.assertValidName(trimmed, "Name cannot be empty, nor only the word 'refinery'");
 

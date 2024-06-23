@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CONSTANTS } from "../constants";
 import type { Metadata, SandboxParams } from "./types";
 import { isSandboxProxy } from "./is-sandbox-proxy";
+import isValidObject from "../is-valid-object";
 
 /**
  * Creates a sandbox proxy for the given object, allowing changes to be tracked
@@ -34,46 +35,46 @@ function addToProxyMap<T extends object>(proxyMap: WeakMap<object, object>, obj:
 
 function createDeepProxy<T extends object>(obj: T, params: SandboxParams): T 
 {
-	const proxyMap = new WeakMap<object, object>();
+	const proxyMap = new WeakMap<T, T>();
+
 	return createProxy(obj, proxyMap, params);
 }
 
-function createProxy<T extends object>(obj: T, proxyMap: WeakMap<object, object>, params: SandboxParams): T 
+function createProxy<T extends object>(obj: T, proxyMap: WeakMap<T, T>, params: SandboxParams): T 
 {
 	const metadata = createMetadata(obj, params);
 
-	const proxy = new Proxy<T>(obj, {
-		get(target, prop, receiver) 
-		{
-			return handleGet(target, prop, receiver, metadata, proxyMap);
-		},
-		set(_target, prop, value) 
-		{
-			return handleSet(prop, value, metadata, proxyMap);
-		},
-		deleteProperty(_target, prop) 
-		{
-			return handleDelete(prop, metadata);
-		},
-	});
+	const proxy = proxyMap.has(obj)
+		? proxyMap.get(obj) 
+		: new Proxy<T>(obj, {
+			get(target, prop, receiver) 
+			{
+				return handleGet(target, prop, receiver, metadata, proxyMap);
+			},
+			set(_target, prop, value) 
+			{
+				return handleSet(prop, value, metadata, proxyMap);
+			},
+			deleteProperty(_target, prop) 
+			{
+				return handleDelete(prop, metadata);
+			},
+		});
 
-	proxyMap.set(obj, proxy);
+	if (!proxyMap.has(obj))
+	{
+		proxyMap.set(obj, proxy);
+	}
 
 	for (const [key, value] of Object.entries(obj)) 
 	{
-		if (isValidObject(value)) 
+		if (isValidObject<T>(value)) 
 		{
-			proxy[key as keyof T] = createProxy(value, proxyMap, params);
+			proxy[key] = createProxy(value, proxyMap, params);
 		}
 	}
 
 	return proxy;
-}
-
-function isValidObject(obj: any)
-{
-	const type = typeof obj;
-	return type === "function" || type === "object" && !!obj;
 }
 
 function createMetadata<T extends object>(obj: T, params: SandboxParams): Metadata<T>
@@ -120,8 +121,8 @@ function handleSet(prop: string | symbol, value: any, metadata: any, proxyMap: W
 
 	const symbolsSkipSet = {
 		[CONSTANTS.SANDBOX_SYMBOL]: true,
-		[CONSTANTS.VERIFICATION.BASIS_SYMBOL]: true,
-		[CONSTANTS.SETTER_SYMBOL]: true,
+		[CONSTANTS.FROST.BASIS_SYMBOL]: true,
+		[CONSTANTS.FROST.SETTER_SYMBOL]: true,
 	};
 
 	const isSpecialSymbol = typeof prop === "symbol" && Object.getOwnPropertySymbols(symbolsSkipSet).includes(prop);
@@ -137,7 +138,7 @@ function handleSet(prop: string | symbol, value: any, metadata: any, proxyMap: W
 
 function handleDelete(prop: string | symbol, metadata: any) 
 {
-	metadata.changes[prop] = CONSTANTS.DELETION_SYMBOL;
+	metadata.changes[prop] = CONSTANTS.FROST.DELETION_SYMBOL;
 	return true;
 }
 

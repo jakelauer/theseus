@@ -76,7 +76,7 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 	 */
 	private resetIfResultReturned(prop: string, result: any)
 	{
-		if (prop === "result" || prop === "resultAsync") 
+		if (prop === "end" || prop === "endAsync") 
 		{
 			if (result instanceof Promise)
 			{
@@ -118,7 +118,7 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 
 		const result = ProxyActionMap.process({ target, prop, proxy, proxyManager: this }, requestType);
 
-		this.log.verbose(`Returning result for property "${prop}"`);
+		this.log.verbose(`[${prop}] Returning result`);
 
 		this.resetIfResultReturned(prop, result);
 
