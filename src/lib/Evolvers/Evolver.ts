@@ -119,8 +119,10 @@ export class Evolver<
 		{
 			this.cachedMutatorSet = mutatorSet;
 		}
-
-		(mutatorSet as MutatorSetBuilder<any, any, any>).replaceData(input);
+		else 
+		{
+			(mutatorSet as MutatorSetBuilder<any, any, any>).reset(input);
+		}
 
 		const mutatorSetGetter = () => mutatorSet;
 		const result = Object.defineProperties<
@@ -157,8 +159,11 @@ export class Evolver<
 		{
 			this.cachedChainableMutatorSet = mutatorSet;
 		}
+		else 
+		{
+			(mutatorSet as ChainableMutatorSetBuilder<any, any, any>).reset(input);
+		}
 
-		(mutatorSet as ChainableMutatorSetBuilder<any, any, any>).replaceData(input);
 
 		const mutatorSetGetter = () => mutatorSet;
 

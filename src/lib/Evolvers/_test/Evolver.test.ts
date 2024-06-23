@@ -81,7 +81,7 @@ describe("Evolvers", () =>
 
         describe("Immutable return", () => 
         {
-        	it("should return a new object copy that won't change after further evolutions", () => 
+        	it("should return the same object which can be further evolved", () => 
         	{
         		const testEvolver = Evolver.create("testEvolver")
         			.toEvolve<TestData>()
@@ -102,11 +102,15 @@ describe("Evolvers", () =>
 
         		// Create a second copy of the evolved data and evolve it again
         		const reEvolvedData = initialDataEvolver.via.increment(2).end();
-        		expect(evolvedData.value).to.equal(2); // The original evolved data should remain unchanged
-        		expect(reEvolvedData.value).to.equal(4); // The new evolved data should be 3
+        		expect(reEvolvedData).to.equal(evolvedData, "The new evolved data should be the same object");
+        		expect(evolvedData.value).to.equal(4, "The original evolved data should be changed");
+        		expect(reEvolvedData.value).to.equal(4);
 
         		// Directly edit the evolved data manually
-        		expect(() => {reEvolvedData.value = 5;}).to.throw("Cannot modify property \"value\" of the original object."); // The new evolved data should remain unchanged
+        		expect(() => 
+        		{
+        			reEvolvedData.value = 5;
+        		}).to.throw("Cannot modify property \"value\" of the original object."); // The new evolved data should remain unchanged
         	});
         });
 
@@ -195,12 +199,12 @@ describe("Evolvers", () =>
         				}),
         			});
 
-        		const resultA = await AsyncEvolver.evolve({ name: "test" })
+        		const resultA = await AsyncEvolver.evolve({ name: "1234" })
         			.via.asyncMakeNameLowerCase()
         			.and.asyncMakeNameUpperCase()
         			.and.asyncReverseName()
         			.lastly.syncReplaceVowels();
-        		expect(resultA.name).to.equal("TS*T");
+        		expect(resultA.name).to.equal("4321");
 
         		const resultB = await AsyncEvolver.evolve({ name: "test" })
         			.via.syncReplaceVowels()

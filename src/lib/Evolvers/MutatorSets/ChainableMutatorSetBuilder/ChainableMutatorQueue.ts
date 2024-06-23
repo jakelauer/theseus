@@ -186,25 +186,28 @@ export class ChainableMutatorQueue<
 		result: TData | Promise<TData>,
 	): SortaPromise<TData> 
 	{
-		let outcome: SortaPromise<TData>;
-		if (result instanceof Promise) 
-		{
-			outcome = result.then((resolvedResult) =>
-			{
-				log.verbose("Async operation resolved, setting data to result of operation");
+		return result instanceof Promise 
+			? this.setDataWithResultAsync(result)
+			: this.setDataWithResultSync(result);
+	}
 
-				this.params.setData(resolvedResult);
-				return resolvedResult;
-			});
-		}
-		else 
-		{
-			log.verbose("Setting data to result of operation");
-			outcome = result;
-			this.params.setData(outcome);
-		}
+	private setDataWithResultSync(result: TData): TData
+	{
+		log.verbose("Setting data to result of operation");
+		this.params.setData(result);
 
-		return outcome;
+		return result;
+	}
+
+	private async setDataWithResultAsync(result: Promise<TData>): Promise<TData> 
+	{
+		return result.then((resolvedResult) =>
+		{
+			log.verbose("Async operation resolved, setting data to result of operation");
+
+			this.params.setData(resolvedResult);
+			return resolvedResult;
+		});
 	}
 
 	public static create<TData extends object, TParamNoun extends string>(

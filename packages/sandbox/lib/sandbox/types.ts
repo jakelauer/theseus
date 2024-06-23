@@ -45,7 +45,7 @@ export interface SandboxProxyProps<T> {
 		params: SandboxParams;
     };
 
-	[CONSTANTS.VERIFICATION.BASIS_SYMBOL]: string;
+	[CONSTANTS.FROST.BASIS_SYMBOL]: string;
 }
 
 /**

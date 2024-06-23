@@ -32,12 +32,12 @@ export function generateVerificationProperty(
 {
 	if (typeof arg1 === "string") 
 	{
-		return `${CONSTANTS.VERIFICATION.CHECK_PROP_PREFIX}${arg1}__${arg2}`;
+		return `${CONSTANTS.FROST.CHECK_PROP_PREFIX}${arg1}__${arg2}`;
 	}
 	else if (typeof arg1 === "object") 
 	{
 		const basisSymbolValue = getVerificationValueFromObject(arg1);
-		return `${CONSTANTS.VERIFICATION.CHECK_PROP_PREFIX}${basisSymbolValue}__${arg2}`;
+		return `${CONSTANTS.FROST.CHECK_PROP_PREFIX}${basisSymbolValue}__${arg2}`;
 	}
 	
 	throw new Error("Invalid arguments");
@@ -45,20 +45,13 @@ export function generateVerificationProperty(
 
 export function getVerificationValueFromObject(target: any): string 
 {
-	if (Object.prototype.hasOwnProperty.call(target, CONSTANTS.VERIFICATION.BASIS_SYMBOL))
+	const basisSymbolValue = target[CONSTANTS.FROST.BASIS_SYMBOL];
+	if (typeof basisSymbolValue === "string")
 	{
-		const basisSymbolValue = target[CONSTANTS.VERIFICATION.BASIS_SYMBOL];
-		if (typeof basisSymbolValue === "string")
-		{
-			return basisSymbolValue;
-		}
-		else 
-		{
-			throw new Error("Verification basis symbol must be a string.");
-		}
+		return basisSymbolValue;
 	}
 	else 
 	{
-		throw new Error("Object has no verification basis symbol.");
+		throw new Error("Verification basis symbol must be a string.");
 	}
 }

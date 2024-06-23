@@ -9,7 +9,7 @@ describe("assertValidVerificationProperty", function()
 		const verificationOwnerObj = {
 			prop: "testProp",
 			value: "testValue",
-			[CONSTANTS.VERIFICATION.BASIS_SYMBOL]: 123,
+			[CONSTANTS.FROST.BASIS_SYMBOL]: 123,
 		};
 
 		const valueToCheck = 123;
@@ -21,7 +21,7 @@ describe("assertValidVerificationProperty", function()
 		const verificationOwnerObj = {
 			prop: "testProp",
 			value: "testValue",
-			[CONSTANTS.VERIFICATION.BASIS_SYMBOL]: 123,
+			[CONSTANTS.FROST.BASIS_SYMBOL]: 123,
 		};
 
 		const valueToCheck = 456;

@@ -1,6 +1,9 @@
 import { CONSTANTS, SANDBOX_VERIFIABLE_PROP_SYMBOL } from "../constants";
+import { frostClone, isFrostProxy } from "../frost";
 import { generateVerificationProperty, getVerificationValueFromObject } from "../frost/properties";
-import { isSandboxProxy } from "../sandbox/is-sandbox-proxy";
+import isValidObject from "../is-valid-object";
+import type { SandboxMode } from "../sandbox";
+import { containsSandboxProxy, isSandboxProxy } from "../sandbox/is-sandbox-proxy";
 import structuredClone from "@ungap/structured-clone";
 
 /**
@@ -23,14 +26,48 @@ export function cement<T extends object>(obj: T): T
 			},
 		} = obj[CONSTANTS.SANDBOX_SYMBOL];
 
-		const toModify = mode === "modify" ? original : structuredClone(original, { lossy: true });
+		const toModify = getModifiableObject(original, mode);
 
 		return applyChanges(toModify, changes);
+	}
+	else if (containsSandboxProxy(obj))
+	{
+		// Loop through the object's properties and cement any nested sandbox proxies recursively
+		for (const key in obj) 
+		{
+			if (Object.prototype.hasOwnProperty.call(obj, key)) 
+			{
+				const val = obj[key];
+				if (isValidObject(val) && isSandboxProxy(val))
+				{
+					const cemented = cement(val);
+					obj[key] = cemented;
+				}
+			}
+		}
+
+		return obj;
 	}
 	else 
 	{
 		throw new Error("Cannot cement an object that is not a sandbox.");
 	}
+}
+
+function getModifiableObject<T extends object>(obj: T, mode: SandboxMode): T
+{
+	// modify mode, non-frost-proxy
+	let result = obj;
+
+	if (mode === "copy")
+	{
+		// if the object is a frost proxy, clone it and frost it, otherwise structured clone it
+		result = isFrostProxy(obj) 
+			? frostClone(obj) 
+			: structuredClone(obj, { lossy: false });
+	}
+
+	return result;
 }
 
 /**
@@ -43,7 +80,7 @@ export function cement<T extends object>(obj: T): T
  */
 function applyChanges<T extends object>(target: any, changes: Record<string | symbol, any>): T 
 {
-	const targetIsFrost = (target as any)[CONSTANTS.IS_FROSTY_PROP];
+	const targetIsFrost = (target as any)[CONSTANTS.FROST.IS_FROSTY];
 
 	const allKeys = new Set([...Object.keys(target), ...Object.keys(changes)]);
 
@@ -61,10 +98,11 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 		// If the value is a nested object, apply changes recursively
 		else if (isSandboxProxy(oldValue)) 
 		{
-			handleSet(target, key, cement(oldValue), targetIsFrost);
+			const cemented = cement(oldValue);
+			handleSet(target, key, cemented, targetIsFrost);
 		}
 		// If the value is a deletion symbol, delete the property
-		else if (newValue === CONSTANTS.DELETION_SYMBOL) 
+		else if (newValue === CONSTANTS.FROST.DELETION_SYMBOL) 
 		{
 			handleDeletion(target, key, targetIsFrost);
 		}
@@ -76,9 +114,8 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 		// otherwise, do nothing
 	}
 
-	delete target[CONSTANTS.SETTER_SYMBOL];
+	delete target[CONSTANTS.FROST.SETTER_SYMBOL];
 	delete target[CONSTANTS.SANDBOX_SYMBOL];
-	delete target[CONSTANTS.VERIFICATION.BASIS_SYMBOL];
 
 	return target;
 }
@@ -101,7 +138,7 @@ function handleSet(target: any, key: string, newValue: any, isFrost: boolean): v
 {
 	if (isFrost) 
 	{
-		target[CONSTANTS.SETTER_SYMBOL] = {
+		target[CONSTANTS.FROST.SETTER_SYMBOL] = {
 			prop: key,
 			value: newValue,
 			[SANDBOX_VERIFIABLE_PROP_SYMBOL]: getVerificationValueFromObject(target),

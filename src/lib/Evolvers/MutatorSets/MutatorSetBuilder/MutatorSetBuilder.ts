@@ -5,7 +5,7 @@ import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
-import { cement, isSandboxProxy, sandbox } from "theseus-sandbox";
+import { cement, frost, isSandboxProxy, sandbox } from "theseus-sandbox";
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
  * adding mutator functions to the evolver and executing these functions to mutate the evolver's state.
@@ -24,7 +24,7 @@ export class MutatorSetBuilder<
 > 
 {
 	protected __theseusId?: string;
-	protected data: Record<TParamNoun, TData>;
+	protected _data: Record<TParamNoun, TData>;
 	public mutatorsForProxy: TMutators = {} as TMutators;
 
 	constructor(
@@ -35,8 +35,20 @@ export class MutatorSetBuilder<
 	) 
 	{
 		this.__theseusId = theseusId;
-		this.data = this.inputToObject(inputData);
+		this.setInitialData(inputData);
 		this.extendSelfWithMutators(mutators);
+	}
+
+	protected get data() 
+	{
+		return this._data;
+	}
+
+	private setInitialData(data: TData)
+	{
+		const wrappedInput = this.inputToObject(data);
+		const frosted = frost(wrappedInput);
+		this._data = frosted as Record<TParamNoun, TData>;
 	}
 
 	public __setTheseusId(id: string) 
@@ -44,9 +56,33 @@ export class MutatorSetBuilder<
 		this.__theseusId = id;
 	}
 
-	public replaceData(data: TData) 
+	public reset(data: TData) 
 	{
-		this.data = this.inputToObject(data);
+		log.verbose("Resetting data to initial state");
+		this.setInitialData(data);
+	}
+
+	public setData(data: TData) 
+	{
+		if (data instanceof Promise)
+		{
+			throw new Error("Cannot set data to a Promise.");
+		}
+
+		this._data = this.augmentData(data);
+		this.cementData();
+	}
+
+	protected augmentData(data: TData)
+	{
+		const sb = sandbox(this.data);
+		sb[this.paramNoun] = data;
+		return sb;
+	}
+
+	public cementData()
+	{
+		this._data = cement(this.data);
 	}
 
 	protected getSelfExtensionPoint(): any 
@@ -191,8 +227,12 @@ export class MutatorSetBuilder<
 		const generateOutcome = (generatedData: TData) => 
 		{
 			Object.assign(draft, generatedData);
+
+			draft = sandbox(draft);
+
 			return draft;
 		};
+
 
 		return result instanceof Promise 
 			? result.then(generateOutcome) 

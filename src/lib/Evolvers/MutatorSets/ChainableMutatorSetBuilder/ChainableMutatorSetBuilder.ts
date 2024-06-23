@@ -9,6 +9,8 @@ import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 import type { MutatorDefs } from "../../Types/MutatorTypes";
 import { createChainingProxy } from "./proxy/chaining-proxy-manager";
 import { cement, frost, getSandboxChanges } from "theseus-sandbox";
+import { isFrostProxy } from "theseus-sandbox";
+import { containsSandboxProxy } from "theseus-sandbox";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
@@ -56,14 +58,10 @@ export class ChainableMutatorSetBuilder<
 		return this.data[this.paramNoun];
 	}
 
-	private setData(data: TData) 
+	public override reset(data: TData): void 
 	{
-		if (data instanceof Promise)
-		{
-			throw new Error("Cannot set data to a Promise.");
-		}
-
-		this.data[this.paramNoun] = data;
+		super.reset(data);
+		this.mutatorQueue.reset();
 	}
 
 	/**
@@ -75,11 +73,19 @@ export class ChainableMutatorSetBuilder<
 		return getSandboxChanges(this.data[this.paramNoun]);
 	}
 
-	private get resultBase():Promise<TData> | TData 
+	private get resultBase(): TData 
 	{
-		return this.mutatorQueue.asyncEncountered
-			? Promise.resolve(this.data[this.paramNoun]) 
-			: this.data[this.paramNoun];
+		return this.data[this.paramNoun];
+	}
+
+	public override setData(data: TData): void 
+	{
+		if (data instanceof Promise)
+		{
+			throw new Error("Cannot set data to a Promise.");
+		}
+	
+		this._data = this.augmentData(data);
 	}
 
 	public end() 
@@ -89,12 +95,27 @@ export class ChainableMutatorSetBuilder<
 			throw new Error("Cannot call end() on a chain that has encountered an async operation. Use endAsync() instead.");
 		}
 		
-		return frost(cement(this.resultBase)) as TData;
+		let result = this.resultBase;
+		if (containsSandboxProxy(result))
+		{
+			result = cement(result);
+		}
+
+		if (!isFrostProxy(result))
+		{
+			result = frost(result);
+		}
+
+		this.setData(result as TData);
+		this.cementData();
+		
+		return result as TData;
 	}
 
-	public endAsync(): Promise<TData> 
+	public async endAsync(): Promise<TData> 
 	{
-		return this.resultBase as Promise<TData>;
+		await (this.resultBase as Promise<TData>);
+		return this.end();
 	}
 
 	protected override getSelfExtensionPoint() 

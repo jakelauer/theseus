@@ -2,6 +2,11 @@ import { assertValidVerificationProperty } from "../assertions";
 import { CONSTANTS } from "../../constants";
 import { propertyStartsWith, extractVerificationPropValues } from "../properties";
 
+interface ProxyDeleterParams
+{
+	proxy:any
+}
+
 /**
  * When an attempt to delete a property is made, this function is called. If called
  * normally outside the sandbox environment (e.g. delete myObject.prop), it will
@@ -10,12 +15,14 @@ import { propertyStartsWith, extractVerificationPropValues } from "../properties
  * 
  * Inside the sandbox, the property can be deleted by calling `delete myObject[CONSTANTS.SANDBOX_SYMBOL].prop`.
  */
-export function proxyDelete(target: any, ostensibleProp: string | symbol): boolean
+export function proxyDelete(target: any, ostensibleProp: string | symbol, params: ProxyDeleterParams): boolean
 {
+	const { proxy } = params;
+
 	const deletableConstants = {
 		[CONSTANTS.SANDBOX_SYMBOL]: true,
-		[CONSTANTS.VERIFICATION.BASIS_SYMBOL]: true,
-		[CONSTANTS.SETTER_SYMBOL]: true,
+		[CONSTANTS.FROST.BASIS_SYMBOL]: true,
+		[CONSTANTS.FROST.SETTER_SYMBOL]: true,
 	};
 
 	const isSpecialSymbol = typeof ostensibleProp === "symbol" && Object.getOwnPropertySymbols(deletableConstants).includes(ostensibleProp);
@@ -27,7 +34,7 @@ export function proxyDelete(target: any, ostensibleProp: string | symbol): boole
 		
 		return true;
 	}
-	else if (propertyStartsWith(ostensibleProp, CONSTANTS.PREFIX))
+	else if (propertyStartsWith(ostensibleProp, CONSTANTS.FROST.PREFIX))
 	{
 		const propString = typeof ostensibleProp === "symbol" ? ostensibleProp.description : ostensibleProp;
 		if (!propString)
@@ -43,7 +50,7 @@ export function proxyDelete(target: any, ostensibleProp: string | symbol): boole
 				propertyName,
 			} = propContents;
 
-			assertValidVerificationProperty(target, verificationValue);
+			assertValidVerificationProperty(proxy, verificationValue);
 				
 			delete target[propertyName];
 		
