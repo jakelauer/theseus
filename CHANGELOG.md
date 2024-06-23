@@ -1,3 +1,17 @@
+# [8.0.0](https://github.com/jakelauer/theseus-js/compare/v7.4.7...v8.0.0) (2024-06-23)
+
+
+### Features
+
+* **broadcast:** avoid broadcasting updates to changes made during evolution ([e95a3a0](https://github.com/jakelauer/theseus-js/commit/e95a3a0fd484b6b388ce4846d44eee1ff2d91c71))
+* **everything:** changes to linting, chain ending, ensuring changes during evolution don't broadcast ([06773d1](https://github.com/jakelauer/theseus-js/commit/06773d16e252d89108ee997fa407a11c0d521eef))
+* **sandbox:** improvements to recursive sandbox and frost ([6b6dbc9](https://github.com/jakelauer/theseus-js/commit/6b6dbc93f3422c1684a461ee65c14b0630765528))
+
+
+### BREAKING CHANGES
+
+* **sandbox:** Evolvers do not modify data until the end, all levels are always frosted
+
 ## [7.4.7](https://github.com/jakelauer/theseus-js/compare/v7.4.6...v7.4.7) (2024-06-19)
 
 
