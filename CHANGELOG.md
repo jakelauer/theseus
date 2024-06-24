@@ -1,3 +1,11 @@
+## [8.0.1](https://github.com/jakelauer/theseus-js/compare/v8.0.0...v8.0.1) (2024-06-24)
+
+
+### Bug Fixes
+
+* **types:** handle both sync and async in FinishChain ([01fe9ea](https://github.com/jakelauer/theseus-js/commit/01fe9ea4aa1a10a8c33c0e357466fe64e21d6a91))
+* **types:** handle both sync and async in FinishChain ([#24](https://github.com/jakelauer/theseus-js/issues/24)) ([56afa85](https://github.com/jakelauer/theseus-js/commit/56afa85c4abf8a48c3fc591a37a32da855995372))
+
 # [8.0.0](https://github.com/jakelauer/theseus-js/compare/v7.4.7...v8.0.0) (2024-06-23)
 
 
