@@ -38,7 +38,9 @@ describe("ProxyActions", function()
 	{
 		it("should call runTest with correct parameters and log the appropriate message when outcome is true", function() 
 		{
-			const params: ProxyActionMapParameters = { prop: "testProp1" } as any;
+			const params: ProxyActionMapParameters = {
+				prop: "testProp1", 
+			} as any;
 			const matchingRequestTypes = ProxyActionType.function;
             
 			const runTestStub = sinon.stub(mockProxyActions, "runTest").returns(true);
@@ -51,7 +53,9 @@ describe("ProxyActions", function()
 
 		it("should call runTest with correct parameters and not log any message when outcome is false", function() 
 		{
-			const params: ProxyActionMapParameters = { prop: "testProp2" } as any;
+			const params: ProxyActionMapParameters = {
+				prop: "testProp2", 
+			} as any;
 			const matchingRequestTypes = ProxyActionType.function;
             
 			const runTestStub = sinon.stub(mockProxyActions, "runTest").returns(false);

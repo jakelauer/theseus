@@ -4,25 +4,37 @@ import { expect } from "chai";
 import sinon from "sinon";
 import { CONSTANTS } from "../../../constants";
 import { proxyDelete } from "../proxy-delete";
-import { extractVerificationPropValues, generateVerificationProperty, propertyStartsWith } from "../../properties";
+import {
+	extractVerificationPropValues, generateVerificationProperty, propertyStartsWith, 
+} from "../../properties";
 import { assertValidVerificationProperty } from "../../assertions";
 
 describe("proxyDelete", function() 
 {
 	it("should delete the verification property", function() 
 	{
-		const target = { [CONSTANTS.FROST.BASIS_SYMBOL]: "123" };
+		const target = {
+			[CONSTANTS.FROST.BASIS_SYMBOL]: "123", 
+		};
 
-		proxyDelete(target, CONSTANTS.FROST.BASIS_SYMBOL, { proxy: target });
+		proxyDelete(target, CONSTANTS.FROST.BASIS_SYMBOL, {
+			proxy: target, 
+		});
 		expect(target[CONSTANTS.FROST.BASIS_SYMBOL]).to.be.undefined;
 	});
 
 	it("should delete the sandbox property with valid verification", function() 
 	{
-		const target = { key: "value", [CONSTANTS.FROST.BASIS_SYMBOL]: "123" };
+		const target = {
+			key: "value",
+			[CONSTANTS.FROST.BASIS_SYMBOL]: "123", 
+		};
 		const ostensibleProp = generateVerificationProperty(target, "key");
 
-		const propValues = { verificationValue: "123", propertyName: "key" };
+		const propValues = {
+			verificationValue: "123",
+			propertyName: "key", 
+		};
 
 		// Directly stub the functions without using withArgs
 		const propertyStub = sinon.stub().returns(true);
@@ -37,7 +49,9 @@ describe("proxyDelete", function()
 		(global as any).extractVerificationPropValues = extractStub;
 		(global as any).assertValidVerificationProperty = assertStub;
 	
-		expect(() => proxyDelete(target, ostensibleProp, { proxy: target })).not.to.throw();
+		expect(() => proxyDelete(target, ostensibleProp, {
+			proxy: target, 
+		})).not.to.throw();
 		expect(target.key).to.be.undefined;
 	
 		// Restore the original functions
@@ -48,9 +62,13 @@ describe("proxyDelete", function()
 
 	it("should throw an error for other properties", function() 
 	{
-		const target = { key: "value" };
+		const target = {
+			key: "value", 
+		};
 		const ostensibleProp = "key";
 
-		expect(() => proxyDelete(target, ostensibleProp, { proxy: target })).to.throw("Cannot modify property \"key\" of the original object.");
+		expect(() => proxyDelete(target, ostensibleProp, {
+			proxy: target, 
+		})).to.throw("Cannot modify property \"key\" of the original object.");
 	});
 });

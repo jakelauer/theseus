@@ -10,7 +10,13 @@ describe("UpdateDataAction", function()
 	beforeEach(function() 
 	{
 		updateDataAction = new UpdateDataAction();
-		params = { target: { replaceData: "newData" }, prop: "setData", proxy: {} } as any;
+		params = {
+			target: {
+				replaceData: "newData", 
+			},
+			prop: "setData",
+			proxy: {}, 
+		} as any;
 	});
 
 	it("should return true for setData property in runTest", function() 

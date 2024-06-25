@@ -10,7 +10,7 @@ export enum ProxyActionType {
     property = 1 << 3, // 8
     chainTermination = 1 << 4, // 16
     chainHelper = 1 << 5, // 32
-    updateData = 1 << 6, // 64
+    updateData = 1 << 6, // 64,
 }
 
 const log = getTheseusLogger("proxy-actions");

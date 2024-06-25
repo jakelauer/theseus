@@ -10,7 +10,10 @@ describe("frost", function()
 
 	beforeEach(function() 
 	{
-		originalObject = { a: 1, b: 2 };
+		originalObject = {
+			a: 1,
+			b: 2, 
+		};
 		frostedProxy = frost(originalObject);
 	});
 
@@ -38,7 +41,9 @@ describe("frost", function()
 
 	it("should allow modification of a property via sandbox", function()
 	{
-		const sandboxFrostedProxy = sandbox(frostedProxy, { mode: "modify" });
+		const sandboxFrostedProxy = sandbox(frostedProxy, {
+			mode: "modify", 
+		});
 		expect(() => 
 		{
 			sandboxFrostedProxy.a = 3;
@@ -47,7 +52,9 @@ describe("frost", function()
 
 	it("should allow deletion of a property via sandbox", function()
 	{
-		const sandboxFrostedProxy = sandbox(frostedProxy, { mode: "modify" });
+		const sandboxFrostedProxy = sandbox(frostedProxy, {
+			mode: "modify", 
+		});
 		expect(() => 
 		{
 			delete sandboxFrostedProxy.a;
@@ -56,7 +63,9 @@ describe("frost", function()
 
 	it("should allow cementing of a frosted sandbox with deletion", function()
 	{
-		const sandboxFrostedProxy = sandbox(frostedProxy, { mode: "modify" });
+		const sandboxFrostedProxy = sandbox(frostedProxy, {
+			mode: "modify", 
+		});
 		delete sandboxFrostedProxy.a;
 		cement(sandboxFrostedProxy);
 	});
@@ -64,7 +73,9 @@ describe("frost", function()
 
 	it("should allow cementing of a frosted sandbox with change", function()
 	{
-		const sandboxFrostedProxy = sandbox(frostedProxy, { mode: "modify" });
+		const sandboxFrostedProxy = sandbox(frostedProxy, {
+			mode: "modify", 
+		});
 		sandboxFrostedProxy.a = 5;
 		const result = cement(sandboxFrostedProxy);
 		expect(result.a).to.equal(5);
@@ -74,7 +85,9 @@ describe("frost", function()
 
 	it("should get same stringified value for frosted proxy and original object", function()
 	{
-		const sandboxFrostedProxy = sandbox(frostedProxy, { mode: "modify" });
+		const sandboxFrostedProxy = sandbox(frostedProxy, {
+			mode: "modify", 
+		});
 		sandboxFrostedProxy.a = 5;
 		const result = cement(sandboxFrostedProxy);
 
@@ -86,7 +99,9 @@ describe("frost", function()
 
 	it("should not get same stringified value for frosted proxy and original object", function()
 	{
-		const sandboxFrostedProxy = sandbox(frostedProxy, { mode: "copy" });
+		const sandboxFrostedProxy = sandbox(frostedProxy, {
+			mode: "copy", 
+		});
 		sandboxFrostedProxy.a = 5;
 		const result = cement(sandboxFrostedProxy);
 

@@ -10,7 +10,13 @@ describe("ToJsonAction", function()
 	beforeEach(function() 
 	{
 		toJsonAction = new ToJsonAction();
-		params = { target: { prop: "value" }, prop: "toJSON", proxy: {} } as any;
+		params = {
+			target: {
+				prop: "value", 
+			},
+			prop: "toJSON",
+			proxy: {}, 
+		} as any;
 	});
 
 	it("should return true for toJSON property in runTest", function() 
@@ -21,6 +27,8 @@ describe("ToJsonAction", function()
 	it("should return serialized object in process", function() 
 	{
 		const result = toJsonAction.process(params);
-		expect(result()).to.deep.equal({ prop: "value" });
+		expect(result()).to.deep.equal({
+			prop: "value", 
+		});
 	});
 });

@@ -5,7 +5,9 @@ import { ChainableMutatorQueue } from "../../ChainableMutatorQueue";
 
 const makeMutatorQueue = () => 
 {
-	let dataReference = { value: 0 };
+	let dataReference = {
+		value: 0, 
+	};
 	return ChainableMutatorQueue.create({
 		paramNoun: "data",
 		setData: ({ data }) => 
@@ -16,7 +18,9 @@ const makeMutatorQueue = () =>
 			}
 			dataReference = data;
 		},
-		getData: () => ({ data: dataReference }),
+		getData: () => ({
+			data: dataReference, 
+		}),
 	});
 };
 
@@ -126,7 +130,11 @@ describe("createChainingProxy", function ()
 
 	it("should maintain the order of queued mutations", function () 
 	{
-		const dataOrig = { data: { a: 1 } };
+		const dataOrig = {
+			data: {
+				a: 1, 
+			}, 
+		};
 		const order: number[] = [];
 		const target = {
 			mutatorsForProxy: {
@@ -151,7 +159,11 @@ describe("createChainingProxy", function ()
 
 		proxy
 			.first(dataOrig)
-			.second({ data: { a: 1 } });
+			.second({
+				data: {
+					a: 1, 
+				}, 
+			});
 		expect(order).to.deep.equal([1, 2]);
 	});
 

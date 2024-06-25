@@ -18,7 +18,9 @@ describe("proxySet", function()
 			[SANDBOX_VERIFIABLE_PROP_SYMBOL]: "123",
 		};
 
-		const result = proxySet(target, CONSTANTS.FROST.SETTER_SYMBOL, value, { proxy: target });
+		const result = proxySet(target, CONSTANTS.FROST.SETTER_SYMBOL, value, {
+			proxy: target, 
+		});
 		expect(result).to.be.true;
 		expect(target["key"]).to.equal("newValue");
 	});
@@ -29,6 +31,8 @@ describe("proxySet", function()
 		const ostensibleProp = "key";
 		const ostensibleValue = "value";
 
-		expect(() => proxySet(target, ostensibleProp, ostensibleValue, { proxy: target })).to.throw("Cannot modify property \"key\" of the original object.");
+		expect(() => proxySet(target, ostensibleProp, ostensibleValue, {
+			proxy: target, 
+		})).to.throw("Cannot modify property \"key\" of the original object.");
 	});
 });

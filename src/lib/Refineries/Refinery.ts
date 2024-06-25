@@ -2,7 +2,9 @@
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 import { ForgeSet } from "./ForgeSets/ForgeSet";
 import { normalizeRefineryName, type NormalizedRefineryName } from "./Util/normalizeRefineryName";
-import type { ForgeDefs, RefineObject, RefineryDefinition as RefineryOptions } from "./Types/RefineryTypes";
+import type {
+	ForgeDefs, RefineObject, RefineryDefinition as RefineryOptions, 
+} from "./Types/RefineryTypes";
 import { sandbox } from "theseus-sandbox";
 
 const log = getTheseusLogger("Refinery");
@@ -75,7 +77,9 @@ export class Refinery<
      */
 	public refine(input: TData) 
 	{
-		const clone = sandbox(input, { mode: "copy" });
+		const clone = sandbox(input, {
+			mode: "copy", 
+		});
 
 		// Create the actions which will be available when `for()` is called.
 		const forgeSet = ForgeSet.create<TData, TParamNoun, TForges>(

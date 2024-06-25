@@ -1,11 +1,15 @@
-import { Evolver, EvolverComplex, Refinery, RefineryComplex } from "../lib";
+import {
+	Evolver, EvolverComplex, Refinery, RefineryComplex, 
+} from "../lib";
 
 export interface MockData {
     touched: boolean;
 }
 
 export const mockRefineryComplex = RefineryComplex.create().withRefineries(
-	Refinery.create("mockRefinery", { noun: "mockData" })
+	Refinery.create("mockRefinery", {
+		noun: "mockData", 
+	})
 		.toRefine<MockData>()
 		.withForges({
 			getOppositeOfTouched: ({ mockData }) => 
@@ -15,7 +19,9 @@ export const mockRefineryComplex = RefineryComplex.create().withRefineries(
 		}),
 );
 
-const mockEvolver = Evolver.create("mock", { noun: "mockData" }).toEvolve<MockData>().withMutators({
+const mockEvolver = Evolver.create("mock", {
+	noun: "mockData", 
+}).toEvolve<MockData>().withMutators({
 	toggleTouch: ({ mockData }) => 
 	{
 		mockData.touched = !mockData.touched;

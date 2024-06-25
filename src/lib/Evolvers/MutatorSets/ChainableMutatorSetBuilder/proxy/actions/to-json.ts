@@ -24,7 +24,9 @@ export class ToJsonAction extends ProxyActions
 		log.verbose("toJSON called");
 		return () => 
 		{
-			const copy = { ...target };
+			const copy = {
+				...target, 
+			};
 			delete copy.chainingProxy; // Remove the circular reference when serializing
 			return copy;
 		};

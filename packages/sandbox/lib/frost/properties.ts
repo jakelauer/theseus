@@ -19,7 +19,10 @@ export function extractVerificationPropValues(input: string)
 	if (match) 
 	{
 		const [_, verificationValue, propertyName] = match;
-		return { verificationValue, propertyName };
+		return {
+			verificationValue,
+			propertyName, 
+		};
 	}
 }
 

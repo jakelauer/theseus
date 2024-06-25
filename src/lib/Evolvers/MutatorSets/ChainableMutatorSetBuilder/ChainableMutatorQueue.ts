@@ -104,10 +104,14 @@ export class ChainableMutatorQueue<
 	{
 		return () => 
 		{
-			log.debug(`[${selfPath}] Operation execution starting`, { args });
+			log.debug(`[${selfPath}] Operation execution starting`, {
+				args, 
+			});
 
 			const mutatorResult = mutator(...args);
-			log.debug(`[${selfPath}] Operation finished executing`, { args });
+			log.debug(`[${selfPath}] Operation finished executing`, {
+				args, 
+			});
 
 			if (mutatorResult === undefined || mutatorResult === null) 
 			{

@@ -49,7 +49,9 @@ describe("EvolverComplex", () =>
 		it("should execute a single mutation correctly", () => 
 		{
 			// Execute step: Use the setup to perform mutations
-			const initialData = { count: 0 };
+			const initialData = {
+				count: 0, 
+			};
 			const mutationResult = IncrementEvolver.mutate(initialData).via.increment(5);
 
 			expect(mutationResult.count).to.equal(5);
@@ -57,7 +59,9 @@ describe("EvolverComplex", () =>
 
 		it("should execute chained mutations correctly", () => 
 		{
-			const initialData = { count: 10 };
+			const initialData = {
+				count: 10, 
+			};
 
 			// Chained execution: Demonstrates the use of the same setup for multiple operations
 			const evolvedResult = IncrementEvolver.evolve(initialData)

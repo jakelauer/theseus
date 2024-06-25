@@ -1,9 +1,8 @@
 import type {
 	RuleConfigCondition,
-	TargetCaseType } from "@commitlint/types";
-import {
-	RuleConfigSeverity,
+	TargetCaseType, 
 } from "@commitlint/types";
+import { RuleConfigSeverity } from "@commitlint/types";
 
 export default {
 	preset: "angular",
@@ -42,20 +41,53 @@ export default {
 	},
 	releaseRules: [
 		// major
-		{ breaking: true, release: "major" },
-		{ revert: true, release: "patch" },
+		{
+			breaking: true,
+			release: "major", 
+		},
+		{
+			revert: true,
+			release: "patch", 
+		},
 		// minor
-		{ type: "feat", release: "minor" },
-		{ type: "build", release: "minor" },
+		{
+			type: "feat",
+			release: "minor", 
+		},
+		{
+			type: "build",
+			release: "minor", 
+		},
 		// patch
-		{ type: "fix", release: "patch" },
-		{ type: "perf", release: "patch" },
-		{ type: "docs", release: "patch" },
-		{ type: "refactor", release: "patch" },
-		{ type: "style", release: "patch" },
+		{
+			type: "fix",
+			release: "patch", 
+		},
+		{
+			type: "perf",
+			release: "patch", 
+		},
+		{
+			type: "docs",
+			release: "patch", 
+		},
+		{
+			type: "refactor",
+			release: "patch", 
+		},
+		{
+			type: "style",
+			release: "patch", 
+		},
 		// none
-		{ type: "ci", release: false },
-		{ scope: "no-release", release: false },
+		{
+			type: "ci",
+			release: false, 
+		},
+		{
+			scope: "no-release",
+			release: false, 
+		},
 	],
 	prompt: {
 		questions: {

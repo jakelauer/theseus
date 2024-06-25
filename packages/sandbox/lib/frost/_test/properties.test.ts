@@ -42,7 +42,10 @@ describe("propertyStartsWith", function()
 	{
 		const input = "__verify_123__propName";
 		const result = extractVerificationPropValues(input);
-		expect(result).to.deep.equal({ verificationValue: "123", propertyName: "propName" });
+		expect(result).to.deep.equal({
+			verificationValue: "123",
+			propertyName: "propName", 
+		});
 	});
 
 	it("should return undefined if the input string does not match the pattern", function() 

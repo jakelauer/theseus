@@ -29,20 +29,26 @@ module.exports = {
 
 		function isLikelyTheseus(node)
 		{
-			const tokens = sourceCode.getTokensBefore(node, { count: 20, filter: ({ type,value }) => 
-			{
-				return type === "Identifier" && targetedRoots.has(value);
-			} });
+			const tokens = sourceCode.getTokensBefore(node, {
+				count: 20,
+				filter: ({ type,value }) => 
+				{
+					return type === "Identifier" && targetedRoots.has(value);
+				}, 
+			});
 
 			return tokens.length > 0;
 		}
 
 		function isEndingMethodPrecededByChaining(node)
 		{
-			const tokens = sourceCode.getTokensBefore(node, { count: 20, filter: ({ type,value }) => 
-			{
-				return type === "Identifier" && chainingMethods.has(value);
-			} });
+			const tokens = sourceCode.getTokensBefore(node, {
+				count: 20,
+				filter: ({ type,value }) => 
+				{
+					return type === "Identifier" && chainingMethods.has(value);
+				}, 
+			});
 
 			return tokens.length > 0;
 		}
@@ -66,11 +72,15 @@ module.exports = {
 				if (matchingNodeName && isLikelyTheseus(node)) 
 				{
 					// Only consider the direct .property access case, ensuring it's part of a member expression chain
-					const tokenBeforeNode = sourceCode.getTokenBefore(node, { includeComments: false });
+					const tokenBeforeNode = sourceCode.getTokenBefore(node, {
+						includeComments: false, 
+					});
 					if (tokenBeforeNode && tokenBeforeNode.type === "Punctuator" && tokenBeforeNode.value === ".") 
 					{
 						const dotBeforeNode = tokenBeforeNode;
-						const tokenBeforeDot = sourceCode.getTokenBefore(dotBeforeNode, { includeComments: false });
+						const tokenBeforeDot = sourceCode.getTokenBefore(dotBeforeNode, {
+							includeComments: false, 
+						});
 
 						// Ensure `.via` is in the chain
 						if (tokenBeforeDot && tokenBeforeDot.loc.end.line === node.loc.start.line) 

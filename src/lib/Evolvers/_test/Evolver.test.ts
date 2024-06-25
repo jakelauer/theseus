@@ -13,16 +13,24 @@ describe("Evolvers", () =>
     const testEvolver = Evolver.create("testEvolver")
     	.toEvolve<TestData>()
     	.withMutators({
-    		increment: ({ input }) => ({ value: input.value + 1 }),
-    		decrement: ({ input }) => ({ value: input.value - 1 }),
+    		increment: ({ input }) => ({
+    			value: input.value + 1, 
+    		}),
+    		decrement: ({ input }) => ({
+    			value: input.value - 1, 
+    		}),
     	});
 
     const preMutatorTestEvolver = Evolver.create("testEvolver").toEvolve<TestData>();
     type MutatorType = Parameters<(typeof preMutatorTestEvolver)["withMutators"]>[0];
 
     const testMutators = {
-    	increment: ({ input }) => ({ value: input.value + 1 }),
-    	decrement: ({ input }) => ({ value: input.value - 1 }),
+    	increment: ({ input }) => ({
+    		value: input.value + 1, 
+    	}),
+    	decrement: ({ input }) => ({
+    		value: input.value - 1, 
+    	}),
     } satisfies MutatorType;
 
     describe("Factory Method and Initialization", () => 
@@ -71,7 +79,9 @@ describe("Evolvers", () =>
         	{
         		// Assuming there's some form of validation on mutators, which there might not be.
         		// This is speculative and should be adapted to the actual error handling strategy of Evolver.
-        		const invalidMutators: any = { brokenMutator: null }; // Intentionally incorrect
+        		const invalidMutators: any = {
+        			brokenMutator: null, 
+        		}; // Intentionally incorrect
 
         		expect(() =>
         			Evolver.create("testEvolver").toEvolve<AnotherTestData>().withMutators(invalidMutators),
@@ -88,11 +98,15 @@ describe("Evolvers", () =>
         			.withMutators({
         				increment: ({ input }, by: number) =>
         				{ 
-        					return { value: input.value + by };
+        					return {
+        						value: input.value + by, 
+        					};
         				},
         			});
 
-        		const initialData = { value: 1 };
+        		const initialData = {
+        			value: 1, 
+        		};
 
         		const initialDataEvolver = testEvolver.evolve(initialData);
 
@@ -121,7 +135,9 @@ describe("Evolvers", () =>
         		const stringEvolver = Evolver.create("string")
         			.toEvolve<AnotherTestData>()
         			.withMutators({
-        				rename: ({ input }) => ({ name: `New ${input.name}` }),
+        				rename: ({ input }) => ({
+        					name: `New ${input.name}`, 
+        				}),
         			});
 
         		expect(stringEvolver).to.be.an.instanceof(Evolver);
@@ -199,14 +215,18 @@ describe("Evolvers", () =>
         				}),
         			});
 
-        		const resultA = await AsyncEvolver.evolve({ name: "1234" })
+        		const resultA = await AsyncEvolver.evolve({
+        			name: "1234", 
+        		})
         			.via.asyncMakeNameLowerCase()
         			.and.asyncMakeNameUpperCase()
         			.and.asyncReverseName()
         			.lastly.syncReplaceVowels();
         		expect(resultA.name).to.equal("4321");
 
-        		const resultB = await AsyncEvolver.evolve({ name: "test" })
+        		const resultB = await AsyncEvolver.evolve({
+        			name: "test", 
+        		})
         			.via.syncReplaceVowels()
         			.and.asyncMakeNameUpperCase()
         			.lastly.asyncReverseName();

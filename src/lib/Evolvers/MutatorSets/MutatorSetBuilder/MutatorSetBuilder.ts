@@ -5,7 +5,9 @@ import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
-import { cement, frost, isSandboxProxy, sandbox } from "theseus-sandbox";
+import {
+	cement, frost, isSandboxProxy, sandbox, 
+} from "theseus-sandbox";
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
  * adding mutator functions to the evolver and executing these functions to mutate the evolver's state.
@@ -150,7 +152,9 @@ export class MutatorSetBuilder<
 				Theseus.incrementStackDepth(this.__theseusId);
 				const draft = isSandboxProxy(this.data[this.paramNoun]) 
 					? this.data 
-					: sandbox(this.data, { mode: "copy" });
+					: sandbox(this.data, {
+						mode: "copy", 
+					});
 				
 				let funcResult: SortaPromise<TData>;
 				try 
@@ -247,7 +251,9 @@ export class MutatorSetBuilder<
 		input: _TData,
 	): { [key in _TParamNoun]: _TData } 
 	{
-		return { [this.paramNoun]: input } as {
+		return {
+			[this.paramNoun]: input, 
+		} as {
             [key in _TParamNoun]: _TData;
         };
 	}

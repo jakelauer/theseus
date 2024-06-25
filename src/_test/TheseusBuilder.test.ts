@@ -5,7 +5,9 @@ import { getTheseusLogger } from "@Shared/index";
 
 // Mock external dependencies and types
 // Assuming these mock functions and classes are implemented elsewhere in the test suite
-import { mockEvolverComplex, mockRefineryComplex, type MockData } from "./mocks";
+import {
+	mockEvolverComplex, mockRefineryComplex, type MockData, 
+} from "./mocks";
 
 describe("TheseusBuilder", function () 
 {
@@ -24,7 +26,9 @@ describe("TheseusBuilder", function ()
 
 	it("extends a Theseus instance with evolvers correctly", function () 
 	{
-		const theseusInstance = TheseusBuilder<MockData>({ touched: false }).maintainWith({
+		const theseusInstance = TheseusBuilder<MockData>({
+			touched: false, 
+		}).maintainWith({
 			evolvers: mockEvolverComplex,
 		});
 
@@ -49,7 +53,9 @@ describe("TheseusBuilder", function ()
 
 	it("extends a Theseus instance with evolvers and refineries correctly", function () 
 	{
-		const theseusInstance = TheseusBuilder<MockData>({ touched: false }).maintainWith({
+		const theseusInstance = TheseusBuilder<MockData>({
+			touched: false, 
+		}).maintainWith({
 			evolvers: mockEvolverComplex,
 			refineries: mockRefineryComplex,
 		});

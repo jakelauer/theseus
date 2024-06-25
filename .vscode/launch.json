@@ -39,7 +39,7 @@
             "request": "launch",
             "name": "Run Base Test (single)",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["test:base", "--timeout", "60000", "--", "--grep", "\"should return a new object copy that won't change after further evolutions\""],
+            "runtimeArgs": ["test:base", "--timeout", "60000", "--", "--grep", "\"should support evolvers with nested mutators\""],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"

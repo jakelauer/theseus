@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { CONSTANTS } from "../constants";
-import { proxyDelete, proxyGet, proxySet } from "./proxy-traps";
+import {
+	proxyDelete, proxyGet, proxySet, 
+} from "./proxy-traps";
 import type { FrostProxy } from "./types";
 import type { SandboxProxy } from "../sandbox";
 import structuredClone from "@ungap/structured-clone";
@@ -51,7 +53,9 @@ export function frost<T extends object>(originalObject: T): Readonly<T>
 
 export function frostClone<T extends object>(originalObject: T): Readonly<T> 
 {
-	const clone = structuredClone(originalObject, { lossy: false });
+	const clone = structuredClone(originalObject, {
+		lossy: false, 
+	});
 	delete (clone as any)[CONSTANTS.FROST.BASIS_SYMBOL];
 
 	return frost(clone);

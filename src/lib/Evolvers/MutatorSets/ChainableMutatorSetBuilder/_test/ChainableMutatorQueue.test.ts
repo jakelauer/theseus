@@ -25,7 +25,9 @@ describe("ChainableMutatorQueue", function ()
 	it("should process synchronous mutators in sequence", function () 
 	{
 		const paramNoun = "testArg";
-		let testData: {value: number} = { value: 1 };
+		let testData: {value: number} = {
+			value: 1, 
+		};
         type TData ={value: number};
 
         const setData = (data: any) => 
@@ -52,13 +54,17 @@ describe("ChainableMutatorQueue", function ()
         void queue.queueMutation("syncMutatorPath", syncMutator, [testData, 1]);
         void queue.queueMutation("syncMutatorPath", syncMutator, [testData, 2]);
 
-        expect(testData).to.deep.equal({ value: 4 });
+        expect(testData).to.deep.equal({
+        	value: 4, 
+        });
 	});
 
 	it("should handle asynchronous mutators correctly", async function () 
 	{
 		const paramNoun = "testArg";
-		let testData: {value: number} = { value: 1 };
+		let testData: {value: number} = {
+			value: 1, 
+		};
         type TData ={value: number};
 
         const setData = (data: any) => 
@@ -93,14 +99,20 @@ describe("ChainableMutatorQueue", function ()
 
         const result = await q;
 
-        expect(result).to.deep.equal({ value: 4 });
+        expect(result).to.deep.equal({
+        	value: 4, 
+        });
 	});
 
 	it("should log an error if a mutator returns undefined", function () 
 	{
 		const paramNoun = "undefinedReturnArg" as string;
 		const setData = sinon.stub();
-		const getData = sinon.stub().returns({ [paramNoun]: { value: 0 } });
+		const getData = sinon.stub().returns({
+			[paramNoun]: {
+				value: 0, 
+			}, 
+		});
 		const undefinedMutator = () => undefined;
 
 		const queue = ChainableMutatorQueue.create({
@@ -118,7 +130,11 @@ describe("ChainableMutatorQueue", function ()
 	{
 		const paramNoun = "undefinedReturnArg" as string;
 		const setData = sinon.stub();
-		const getData = sinon.stub().returns({ [paramNoun]: { value: 0 } });
+		const getData = sinon.stub().returns({
+			[paramNoun]: {
+				value: 0, 
+			}, 
+		});
 		const stringMutator = () => "not an object" as any;
 
 		const queue = ChainableMutatorQueue.create({
@@ -137,7 +153,9 @@ describe("ChainableMutatorQueue", function ()
 		type Data = {"undefinedReturn": number};
 		const paramNoun = "undefinedReturn";
 		const setData = sinon.stub();
-		const getData = sinon.stub().returns({ [paramNoun]: 0 });
+		const getData = sinon.stub().returns({
+			[paramNoun]: 0, 
+		});
 		const numberToStringMutator = async () => 
 		{
 		    return Promise.resolve("not a number") as unknown as Data;
@@ -169,7 +187,11 @@ describe("ChainableMutatorQueue", function ()
 	{
 		const paramNoun = "testArg";
 		const setData = sinon.stub();
-		const getData = sinon.stub().returns({ [paramNoun]: { value: 0 } });
+		const getData = sinon.stub().returns({
+			[paramNoun]: {
+				value: 0, 
+			}, 
+		});
 		const queue = ChainableMutatorQueue.create({
 			paramNoun,
 			getData: getData,

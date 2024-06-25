@@ -23,7 +23,9 @@ export class ChainTerminationAction extends ProxyActions
 		return propMatches;
 	}
 	
-	public process({ prop, proxyManager, proxy }: ProxyActionMapParameters) 
+	public process({
+		prop, proxyManager, proxy, 
+	}: ProxyActionMapParameters) 
 	{
 		const processReturnsProxy = this.matchAgainstProps.get(prop) ?? false;
 

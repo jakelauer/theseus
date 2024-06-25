@@ -81,7 +81,7 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 			if (result instanceof Promise)
 			{
 				this.log.verbose("Result is a promise; skipping reset.", {
-					isFinalChainLink: this.isFinalChainLink,
+					isFinalChainLink: this.isFinalChainLink, 
 				});
 			}
 			else 
@@ -114,9 +114,21 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 			return target[prop];
 		}
 
-		const requestType = ProxyActionMap.determineAction({ target, prop, proxy, proxyManager: this });
+		const requestType = ProxyActionMap.determineAction({
+			target,
+			prop,
+			proxy,
+			proxyManager: this,
+			queue: this.queue, 
+		});
 
-		const result = ProxyActionMap.process({ target, prop, proxy, proxyManager: this }, requestType);
+		const result = ProxyActionMap.process({
+			target,
+			prop,
+			proxy,
+			proxyManager: this,
+			queue: this.queue, 
+		}, requestType);
 
 		this.log.verbose(`[${prop}] Returning result`);
 
@@ -132,7 +144,7 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 	public create(): TTarget 
 	{
 		const proxy: any = new Proxy(this.target as any, {
-			get: (target: any, rawProp: string | symbol) => this.getProperty(proxy, target, rawProp),
+			get: (target: any, rawProp: string | symbol) => this.getProperty(proxy, target, rawProp), 
 		});
 
 		return proxy;

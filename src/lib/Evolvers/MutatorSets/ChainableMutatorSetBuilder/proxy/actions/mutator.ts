@@ -21,7 +21,9 @@ export class MutatorAction extends ProxyActions
 		return this.handleMutatorCall(params);
 	}
 
-	private handleMutatorCall({ target, prop, proxyManager, proxy }: ProxyActionMapParameters) 
+	private handleMutatorCall({
+		target, prop, proxyManager, proxy, 
+	}: ProxyActionMapParameters) 
 	{
 		return (...args: any[]) => 
 		{

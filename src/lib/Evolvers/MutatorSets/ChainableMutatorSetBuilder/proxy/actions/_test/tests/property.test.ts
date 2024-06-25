@@ -11,7 +11,13 @@ describe("PropertyAction", function()
 	beforeEach(function() 
 	{
 		propertyAction = new PropertyAction();
-		params = { target: { prop1: "value1" }, prop: "prop1", proxy: {} } as any;
+		params = {
+			target: {
+				prop1: "value1", 
+			},
+			prop: "prop1",
+			proxy: {}, 
+		} as any;
 	});
 
 	it("should return true for existing properties in runTest", function() 

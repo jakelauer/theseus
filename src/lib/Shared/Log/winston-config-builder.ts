@@ -6,7 +6,9 @@ import { theseusArgs } from "./theseus-args";
 import { DEFAULT_LOG_LEVEL, logLevels } from "./log-levels";
 
 const { format, addColors } = winston;
-const { combine, colorize, timestamp, printf, errors, splat, prettyPrint, json } = format;
+const {
+	combine, colorize, timestamp, printf, errors, splat, prettyPrint, json, 
+} = format;
 
 const logFilter = theseusArgs["theseus-log-filter"];
 
@@ -27,16 +29,27 @@ const filterLogs = format((info) =>
 
 export const theseusLogFormat = () =>
 	combine(
-		errors({ stack: true }),
-		colorize({ all: true }),
+		errors({
+			stack: true, 
+		}),
+		colorize({
+			all: true, 
+		}),
 		splat(),
-		json({ space: 2, circularValue: undefined }),
+		json({
+			space: 2,
+			circularValue: undefined, 
+		}),
 		prettyPrint(),
-		timestamp({ format: "HH:mm:ss:SS" }),
+		timestamp({
+			format: "HH:mm:ss:SS", 
+		}),
 		filterLogs(),
 		printf((info) => 
 		{
-			const { label, level, timestamp, message, ...args } = info;
+			const {
+				label, level, timestamp, message, ...args 
+			} = info;
 			const argsAsString = stringifier(args)
 				.split("\n")
 				.map((line) => `|  ${line}`)

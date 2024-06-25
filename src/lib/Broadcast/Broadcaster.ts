@@ -44,7 +44,9 @@ export class Broadcaster<
 	{
 		const broadcastTo = this.getObserversToUpdate(data);
 
-		log.verbose("Broadcasting data to observers", { count: broadcastTo.length });
+		log.verbose("Broadcasting data to observers", {
+			count: broadcastTo.length, 
+		});
 
 		// Assign a guid to this broadcast
 		const updateGuid = uuidv4();
@@ -64,7 +66,9 @@ export class Broadcaster<
 		)
 			.then(() => 
 			{
-				log.verbose("Completed pending update", { updateGuid });
+				log.verbose("Completed pending update", {
+					updateGuid, 
+				});
 				delete this.pendingUpdates[updateGuid];
 			})
 			.catch((error) => 
@@ -72,7 +76,9 @@ export class Broadcaster<
 				log.error(error);
 			});
 
-		log.verbose("Added pending update", { updateGuid });
+		log.verbose("Added pending update", {
+			updateGuid, 
+		});
 
 		// Return the pending update Promise
 		return this.pendingUpdates[updateGuid];

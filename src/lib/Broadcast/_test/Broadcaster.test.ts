@@ -1,5 +1,7 @@
 import chai, { expect } from "chai";
-import { beforeEach, describe, it } from "mocha";
+import {
+	beforeEach, describe, it, 
+} from "mocha";
 import chaiAsPromised from "chai-as-promised";
 
 import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
@@ -60,7 +62,9 @@ describe("Broadcaster", () =>
 		{
 			const mockObserver = new MockObserver(() => {});
 			broadcaster.observe(mockObserver.update.bind(mockObserver));
-			const testData = { key: "value" };
+			const testData = {
+				key: "value", 
+			};
 
 			await broadcaster.broadcast(testData);
 			expect(mockObserver.dataReceived).to.deep.equal(testData);
@@ -68,7 +72,9 @@ describe("Broadcaster", () =>
 
 		it("completes broadcast with no observers without error", async () => 
 		{
-			const broadcastPromise = broadcaster.broadcast({ key: "value" });
+			const broadcastPromise = broadcaster.broadcast({
+				key: "value", 
+			});
 			await expect(broadcastPromise).to.be.fulfilled;
 		});
 	});
@@ -80,7 +86,9 @@ describe("Broadcaster", () =>
 			const mockObserver = new MockObserver(() => {});
 			broadcaster.observe(mockObserver.update.bind(mockObserver));
 
-			const testData = { key: "value" };
+			const testData = {
+				key: "value", 
+			};
 			await broadcaster.broadcast(testData);
 
 			expect(mockObserver.dataReceived).to.deep.equal(testData);
@@ -93,7 +101,9 @@ describe("Broadcaster", () =>
 
 			destroy();
 
-			const testData = { key: "value" };
+			const testData = {
+				key: "value", 
+			};
 			await broadcaster.broadcast(testData);
 
 			expect(mockObserver.dataReceived).to.be.null; // Assuming initial value is null
@@ -113,7 +123,9 @@ describe("Broadcaster", () =>
 			Broadcaster.destroyAll(destroy1, destroy2);
 
 			// Attempt to broadcast data and verify that observers do not receive it
-			const testData = { key: "value" };
+			const testData = {
+				key: "value", 
+			};
 
 			broadcaster
 				.broadcast(testData)

@@ -6,12 +6,18 @@ describe("stringifier", function()
 	it("should serialize primitive values correctly", function() 
 	{
 		// Adjust for pretty-printed output
-		expect(stringifier({ value: "test" })).to.equal(JSON.stringify({ value: "test" }, null, 2));
+		expect(stringifier({
+			value: "test", 
+		})).to.equal(JSON.stringify({
+			value: "test", 
+		}, null, 2));
 	});
 
 	it("should apply custom formatting to arrays of primitives", function() 
 	{
-		const obj = { key: [1, "string", true] };
+		const obj = {
+			key: [1, "string", true], 
+		};
 		// Understanding that custom formatting may not be as initially expected
 		// Check if output is valid JSON and parse it to verify the structure
 		const result = stringifier(obj);

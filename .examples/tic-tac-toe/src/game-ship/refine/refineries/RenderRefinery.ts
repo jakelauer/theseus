@@ -2,7 +2,9 @@ import { Refinery } from "theseus-js";
 
 import type { Board, GameState } from "../../state/GameState";
 
-export const RenderRefinery = Refinery.create("RenderRefinery", { noun: "gameState" })
+export const RenderRefinery = Refinery.create("RenderRefinery", {
+	noun: "gameState", 
+})
 	.toRefine<GameState>()
 	.withForges({
 		renderToString: ({ gameState: { board } }) => 

@@ -10,7 +10,11 @@ describe("FunctionAction", function()
 	beforeEach(function() 
 	{
 		functionAction = new FunctionAction();
-		params = { target: () => {}, prop: "apply", proxy: {} as any } as any;
+		params = {
+			target: () => {},
+			prop: "apply",
+			proxy: {} as any, 
+		} as any;
 	});
 
 	it("should return true for function type in runTest", function() 

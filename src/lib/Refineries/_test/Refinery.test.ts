@@ -35,7 +35,9 @@ describe("Refinery Base", function ()
     				field: testData.field.toUpperCase(),
     			}),
     		});
-    	const testData: TestData = { field: "test" };
+    	const testData: TestData = {
+    		field: "test", 
+    	};
     	const result = testRefinery.refine(testData).forge1(); // Assuming `applyForges` is a method to apply forges
     	expect(result.field).to.equal("TEST");
     });
@@ -50,7 +52,9 @@ describe("Refinery Base", function ()
     				field: testData.field.toUpperCase(),
     			}),
     		});
-    	const testData: TestData = { field: "test" };
+    	const testData: TestData = {
+    		field: "test", 
+    	};
     	const result = testRefinery.refine(testData).forge1();
     	expect(result.field).to.equal("TEST");
     });

@@ -1,5 +1,7 @@
 import { expect } from "chai";
-import { beforeEach, describe, it } from "mocha";
+import {
+	beforeEach, describe, it, 
+} from "mocha";
 import sinon from "sinon";
 
 import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
@@ -24,7 +26,9 @@ describe("BroadcasterObserver", () =>
 
 	it("calls the callback with provided data asynchronously", async () => 
 	{
-		const testData = { key: "value" };
+		const testData = {
+			key: "value", 
+		};
 		await observer.update(testData);
 
 		sinon.assert.calledOnce(callback);

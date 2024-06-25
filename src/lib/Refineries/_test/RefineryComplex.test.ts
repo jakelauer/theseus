@@ -52,7 +52,10 @@ describe("RefineryComplex", function ()
     		createMockIncrementCountRefinery(),
     	);
 
-    	const testData: TestData = { field: "test", count: 1 };
+    	const testData: TestData = {
+    		field: "test",
+    		count: 1, 
+    	};
     	const { mockIncrementCount, mockUpperCase } = refineryComplex.refine(testData);
     	const resultAfterUppercase = mockUpperCase.makeUppercase();
     	const resultAfterIncrement = mockIncrementCount.incrementCount();
@@ -67,9 +70,14 @@ describe("RefineryComplex", function ()
     		createMockUpperCaseRefinery(),
     	);
 
-    	const testData: TestData = { field: "test", count: 1 };
+    	const testData: TestData = {
+    		field: "test",
+    		count: 1, 
+    	};
     	const { mockUpperCase } = refineryComplex.refine(testData);
-    	const resultBefore = { ...testData };
+    	const resultBefore = {
+    		...testData, 
+    	};
     	mockUpperCase.makeUppercase();
 
     	// Ensuring the original testData is not modified by the refinery process
@@ -82,7 +90,10 @@ describe("RefineryComplex", function ()
     		createMockUpperCaseRefinery(),
     	);
 
-    	const testData: TestData = { field: "", count: 0 };
+    	const testData: TestData = {
+    		field: "",
+    		count: 0, 
+    	};
     	const { mockUpperCase } = refineryComplex.refine(testData);
     	const result = mockUpperCase.makeUppercase();
 
@@ -96,7 +107,10 @@ describe("RefineryComplex", function ()
     		createMockIncrementCountRefinery(),
     	);
 
-    	const testData: TestData = { field: "sequence", count: 0 };
+    	const testData: TestData = {
+    		field: "sequence",
+    		count: 0, 
+    	};
     	const { mockIncrementCount, mockUpperCase } = refineryComplex.refine(testData);
     	const resultAfterUppercase = mockUpperCase.makeUppercase();
     	const resultAfterIncrement = mockIncrementCount.incrementCount();
@@ -113,8 +127,13 @@ describe("RefineryComplex", function ()
     		createMockIncrementCountRefinery(),
     	);
 
-    	const testData: TestData = { field: "immutable", count: 1 };
-    	const originalTestData = { ...testData };
+    	const testData: TestData = {
+    		field: "immutable",
+    		count: 1, 
+    	};
+    	const originalTestData = {
+    		...testData, 
+    	};
     	const funcs = refineryComplex.refine(testData);
     	const { mockIncrementCount, mockUpperCase } = funcs;
     	mockUpperCase.makeUppercase();
