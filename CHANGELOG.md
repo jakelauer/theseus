@@ -1,3 +1,17 @@
+# [9.0.0](https://github.com/jakelauer/theseus-js/compare/v8.0.1...v9.0.0) (2024-06-25)
+
+
+### Bug Fixes
+
+* **mutators:** disable nested mutators ([96d9ace](https://github.com/jakelauer/theseus-js/commit/96d9acec54b324c3371101623b65e00f7ca94a73))
+* **mutators:** disable nested mutators ([#25](https://github.com/jakelauer/theseus-js/issues/25)) ([44b7822](https://github.com/jakelauer/theseus-js/commit/44b782246a3134d5c8bd46238addfbe52901b8f8))
+* **types:** remove nestable mutators from TS types ([b690a20](https://github.com/jakelauer/theseus-js/commit/b690a20650d3e96b22f74048b7b799e0e6a548ee))
+
+
+### BREAKING CHANGES
+
+* **mutators:** Cannot nest mutators or forges
+
 ## [8.0.1](https://github.com/jakelauer/theseus-js/compare/v8.0.0...v8.0.1) (2024-06-24)
 
 
