@@ -1,3 +1,11 @@
+## [9.0.1](https://github.com/jakelauer/theseus-js/compare/v9.0.0...v9.0.1) (2024-06-25)
+
+
+### Bug Fixes
+
+* **eslint:** version bump ([d0c4ff0](https://github.com/jakelauer/theseus-js/commit/d0c4ff045e4bcc2979bb838532ba514473481dda))
+* **eslint:** version bump ([#26](https://github.com/jakelauer/theseus-js/issues/26)) ([24c88c0](https://github.com/jakelauer/theseus-js/commit/24c88c0fe530c3eb417c312a2a143056f4418d84))
+
 # [9.0.0](https://github.com/jakelauer/theseus-js/compare/v8.0.1...v9.0.0) (2024-06-25)
 
 
