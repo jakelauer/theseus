@@ -7,7 +7,9 @@ describe("MutatorSetBuilder", function ()
     type TestData = { testProp: number };
     const paramNoun = "testProp";
 
-    let initialData: TestData = { testProp: 42 };
+    let initialData: TestData = {
+    	testProp: 42, 
+    };
     const makeBuilder = () =>
     	MutatorSetBuilder.create(initialData, paramNoun, {
     		increase: ({ testProp }, amount: number) => 
@@ -20,7 +22,9 @@ describe("MutatorSetBuilder", function ()
 
     beforeEach(function () 
     {
-    	initialData = { testProp: 42 };
+    	initialData = {
+    		testProp: 42, 
+    	};
     	builder = makeBuilder();
     });
 
@@ -28,13 +32,17 @@ describe("MutatorSetBuilder", function ()
     {
     	expect(builder)
     		.to.have.property("data")
-    		.that.deep.includes({ [paramNoun]: initialData });
+    		.that.deep.includes({
+    			[paramNoun]: initialData, 
+    		});
     });
 
     it("inputToObject transforms input data into structured format", function () 
     {
     	const structuredData = (builder as any)["inputToObject"](initialData);
-    	expect(structuredData).to.deep.equal({ [paramNoun]: initialData });
+    	expect(structuredData).to.deep.equal({
+    		[paramNoun]: initialData, 
+    	});
     });
 
     it("create method returns a new instance of MutatorSetBuilder", function () 
@@ -42,7 +50,9 @@ describe("MutatorSetBuilder", function ()
     	expect(builder).to.be.instanceOf(MutatorSetBuilder);
     	expect(builder)
     		.to.have.property("data")
-    		.that.deep.includes({ [paramNoun]: initialData });
+    		.that.deep.includes({
+    			[paramNoun]: initialData, 
+    		});
     });
 
     it("create method returns a new instance with mutators applied", function () 
@@ -56,6 +66,8 @@ describe("MutatorSetBuilder", function ()
     	// This will invoke the 'increase' function directly on the builder, demonstrating 
     	// its presence and functionality
     	const result = builder.increase(10);
-    	expect(result).to.deep.equal({ testProp: 52 });
+    	expect(result).to.deep.equal({
+    		testProp: 52, 
+    	});
     });
 });

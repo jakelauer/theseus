@@ -18,7 +18,10 @@ describe("proxyGet", function()
 		};
 
 		// Create stubs for the external functions
-		const extractStub = sinon.stub().returns({ verificationValue, propertyName: "propName" });
+		const extractStub = sinon.stub().returns({
+			verificationValue,
+			propertyName: "propName", 
+		});
 		const assertStub = sinon.stub().returns(true);
 
 		// Replace the actual functions with the stubs
@@ -51,7 +54,9 @@ describe("proxyGet", function()
 
 	it("should return the target property for other properties", function() 
 	{
-		const target = { key: "value" };
+		const target = {
+			key: "value", 
+		};
 		const prop = "key";
 		const result = proxyGet(target, prop, {
 			guid: "123",

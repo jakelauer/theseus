@@ -21,18 +21,8 @@ export type ForgeDict<TDict extends Record<string, () => any>> = {
  * @template TParamNoun The name of the parameter representing the data
  */
 export type ForgeDefs<TData extends object, TParamNoun extends string> = {
-    [key: string]: ForgeDefChild<TData, TParamNoun>;
+    [key: string]: Forge<TData, TParamNoun>;
 };
-
-/**
- * Represents either a single forge function or a nested collection of forge definitions.
- *
- * @template TData The type of data being refined.
- * @template TParamNoun The name of the parameter representing the data
- */
-export type ForgeDefChild<TData extends object, TParamNoun extends string> =
-    | Forge<TData, TParamNoun>
-    | ForgeDefs<TData, TParamNoun>;
 
 /**
  * Exposes forge functions from a set to be used in data refinement processes. This type dynamically creates a

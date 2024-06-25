@@ -66,7 +66,9 @@ export default <TData extends object>(data: TData) => ({
 		params: TheseusParams<TData, TParamNoun, TMutators, TEvolvers, TForges, TRefineries, TObserverType>,
 	) => 
 	{
-		const { evolvers, refineries, ...rest } = params;
+		const {
+			evolvers, refineries, ...rest 
+		} = params;
 		const theseusInstance = Theseus.__private_create<TData, TObserverType>(data, rest);
 
         type ParamsAbbrev = TheseusParams<
@@ -130,7 +132,10 @@ export default <TData extends object>(data: TData) => ({
                     	:   RefineryComplex.create<TData>().withRefineries(...refineries);
 
         		extension = Object.defineProperties<BaseExtension>(
-                    { ...extension, refine: undefined } as any,
+                    {
+                    	...extension,
+                    	refine: undefined, 
+                    } as any,
                     {
                     	refine: {
                     		get: () => 

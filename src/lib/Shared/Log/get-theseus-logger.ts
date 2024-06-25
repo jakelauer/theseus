@@ -13,7 +13,9 @@ const rootLogger = winston.createLogger({
 });
 
 export type TheseusLogParams = Parameters<typeof winston.createLogger>[0];
-const buildLogger = (label: string) => rootLogger.child({ label });
+const buildLogger = (label: string) => rootLogger.child({
+	label, 
+});
 
 /**
  * Returns a logger with the given name.

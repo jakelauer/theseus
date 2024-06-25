@@ -4,7 +4,9 @@ import type { CoordsArray, GameState } from "../../state/GameState";
 
 const log = getTheseusLogger("SquaresRefinery");
 
-export const SquaresRefinery = Refinery.create("SquaresRefinery", { noun: "gameState" })
+export const SquaresRefinery = Refinery.create("SquaresRefinery", {
+	noun: "gameState", 
+})
 	.toRefine<GameState>()
 	.withForges({
 		getSquare: ({ gameState }, coords: [number, number]) => 

@@ -60,9 +60,9 @@ export type FinishChain<
     TParamNoun extends string,
     TMutators extends MutatorDefChild<TData, TParamNoun>,
     IsAsync extends AsyncTracker,
-> = IsAsync extends "async" 
+> = (IsAsync extends "async" 
 		? Record<"endAsync", () => Promise<TData>> 
-		: Record<"end", () => TData> &
+		: Record<"end", () => TData>) &
     Record<"lastly", ChainableMutators<TData, TParamNoun, TMutators, "final", IsAsync>>;
 
 type AsyncChainable<

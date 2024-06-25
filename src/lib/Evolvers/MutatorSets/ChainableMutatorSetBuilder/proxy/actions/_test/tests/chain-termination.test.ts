@@ -16,8 +16,15 @@ describe("ChainTerminationAction", function()
 			proxy: {} as any, 
 			proxyManager: { 
 				onChainEnd: () => {}, 
-				queue: { asyncEncountered: false, queue: [] } as any, 
-				params: { target: { result: "resultValue" } } as any, 
+				queue: {
+					asyncEncountered: false,
+					queue: [], 
+				} as any, 
+				params: {
+					target: {
+						result: "resultValue", 
+					}, 
+				} as any, 
 			} as any, 
 		} as any;
 	});
@@ -39,7 +46,10 @@ describe("ChainTerminationAction", function()
 	{
 		const proxyManager = {
 			onChainEnd: sinon.spy(),
-			queue: { asyncEncountered: false, queue: [] },
+			queue: {
+				asyncEncountered: false,
+				queue: [], 
+			},
 			params: { 
 				target: {
 					 end: () => "resultValue", 

@@ -1,4 +1,5 @@
 import { getTheseusLogger } from "../../../../Shared";
+import type { ChainableMutatorQueue } from "../ChainableMutatorQueue";
 import { ChainHelperAction } from "./actions/chain-helper";
 import { ChainTerminationAction } from "./actions/chain-termination";
 import { FunctionAction } from "./actions/function";
@@ -17,7 +18,8 @@ export interface ProxyActionMapParameters
 	target: any, 
 	prop: string, 
 	proxyManager: ChainingProxyManager<any>,
-	proxy: ChainingProxyManager<any>
+	proxy: ChainingProxyManager<any>,
+	queue: ChainableMutatorQueue<any, any>
 }
 
 export class ProxyActionMap
@@ -48,7 +50,7 @@ export class ProxyActionMap
 
 	public static process(params: ProxyActionMapParameters, requestType: ProxyActionType)
 	{
-		const { prop, proxy } = params;
+		const { prop } = params;
 		let toReturn: any = undefined; // Initial value is undefined to indicate "not set"
 
 		this.actions.forEach((action) => 
@@ -72,7 +74,7 @@ export class ProxyActionMap
 		// If after checking all bits toReturn is still undefined, it means no valid action was matched.
 		if (typeof toReturn === "undefined") 
 		{
-			log.trace(`Property or action "${prop}" not found in target or not supported`, { prop, proxy });
+			log.trace(`Property or action "${prop}" not found in target or not supported`);
 			throw new Error(`Property or action "${prop}" not found in target or not supported`);
 		}
 

@@ -15,7 +15,9 @@ const log = getTheseusLogger("OutcomeRefinery");
 /**
  * Refinery for checking the outcome of a game
  */
-export const OutcomeRefinery = Refinery.create("OutcomeRefinery", { noun: "gameState" })
+export const OutcomeRefinery = Refinery.create("OutcomeRefinery", {
+	noun: "gameState", 
+})
 	.toRefine<GameState>()
 	.withForges({
 		/**
@@ -67,11 +69,27 @@ export const OutcomeRefinery = Refinery.create("OutcomeRefinery", { noun: "gameS
 			const triples: Triple[] = [];
 			for (let i = 0; i < 3; i++) 
 			{
-				triples.push({ type: "row", from: [i, 0], to: [i, 2] });
-				triples.push({ type: "column", from: [0, i], to: [2, i] });
+				triples.push({
+					type: "row",
+					from: [i, 0],
+					to: [i, 2], 
+				});
+				triples.push({
+					type: "column",
+					from: [0, i],
+					to: [2, i], 
+				});
 			}
-			triples.push({ type: "diagonalLR", from: [0, 0], to: [2, 2] });
-			triples.push({ type: "diagonalRL", from: [0, 2], to: [2, 0] });
+			triples.push({
+				type: "diagonalLR",
+				from: [0, 0],
+				to: [2, 2], 
+			});
+			triples.push({
+				type: "diagonalRL",
+				from: [0, 2],
+				to: [2, 0], 
+			});
 			for (const triple of triples) 
 			{
 				const winner= OutcomeRefinery.refine(gameState).checkTriple(triple);

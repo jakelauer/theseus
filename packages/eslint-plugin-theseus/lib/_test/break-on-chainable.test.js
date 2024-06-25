@@ -5,7 +5,10 @@ const rule = require("../rules/break-on-chainable");
 
 // Use the appropriate parser if dealing with specific ECMAScript versions or TypeScript
 const ruleTester = new RuleTester({
-	parserOptions: { ecmaVersion: 2020, sourceType: "module" },
+	parserOptions: {
+		ecmaVersion: 2020,
+		sourceType: "module", 
+	},
 });
 
 ruleTester.run("break-on-chainable", rule, {
@@ -32,32 +35,48 @@ ruleTester.run("break-on-chainable", rule, {
 		{
 			code: "obj.via.thing().and.anotherThing().lastly.thing();",
 			errors: [
-				{ message: "Expected line break before `.and`." },
-				{ message: "Expected line break before `.lastly`." },
+				{
+					message: "Expected line break before `.and`.", 
+				},
+				{
+					message: "Expected line break before `.lastly`.", 
+				},
 			],
 			output: "obj.via.thing()\n.and.anotherThing()\n.lastly.thing();",
 		},
 		{
 			code: "obj.via.thing().and.thing().end();",
 			errors: [
-				{ message: "Expected line break before `.and`." },
-				{ message: "Expected line break before `.end`." },
+				{
+					message: "Expected line break before `.and`.", 
+				},
+				{
+					message: "Expected line break before `.end`.", 
+				},
 			],
 			output: "obj.via.thing()\n.and.thing()\n.end();",
 		},
 		{
 			code: "obj.via.thing().and.thing().endAsync();",
 			errors: [
-				{ message: "Expected line break before `.and`." },
-				{ message: "Expected line break before `.endAsync`." },
+				{
+					message: "Expected line break before `.and`.", 
+				},
+				{
+					message: "Expected line break before `.endAsync`.", 
+				},
 			],
 			output: "obj.via.thing()\n.and.thing()\n.endAsync();",
 		},
 		{
 			code: "GameMeta.evolve.iterateTurnCount().and.updateLastPlayer(mark).and.updateLastPlayedCoords(coords);",
 			errors: [
-				{ message: "Expected line break before `.and`." },
-				{ message: "Expected line break before `.and`." },
+				{
+					message: "Expected line break before `.and`.", 
+				},
+				{
+					message: "Expected line break before `.and`.", 
+				},
 			],
 			output: "GameMeta.evolve.iterateTurnCount()\n.and.updateLastPlayer(mark)\n.and.updateLastPlayedCoords(coords);",
 		},

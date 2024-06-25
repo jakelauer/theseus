@@ -77,7 +77,9 @@ export class ForgeSet<
      */
 	protected inputToObject<TData, TParamNoun extends string>(input: TData): { [key in TParamNoun]: TData } 
 	{
-		return { [this.paramNoun]: input } as {
+		return {
+			[this.paramNoun]: input, 
+		} as {
             [key in TParamNoun]: TData;
         };
 	}

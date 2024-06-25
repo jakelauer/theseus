@@ -10,7 +10,12 @@ describe("ChainHelperAction", function()
 	beforeEach(function() 
 	{
 		chainHelperAction = new ChainHelperAction();
-		params = { prop: "and", proxy: {} as any, proxyManager: null as any, target: null };
+		params = {
+			prop: "and",
+			proxy: {} as any,
+			proxyManager: null as any,
+			target: null, 
+		};
 	});
 
 	it("should return true for matched properties in runTest", function() 
@@ -28,7 +33,9 @@ describe("ChainHelperAction", function()
 
 	it("should return the proxy in process method", function() 
 	{
-		const proxy = { test: "proxy" };
+		const proxy = {
+			test: "proxy", 
+		};
 		params.proxy = proxy as any;
 		expect(chainHelperAction.process(params)).to.equal(proxy);
 	});

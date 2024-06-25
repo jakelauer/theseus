@@ -6,7 +6,9 @@ describe("getSandboxChanges", function()
 {
 	it("should return changes when input is a sandbox proxy", function() 
 	{
-		const changes = { some: "changes" };
+		const changes = {
+			some: "changes", 
+		};
 		const sandboxProxy = {
 			[CONSTANTS.SANDBOX_SYMBOL]: {
 				changes,

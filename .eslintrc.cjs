@@ -30,13 +30,20 @@ module.exports = {
 			}
 		  }
 	},
-    plugins: ["unused-imports"],  
+    plugins: ["unused-imports", "@stylistic"],  
     rules: {  
 		"indent": ["error", "tab", { "SwitchCase": 1 }],
         quotes: [2, "double", { avoidEscape: true }],  
         "unused-imports/no-unused-imports": "error",  
         "no-async-promise-executor": "off",  
-        "mocha/no-setup-in-describe": "off",  
+        "mocha/no-setup-in-describe": "off",
+		"@stylistic/object-property-newline": ["error"],
+		"@stylistic/object-curly-newline": ["error", {
+			"ObjectExpression": { "multiline": true, "minProperties": 1 },
+			"ObjectPattern": { "multiline": true, "minProperties": 3 },
+			"ImportDeclaration": { "multiline": true, "minProperties": 3 },
+			"ExportDeclaration": { "multiline": true, "minProperties": 2 }
+		}],
         "@typescript-eslint/no-floating-promises": ["error"],  
         "@typescript-eslint/no-explicit-any": "off",  
         "@typescript-eslint/consistent-type-imports": "error",  

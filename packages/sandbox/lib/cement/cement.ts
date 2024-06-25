@@ -21,9 +21,7 @@ export function cement<T extends object>(obj: T): T
 		const {
 			original,
 			changes,
-			params: {
-				mode,
-			},
+			params: { mode },
 		} = obj[CONSTANTS.SANDBOX_SYMBOL];
 
 		const toModify = getModifiableObject(original, mode);
@@ -64,7 +62,9 @@ function getModifiableObject<T extends object>(obj: T, mode: SandboxMode): T
 		// if the object is a frost proxy, clone it and frost it, otherwise structured clone it
 		result = isFrostProxy(obj) 
 			? frostClone(obj) 
-			: structuredClone(obj, { lossy: false });
+			: structuredClone(obj, {
+				lossy: false, 
+			});
 	}
 
 	return result;

@@ -9,7 +9,9 @@ import TheseusBuilder from "./TheseusBuilder";
 import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 import type { DestroyCallback } from "./lib/Broadcast/Broadcaster";
 import type { BaseParams, ITheseus } from "@Types/Theseus";
-import { cement, frost, sandbox } from "theseus-sandbox";
+import {
+	cement, frost, sandbox, 
+} from "theseus-sandbox";
 
 const log = getTheseusLogger("Observation");
 
@@ -61,7 +63,9 @@ export class Theseus<
 
 	private setData = (data: TData) => 
 	{
-		this.internalState = sandbox(frost(data), { mode: "copy" });
+		this.internalState = sandbox(frost(data), {
+			mode: "copy", 
+		});
 	};
 
 	/**

@@ -7,8 +7,14 @@ describe("reject", function()
 {
 	it("should return the original object if it is a sandbox proxy", function() 
 	{
-		const original = { key: "value" };
-		const proxy = { [CONSTANTS.SANDBOX_SYMBOL]: { original } };
+		const original = {
+			key: "value", 
+		};
+		const proxy = {
+			[CONSTANTS.SANDBOX_SYMBOL]: {
+				original, 
+			}, 
+		};
     
 		// Mock the isSandboxProxy function to return true
 		isSandboxProxy(proxy);
@@ -17,7 +23,9 @@ describe("reject", function()
 
 	it("should return the object itself if it is not a sandbox proxy", function() 
 	{
-		const obj = { key: "value" };
+		const obj = {
+			key: "value", 
+		};
 		// Mock the isSandboxProxy function to return false
 		isSandboxProxy(obj);
 		expect(reject(obj)).to.equal(obj);

@@ -48,7 +48,9 @@ describe("ChainableMutatorSet", function ()
 
 	beforeEach(function () 
 	{
-		testData = { value: 0 };
+		testData = {
+			value: 0, 
+		};
 		chainableMutatorSet = buildChainableMutatorSet(testData);
 	});
 
@@ -136,7 +138,9 @@ describe("ChainableMutatorSet", function ()
 
 	it("should allow multiple chains to execute in parallel without interference", async function () 
 	{
-		const anotherTestData = { value: 10 };
+		const anotherTestData = {
+			value: 10, 
+		};
 		const anotherChain = buildChainableMutatorSet(anotherTestData);
 
 		const results = await Promise.all([
