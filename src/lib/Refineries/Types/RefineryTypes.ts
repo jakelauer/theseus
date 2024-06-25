@@ -35,7 +35,7 @@ export type ForgeDefs<TData extends object, TParamNoun extends string> = {
 export type ExposeForges<
     TData extends object,
     TParamNoun extends string,
-    TForges extends ForgeDefChild<TData, TParamNoun>,
+    TForges extends ForgeDefs<TData, TParamNoun>,
 > = {
     // Iterate over each key in TMutators to create a chainable method
     [K in keyof TForges]: TForges[K] extends (...args: any) => any ?
@@ -43,7 +43,7 @@ export type ExposeForges<
             // Return another function which creates the chain
             (...args: Parameters<TForges[K]>) => ReturnType<TForges[K]>
         >
-    : TForges[K] extends ForgeDefChild<TData, TParamNoun> ? ExposeForges<TData, TParamNoun, TForges[K]>
+    : TForges[K] extends ForgeDefs<TData, TParamNoun> ? ExposeForges<TData, TParamNoun, TForges[K]>
     : never;
 };
 

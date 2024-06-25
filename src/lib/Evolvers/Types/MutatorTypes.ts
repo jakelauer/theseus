@@ -28,7 +28,7 @@ export type ParamNameData<TData extends object, TParamNoun extends string> = {
 
 /** Represents a collection of definitions for mutators applicable to a piece of evolver data. */
 export type MutatorDefs<TData extends object, TParamNoun extends string> = {
-    [key: string]: Mutator<TData, TParamNoun, SortaPromise<TData>>;
+    [key: string]: Mutator<TData, TParamNoun, SortaPromise<TData>>
 };
 
 /**

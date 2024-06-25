@@ -1,7 +1,4 @@
 import getTheseusLogger from "@Shared/Log/get-theseus-logger";
-
-
-
 import type { EvolverInstance } from "./Types/EvolverTypes";
 import type { MutatorDefs } from "./Types/MutatorTypes";
 import type { MacroMutatorsFormatted, MutatorsFormatted } from "@Evolvers/Types/EvolverComplexTypes";
@@ -32,7 +29,7 @@ export const generateEvolveMethods = <
 
 			return acc;
 		},
-        {} as MutatorsFormatted<TData, TParamNoun, TEvolvers>,
+        {} as TIsMacro extends true ? MacroMutatorsFormatted<TData, TParamNoun, TEvolvers> : MutatorsFormatted<TData, TParamNoun, TEvolvers>,
 	);
 
 	return result;
@@ -76,15 +73,19 @@ const mutate = <
 
 export const create = <TData extends object>() => ({
 	withEvolvers: <
-        TEvolvers extends EvolverInstance<TData, string,  TParamNoun, any>[],
+    	TMutators extends MutatorDefs<TData, TParamNoun>,
+        TEvolvers extends EvolverInstance<TData, string,  TParamNoun, TMutators>[],
         TParamNoun extends string,
     >(
 		...evolvers: TEvolvers
-	) => 
+	): EvolverComplexInstance<TData, TParamNoun, TMutators, TEvolvers> => 
 	{
 		log.verbose("Creating evolver complex with evolvers:", {
 			evolvers: Object.keys(evolvers),
 		});
+
+		const mutation = (input: TData) => mutate<TData, TEvolvers, TMutators, TParamNoun>(input).withEvolvers(evolvers);
+		const evolution = (input: TData) => evolve<TData, TEvolvers, TMutators, TParamNoun>(input).withEvolvers(evolvers);
 
 		return {
 		    __evolvers__: evolvers,
@@ -96,7 +97,7 @@ export const create = <TData extends object>() => ({
              *     const { BoxScore } = BaseballEvolverComplex.mutate(myData);
              *     const result = BoxScore.setRuns(5);
              */
-		    mutate: (input: TData) => mutate(input).withEvolvers(evolvers),
+		    mutate: mutation,
 		    /**
              * Performs multiple mutations on the given input, chained together. The final result is available
              * via the `finish` method, or by preceding the final chained call with `.lastly`.
@@ -107,16 +108,16 @@ export const create = <TData extends object>() => ({
              *     const result = BoxScore.setRuns(5).and.setHits(10).and.setErrors(0).finish(); // option 1
              *     const result = BoxScore.setRuns(5).and.setHits(10).and.lastly.setErrors(0); // option 2
              */
-		    evolve: (input: TData) => evolve(input).withEvolvers(evolvers),
+		    evolve: evolution,
 		    use: (input: TData) => ({
-		        mutate: mutate(input).withEvolvers(evolvers),
-		        evolve: evolve(input).withEvolvers(evolvers),
+		        mutate: mutation(input),
+		        evolve: evolution(input),
 		    }),
 			addTheseusId: (theseusId: string) => 
 			{
 				evolvers.forEach((evolver) => evolver.__setTheseusId(theseusId));
 			},
-		} as EvolverComplexInstance<TData, TParamNoun, any, TEvolvers>;
+		};
 	},
 });
 

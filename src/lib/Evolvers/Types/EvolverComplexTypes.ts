@@ -1,5 +1,5 @@
 import type {
-	EvolveObject, EvolverInstance, MutateObject, 
+	EvolveObject, EvolverInstance, MutateObject,
 } from "@Evolvers/Types/EvolverTypes";
 
 // Determines the mutators for a given evolver by returning the types of mutators available for the evolver's data.
