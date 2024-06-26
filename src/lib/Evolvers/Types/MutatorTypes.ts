@@ -28,8 +28,16 @@ export type ParamNameData<TData extends object, TParamNoun extends string> = {
 
 /** Represents a collection of definitions for mutators applicable to a piece of evolver data. */
 export type MutatorDefs<TData extends object, TParamNoun extends string> = {
-    [key: string]: Mutator<TData, TParamNoun, SortaPromise<TData>>
+    [key: string]: MutatorDefChild<TData, TParamNoun>;
 };
+
+/**
+ * A union type that can represent either a single mutator function or a nested collection of mutator
+ * definitions. This allows for the recursive definition of mutators, supporting complex, nested mutations.
+ */
+export type MutatorDefChild<TData extends object, TParamNoun extends string> =
+    | Mutator<TData, TParamNoun, SortaPromise<TData>>
+    | MutatorDefs<TData, TParamNoun>;
 
 /**
  * Constructs a dictionary type from a set of mutator definitions, converting each mutator function into a
@@ -42,6 +50,5 @@ export type MutatorDict<
 > = {
     [K in keyof TDict]: TDict[K] extends (...args: any) => any ?
         FuncMinusFirstArg<TDict[K], SortaPromise<TData>>
-    : TDict[K] extends MutatorDefs<TData, TParamNoun> ? MutatorDict<TData, TParamNoun, TDict[K]>
     : never;
 };

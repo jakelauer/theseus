@@ -23,7 +23,7 @@ export const TurnEvolver = Evolver.create("TurnEvolver", {
 		/**
 		 * Take the next turn at a random available square.
 		 */
-		nextTurn: ({ gameState }): GameState => 
+		nextTurn: async ({ gameState }): Promise<GameState> => 
 		{
 			const { turns, lastPlayer } = gameState;
 			log.major(`Taking turn #${turns}`);

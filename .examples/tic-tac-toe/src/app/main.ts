@@ -4,4 +4,4 @@ import observeGameUpdates from "./observe-game-updates";
 
 observeGameUpdates();
 
-GameShip.mutate.Turn.nextTurn();
+GameShip.mutate.Turn.nextTurn().catch(console.error);

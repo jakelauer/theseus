@@ -1,6 +1,6 @@
 {
     "compileOnSave": true,
-    "include": ["./src/**/*", "./register.js"],
+    "include": ["./src/**/*.*"],
     "compilerOptions": {
         "rootDir": "./src",
         "baseUrl": "./src",

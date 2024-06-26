@@ -99,9 +99,15 @@ export type ForceReadonlyReturnType<TOutput> =
 
 // Utility type to remove a specified word from the start or end of a string type,
 // supporting both capitalized and non-capitalized forms.
-export type RemoveWordFromTypeStr<T extends string, Word extends string> =
+export type RemoveWord<T extends string, Word extends string> =
     T extends `${Word}${infer Rest}` ? Rest
     : T extends `${Capitalize<Word>}${infer Rest}` ? Rest
     : T extends `${infer Rest}${Word}` ? Rest
     : T extends `${infer Rest}${Capitalize<Word>}` ? Rest
     : T;
+
+export type RemoveWordAndValidate<T extends string, Word extends string> = RemoveWord<T, Word> extends "" 
+	? T 
+	: RemoveWord<T, Word> extends `${number}`
+		? T
+		: RemoveWord<T, Word>;
