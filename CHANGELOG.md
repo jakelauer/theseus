@@ -1,3 +1,10 @@
+## [10.0.1](https://github.com/jakelauer/theseus-js/compare/v10.0.0...v10.0.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* **logs:** reduce logging ([f83dd7a](https://github.com/jakelauer/theseus-js/commit/f83dd7a876996f0d2e40581170e934889fca5393))
+
 # [10.0.0](https://github.com/jakelauer/theseus-js/compare/v9.0.1...v10.0.0) (2024-06-26)
 
 
