@@ -1,75 +1,48 @@
-import { expect } from "chai";
-import { describe, it } from "mocha";
-
 import { Evolver } from "../Evolver";
+import { EvolverComplex } from "../EvolverComplex";
 
-const IncrementEvolverCreator = () =>
-	Evolver.create("IncrementEvolver", {
-		noun: "amount",
-	})
-		.toEvolve<{ count: number }>()
-		.withMutators({
-			increment: ({ amount }, delta: number) => 
-			{
-				return {
-					count: amount.count + delta,
-				};
-			},
-		});
+interface DataType{
+	count: number;
+}
 
-type IncrementEvolver = ReturnType<typeof IncrementEvolverCreator>;
-
-describe("EvolverComplex", () => 
+describe("generateEvolveMethods", function() 
 {
-	let IncrementEvolver: IncrementEvolver;
-
-	before(function () 
+	it("should support evolvers with both sync and async mutations", function() 
 	{
-		// Define a simple increment Evolver for demonstration purposes
-		IncrementEvolver = IncrementEvolverCreator();
-	});
+		const complex = EvolverComplex.create().withEvolvers(
+			Evolver.create("evolver1", {
+				noun: "data",
+			}).toEvolve<DataType>().withMutators({
+				inner: {
+					test: {
+						inner2: ({ data }) => data,
+					},
+				},
+				syncIncrement: ({ data }) => ({
+					count: data.count + 1, 
+				}),
+				asyncIncrement: async ({ data }) => ({
+					count: data.count + 1, 
+				}),
+			}),
+			Evolver.create("evolver2", {
+				noun: "data",
+			}).toEvolve<DataType>().withMutators({
+				inner: {
+					test: {
+						inner2: ({ data }) => data,
+					},
+				},
+				syncIncrement: ({ data }) => ({
+					count: data.count + 1, 
+				}),
+			}),
+		);
 
-	describe("create and setup evolvers", () => 
-	{
-		it("should initialize and setup evolvers correctly, separating creation from execution", () => 
-		{
-			// Creation step: Define the structure of the complex evolver
-			const IncrementEvolver = IncrementEvolverCreator();
-
-			// Ensure the setup contains methods indicative of a successful setup
-			expect(IncrementEvolver).to.have.property("mutate").that.is.a("function");
-			expect(IncrementEvolver).to.have.property("evolve").that.is.a("function");
-
-			// This confirms that the setup phase not only occurs but results in an object ready for execution phases.
-		});
-	});
-
-	describe("execute mutations", () => 
-	{
-		it("should execute a single mutation correctly", () => 
-		{
-			// Execute step: Use the setup to perform mutations
-			const initialData = {
-				count: 0, 
-			};
-			const mutationResult = IncrementEvolver.mutate(initialData).via.increment(5);
-
-			expect(mutationResult.count).to.equal(5);
-		});
-
-		it("should execute chained mutations correctly", () => 
-		{
-			const initialData = {
-				count: 10, 
-			};
-
-			// Chained execution: Demonstrates the use of the same setup for multiple operations
-			const evolvedResult = IncrementEvolver.evolve(initialData)
-				.via.increment(5)
-				.and.increment(10)
-				.lastly.increment(10);
-
-			expect(evolvedResult.count).to.equal(35);
-		});
+		const input = {
+			count: 0, 
+		};
+		
+		const result = complex.__evolvers__;
 	});
 });

@@ -1,6 +1,6 @@
 import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 import type { EvolverComplexInstance } from "@Evolvers/EvolverComplex";
-import { EvolverComplex } from "@Evolvers/EvolverComplex";
+import { EvolverComplex, EvolversSymbol } from "@Evolvers/EvolverComplex";
 import { RefineryComplex } from "@Refineries/RefineryComplex";
 import { getTheseusLogger } from "@Shared/index";
 
@@ -104,7 +104,7 @@ export default <TData extends object>(data: TData) => ({
                 	:   EvolverComplex.create<TData>().withEvolvers(...evolvers);
 
         	// set theseus id for each evolver, so that we can track which theseus is being used
-        	Object.values(evolverComplex.__evolvers__).forEach(
+        	Object.values(evolverComplex[EvolversSymbol]).forEach(
         		(evolver: EvolverInstance<TData, string,  TParamNoun, TMutators>) =>
         			evolver.__setTheseusId(innerInstance.__uuid),
         	);

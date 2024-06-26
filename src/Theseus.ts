@@ -1,4 +1,3 @@
-import deepExtend from "deep-extend";
 import { v4 as uuidv4 } from "uuid";
 
 import { getTheseusLogger } from "@Shared/index";
@@ -75,7 +74,7 @@ export class Theseus<
      */
 	private async update(data: TData) 
 	{
-		deepExtend(this.internalState, data);
+		Object.assign(this.internalState, data);
 		const newState = cement(this.internalState);
 
 		this.setData(newState);

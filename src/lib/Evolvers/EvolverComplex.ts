@@ -71,6 +71,8 @@ const mutate = <
 	};
 };
 
+export const EvolversSymbol = Symbol("Evolvers");
+
 export const create = <TData extends object>() => ({
 	withEvolvers: <
     	TMutators extends MutatorDefs<TData, TParamNoun>,
@@ -88,7 +90,7 @@ export const create = <TData extends object>() => ({
 		const evolution = (input: TData) => evolve<TData, TEvolvers, TMutators, TParamNoun>(input).withEvolvers(evolvers);
 
 		return {
-		    __evolvers__: evolvers,
+		    [EvolversSymbol]: evolvers,
 		    /**
              * Performs a single mutation on the given input, and returns the resulting transformed data.
              *
@@ -134,7 +136,7 @@ export type EvolverComplexInstance<
     TMutators extends MutatorDefs<TData, TParamNoun>,
     TEvolvers extends EvolverInstance<TData, string,  TParamNoun, TMutators>[],
 > = {
-    __evolvers__: TEvolvers;
+    [EvolversSymbol]: TEvolvers;
     mutate: (data: TData) => MutatorsFormatted<TData, TParamNoun, TEvolvers>;
     evolve: (data: TData) => MacroMutatorsFormatted<TData, TParamNoun, TEvolvers>;
     use: (data: TData) => {

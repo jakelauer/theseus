@@ -59,7 +59,7 @@
             "request": "launch",
             "name": "Run tic-tac-toe",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["example:ttt"],//, "--grep", "\"should process synchronous mutators in sequence\""],
+            "runtimeArgs": ["--prefix", ".examples/tic-tac-toe", "start-raw"],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"

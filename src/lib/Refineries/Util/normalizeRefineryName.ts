@@ -1,6 +1,6 @@
-import type { RemoveWordFromTypeStr } from "@Types/Modifiers";
+import type { RemoveWordAndValidate } from "@Types/Modifiers";
 
-export type NormalizedRefineryName<T extends string> = RemoveWordFromTypeStr<T, "refinery">;
+export type NormalizedRefineryName<T extends string> = RemoveWordAndValidate<T, "refinery">;
 export const normalizeRefineryName = <T extends string>(name: T): NormalizedRefineryName<T> => 
 {
 	// Regular expression to match 'refinery' or 'Refinery' at the start and/or end of the string

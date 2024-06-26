@@ -9,5 +9,5 @@
     "bracketSpacing": true,
     "bracketSameLine": false,
     "proseWrap": "always",
-    "experimentalTernaries": false
+    "experimentalTernaries": true
 }

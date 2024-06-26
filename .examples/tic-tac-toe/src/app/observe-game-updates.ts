@@ -7,10 +7,8 @@ const log = getTheseusLogger("Observe");
 
 export default function()
 {
-	GameShip.observe((state) => 
-	{
-		onGameUpdated();
-			
+	GameShip.observe(async (state) => 
+	{		
 		switch (state.winner) 
 		{
 			case "stalemate":
@@ -22,7 +20,7 @@ export default function()
 				break;
 			default:
 				log.major("Move detected! Taking next turn...");
-				GameShip.mutate.Turn.nextTurn();
+				await onGameUpdated();
 				break;
 		}
 	}, false);

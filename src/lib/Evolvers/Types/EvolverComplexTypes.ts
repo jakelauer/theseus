@@ -72,6 +72,7 @@ export type MacroMutatorsFormatted<
     TParamNoun extends string,
     TEvolvers extends EvolverInstance<TData, string,  TParamNoun, any>[],
 > = MacroMutatorsRemapped<TData, TParamNoun, TEvolvers>;
+
 export type MutatorsFormatted<
     TData extends object,
     TParamNoun extends string,
