@@ -58,7 +58,7 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 			this.setChainTerminated(false);
 		}
 
-		this.log.debug(`Returning ${isAsync ? "async" : "sync"} result of queued operations`, execResult);
+		this.log.debug(`Returning ${isAsync ? "async" : "sync"} result of queued operations`);
 		
 		return execResult;
 	}

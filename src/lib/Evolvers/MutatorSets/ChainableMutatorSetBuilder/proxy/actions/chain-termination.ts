@@ -42,9 +42,7 @@ export class ChainTerminationAction extends ProxyActions
 
 		const asyncLabel = proxyManager.queue.asyncEncountered ? "🕐ASYNC" : "";
 
-		log.verbose(`[${prop}${asyncLabel}] processed`, {
-			toReturn,
-		});
+		log.verbose(`[${prop}${asyncLabel}] processed`);
 
 		return toReturn;
 	}

@@ -163,11 +163,11 @@ export default <TData extends object>(data: TData) => ({
 
         const extension = addEvolversAndRefineries(theseusInstance, evolvers, refineries);
 
-        log.verbose(`Built extension for Theseus instance ${theseusInstance.__uuid}`, extension);
+        log.verbose(`Built extension for Theseus instance ${theseusInstance.__uuid}`);
 
         const theseusExtended = extendTheseusWith<ITheseus<TData>, Extension>(theseusInstance, extension);
 
-        log.verbose(`Theseus instance ${theseusInstance.__uuid} is ready`, theseusExtended);
+        log.verbose(`Theseus instance ${theseusInstance.__uuid} is ready`);
 
         return theseusExtended;
 	},

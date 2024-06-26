@@ -80,7 +80,7 @@ export class ChainableMutatorQueue<
 		return mutatorResult.then((result) => 
 		{
 			this.assertObjectResult(selfPath, result);
-			log.verbose(`{ASYNC} ${selfPath}`, result);
+			log.verbose(`{ASYNC} ${selfPath}`);
 			return result;
 		});
 	}
@@ -92,7 +92,7 @@ export class ChainableMutatorQueue<
 		);
 
 		this.assertObjectResult(selfPath, mutatorResult);
-		log.verbose(`{SYNC} ${selfPath} = `, mutatorResult);
+		log.verbose(`{SYNC} ${selfPath} = `);
 		return mutatorResult;
 	}
 

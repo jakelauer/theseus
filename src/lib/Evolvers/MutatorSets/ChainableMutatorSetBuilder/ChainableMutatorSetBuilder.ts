@@ -71,7 +71,7 @@ export class ChainableMutatorSetBuilder<
 	 */
 	public getChanges(): Partial<TData>
 	{
-		log.verbose("Getting changes for instance", this.data[this.paramNoun]);
+		log.verbose("Getting changes for instance");
 		return getSandboxChanges(this.data[this.paramNoun]);
 	}
 

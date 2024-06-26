@@ -42,8 +42,6 @@ export class MutatorAction extends ProxyActions
 						void Theseus.updateInstance(proxyManager.params.observationId, cementedResult);
 					}
 
-					//this.log.verbose(`.lastly mode active, returning result of queued operations after prop ${prop}`, execResult);
-
 					return proxyManager.finalizeAndReset(cementedResult);
 				};
 

@@ -39,9 +39,6 @@ const refine = <
 				},
             {} as RefineriesRemapped<TData, TParamNoun, TForges, TRefineries>,
 			);
-			log.verbose("Reduced refineries to", {
-				result,
-			});
 
 			return result;
 		},
