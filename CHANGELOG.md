@@ -1,3 +1,16 @@
+# [10.0.0](https://github.com/jakelauer/theseus-js/compare/v9.0.1...v10.0.0) (2024-06-26)
+
+
+### Bug Fixes
+
+* **mutators:** handle nested mutators ([1a4dbca](https://github.com/jakelauer/theseus-js/commit/1a4dbca4860d8c7f3a34d854a83399571830ea85))
+* **mutators:** handle nested mutators ([#27](https://github.com/jakelauer/theseus-js/issues/27)) ([b089304](https://github.com/jakelauer/theseus-js/commit/b08930460613f9be9fa831cf9c82f0b01a4ffe0c))
+
+
+### BREAKING CHANGES
+
+* **mutators:** changes to interactions with mutators
+
 ## [9.0.1](https://github.com/jakelauer/theseus-js/compare/v9.0.0...v9.0.1) (2024-06-25)
 
 
