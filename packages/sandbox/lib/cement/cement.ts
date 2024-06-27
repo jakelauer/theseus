@@ -86,7 +86,6 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 
 	for (const key of allKeys) 
 	{
-		const oldValue = target[key];
 		const newValue = changes[key];
 
 		// If the key is not in the target object, add it
@@ -96,9 +95,9 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 			handleSet(target, key, newValue, targetIsFrost);
 		}
 		// If the value is a nested object, apply changes recursively
-		else if (isSandboxProxy(oldValue)) 
+		else if (isSandboxProxy(newValue)) 
 		{
-			const cemented = cement(oldValue);
+			const cemented = cement(newValue);
 			handleSet(target, key, cemented, targetIsFrost);
 		}
 		// If the value is a deletion symbol, delete the property

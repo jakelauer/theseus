@@ -6,6 +6,7 @@ import {
 import type { FrostProxy } from "./types";
 import type { SandboxProxy } from "../sandbox";
 import structuredClone from "@ungap/structured-clone";
+import isElligibleForSandbox from "../validity/is-elligible-for-sandbox";
 
 function createDeepFrostProxy<T extends object>(obj: T): T 
 {
@@ -14,7 +15,7 @@ function createDeepFrostProxy<T extends object>(obj: T): T
 	const proxy = new Proxy<T>(obj, {
 		get(target, prop) 
 		{
-			return proxyGet(target, prop, { 
+			return proxyGet(obj, target, prop, { 
 				guid, 
 				recursor: (value: any) => createDeepFrostProxy(value), 
 			});
@@ -49,6 +50,43 @@ export function frost<T extends object>(originalObject: T): Readonly<T>
 	}
 
 	return createDeepFrostProxy(originalObject);
+}
+
+function defrostLayer<T extends object>(obj: T): T 
+{
+	if (isFrostProxy(obj))
+	{
+		return obj[CONSTANTS.FROST.ORIGINAL_GETTER_SYMBOL];
+	}
+
+	console.warn("defrost called on non-frost object");
+
+	return obj;
+}
+
+export function defrost<T extends object>(obj: T): T 
+{
+	// Recursively defrost the object
+	// if (isFrostProxy(obj))
+	// {
+	// 	for (const key in obj)
+	// 	{
+	// 		obj[key] = defrost(obj[key]);
+	// 	}
+	// }
+
+	const root = defrostLayer(obj);
+	
+	for (const key in root)
+	{
+		const innerValue = root[key];
+		if (isElligibleForSandbox<object>(innerValue))
+		{
+			root[key] = defrost(innerValue);
+		}
+	}
+
+	return root;
 }
 
 export function frostClone<T extends object>(originalObject: T): Readonly<T> 

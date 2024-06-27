@@ -30,7 +30,7 @@ describe("proxyGet", function()
 		(global as any).extractVerificationPropValues = extractStub;
 		(global as any).assertValidVerificationProperty = assertStub;
 
-		const result = proxyGet(target, prop, {
+		const result = proxyGet({}, target, prop, {
 			guid: "123",
 			recursor: () => {},
 		});
@@ -45,7 +45,7 @@ describe("proxyGet", function()
 	{
 		const target = {};
 		const prop = CONSTANTS.FROST.IS_FROSTY;
-		const result = proxyGet(target, prop, {
+		const result = proxyGet({}, target, prop, {
 			guid: "123",
 			recursor: () => {},
 		});
@@ -58,7 +58,7 @@ describe("proxyGet", function()
 			key: "value", 
 		};
 		const prop = "key";
-		const result = proxyGet(target, prop, {
+		const result = proxyGet({}, target, prop, {
 			guid: "123",
 			recursor: () => {},
 		});

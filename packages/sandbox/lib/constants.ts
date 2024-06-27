@@ -5,6 +5,7 @@ const frostVerificationSymbol = Symbol(`${frostPrefix}verification`);
 const sandboxSymbol = Symbol(sandboxPrefix);
 const deletionSymbol = Symbol(`${frostPrefix}delete`);
 const setterSymbol = Symbol(`${frostPrefix}set`);
+const originalGetterSymbol = Symbol(`${frostPrefix}originalGetter`);
 
 interface SandboxConstants
 {
@@ -59,6 +60,10 @@ interface FrostConstants
 		 * The symbol used to indicate a deletion.
 		 */
 		DELETION_SYMBOL: typeof deletionSymbol;
+		/**
+		 * The symbol used to get the original object from a proxy.
+		 */
+		ORIGINAL_GETTER_SYMBOL: typeof originalGetterSymbol;
 	};
 }
 
@@ -76,6 +81,7 @@ export const CONSTANTS: Constants = {
 		REGEXP: new RegExp(frostVerificationRegexPattern),
 		SETTER_SYMBOL: setterSymbol,
 		DELETION_SYMBOL: deletionSymbol,
+		ORIGINAL_GETTER_SYMBOL: originalGetterSymbol,
 	}, 
 };
 

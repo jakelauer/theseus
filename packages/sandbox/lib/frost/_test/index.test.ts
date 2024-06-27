@@ -1,7 +1,30 @@
 import { expect } from "chai";
-import { frost } from "../frost";
+import {
+	defrost, frost, isFrostProxy, 
+} from "../frost";
 import { sandbox } from "../../sandbox/sandbox";
 import { cement } from "../../cement/cement";
+import { isSandboxProxy } from "../../sandbox";
+
+function expectAllLayersToBeFrostProxies(obj) 
+{
+	if (typeof obj !== "object" || obj === null) 
+	{
+		return;
+	}
+	expect(isFrostProxy(obj)).to.be.true;
+	Object.values(obj).forEach(expectAllLayersToBeFrostProxies);
+}
+
+function expectNoLayersToBeFrostProxies(obj) 
+{
+	if (typeof obj !== "object" || obj === null) 
+	{
+		return;
+	}
+	expect(isFrostProxy(obj)).to.be.false;
+	Object.values(obj).forEach(expectNoLayersToBeFrostProxies);
+}
 
 describe("frost", function() 
 {
@@ -112,6 +135,52 @@ describe("frost", function()
 		expect(result.a).to.equal(5);
 		expect(frostedProxy.a).to.equal(1);
 		expect(originalObject.a).to.equal(1);
+	});
+
+	describe("Defrosting a Frosted Object", function() 
+	{
+		let original;
+		let frosted;
+	
+		beforeEach(function() 
+		{
+			original = {
+				layer1: {
+					layer2: {
+						layer3: {
+							a: 1,
+						},
+					},
+				},
+			};
+			frosted = frost(original);
+		});
+	
+		it("should frost an object correctly", function() 
+		{
+			expect(frosted).not.to.equal(original);
+			expectAllLayersToBeFrostProxies(frosted);
+		});
+	
+		it("should allow modification in a sandbox", function() 
+		{
+			const sb = sandbox(frosted);
+			sb.layer1.layer2.layer3.a = 5;
+			const cemented = cement(sb);
+			expect(isSandboxProxy(cemented.layer1)).to.be.false;
+			expect(cemented.layer1.layer2.layer3.a).to.equal(5);
+		});
+	
+		it("should defrost an object correctly", function() 
+		{
+			const sb = sandbox(frosted);
+			sb.layer1.layer2.layer3.a = 5;
+			const cemented = cement(sb);
+			const defrosted = defrost(cemented);
+			expect(defrosted).to.equal(original);
+			expectNoLayersToBeFrostProxies(defrosted);
+			expect(defrosted.layer1.layer2.layer3.a).to.equal(5);
+		});
 	});
 
 });

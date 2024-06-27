@@ -9,8 +9,13 @@ interface FrostGetterParams
 	recursor: (value: any) => any;
 }
 
-export function proxyGet(target: any, prop: string | symbol, params: FrostGetterParams) 
+export function proxyGet(original: any, target: any, prop: string | symbol, params: FrostGetterParams) 
 {
+	if (prop === CONSTANTS.FROST.ORIGINAL_GETTER_SYMBOL)
+	{
+		return original;
+	}
+
 	const { guid, recursor } = params;
 	const value = Reflect.get(target, prop);
 	if (typeof value === "object" && value !== null && !isFrostProxy(value)) 
