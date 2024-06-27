@@ -183,4 +183,14 @@ describe("sandbox", function()
 		expect(() => {proxy = sandbox(original);}).not.to.throw();
 		expect(isSandboxProxy(proxy.a)).to.be.false;
 	});
+
+	it("should not break when dates are present", function()
+	{
+		const original: any = {
+			a: new Date(), 
+		};
+		let proxy: any;
+		expect(() => {proxy = sandbox(original);}).not.to.throw();
+		expect(isSandboxProxy(proxy.a)).to.be.false;
+	});
 });

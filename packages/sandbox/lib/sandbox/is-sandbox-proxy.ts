@@ -1,4 +1,5 @@
 import { CONSTANTS } from "../constants";
+import isElligibleForSandbox from "../validity/is-elligible-for-sandbox";
 import type { SandboxProxy } from "./types";
 
 
@@ -15,7 +16,7 @@ function objectPropertiesAreSandboxProxy(o?: any): boolean
 	
 	}
 
-	let propertiesAreSandboxProxy = true;
+	let propertiesAreSandboxProxy = isElligibleForSandbox<object>(o);
 
 	// Recursively check all properties
 	for (const key in o) 
