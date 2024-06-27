@@ -1,3 +1,11 @@
+## [10.0.2](https://github.com/jakelauer/theseus-js/compare/v10.0.1...v10.0.2) (2024-06-27)
+
+
+### Bug Fixes
+
+* **sandbox:** fix built-in objects (e.g. Date) being proxified instead of left alone ([c8fe418](https://github.com/jakelauer/theseus-js/commit/c8fe418213f73b82f49375a6be1f3e3f3a7d1e0c))
+* **sandbox:** fix built-in objects (e.g. Date) being proxified instead of left alone ([#28](https://github.com/jakelauer/theseus-js/issues/28)) ([3425f45](https://github.com/jakelauer/theseus-js/commit/3425f452528640393b40d255dac5f6386461d348))
+
 ## [10.0.1](https://github.com/jakelauer/theseus-js/compare/v10.0.0...v10.0.1) (2024-06-26)
 
 
