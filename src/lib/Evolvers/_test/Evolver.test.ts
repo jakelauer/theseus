@@ -116,8 +116,8 @@ describe("Evolvers", () =>
 
         		// Create a second copy of the evolved data and evolve it again
         		const reEvolvedData = initialDataEvolver.via.increment(2).end();
-        		expect(reEvolvedData).to.equal(evolvedData, "The new evolved data should be the same object");
-        		expect(evolvedData.value).to.equal(4, "The original evolved data should be changed");
+        		expect(reEvolvedData).not.to.equal(evolvedData, "The new evolved data should not be the same object");
+        		expect(evolvedData.value).to.equal(2, "The original evolved data should not be changed");
         		expect(reEvolvedData.value).to.equal(4);
 
         		// Directly edit the evolved data manually
