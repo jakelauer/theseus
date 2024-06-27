@@ -1,7 +1,7 @@
 import { CONSTANTS, SANDBOX_VERIFIABLE_PROP_SYMBOL } from "../constants";
 import { frostClone, isFrostProxy } from "../frost";
 import { generateVerificationProperty, getVerificationValueFromObject } from "../frost/properties";
-import isValidObject from "../is-valid-object";
+import isValidObject from "../validity/is-valid-object";
 import type { SandboxMode } from "../sandbox";
 import { containsSandboxProxy, isSandboxProxy } from "../sandbox/is-sandbox-proxy";
 import structuredClone from "@ungap/structured-clone";
@@ -36,7 +36,7 @@ export function cement<T extends object>(obj: T): T
 			if (Object.prototype.hasOwnProperty.call(obj, key)) 
 			{
 				const val = obj[key];
-				if (isValidObject(val) && isSandboxProxy(val))
+				if (Array.isArray(val) || isValidObject(val) && isSandboxProxy(val))
 				{
 					const cemented = cement(val);
 					obj[key] = cemented;

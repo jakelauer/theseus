@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CONSTANTS } from "../constants";
 import type { Metadata, SandboxParams } from "./types";
 import { isSandboxProxy } from "./is-sandbox-proxy";
-import isValidObject from "../is-valid-object";
+import isElligibleForSandbox from "../validity/is-elligible-for-sandbox";
 
 /**
  * Creates a sandbox proxy for the given object, allowing changes to be tracked
@@ -68,7 +68,8 @@ function createProxy<T extends object>(obj: T, proxyMap: WeakMap<T, T>, params: 
 
 	for (const [key, value] of Object.entries(obj)) 
 	{
-		if (isValidObject<T>(value)) 
+		// Only proxify values which are objects, and only those which are plain objects (not special objects like Date, etc.)
+		if (isElligibleForSandbox<object>(value))
 		{
 			proxy[key] = createProxy(value, proxyMap, params);
 		}
@@ -100,7 +101,7 @@ function handleGet<T extends object>(target: T, prop: string | symbol, receiver:
 	}
 
 	const value = Reflect.get(target, prop, receiver);
-	if (typeof value === "object" && value !== null && !isSandboxProxy(value)) 
+	if (isElligibleForSandbox<object>(value) && !isSandboxProxy(value)) 
 	{
 		if (!proxyMap.has(value)) 
 		{
