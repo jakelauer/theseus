@@ -1,3 +1,15 @@
+# [10.1.0](https://github.com/jakelauer/theseus-js/compare/v10.0.2...v10.1.0) (2024-06-27)
+
+
+### Bug Fixes
+
+* **missed files:** missed files ([aa506b7](https://github.com/jakelauer/theseus-js/commit/aa506b72743785055e44f7ad055de47045b531a5))
+
+
+### Features
+
+* **frost:** allow defrosting of a frosted object ([fd2d9de](https://github.com/jakelauer/theseus-js/commit/fd2d9de9b2bbb20ad8c00139d71ede0c4d3edf3d))
+
 ## [10.0.2](https://github.com/jakelauer/theseus-js/compare/v10.0.1...v10.0.2) (2024-06-27)
 
 
