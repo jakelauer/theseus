@@ -1,3 +1,10 @@
+## [10.1.1](https://github.com/jakelauer/theseus-js/compare/v10.1.0...v10.1.1) (2024-06-29)
+
+
+### Bug Fixes
+
+* **sandbox:** fix for misidentification of sandbox items, add tests ([65253e3](https://github.com/jakelauer/theseus-js/commit/65253e3694e8716e80e00023fa931a82fbee380d))
+
 # [10.1.0](https://github.com/jakelauer/theseus-js/compare/v10.0.2...v10.1.0) (2024-06-27)
 
 
