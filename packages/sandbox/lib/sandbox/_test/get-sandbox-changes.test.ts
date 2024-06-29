@@ -10,6 +10,7 @@ describe("getSandboxChanges", function()
 			some: "changes", 
 		};
 		const sandboxProxy = {
+			some: "unchanged",
 			[CONSTANTS.SANDBOX_SYMBOL]: {
 				changes,
 			},

@@ -79,7 +79,11 @@ describe("Integration type tests", function()
 		expect(() => JSON.stringify(cemented)).not.to.throw();
 		expect(isSbProxy).to.deep.equal({
 			root: false,
-			properties: false,
+			properties: {
+				all: false,
+				any: true,
+				elligible: true,
+			},
 		});
 	};
 
