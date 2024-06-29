@@ -2,7 +2,6 @@ import { CONSTANTS } from "../constants";
 import isElligibleForSandbox from "../validity/is-elligible-for-sandbox";
 import type { SandboxProxy } from "./types";
 
-
 export function objectRootIsSandboxProxy(o?: any): boolean 
 {
 	return o && typeof o === "object" && !!o[CONSTANTS.SANDBOX_SYMBOL];
@@ -21,7 +20,7 @@ function objectPropertiesAreSandboxProxy(o?: any): boolean
 	// Recursively check all properties
 	for (const key in o) 
 	{
-		if (Object.prototype.hasOwnProperty.call(o, key) && typeof o[key] === "object") 
+		if (Object.prototype.hasOwnProperty.call(o, key) && isElligibleForSandbox(o[key]))
 		{
 			propertiesAreSandboxProxy = propertiesAreSandboxProxy && objectRootIsSandboxProxy(o) && objectPropertiesAreSandboxProxy(o[key]);
 		}
@@ -82,7 +81,7 @@ export const sandboxProxyStatus = <T extends object>(obj?: T, recursive = true):
 		propertiesAreSandboxProxy = objectPropertiesAreSandboxProxy(obj);
 		if (rootIsSandboxProxy && !propertiesAreSandboxProxy)
 		{
-			console.warn("Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.");
+			warnIfPartialSandbox();
 		}
 	}
 	
@@ -90,4 +89,9 @@ export const sandboxProxyStatus = <T extends object>(obj?: T, recursive = true):
 		root: !!rootIsSandboxProxy,
 		properties: !!propertiesAreSandboxProxy,
 	};
+};
+
+export const warnIfPartialSandbox = () => 
+{
+	console.warn("Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.");
 };

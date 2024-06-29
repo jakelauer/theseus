@@ -1,7 +1,7 @@
 {
     "compileOnSave": true,
-    "include": ["./lib/**/*", "./index.ts"],
-	"exclude": ["node_modules", "dist"],
+    "include": ["./lib/**/*", "./index.ts", "_test/type-tests.test.ts"],
+	"exclude": ["node_modules", "dist", "**/*.test-dep.*"],
     "compilerOptions": {
 		"esModuleInterop": true,
 		"declaration": true,

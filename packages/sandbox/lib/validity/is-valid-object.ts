@@ -6,7 +6,11 @@ function isPlainObject(obj: any)
 function isRealObject<T = object>(obj: any): obj is T
 {
 	const type = typeof obj;
-	return type === "function" || type === "object" && !!obj;
+	const isFunction = type === "function";
+	const isObject = type === "object";
+	const hasValue = obj !== null && obj !== undefined;
+	
+	return hasValue && (isObject || isFunction);
 }
 
 export default function isValidObject<T = object>(obj: any): obj is T
