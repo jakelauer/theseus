@@ -4,29 +4,38 @@ import type { SandboxProxy } from "./types";
 
 export function objectRootIsSandboxProxy(o?: any): boolean 
 {
-	return o && typeof o === "object" && !!o[CONSTANTS.SANDBOX_SYMBOL];
+	return isElligibleForSandbox(o) && !!o[CONSTANTS.SANDBOX_SYMBOL];
 }
 
-function objectPropertiesAreSandboxProxy(o?: any): boolean
+function objectPropertiesAreSandboxProxy(o?: any): SandboxProxyStatus<true>["properties"]
 {
-	if (!o || typeof o !== "object")
-	{
-		return false;
-	
-	}
+	const elligibleWithKeys = (obj: any) => isElligibleForSandbox<object>(obj) && Object.keys(obj).length > 0;
 
-	let propertiesAreSandboxProxy = isElligibleForSandbox<object>(o);
+	const rootElligibleWithKeys = elligibleWithKeys(o);
 
-	// Recursively check all properties
-	for (const key in o) 
+	let allropertiesAreSandboxProxy = rootElligibleWithKeys;
+	let anyPropertiesAreSandboxProxy = rootElligibleWithKeys;
+
+	if (rootElligibleWithKeys)
 	{
-		if (Object.prototype.hasOwnProperty.call(o, key) && isElligibleForSandbox(o[key]))
+		// Recursively check all properties
+		for (const key in o) 
 		{
-			propertiesAreSandboxProxy = propertiesAreSandboxProxy && objectRootIsSandboxProxy(o) && objectPropertiesAreSandboxProxy(o[key]);
+			if (Object.prototype.hasOwnProperty.call(o, key) && elligibleWithKeys(o[key]))
+			{
+				const root = objectRootIsSandboxProxy(o);
+				const properties = objectPropertiesAreSandboxProxy(o[key]);
+				allropertiesAreSandboxProxy = allropertiesAreSandboxProxy && root && (properties.all || !properties.elligible);
+				anyPropertiesAreSandboxProxy = anyPropertiesAreSandboxProxy || root || (properties.any || !properties.elligible);
+			}
 		}
 	}
 
-	return propertiesAreSandboxProxy;
+	return {
+		all: allropertiesAreSandboxProxy,
+		any: anyPropertiesAreSandboxProxy,
+		elligible: rootElligibleWithKeys,
+	};
 }
 
 /**
@@ -40,7 +49,7 @@ export const isDeepSandboxProxy = <T extends object>(obj?: T): obj is SandboxPro
 {
 	const status = sandboxProxyStatus(obj, true);
 
-	return Boolean(status.root && status.properties);
+	return Boolean(status.root && status.properties.all);
 };
 
 /**
@@ -63,32 +72,55 @@ export const containsSandboxProxy = <T extends object>(obj?: T): boolean =>
 {
 	const status = sandboxProxyStatus(obj, true);
 
-	return Boolean(status.root || status.properties);
+	return Boolean(status.root || status.properties.any);
 };
 
-interface SandboxProxyStatus{
+interface SandboxProxyStatusAll{
 	root: boolean;
-	properties: boolean;
+	properties: {
+		all: boolean;
+		any: boolean;
+		elligible: boolean;
+	};
 }
 
-export const sandboxProxyStatus = <T extends object>(obj?: T, recursive = true):SandboxProxyStatus  =>
+type SandboxProxyStatus<TRecursive> = TRecursive extends true ? SandboxProxyStatusAll : Omit<SandboxProxyStatusAll, "properties">;
+
+export const sandboxProxyStatus = <T extends object, TRecursive extends boolean>(
+	obj?: T, 
+	recursive: TRecursive = true as TRecursive,
+): SandboxProxyStatus<TRecursive>  =>
 {
 	const rootIsSandboxProxy = objectRootIsSandboxProxy(obj);
-	let propertiesAreSandboxProxy = true;
+
+	if (!recursive)
+	{
+		return {
+			root: rootIsSandboxProxy,
+		} as SandboxProxyStatus<TRecursive>;
+	}
+
+	const isElligible = isElligibleForSandbox(obj);
+
+	let propertiesAreSandboxProxy = {
+		all: isElligible,
+		any: isElligible,
+		elligible: isElligibleForSandbox(obj),
+	};
 	
 	if (recursive) 
 	{
 		propertiesAreSandboxProxy = objectPropertiesAreSandboxProxy(obj);
-		if (rootIsSandboxProxy && !propertiesAreSandboxProxy)
+		if (rootIsSandboxProxy && !propertiesAreSandboxProxy.all && propertiesAreSandboxProxy.elligible)
 		{
 			warnIfPartialSandbox();
 		}
 	}
 	
 	return {
-		root: !!rootIsSandboxProxy,
-		properties: !!propertiesAreSandboxProxy,
-	};
+		root: rootIsSandboxProxy,
+		properties: propertiesAreSandboxProxy,
+	} as SandboxProxyStatus<TRecursive>;
 };
 
 export const warnIfPartialSandbox = () => 

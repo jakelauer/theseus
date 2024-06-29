@@ -15,7 +15,8 @@ describe("cement", function()
 			key2: "newValue2",
 			key3: "value3", 
 		};
-		const proxy = { 
+		const proxy = {
+			...original,
 			[CONSTANTS.SANDBOX_SYMBOL]: { 
 				original, 
 				changes, 
@@ -45,6 +46,7 @@ describe("cement", function()
 			key3: "value3", 
 		};
 		const proxy = { 
+			...original,
 			[CONSTANTS.SANDBOX_SYMBOL]: { 
 				original, 
 				changes, 
@@ -80,6 +82,7 @@ describe("cement", function()
 			}, 
 		};
 		const proxy = { 
+			...original,
 			[CONSTANTS.SANDBOX_SYMBOL]: { 
 				original, 
 				changes, 
@@ -130,5 +133,27 @@ describe("cement", function()
 				}
 			}
 		};
+	});
+
+	it("should cement nested objects even if the root object is not a sandbox", function()
+	{
+		const original = {
+			key1: "value1",
+			key2: {
+				key3: "value3", 
+			}, 
+		};
+		const sb = sandbox(original.key2);
+		sb.key3 = "replacement";
+		original.key2 = sb;
+		const result = cement(original);
+		expect(result).to.deep.equal({
+			key1: "value1",
+			key2: {
+				key3: "replacement", 
+			}, 
+		});
+
+		expect(isSandboxProxy(result)).to.be.false;
 	});
 });

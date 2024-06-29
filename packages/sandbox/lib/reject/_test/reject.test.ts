@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import { reject } from "../reject";
 import { CONSTANTS } from "../../constants";
-import { isSandboxProxy } from "../../sandbox/is-sandbox-proxy";
 
 describe("reject", function() 
 {
@@ -11,13 +10,12 @@ describe("reject", function()
 			key: "value", 
 		};
 		const proxy = {
+			...original,
 			[CONSTANTS.SANDBOX_SYMBOL]: {
 				original, 
 			}, 
 		};
     
-		// Mock the isSandboxProxy function to return true
-		isSandboxProxy(proxy);
 		expect(reject(proxy)).to.equal(original);
 	});
 
@@ -26,8 +24,7 @@ describe("reject", function()
 		const obj = {
 			key: "value", 
 		};
-		// Mock the isSandboxProxy function to return false
-		isSandboxProxy(obj);
+		
 		expect(reject(obj)).to.equal(obj);
 	});
 });

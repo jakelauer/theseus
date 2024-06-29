@@ -49,7 +49,7 @@
             "request": "launch",
             "name": "Run Sandbox Tests",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["--prefix","./packages/sandbox", "test", "--", "--grep", "\"should allow defrosting of a frosted object\""],
+            "runtimeArgs": ["--prefix","./packages/sandbox", "test", "--timeout", "60000", "--", "--grep", "\"should return the original object if it is a sandbox proxy\""],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"
