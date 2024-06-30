@@ -80,7 +80,7 @@ export function defrost<T extends object>(obj: T): T
 	for (const key in root)
 	{
 		const innerValue = root[key];
-		if (isElligibleForSandbox<object>(innerValue))
+		if (isElligibleForSandbox(innerValue))
 		{
 			root[key] = defrost(innerValue);
 		}

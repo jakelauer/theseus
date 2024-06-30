@@ -9,12 +9,12 @@ export function objectRootIsSandboxProxy(o?: any): boolean
 
 function objectPropertiesAreSandboxProxy(o?: any): SandboxProxyStatus<true>["properties"]
 {
-	const elligibleWithKeys = (obj: any) => isElligibleForSandbox<object>(obj) && Object.keys(obj).length > 0;
+	const elligibleWithKeys = (obj: any) => isElligibleForSandbox(obj) && Object.keys(obj).length > 0;
 
 	const rootElligibleWithKeys = elligibleWithKeys(o);
 
 	let allropertiesAreSandboxProxy = rootElligibleWithKeys;
-	let anyPropertiesAreSandboxProxy = rootElligibleWithKeys;
+	let anyPropertiesAreSandboxProxy = false;
 
 	if (rootElligibleWithKeys)
 	{

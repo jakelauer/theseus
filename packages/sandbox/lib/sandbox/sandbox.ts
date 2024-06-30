@@ -69,7 +69,7 @@ function createProxy<T extends object>(obj: T, proxyMap: WeakMap<T, T>, params: 
 	for (const [key, value] of Object.entries(obj)) 
 	{
 		// Only proxify values which are objects, and only those which are plain objects (not special objects like Date, etc.)
-		if (isElligibleForSandbox<object>(value))
+		if (isElligibleForSandbox(value))
 		{
 			proxy[key] = createProxy(value, proxyMap, params);
 		}
@@ -101,7 +101,7 @@ function handleGet<T extends object>(target: T, prop: string | symbol, receiver:
 	}
 
 	const value = Reflect.get(target, prop, receiver);
-	if (isElligibleForSandbox<object>(value) && !isSandboxProxy(value)) 
+	if (isElligibleForSandbox(value) && !isSandboxProxy(value)) 
 	{
 		if (!proxyMap.has(value)) 
 		{

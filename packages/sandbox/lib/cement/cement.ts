@@ -1,10 +1,10 @@
 import { CONSTANTS, SANDBOX_VERIFIABLE_PROP_SYMBOL } from "../constants";
 import { frostClone, isFrostProxy } from "../frost";
 import { generateVerificationProperty, getVerificationValueFromObject } from "../frost/properties";
-import isValidObject from "../validity/is-valid-object";
-import type { SandboxMode } from "../sandbox";
-import { containsSandboxProxy, isSandboxProxy } from "../sandbox/is-sandbox-proxy";
+import { containsSandboxProxy, type SandboxMode } from "../sandbox";
 import structuredClone from "@ungap/structured-clone";
+import isElligibleForSandbox from "../validity/is-elligible-for-sandbox";
+import { sandboxTransform } from "../sandbox/sandbox-transform";
 
 /**
  * Finalizes the changes made in a sandbox proxy object and returns a new object with those changes applied.
@@ -16,39 +16,51 @@ import structuredClone from "@ungap/structured-clone";
  */
 export function cement<T extends object>(obj: T): T 
 {
-	if (isSandboxProxy(obj)) 
+	let finalResult = obj;
+
+	// If the object is a sandbox proxy at the root level, apply the changes
+	const rootCemented = cementAtRoot(obj);
+	if (rootCemented !== undefined)
 	{
-		const {
-			original,
-			changes,
-			params: { mode },
-		} = obj[CONSTANTS.SANDBOX_SYMBOL];
-
-		const toModify = getModifiableObject(original, mode);
-
-		return applyChanges(toModify, changes);
+		finalResult = rootCemented;
 	}
+	// If the object contains nested sandbox proxies, apply the changes recursively.
+	// We don't need to check for situations where there are non-sandbox-proxies between
+	// a sb-root and a sb-nested, because sb-root objects are recursively sandboxed, so
+	// any changes to nested objects will also be sandboxed if the root is sandboxed.
 	else if (containsSandboxProxy(obj))
 	{
-		// Loop through the object's properties and cement any nested sandbox proxies recursively
-		for (const key in obj) 
+		finalResult = sandboxTransform(obj, (val) => 
 		{
-			if (Object.prototype.hasOwnProperty.call(obj, key)) 
-			{
-				const val = obj[key];
-				if (Array.isArray(val) || isValidObject(val) && isSandboxProxy(val))
-				{
-					const cemented = cement(val);
-					obj[key] = cemented;
-				}
-			}
-		}
-
-		return obj;
+			return cement(val);
+		}, isElligibleForSandbox);
 	}
-	else 
+
+	return finalResult;
+}
+
+function cementAtRoot<T extends object>(obj: T): T 
+{
+	let original: T, changes: Record<string | symbol, any>, mode: SandboxMode, isSandboxProxy = false;
+	try 
 	{
-		throw new Error("Cannot cement an object that is not a sandbox.");
+		// If this errors, the object is not a sandbox proxy
+		const sbMetadata = obj[CONSTANTS.SANDBOX_SYMBOL];
+		original = sbMetadata.original;
+		changes = sbMetadata.changes;
+		mode = sbMetadata.params.mode;
+		isSandboxProxy = true;
+	}
+	catch 
+	{
+		// Not really an error case, just means the object is not a sandbox proxy
+	}
+
+	if (isSandboxProxy) 
+	{
+		const toModify = getModifiableObject(original, mode);
+	
+		return applyChanges(toModify, changes);
 	}
 }
 
@@ -95,7 +107,7 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 			handleSet(target, key, newValue, targetIsFrost);
 		}
 		// If the value is a nested object, apply changes recursively
-		else if (isSandboxProxy(newValue)) 
+		else if (isElligibleForSandbox(newValue)) 
 		{
 			const cemented = cement(newValue);
 			handleSet(target, key, cemented, targetIsFrost);

@@ -81,7 +81,7 @@ describe("Integration type tests", function()
 			root: false,
 			properties: {
 				all: false,
-				any: true,
+				any: false,
 				elligible: true,
 			},
 		});
