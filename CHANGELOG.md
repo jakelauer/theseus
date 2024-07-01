@@ -1,3 +1,10 @@
+## [10.1.3](https://github.com/jakelauer/theseus-js/compare/v10.1.2...v10.1.3) (2024-06-30)
+
+
+### Bug Fixes
+
+* **sandbox.cement:** fix recursive cementing ([d155739](https://github.com/jakelauer/theseus-js/commit/d155739400587869deea2ca4cf28e931dc825a3a))
+
 ## [10.1.2](https://github.com/jakelauer/theseus-js/compare/v10.1.1...v10.1.2) (2024-06-29)
 
 
