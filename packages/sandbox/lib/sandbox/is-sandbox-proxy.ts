@@ -7,34 +7,79 @@ export function objectRootIsSandboxProxy(o?: any): boolean
 	return isElligibleForSandbox(o) && !!o[CONSTANTS.SANDBOX_SYMBOL];
 }
 
-function objectPropertiesAreSandboxProxy(o?: any): SandboxProxyStatus<true>["properties"]
+// function objectPropertiesAreSandboxProxy(o?: any): SandboxProxyStatus<true>["properties"] 
+// {
+// 	const elligibleWithKeys = (obj: any) => isElligibleForSandbox(obj);
+
+// 	const rootElligibleWithKeys = elligibleWithKeys(o);
+
+// 	let allropertiesAreSandboxProxy = rootElligibleWithKeys;
+// 	let anyPropertiesAreSandboxProxy = false;
+
+// 	if (rootElligibleWithKeys) 
+// 	{
+// 		// Recursively check all properties
+// 		for (const key in o) 
+// 		{
+// 			if (Object.prototype.hasOwnProperty.call(o, key) && isElligibleForSandbox(o[key])) 
+// 			{
+// 				const root = objectRootIsSandboxProxy(o);
+// 				const properties = objectPropertiesAreSandboxProxy(o[key]);
+// 				allropertiesAreSandboxProxy =
+//                     allropertiesAreSandboxProxy && root && (properties.all || !properties.elligible);
+// 				anyPropertiesAreSandboxProxy =
+//                     anyPropertiesAreSandboxProxy || root || properties.any || !properties.elligible;
+// 			}
+// 		}
+// 	}
+
+// 	return {
+// 		all: allropertiesAreSandboxProxy,
+// 		any: anyPropertiesAreSandboxProxy,
+// 		elligible: rootElligibleWithKeys,
+// 	};
+// }
+
+function objectPropertiesAreSandboxProxy(obj: any): SandboxProxyStatus<true>["properties"] 
 {
-	const elligibleWithKeys = (obj: any) => isElligibleForSandbox(obj) && Object.keys(obj).length > 0;
+	let some = false;
+	let every = true;
 
-	const rootElligibleWithKeys = elligibleWithKeys(o);
-
-	let allropertiesAreSandboxProxy = rootElligibleWithKeys;
-	let anyPropertiesAreSandboxProxy = false;
-
-	if (rootElligibleWithKeys)
+	function recursiveCheck(o: any) 
 	{
-		// Recursively check all properties
-		for (const key in o) 
+		if (isElligibleForSandbox(o)) 
 		{
-			if (Object.prototype.hasOwnProperty.call(o, key) && elligibleWithKeys(o[key]))
+			if (objectRootIsSandboxProxy(o)) 
 			{
-				const root = objectRootIsSandboxProxy(o);
-				const properties = objectPropertiesAreSandboxProxy(o[key]);
-				allropertiesAreSandboxProxy = allropertiesAreSandboxProxy && root && (properties.all || !properties.elligible);
-				anyPropertiesAreSandboxProxy = anyPropertiesAreSandboxProxy || root || (properties.any || !properties.elligible);
+				some = true;
+			}
+			else 
+			{
+				every = false;
+			}
+			
+			for (const key in o) 
+			{
+				if (Object.prototype.hasOwnProperty.call(o, key)) 
+				{
+					recursiveCheck(o[key]);
+				}
+			}
+		}
+		else if (Array.isArray(o)) 
+		{
+			for (let i = 0; i < o.length; i++) 
+			{
+				recursiveCheck(o[i]);
 			}
 		}
 	}
 
+	recursiveCheck(obj);
+
 	return {
-		all: allropertiesAreSandboxProxy,
-		any: anyPropertiesAreSandboxProxy,
-		elligible: rootElligibleWithKeys,
+		every: every,
+		some: some,
 	};
 }
 
@@ -45,17 +90,17 @@ function objectPropertiesAreSandboxProxy(o?: any): SandboxProxyStatus<true>["pro
  * @param {T} obj - The object to check.
  * @returns {obj is SandboxProxy<T>} - True if the object is a sandbox proxy, false otherwise.
  */
-export const isDeepSandboxProxy = <T extends object>(obj?: T): obj is SandboxProxy<T> =>
+export const isDeepSandboxProxy = <T extends object>(obj?: T): obj is SandboxProxy<T> => 
 {
 	const status = sandboxProxyStatus(obj, true);
 
-	return Boolean(status.root && status.properties.all);
+	return Boolean(status.root && status.properties.every);
 };
 
 /**
  * Determines if the given object is a sandbox proxy (shallow check, only checks the root object).
  */
-export const isShallowSandboxProxy = <T extends object>(obj?: T): obj is SandboxProxy<T> =>
+export const isShallowSandboxProxy = <T extends object>(obj?: T): obj is SandboxProxy<T> => 
 {
 	return objectRootIsSandboxProxy(obj);
 };
@@ -72,51 +117,45 @@ export const containsSandboxProxy = <T extends object>(obj?: T): boolean =>
 {
 	const status = sandboxProxyStatus(obj, true);
 
-	return Boolean(status.root || status.properties.any);
+	return Boolean(status.root || status.properties.some);
 };
 
-interface SandboxProxyStatusAll{
-	root: boolean;
-	properties: {
-		all: boolean;
-		any: boolean;
-		elligible: boolean;
-	};
+interface SandboxProxyStatusAll {
+    root: boolean;
+    properties: {
+        every: boolean;
+        some: boolean;
+    };
 }
 
-type SandboxProxyStatus<TRecursive> = TRecursive extends true ? SandboxProxyStatusAll : Omit<SandboxProxyStatusAll, "properties">;
+type SandboxProxyStatus<TRecursive> =
+    TRecursive extends true ? SandboxProxyStatusAll : Omit<SandboxProxyStatusAll, "properties">;
 
 export const sandboxProxyStatus = <T extends object, TRecursive extends boolean>(
-	obj?: T, 
+	obj?: T,
 	recursive: TRecursive = true as TRecursive,
-): SandboxProxyStatus<TRecursive>  =>
+): SandboxProxyStatus<TRecursive> => 
 {
 	const rootIsSandboxProxy = objectRootIsSandboxProxy(obj);
 
-	if (!recursive)
+	if (!recursive) 
 	{
 		return {
 			root: rootIsSandboxProxy,
 		} as SandboxProxyStatus<TRecursive>;
 	}
 
-	const isElligible = isElligibleForSandbox(obj);
+	let propertiesAreSandboxProxy: SandboxProxyStatus<true>["properties"] | undefined;
 
-	let propertiesAreSandboxProxy = {
-		all: isElligible,
-		any: isElligible,
-		elligible: isElligibleForSandbox(obj),
-	};
-	
 	if (recursive) 
 	{
 		propertiesAreSandboxProxy = objectPropertiesAreSandboxProxy(obj);
-		if (rootIsSandboxProxy && !propertiesAreSandboxProxy.all && propertiesAreSandboxProxy.elligible)
+		if (rootIsSandboxProxy && !propertiesAreSandboxProxy.every) 
 		{
 			warnIfPartialSandbox();
 		}
 	}
-	
+
 	return {
 		root: rootIsSandboxProxy,
 		properties: propertiesAreSandboxProxy,
@@ -125,5 +164,7 @@ export const sandboxProxyStatus = <T extends object, TRecursive extends boolean>
 
 export const warnIfPartialSandbox = () => 
 {
-	console.warn("Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.");
+	console.warn(
+		"Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.",
+	);
 };

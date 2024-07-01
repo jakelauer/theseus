@@ -49,7 +49,7 @@
             "request": "launch",
             "name": "Run Sandbox Tests",
             "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["--prefix","./packages/sandbox", "test", "--", "--timeout", "60000", "--grep", "\"should call transform and predicate the correct\""],
+            "runtimeArgs": ["--prefix","./packages/sandbox", "test", "--", "--timeout", "60000", "--grep", "\"should handle sandbox set to property inside another sandbox\""],
             "internalConsoleOptions": "openOnSessionStart",
             "cwd": "${workspaceFolder}",
             "outputCapture": "std"

@@ -24,13 +24,14 @@ export function cement<T extends object>(obj: T): T
 	{
 		finalResult = rootCemented;
 	}
+
 	// If the object contains nested sandbox proxies, apply the changes recursively.
 	// We don't need to check for situations where there are non-sandbox-proxies between
 	// a sb-root and a sb-nested, because sb-root objects are recursively sandboxed, so
 	// any changes to nested objects will also be sandboxed if the root is sandboxed.
-	else if (containsSandboxProxy(obj))
+	if (containsSandboxProxy(finalResult))
 	{
-		finalResult = sandboxTransform(obj, (val) => 
+		finalResult = sandboxTransform(finalResult, (val) => 
 		{
 			return cement(val);
 		}, isElligibleForSandbox);
@@ -104,7 +105,8 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 		if (!Object.prototype.hasOwnProperty.call(target, key))
 		{
 			const newValue = changes[key];
-			handleSet(target, key, newValue, targetIsFrost);
+			const setValue = isElligibleForSandbox(newValue) ? cement(newValue) : newValue;
+			handleSet(target, key, setValue, targetIsFrost);
 		}
 		// If the value is a nested object, apply changes recursively
 		else if (isElligibleForSandbox(newValue)) 
@@ -124,9 +126,6 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 		}
 		// otherwise, do nothing
 	}
-
-	delete target[CONSTANTS.FROST.SETTER_SYMBOL];
-	delete target[CONSTANTS.SANDBOX_SYMBOL];
 
 	return target;
 }

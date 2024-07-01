@@ -70,7 +70,9 @@ describe("Integration type tests", function()
 
 	const cementSandbox = (key: string, value: any) => 
 	{
-		const sb = sandbox(createMultiLevelObject(key, value));
+		const sb = sandbox(createMultiLevelObject(key, value), {
+			mode: "copy",
+		});
 
 		const cemented = cement(sb);
 
@@ -80,9 +82,46 @@ describe("Integration type tests", function()
 		expect(isSbProxy).to.deep.equal({
 			root: false,
 			properties: {
-				all: false,
-				any: false,
-				elligible: true,
+				every: false,
+				some: false,
+			},
+		});
+	};
+
+	const multiLayerSandbox = (key: string, value: any) => 
+	{
+		const originial = createMultiLevelObject(key, value);
+		const sb0 = sandbox(originial);
+		const sb1 = sandbox(sb0);
+		const sb2 = sandbox(sb1);
+		const sb3 = sandbox(sb2);
+
+		const isSbProxy = isSandboxProxy.isSandboxProxy(sb3);
+
+		expect(() => JSON.stringify(sandbox)).not.to.throw();
+		expect(isSbProxy).to.be.true;
+
+		expect(consoleWarnSpy).not.to.be.calledWith("Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.");
+	};
+
+	const multiLayerCement = (key: string, value: any) => 
+	{
+		const originial = createMultiLevelObject(key, value);
+		const sb0 = sandbox(originial);
+		const sb1 = sandbox(sb0);
+		const sb2 = sandbox(sb1);
+		const sb3 = sandbox(sb2);
+
+		const cemented = cement(sb3);
+
+		const isSbProxy = isSandboxProxy.sandboxProxyStatus(cemented);
+
+		expect(() => JSON.stringify(cemented)).not.to.throw();
+		expect(isSbProxy).to.deep.equal({
+			root: false,
+			properties: {
+				every: false,
+				some: false,
 			},
 		});
 	};
@@ -147,6 +186,20 @@ describe("Integration type tests", function()
 					const val = propValuesByType[key as keyof typeof propValuesByType];
 
 					cementSandbox(key, val);
+				});
+
+				it(`should be able to create a multi-nested sandbox proxy for ${key}`, function()
+				{
+					const val = propValuesByType[key as keyof typeof propValuesByType];
+
+					multiLayerSandbox(key, val);
+				});
+
+				it(`should be able to cement a multi-nested sandbox proxy for ${key}`, function()
+				{
+					const val = propValuesByType[key as keyof typeof propValuesByType];
+
+					multiLayerCement(key, val);
 				});
 			});
 		}

@@ -189,4 +189,27 @@ describe("cement", function()
 		expect(original.key2.key3.key4.key5).to.equal("unchanged");
 		expect(containsSandboxProxy(cemented)).to.be.false;
 	});
+
+	it("should handle sandbox set to property inside another sandbox", function() 
+	{
+		const sb1 = sandbox({
+			sb1Prop: {},
+		});
+
+		const sb2 = sandbox({
+			sb2Prop: {},
+		});
+
+		sb1.sb1Prop = sb2;
+
+		const result = cement(sb1);
+
+		expect(result).to.deep.equal({
+			sb1Prop: {
+				sb2Prop: {},
+			},
+		});
+
+		expect(containsSandboxProxy(result)).to.be.false;
+	});
 });
