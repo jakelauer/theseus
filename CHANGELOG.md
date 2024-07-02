@@ -1,3 +1,10 @@
+## [10.1.4](https://github.com/jakelauer/theseus-js/compare/v10.1.3...v10.1.4) (2024-07-01)
+
+
+### Bug Fixes
+
+* **sandbox:** fix sandbox detection in nested objects ([591dc33](https://github.com/jakelauer/theseus-js/commit/591dc33fceea1028505c9f8384e25de35c6889df))
+
 ## [10.1.3](https://github.com/jakelauer/theseus-js/compare/v10.1.2...v10.1.3) (2024-06-30)
 
 
