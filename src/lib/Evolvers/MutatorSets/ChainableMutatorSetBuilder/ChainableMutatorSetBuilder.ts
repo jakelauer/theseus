@@ -9,9 +9,8 @@ import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 import type { MutatorDefs } from "../../Types/MutatorTypes";
 import { createChainingProxy } from "./proxy/chaining-proxy-manager";
 import {
-	cement, frost, getSandboxChanges, 
+	cement, frost, getSandboxChanges, isFrost,
 } from "theseus-sandbox";
-import { isFrostProxy } from "theseus-sandbox";
 import { containsSandboxProxy } from "theseus-sandbox";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
@@ -103,7 +102,7 @@ export class ChainableMutatorSetBuilder<
 			result = cement(result);
 		}
 
-		if (!isFrostProxy(result))
+		if (!isFrost(result))
 		{
 			result = frost(result);
 		}

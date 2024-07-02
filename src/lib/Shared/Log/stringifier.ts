@@ -1,4 +1,4 @@
-import { isShallowSandboxProxy } from "theseus-sandbox";
+import { isShallowFrost, isShallowSandboxProxy } from "theseus-sandbox";
 
 const isPrimitive = (obj: object) =>
 	obj === null || ["string", "number", "boolean", "object"].includes(typeof obj);
@@ -17,6 +17,10 @@ export const stringifier = (obj: object) =>
 	if (isShallowSandboxProxy(obj))
 	{
 		return "SandboxProxy";
+	}
+	if (isShallowFrost(obj))
+	{
+		return "FrostProxy";
 	}
 
 	try 

@@ -26,7 +26,7 @@ export const isDeepFrost = <T extends object>(obj: T, mode: "some" | "every" = "
 /**
  * Determines if the given object is a sandbox proxy (shallow check, only checks the root object).
  */
-export const isShallowSandboxProxy = <T extends object>(obj?: T): obj is FrostProxy<T> => 
+export const isShallowFrost = <T extends object>(obj?: T): obj is FrostProxy<T> => 
 {
 	return objectRootIsFrost(obj);
 };
