@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { CONSTANTS } from "../constants";
 import type { Metadata, SandboxParams } from "./types";
-import { isSandboxProxy } from "./is-sandbox-proxy";
-import isElligibleForSandbox from "../validity/is-elligible-for-sandbox";
+import { isSandboxProxy } from "./detect/is-sandbox-proxy";
+import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy";
 
 /**
  * Creates a sandbox proxy for the given object, allowing changes to be tracked
@@ -69,7 +69,7 @@ function createProxy<T extends object>(obj: T, proxyMap: WeakMap<T, T>, params: 
 	for (const [key, value] of Object.entries(obj)) 
 	{
 		// Only proxify values which are objects, and only those which are plain objects (not special objects like Date, etc.)
-		if (isElligibleForSandbox(value))
+		if (isElligibleForProxy(value))
 		{
 			proxy[key] = createProxy(value, proxyMap, params);
 		}
@@ -90,18 +90,18 @@ function createMetadata<T extends object>(obj: T, params: SandboxParams): Metada
 
 function handleGet<T extends object>(target: T, prop: string | symbol, receiver: any, metadata: Metadata<T>, proxyMap: WeakMap<object, object>) 
 {
-	if (prop in metadata.changes) 
-	{
-		return metadata.changes[prop as string];
-	}
-
 	if (prop === CONSTANTS.SANDBOX_SYMBOL) 
 	{
 		return metadata;
 	}
 
+	if (prop in metadata.changes) 
+	{
+		return metadata.changes[prop as string];
+	}
+
 	const value = Reflect.get(target, prop, receiver);
-	if (isElligibleForSandbox(value) && !isSandboxProxy(value)) 
+	if (isElligibleForProxy(value) && !isSandboxProxy(value)) 
 	{
 		if (!proxyMap.has(value)) 
 		{

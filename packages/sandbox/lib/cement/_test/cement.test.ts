@@ -125,17 +125,7 @@ describe("cement", function()
 			}, 
 		});
 
-		const checkForSandbox = (obj: any) =>
-		{
-			if (typeof obj === "object")
-			{
-				expect(isSandboxProxy(obj)).to.be.false;
-				for (const key in obj)
-				{
-					checkForSandbox(obj[key]);
-				}
-			}
-		};
+		expect(isSandboxProxy(result, "some")).to.be.false;
 	});
 
 	it("should cement nested objects even if the root object is not a sandbox", function()

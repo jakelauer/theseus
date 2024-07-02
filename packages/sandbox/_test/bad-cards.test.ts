@@ -1,11 +1,10 @@
 import { GetMockGameItem } from "./bad-cards.test-dep";
 import { sandbox } from "../lib/sandbox/sandbox";
 import { expect } from "chai";
-import { isSandboxProxy } from "../lib/sandbox/is-sandbox-proxy";
+import { isSandboxProxy } from "../lib/sandbox/detect/is-sandbox-proxy";
 import { cement } from "../lib/cement/cement";
-import {
-	defrost, frost, isFrostProxy, 
-} from "../lib/frost";
+import { defrost, frost } from "../lib/frost";
+import { isFrost } from "../lib/frost/detect/is-frost-proxy";
 
 describe("Bad Cards", function()
 {
@@ -19,9 +18,9 @@ describe("Bad Cards", function()
 		expect(sandboxedGameItem).not.to.deep.equal(gameItem);
 		expect(gameItem.id).not.to.equal("fake-new-id");
 
-		expect(isFrostProxy(gameItem)).to.be.false;
-		expect(isSandboxProxy(gameItem)).to.be.false;
-		expect(isFrostProxy(sandboxedGameItem)).to.be.false;
+		expect(isFrost(gameItem, "every")).to.be.false;
+		expect(isSandboxProxy(gameItem, "every")).to.be.false;
+		expect(isFrost(sandboxedGameItem, "every")).to.be.false;
 		expect(isSandboxProxy(sandboxedGameItem)).to.be.true;
 	});
 
@@ -37,11 +36,11 @@ describe("Bad Cards", function()
 		expect(cementedGameItem).to.equal(gameItem);
 		expect(gameItem.id).to.equal("fake-new-id");
 
-		expect(isFrostProxy(gameItem)).to.be.false;
+		expect(isFrost(gameItem)).to.be.false;
 		expect(isSandboxProxy(gameItem)).to.be.false;
-		expect(isFrostProxy(sandboxedGameItem)).to.be.false;
+		expect(isFrost(sandboxedGameItem)).to.be.false;
 		expect(isSandboxProxy(sandboxedGameItem)).to.be.true;
-		expect(isFrostProxy(cementedGameItem)).to.be.false;
+		expect(isFrost(cementedGameItem)).to.be.false;
 		expect(isSandboxProxy(cementedGameItem)).to.be.false;
 	});
 
@@ -52,7 +51,7 @@ describe("Bad Cards", function()
 		const frozenGameItem = frost(gameItem);
 		const sandboxedFrozenGameItem = sandbox(frozenGameItem);
 
-		expect(isFrostProxy(frozenGameItem)).to.be.true;
+		expect(isFrost(frozenGameItem)).to.be.true;
 		expect(() => {(frozenGameItem as any).id = "fake-new-id";}).to.throw();
 		expect(() => {(sandboxedFrozenGameItem as any).id = "fake-new-id";}).not.to.throw();
 		expect(sandboxedFrozenGameItem.id).to.equal("fake-new-id");

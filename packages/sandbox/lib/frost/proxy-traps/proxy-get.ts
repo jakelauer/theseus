@@ -1,6 +1,6 @@
 import { CONSTANTS } from "../../constants";
 import { assertValidVerificationProperty } from "../assertions";
-import { isFrostProxy } from "../frost";
+import { objectRootIsFrost } from "../detect/root-is-frost";
 import { extractVerificationPropValues } from "../properties";
 
 interface FrostGetterParams
@@ -18,7 +18,7 @@ export function proxyGet(original: any, target: any, prop: string | symbol, para
 
 	const { guid, recursor } = params;
 	const value = Reflect.get(target, prop);
-	if (typeof value === "object" && value !== null && !isFrostProxy(value)) 
+	if (typeof value === "object" && value !== null && !objectRootIsFrost(value)) 
 	{
 		return recursor(value);
 	}

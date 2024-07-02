@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import sinonChai from "sinon-chai";
 import sinon from "sinon";
-import * as isSandboxProxy from "../lib/sandbox/is-sandbox-proxy";
+import * as isSandboxProxy from "../lib/sandbox/detect/is-sandbox-proxy";
 import { sandbox } from "../lib/sandbox/sandbox";
 import chai from "chai";
 import { cement } from "../lib";
@@ -76,16 +76,10 @@ describe("Integration type tests", function()
 
 		const cemented = cement(sb);
 
-		const isSbProxy = isSandboxProxy.sandboxProxyStatus(cemented);
+		const isSbProxy = isSandboxProxy.isSandboxProxy(cemented, "every");
 
 		expect(() => JSON.stringify(cemented)).not.to.throw();
-		expect(isSbProxy).to.deep.equal({
-			root: false,
-			properties: {
-				every: false,
-				some: false,
-			},
-		});
+		expect(isSbProxy).to.equal(false);
 	};
 
 	const multiLayerSandbox = (key: string, value: any) => 
@@ -114,16 +108,10 @@ describe("Integration type tests", function()
 
 		const cemented = cement(sb3);
 
-		const isSbProxy = isSandboxProxy.sandboxProxyStatus(cemented);
+		const isSbProxy = isSandboxProxy.isSandboxProxy(cemented, "every");
 
 		expect(() => JSON.stringify(cemented)).not.to.throw();
-		expect(isSbProxy).to.deep.equal({
-			root: false,
-			properties: {
-				every: false,
-				some: false,
-			},
-		});
+		expect(isSbProxy).to.equal(false);
 	};
 
 	const propValuesByType = {

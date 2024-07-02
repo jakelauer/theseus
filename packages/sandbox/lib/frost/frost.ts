@@ -3,10 +3,11 @@ import { CONSTANTS } from "../constants";
 import {
 	proxyDelete, proxyGet, proxySet, 
 } from "./proxy-traps";
-import type { FrostProxy } from "./types";
 import type { SandboxProxy } from "../sandbox";
 import structuredClone from "@ungap/structured-clone";
-import isElligibleForSandbox from "../validity/is-elligible-for-sandbox";
+import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy";
+import { isFrost } from "./detect/is-frost-proxy";
+import { objectRootIsFrost } from "./detect/root-is-frost";
 
 function createDeepFrostProxy<T extends object>(obj: T): T 
 {
@@ -37,14 +38,10 @@ function createDeepFrostProxy<T extends object>(obj: T): T
 	return proxy as Readonly<T>;
 }
 
-export function isFrostProxy<T extends object>(obj: T): obj is FrostProxy<T> 
-{
-	return (obj as any)[CONSTANTS.FROST.BASIS_SYMBOL] !== undefined;
-}
 
 export function frost<T extends object>(originalObject: T): Readonly<T> 
 {
-	if (isFrostProxy(originalObject)) 
+	if (isFrost(originalObject, "every")) 
 	{
 		return originalObject;
 	}
@@ -54,7 +51,7 @@ export function frost<T extends object>(originalObject: T): Readonly<T>
 
 function defrostLayer<T extends object>(obj: T): T 
 {
-	if (isFrostProxy(obj))
+	if (objectRootIsFrost(obj))
 	{
 		return obj[CONSTANTS.FROST.ORIGINAL_GETTER_SYMBOL];
 	}
@@ -66,21 +63,12 @@ function defrostLayer<T extends object>(obj: T): T
 
 export function defrost<T extends object>(obj: T): T 
 {
-	// Recursively defrost the object
-	// if (isFrostProxy(obj))
-	// {
-	// 	for (const key in obj)
-	// 	{
-	// 		obj[key] = defrost(obj[key]);
-	// 	}
-	// }
-
 	const root = defrostLayer(obj);
 	
 	for (const key in root)
 	{
 		const innerValue = root[key];
-		if (isElligibleForSandbox(innerValue))
+		if (isElligibleForProxy(innerValue))
 		{
 			root[key] = defrost(innerValue);
 		}
@@ -94,6 +82,9 @@ export function frostClone<T extends object>(originalObject: T): Readonly<T>
 	const clone = structuredClone(originalObject, {
 		lossy: false, 
 	});
+	
+	// This is just a getter in the original object, which means it appears in the clone
+	// as a normal property. We need to remove it.
 	delete (clone as any)[CONSTANTS.FROST.BASIS_SYMBOL];
 
 	return frost(clone);

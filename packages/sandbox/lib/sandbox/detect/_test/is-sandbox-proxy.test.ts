@@ -1,5 +1,5 @@
 import { describe } from "mocha";
-import { sandbox } from "../sandbox";
+import { sandbox } from "../../sandbox";
 import { containsSandboxProxy, isSandboxProxy } from "../is-sandbox-proxy";
 import { expect } from "chai";
 

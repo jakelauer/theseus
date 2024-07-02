@@ -1,10 +1,11 @@
 import { CONSTANTS, SANDBOX_VERIFIABLE_PROP_SYMBOL } from "../constants";
-import { frostClone, isFrostProxy } from "../frost";
+import { frostClone } from "../frost";
 import { generateVerificationProperty, getVerificationValueFromObject } from "../frost/properties";
 import { containsSandboxProxy, type SandboxMode } from "../sandbox";
 import structuredClone from "@ungap/structured-clone";
-import isElligibleForSandbox from "../validity/is-elligible-for-sandbox";
+import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy";
 import { sandboxTransform } from "../sandbox/sandbox-transform";
+import { isFrost } from "../frost/detect/is-frost-proxy";
 
 /**
  * Finalizes the changes made in a sandbox proxy object and returns a new object with those changes applied.
@@ -34,7 +35,7 @@ export function cement<T extends object>(obj: T): T
 		finalResult = sandboxTransform(finalResult, (val) => 
 		{
 			return cement(val);
-		}, isElligibleForSandbox);
+		}, isElligibleForProxy);
 	}
 
 	return finalResult;
@@ -73,7 +74,7 @@ function getModifiableObject<T extends object>(obj: T, mode: SandboxMode): T
 	if (mode === "copy")
 	{
 		// if the object is a frost proxy, clone it and frost it, otherwise structured clone it
-		result = isFrostProxy(obj) 
+		result = isFrost(obj) 
 			? frostClone(obj) 
 			: structuredClone(obj, {
 				lossy: false, 
@@ -105,11 +106,11 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 		if (!Object.prototype.hasOwnProperty.call(target, key))
 		{
 			const newValue = changes[key];
-			const setValue = isElligibleForSandbox(newValue) ? cement(newValue) : newValue;
+			const setValue = isElligibleForProxy(newValue) ? cement(newValue) : newValue;
 			handleSet(target, key, setValue, targetIsFrost);
 		}
 		// If the value is a nested object, apply changes recursively
-		else if (isElligibleForSandbox(newValue)) 
+		else if (isElligibleForProxy(newValue)) 
 		{
 			const cemented = cement(newValue);
 			handleSet(target, key, cemented, targetIsFrost);

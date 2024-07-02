@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { sandbox } from "../sandbox";
-import { isSandboxProxy } from "../is-sandbox-proxy";
+import { isSandboxProxy } from "../detect/is-sandbox-proxy";
 import { CONSTANTS } from "../../constants";
 import { cement } from "../../cement/cement";
 

@@ -3,4 +3,4 @@ export * from "./constants";
 export * from "./frost";
 export * from "./reject";
 export * from "./sandbox";
-export * from "./validity";
+export * from "./proxy-handler/validity";

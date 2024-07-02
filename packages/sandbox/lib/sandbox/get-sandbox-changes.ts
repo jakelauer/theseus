@@ -1,5 +1,5 @@
 import { CONSTANTS } from "../constants";
-import { isSandboxProxy } from "./is-sandbox-proxy";
+import { isSandboxProxy } from "./detect/is-sandbox-proxy";
 
 /**
  * Returns the changes made to the object if it is a sandbox proxy.

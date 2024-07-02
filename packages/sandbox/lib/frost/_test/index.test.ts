@@ -1,10 +1,9 @@
 import { expect } from "chai";
-import {
-	defrost, frost, isFrostProxy, 
-} from "../frost";
+import { defrost, frost } from "../frost";
 import { sandbox } from "../../sandbox/sandbox";
 import { cement } from "../../cement/cement";
 import { isSandboxProxy } from "../../sandbox";
+import { isFrost } from "../detect/is-frost-proxy";
 
 function expectAllLayersToBeFrostProxies(obj) 
 {
@@ -12,7 +11,7 @@ function expectAllLayersToBeFrostProxies(obj)
 	{
 		return;
 	}
-	expect(isFrostProxy(obj)).to.be.true;
+	expect(isFrost(obj)).to.be.true;
 	Object.values(obj).forEach(expectAllLayersToBeFrostProxies);
 }
 
@@ -22,7 +21,7 @@ function expectNoLayersToBeFrostProxies(obj)
 	{
 		return;
 	}
-	expect(isFrostProxy(obj)).to.be.false;
+	expect(isFrost(obj)).to.be.false;
 	Object.values(obj).forEach(expectNoLayersToBeFrostProxies);
 }
 
