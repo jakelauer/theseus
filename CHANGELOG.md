@@ -1,3 +1,10 @@
+## [10.2.3](https://github.com/jakelauer/theseus-js/compare/v10.2.2...v10.2.3) (2024-07-03)
+
+
+### Bug Fixes
+
+* **sandbox:** prevent sandboxing unproxyable objects ([ad93727](https://github.com/jakelauer/theseus-js/commit/ad9372706970314c45b7dca19e1e37ed26927818))
+
 ## [10.2.2](https://github.com/jakelauer/theseus-js/compare/v10.2.1...v10.2.2) (2024-07-03)
 
 
