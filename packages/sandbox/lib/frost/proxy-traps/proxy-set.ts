@@ -1,6 +1,7 @@
 import { assertValidVerificationProperty } from "../assertions";
 import { SANDBOX_VERIFIABLE_PROP_SYMBOL, CONSTANTS } from "../../constants";
 import type { SandboxSettable } from "../types";
+import { symbolCompare } from "../../symbol-compare";
 
 interface ProxySetterParams
 {
@@ -12,7 +13,7 @@ export function proxySet(target: any, ostensibleProp: string | symbol, ostensibl
 	const { proxy } = params;
 	
 	// Set the verification property
-	if (ostensibleProp == CONSTANTS.FROST.SETTER_SYMBOL) 
+	if (symbolCompare(ostensibleProp, CONSTANTS.FROST.SETTER_SYMBOL).looseEqual)
 	{
 		const {
 			prop,

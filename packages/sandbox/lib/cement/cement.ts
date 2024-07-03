@@ -6,6 +6,7 @@ import structuredClone from "@ungap/structured-clone";
 import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy";
 import { sandboxTransform } from "../sandbox/sandbox-transform";
 import { isFrost } from "../frost/detect/is-frost-proxy";
+import { symbolCompare } from "../symbol-compare";
 
 /**
  * Finalizes the changes made in a sandbox proxy object and returns a new object with those changes applied.
@@ -116,7 +117,7 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 			handleSet(target, key, cemented, targetIsFrost);
 		}
 		// If the value is a deletion symbol, delete the property
-		else if (newValue === CONSTANTS.FROST.DELETION_SYMBOL) 
+		else if (symbolCompare(newValue, CONSTANTS.FROST.DELETION_SYMBOL).looseEqual)
 		{
 			handleDeletion(target, key, targetIsFrost);
 		}

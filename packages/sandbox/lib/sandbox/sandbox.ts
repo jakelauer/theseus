@@ -3,6 +3,7 @@ import { CONSTANTS } from "../constants";
 import type { Metadata, SandboxParams } from "./types";
 import { isSandbox } from "./detect/is-sandbox-proxy";
 import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy";
+import { symbolCompare } from "../symbol-compare";
 
 /**
  * Creates a sandbox proxy for the given object, allowing changes to be tracked
@@ -90,7 +91,7 @@ function createMetadata<T extends object>(obj: T, params: SandboxParams): Metada
 
 function handleGet<T extends object>(target: T, prop: string | symbol, receiver: any, metadata: Metadata<T>, proxyMap: WeakMap<object, object>) 
 {
-	if (prop === CONSTANTS.SANDBOX_SYMBOL) 
+	if (symbolCompare(prop, CONSTANTS.SANDBOX_SYMBOL).looseEqual)
 	{
 		return metadata;
 	}

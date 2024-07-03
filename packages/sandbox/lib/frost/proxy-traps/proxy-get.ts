@@ -2,6 +2,7 @@ import { CONSTANTS } from "../../constants";
 import { assertValidVerificationProperty } from "../assertions";
 import { objectRootIsFrost } from "../detect/root-is-frost";
 import { extractVerificationPropValues } from "../properties";
+import { symbolCompare } from "../../symbol-compare";
 
 interface FrostGetterParams
 {
@@ -11,7 +12,7 @@ interface FrostGetterParams
 
 export function proxyGet(original: any, target: any, prop: string | symbol, params: FrostGetterParams) 
 {
-	if (prop === CONSTANTS.FROST.ORIGINAL_GETTER_SYMBOL)
+	if (symbolCompare(prop, CONSTANTS.FROST.ORIGINAL_GETTER_SYMBOL).looseEqual)
 	{
 		return original;
 	}
@@ -23,7 +24,7 @@ export function proxyGet(original: any, target: any, prop: string | symbol, para
 		return recursor(value);
 	}
 	
-	if (prop === CONSTANTS.FROST.BASIS_SYMBOL)
+	if (symbolCompare(prop, CONSTANTS.FROST.BASIS_SYMBOL).looseEqual)
 	{
 		return guid;
 	}

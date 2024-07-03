@@ -1,6 +1,7 @@
 import { assertValidVerificationProperty } from "../assertions";
 import { CONSTANTS } from "../../constants";
 import { propertyStartsWith, extractVerificationPropValues } from "../properties";
+import { symbolCompare } from "../../symbol-compare";
 
 interface ProxyDeleterParams
 {
@@ -25,7 +26,7 @@ export function proxyDelete(target: any, ostensibleProp: string | symbol, params
 		[CONSTANTS.FROST.SETTER_SYMBOL]: true,
 	};
 
-	const isSpecialSymbol = typeof ostensibleProp === "symbol" && Object.getOwnPropertySymbols(deletableConstants).includes(ostensibleProp);
+	const isSpecialSymbol = typeof ostensibleProp === "symbol" && Object.getOwnPropertySymbols(deletableConstants).find((c) => symbolCompare(ostensibleProp, c).looseEqual);
 
 	// Allow deletion of constants for sandbox
 	if (isSpecialSymbol)
