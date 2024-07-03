@@ -1,3 +1,10 @@
+## [10.2.1](https://github.com/jakelauer/theseus-js/compare/v10.2.0...v10.2.1) (2024-07-03)
+
+
+### Bug Fixes
+
+* **sandbox:** attempted fix for frost detection ([30c00c7](https://github.com/jakelauer/theseus-js/commit/30c00c75f24e3cc8b6868083732c2127747aca3d))
+
 # [10.2.0](https://github.com/jakelauer/theseus-js/compare/v10.1.4...v10.2.0) (2024-07-02)
 
 
