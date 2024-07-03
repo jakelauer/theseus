@@ -1,5 +1,5 @@
 import { proxyStatus } from "../../proxy-handler/proxy-status";
-import type { SandboxProxy } from "../types";
+import type { Sandbox } from "../types";
 import { objectRootIsSandbox } from "./root-is-sandbox";
 
 /**
@@ -7,9 +7,9 @@ import { objectRootIsSandbox } from "./root-is-sandbox";
  *
  * @template T - The type of the object.
  * @param {T} obj - The object to check.
- * @returns {obj is SandboxProxy<T>} - True if the object is a sandbox proxy, false otherwise.
+ * @returns {obj is Sandbox<T>} - True if the object is a sandbox proxy, false otherwise.
  */
-export const isDeepSandbox = <T extends object>(obj: T, mode: "some" | "every" = "every"): obj is SandboxProxy<T> => 
+export const isDeepSandbox = <T extends object>(obj: T, mode: "some" | "every" = "every"): obj is Sandbox<T> => 
 {
 	const status = proxyStatus(obj, {
 		objectChecker: objectRootIsSandbox,
@@ -23,7 +23,7 @@ export const isDeepSandbox = <T extends object>(obj: T, mode: "some" | "every" =
 /**
  * Determines if the given object is a sandbox proxy (shallow check, only checks the root object).
  */
-export const isShallowSandbox = <T extends object>(obj?: T): obj is SandboxProxy<T> => 
+export const isShallowSandbox = <T extends object>(obj?: T): obj is Sandbox<T> => 
 {
 	return objectRootIsSandbox(obj);
 };

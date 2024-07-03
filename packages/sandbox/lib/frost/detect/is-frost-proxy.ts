@@ -7,7 +7,6 @@ import { objectRootIsFrost } from "./root-is-frost";
  *
  * @template T - The type of the object.
  * @param {T} obj - The object to check.
- * @returns {obj is SandboxProxy<T>} - True if the object is a sandbox proxy, false otherwise.
  */
 export const isDeepFrost = <T extends object>(obj: T, mode: "some" | "every" = "every"): obj is FrostProxy<T> => 
 {

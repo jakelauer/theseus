@@ -9,14 +9,14 @@ describe("getSandboxChanges", function()
 		const changes = {
 			some: "changes", 
 		};
-		const sandboxProxy = {
+		const sandbox = {
 			some: "unchanged",
 			[CONSTANTS.SANDBOX_SYMBOL]: {
 				changes,
 			},
 		};
 
-		const result = getSandboxChanges(sandboxProxy);
+		const result = getSandboxChanges(sandbox);
 
 		expect(result).to.deep.equal(changes);
 	});

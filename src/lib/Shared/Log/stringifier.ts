@@ -16,12 +16,12 @@ export const stringifier = (obj: object) =>
 {
 	if (isShallowSandbox(obj))
 	{
-		return "SandboxProxy";
+		return "Sandbox";
 	}
 	
 	if (isShallowFrost(obj))
 	{
-		return "FrostProxy";
+		return "Frost";
 	}
 
 	try 
