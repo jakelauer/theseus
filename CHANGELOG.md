@@ -24,8 +24,8 @@
 
 ### Bug Fixes
 
-* **sandbox:** fix cement for nested sandboxes, enhance isSandboxProxy to account for inelligible properties ([05ded9e](https://github.com/jakelauer/theseus-js/commit/05ded9e552525f10165606d6b2f75da752edfc59))
-* **sandbox:** fix cement for nested sandboxes, enhance isSandboxProxy… ([#29](https://github.com/jakelauer/theseus-js/issues/29)) ([865ba10](https://github.com/jakelauer/theseus-js/commit/865ba10d65c2dd6efc6fe47226df69b4fb8def06))
+* **sandbox:** fix cement for nested sandboxes, enhance isSandbox to account for inelligible properties ([05ded9e](https://github.com/jakelauer/theseus-js/commit/05ded9e552525f10165606d6b2f75da752edfc59))
+* **sandbox:** fix cement for nested sandboxes, enhance isSandbox… ([#29](https://github.com/jakelauer/theseus-js/issues/29)) ([865ba10](https://github.com/jakelauer/theseus-js/commit/865ba10d65c2dd6efc6fe47226df69b4fb8def06))
 
 ## [10.1.1](https://github.com/jakelauer/theseus-js/compare/v10.1.0...v10.1.1) (2024-06-29)
 

@@ -59,7 +59,7 @@ describe("cement", function()
 			}, 
 		};
 
-		// Mock the isSandboxProxy function to return true
+		// Mock the isSandbox function to return true
 		
 		const result = cement(proxy);
 		expect(result).to.deep.equal({

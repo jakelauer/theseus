@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import sinonChai from "sinon-chai";
 import sinon from "sinon";
-import * as isSandboxProxy from "../lib/sandbox/detect/is-sandbox-proxy";
+import * as isSandbox from "../lib/sandbox/detect/is-sandbox-proxy";
 import { sandbox } from "../lib/sandbox/sandbox";
 import chai from "chai";
 import { cement } from "../lib";
@@ -60,7 +60,7 @@ describe("Integration type tests", function()
 	{
 		const sb = sandbox(createMultiLevelObject(key, value));
 
-		const isSbProxy = isSandboxProxy.isSandbox(sb);
+		const isSbProxy = isSandbox.isSandbox(sb);
 
 		expect(() => JSON.stringify(sandbox)).not.to.throw();
 		expect(isSbProxy).to.be.true;
@@ -76,7 +76,7 @@ describe("Integration type tests", function()
 
 		const cemented = cement(sb);
 
-		const isSbProxy = isSandboxProxy.isSandbox(cemented, "every");
+		const isSbProxy = isSandbox.isSandbox(cemented, "every");
 
 		expect(() => JSON.stringify(cemented)).not.to.throw();
 		expect(isSbProxy).to.equal(false);
@@ -90,7 +90,7 @@ describe("Integration type tests", function()
 		const sb2 = sandbox(sb1);
 		const sb3 = sandbox(sb2);
 
-		const isSbProxy = isSandboxProxy.isSandbox(sb3);
+		const isSbProxy = isSandbox.isSandbox(sb3);
 
 		expect(() => JSON.stringify(sandbox)).not.to.throw();
 		expect(isSbProxy).to.be.true;
@@ -108,7 +108,7 @@ describe("Integration type tests", function()
 
 		const cemented = cement(sb3);
 
-		const isSbProxy = isSandboxProxy.isSandbox(cemented, "every");
+		const isSbProxy = isSandbox.isSandbox(cemented, "every");
 
 		expect(() => JSON.stringify(cemented)).not.to.throw();
 		expect(isSbProxy).to.equal(false);

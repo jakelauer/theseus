@@ -4,6 +4,7 @@ import { expect } from "chai";
 import { cement } from "../lib/cement/cement";
 import { defrost, frost } from "../lib/frost";
 import { isFrost } from "../lib/frost/detect/is-frost-proxy";
+import { isSandbox } from "../lib/sandbox";
 
 describe("Bad Cards", function()
 {
@@ -18,9 +19,9 @@ describe("Bad Cards", function()
 		expect(gameItem.id).not.to.equal("fake-new-id");
 
 		expect(isFrost(gameItem, "every")).to.be.false;
-		expect(isSandboxProxy(gameItem, "every")).to.be.false;
+		expect(isSandbox(gameItem, "every")).to.be.false;
 		expect(isFrost(sandboxedGameItem, "every")).to.be.false;
-		expect(isSandboxProxy(sandboxedGameItem)).to.be.true;
+		expect(isSandbox(sandboxedGameItem)).to.be.true;
 	});
 
 	it("should successfully cement a sandboxed game item", function()
@@ -36,11 +37,11 @@ describe("Bad Cards", function()
 		expect(gameItem.id).to.equal("fake-new-id");
 
 		expect(isFrost(gameItem)).to.be.false;
-		expect(isSandboxProxy(gameItem)).to.be.false;
+		expect(isSandbox(gameItem)).to.be.false;
 		expect(isFrost(sandboxedGameItem)).to.be.false;
-		expect(isSandboxProxy(sandboxedGameItem)).to.be.true;
+		expect(isSandbox(sandboxedGameItem)).to.be.true;
 		expect(isFrost(cementedGameItem)).to.be.false;
-		expect(isSandboxProxy(cementedGameItem)).to.be.false;
+		expect(isSandbox(cementedGameItem)).to.be.false;
 	});
 
 	it("should successfully frost and defrost a sandboxed game item", function()

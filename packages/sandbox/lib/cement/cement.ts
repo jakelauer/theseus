@@ -43,7 +43,7 @@ export function cement<T extends object>(obj: T): T
 
 function cementAtRoot<T extends object>(obj: T): T 
 {
-	let original: T, changes: Record<string | symbol, any>, mode: SandboxMode, isSandboxProxy = false;
+	let original: T, changes: Record<string | symbol, any>, mode: SandboxMode, isSandbox = false;
 	try 
 	{
 		// If this errors, the object is not a sandbox proxy
@@ -51,14 +51,14 @@ function cementAtRoot<T extends object>(obj: T): T
 		original = sbMetadata.original;
 		changes = sbMetadata.changes;
 		mode = sbMetadata.params.mode;
-		isSandboxProxy = true;
+		isSandbox = true;
 	}
 	catch 
 	{
 		// Not really an error case, just means the object is not a sandbox proxy
 	}
 
-	if (isSandboxProxy) 
+	if (isSandbox) 
 	{
 		const toModify = getModifiableObject(original, mode);
 	
