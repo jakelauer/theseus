@@ -18,7 +18,7 @@ function createDeepFrostProxy<T extends object>(obj: T): T
 		{
 			return proxyGet(obj, target, prop, { 
 				guid, 
-				recursor: (value: any) => createDeepFrostProxy(value), 
+				recursor: (value: any) => frost(value), 
 			});
 		},
 		set(target, prop, value) 

@@ -11,8 +11,7 @@ function expectAllLayersToBeFrostProxies(obj)
 	{
 		return;
 	}
-	expect(isFrost(obj)).to.be.true;
-	Object.values(obj).forEach(expectAllLayersToBeFrostProxies);
+	expect(isFrost(obj, "every")).to.be.true;
 }
 
 function expectNoLayersToBeFrostProxies(obj) 
@@ -21,8 +20,7 @@ function expectNoLayersToBeFrostProxies(obj)
 	{
 		return;
 	}
-	expect(isFrost(obj)).to.be.false;
-	Object.values(obj).forEach(expectNoLayersToBeFrostProxies);
+	expect(isFrost(obj, "some")).to.be.false;
 }
 
 describe("frost", function() 
