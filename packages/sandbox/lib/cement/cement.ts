@@ -1,7 +1,7 @@
 import { CONSTANTS, SANDBOX_VERIFIABLE_PROP_SYMBOL } from "../constants";
 import { frostClone } from "../frost";
 import { generateVerificationProperty, getVerificationValueFromObject } from "../frost/properties";
-import { containsSandboxProxy, type SandboxMode } from "../sandbox";
+import { containsSandbox, type SandboxMode } from "../sandbox";
 import structuredClone from "@ungap/structured-clone";
 import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy";
 import { sandboxTransform } from "../sandbox/sandbox-transform";
@@ -30,7 +30,7 @@ export function cement<T extends object>(obj: T): T
 	// We don't need to check for situations where there are non-sandbox-proxies between
 	// a sb-root and a sb-nested, because sb-root objects are recursively sandboxed, so
 	// any changes to nested objects will also be sandboxed if the root is sandboxed.
-	if (containsSandboxProxy(finalResult))
+	if (containsSandbox(finalResult))
 	{
 		finalResult = sandboxTransform(finalResult, (val) => 
 		{

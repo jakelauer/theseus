@@ -2,9 +2,6 @@ import { proxyStatus } from "../../proxy-handler/proxy-status";
 import type { FrostProxy } from "../types";
 import { objectRootIsFrost } from "./root-is-frost";
 
-
-
-
 /**
  * Determines if the given object is a sandbox proxy (deep check, checks the root object and all inner objects).
  *

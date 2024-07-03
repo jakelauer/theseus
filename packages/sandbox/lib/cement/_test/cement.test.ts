@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { cement } from "../cement";
 import { CONSTANTS } from "../../constants";
 import {
-	containsSandboxProxy, isSandboxProxy, sandbox, 
+	containsSandbox, isSandbox, sandbox, 
 } from "../../sandbox";
 import structuredClone from "@ungap/structured-clone";
 
@@ -125,7 +125,7 @@ describe("cement", function()
 			}, 
 		});
 
-		expect(isSandboxProxy(result, "some")).to.be.false;
+		expect(isSandbox(result, "some")).to.be.false;
 	});
 
 	it("should cement nested objects even if the root object is not a sandbox", function()
@@ -147,7 +147,7 @@ describe("cement", function()
 			}, 
 		});
 
-		expect(isSandboxProxy(result)).to.be.false;
+		expect(isSandbox(result)).to.be.false;
 	});
 
 	it("should cement deeply nested objects, even if the parent object is not a sandbox", function()
@@ -177,7 +177,7 @@ describe("cement", function()
 
 		expect(cemented.key2.key3.key4.key5).to.equal("changed");
 		expect(original.key2.key3.key4.key5).to.equal("unchanged");
-		expect(containsSandboxProxy(cemented)).to.be.false;
+		expect(containsSandbox(cemented)).to.be.false;
 	});
 
 	it("should handle sandbox set to property inside another sandbox", function() 
@@ -200,6 +200,6 @@ describe("cement", function()
 			},
 		});
 
-		expect(containsSandboxProxy(result)).to.be.false;
+		expect(containsSandbox(result)).to.be.false;
 	});
 });

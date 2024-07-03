@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { defrost, frost } from "../frost";
 import { sandbox } from "../../sandbox/sandbox";
 import { cement } from "../../cement/cement";
-import { isSandboxProxy } from "../../sandbox";
+import { isSandbox } from "../../sandbox";
 import { isFrost } from "../detect/is-frost-proxy";
 
 function expectAllLayersToBeFrostProxies(obj) 
@@ -166,7 +166,7 @@ describe("frost", function()
 			const sb = sandbox(frosted);
 			sb.layer1.layer2.layer3.a = 5;
 			const cemented = cement(sb);
-			expect(isSandboxProxy(cemented.layer1)).to.be.false;
+			expect(isSandbox(cemented.layer1)).to.be.false;
 			expect(cemented.layer1.layer2.layer3.a).to.equal(5);
 		});
 	

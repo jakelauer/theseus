@@ -6,7 +6,7 @@ import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
 import {
-	cement, frost, isSandboxProxy, sandbox, 
+	cement, frost, isSandbox, sandbox, 
 } from "theseus-sandbox";
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
@@ -150,7 +150,7 @@ export class MutatorSetBuilder<
 			[selfPath]: (...args: any[]) => 
 			{
 				Theseus.incrementStackDepth(this.__theseusId);
-				const draft = isSandboxProxy(this.data[this.paramNoun]) 
+				const draft = isSandbox(this.data[this.paramNoun]) 
 					? this.data 
 					: sandbox(this.data, {
 						mode: "copy", 
@@ -208,7 +208,7 @@ export class MutatorSetBuilder<
 	{
 		const generateOutcome = (generatedData: TData) => 
 		{
-			const finishedDraft = isSandboxProxy(generatedData) 
+			const finishedDraft = isSandbox(generatedData) 
 				? cement(generatedData) as Record<TParamNoun, TData> 
 				: generatedData;
 				

@@ -1,7 +1,6 @@
 import { GetMockGameItem } from "./bad-cards.test-dep";
 import { sandbox } from "../lib/sandbox/sandbox";
 import { expect } from "chai";
-import { isSandboxProxy } from "../lib/sandbox/detect/is-sandbox-proxy";
 import { cement } from "../lib/cement/cement";
 import { defrost, frost } from "../lib/frost";
 import { isFrost } from "../lib/frost/detect/is-frost-proxy";

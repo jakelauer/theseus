@@ -1,5 +1,5 @@
 import { CONSTANTS } from "../constants";
-import { isSandboxProxy } from "../sandbox/detect/is-sandbox-proxy";
+import { isSandbox } from "../sandbox/detect/is-sandbox-proxy";
 
 /**
  * Reverts the object to its original state if it is a sandbox proxy.
@@ -11,7 +11,7 @@ import { isSandboxProxy } from "../sandbox/detect/is-sandbox-proxy";
  */
 export function reject<T extends object>(obj: T): T 
 {
-	if (isSandboxProxy(obj)) 
+	if (isSandbox(obj)) 
 	{
 		const original = obj[CONSTANTS.SANDBOX_SYMBOL].original as T;
 		return original;

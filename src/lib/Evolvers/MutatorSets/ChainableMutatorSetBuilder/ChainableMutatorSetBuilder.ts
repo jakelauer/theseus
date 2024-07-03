@@ -11,7 +11,7 @@ import { createChainingProxy } from "./proxy/chaining-proxy-manager";
 import {
 	cement, frost, getSandboxChanges, isFrost,
 } from "theseus-sandbox";
-import { containsSandboxProxy } from "theseus-sandbox";
+import { containsSandbox } from "theseus-sandbox";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
@@ -97,7 +97,7 @@ export class ChainableMutatorSetBuilder<
 		}
 		
 		let result = this.resultBase;
-		if (containsSandboxProxy(result))
+		if (containsSandbox(result))
 		{
 			result = cement(result);
 		}

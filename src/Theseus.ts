@@ -169,5 +169,6 @@ export class Theseus<
 		}
 	}
 }
+
 export type TheseusInstance = typeof Theseus;
 export default TheseusBuilder;

@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { CONSTANTS } from "../constants";
 import type { Metadata, SandboxParams } from "./types";
-import { isSandboxProxy } from "./detect/is-sandbox-proxy";
+import { isSandbox } from "./detect/is-sandbox-proxy";
 import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy";
 
 /**
@@ -14,7 +14,7 @@ import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-prox
  */
 export function sandbox<T extends object>(originalObject: T, _params?: Partial<SandboxParams>): T 
 {
-	if (isSandboxProxy(originalObject)) 
+	if (isSandbox(originalObject)) 
 	{
 		return originalObject;
 	}
@@ -101,7 +101,7 @@ function handleGet<T extends object>(target: T, prop: string | symbol, receiver:
 	}
 
 	const value = Reflect.get(target, prop, receiver);
-	if (isElligibleForProxy(value) && !isSandboxProxy(value)) 
+	if (isElligibleForProxy(value) && !isSandbox(value)) 
 	{
 		if (!proxyMap.has(value)) 
 		{
@@ -115,7 +115,7 @@ function handleGet<T extends object>(target: T, prop: string | symbol, receiver:
 
 function handleSet(prop: string | symbol, value: any, metadata: any, proxyMap: WeakMap<object, object>) 
 {
-	if (typeof value === "object" && value !== null && !isSandboxProxy(value)) 
+	if (typeof value === "object" && value !== null && !isSandbox(value)) 
 	{
 		value = createProxy(value, proxyMap, metadata.params);
 	}

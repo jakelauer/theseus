@@ -1,5 +1,5 @@
 import { CONSTANTS } from "../constants";
-import { isSandboxProxy } from "./detect/is-sandbox-proxy";
+import { isSandbox } from "./detect/is-sandbox-proxy";
 
 /**
  * Returns the changes made to the object if it is a sandbox proxy.
@@ -10,7 +10,7 @@ import { isSandboxProxy } from "./detect/is-sandbox-proxy";
  */
 export function getSandboxChanges<T extends object>(potentialSandboxProxy: T): Partial<T> 
 {
-	if (!isSandboxProxy(potentialSandboxProxy)) 
+	if (!isSandbox(potentialSandboxProxy)) 
 	{
 		throw new Error("The provided object is not a sandbox.");
 	}

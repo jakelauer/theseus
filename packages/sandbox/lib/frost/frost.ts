@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-import { CONSTANTS } from "../constants";
 import {
 	proxyDelete, proxyGet, proxySet, 
 } from "./proxy-traps";
@@ -8,6 +7,7 @@ import structuredClone from "@ungap/structured-clone";
 import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy";
 import { isFrost } from "./detect/is-frost-proxy";
 import { objectRootIsFrost } from "./detect/root-is-frost";
+import { CONSTANTS } from "../constants";
 
 function createDeepFrostProxy<T extends object>(obj: T): T 
 {

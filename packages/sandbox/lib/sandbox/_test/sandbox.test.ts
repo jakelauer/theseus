@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { sandbox } from "../sandbox";
-import { isSandboxProxy } from "../detect/is-sandbox-proxy";
+import { isSandbox } from "../detect/is-sandbox-proxy";
 import { CONSTANTS } from "../../constants";
 import { cement } from "../../cement/cement";
 
@@ -72,7 +72,7 @@ describe("sandbox", function()
 		{
 			if (typeof obj === "object" && obj !== null) 
 			{
-				expect(isSandboxProxy(obj)).to.be.true;
+				expect(isSandbox(obj)).to.be.true;
 				for (const key in obj) 
 				{
 					recursiveCheckIfProxy(obj[key]);
@@ -104,7 +104,7 @@ describe("sandbox", function()
 			d: 3,
 			e: 4, 
 		};
-		expect(isSandboxProxy(proxy.a)).to.be.true;
+		expect(isSandbox(proxy.a)).to.be.true;
 
 	});
 
@@ -114,7 +114,7 @@ describe("sandbox", function()
 			a: [1, 2, 3], 
 		};
 		const proxy = sandbox(original);
-		expect(isSandboxProxy(proxy.a)).to.be.true;
+		expect(isSandbox(proxy.a)).to.be.true;
 	});
 
 	it("should sandbox objects nested in arrays nested in objects", function() 
@@ -127,8 +127,8 @@ describe("sandbox", function()
 			}], 
 		};
 		const proxy = sandbox(original);
-		expect(isSandboxProxy(proxy.a[0])).to.be.true;
-		expect(isSandboxProxy(proxy.a[1])).to.be.true;
+		expect(isSandbox(proxy.a[0])).to.be.true;
+		expect(isSandbox(proxy.a[1])).to.be.true;
 	});
 
 	it("should correctly process changes to objects nested in arrays nested in objects", function() 
@@ -181,7 +181,7 @@ describe("sandbox", function()
 		};
 		let proxy: any;
 		expect(() => {proxy = sandbox(original);}).not.to.throw();
-		expect(isSandboxProxy(proxy.a)).to.be.false;
+		expect(isSandbox(proxy.a)).to.be.false;
 	});
 
 	it("should not break when dates are present", function()
@@ -191,6 +191,6 @@ describe("sandbox", function()
 		};
 		let proxy: any;
 		expect(() => {proxy = sandbox(original);}).not.to.throw();
-		expect(isSandboxProxy(proxy.a)).to.be.false;
+		expect(isSandbox(proxy.a)).to.be.false;
 	});
 });
