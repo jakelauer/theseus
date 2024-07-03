@@ -1,3 +1,10 @@
+## [10.2.2](https://github.com/jakelauer/theseus-js/compare/v10.2.1...v10.2.2) (2024-07-03)
+
+
+### Bug Fixes
+
+* **sandbox:** change symbol comparison to use symbol names instead of references ([5ff1c43](https://github.com/jakelauer/theseus-js/commit/5ff1c43d57c28a39a69e42054c823edf6c0eee3f))
+
 ## [10.2.1](https://github.com/jakelauer/theseus-js/compare/v10.2.0...v10.2.1) (2024-07-03)
 
 
