@@ -1,3 +1,15 @@
+# [11.0.0](https://github.com/jakelauer/theseus-js/compare/v10.2.3...v11.0.0) (2024-07-03)
+
+
+### Bug Fixes
+
+* **sandbox:** further fixing sandbox detection ([8814b01](https://github.com/jakelauer/theseus-js/commit/8814b01fa3bd00625e8dbb518e24d231f6bd2491))
+
+
+### BREAKING CHANGES
+
+* **sandbox:** Sandbox rearrangement and changes to what can be sandboxed
+
 ## [10.2.3](https://github.com/jakelauer/theseus-js/compare/v10.2.2...v10.2.3) (2024-07-03)
 
 
