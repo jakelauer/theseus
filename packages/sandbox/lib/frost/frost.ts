@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
 	proxyDelete, proxyGet, proxySet, 
 } from "./proxy-traps";
-import type { SandboxProxy } from "../sandbox";
+import type { Sandbox } from "../sandbox";
 import structuredClone from "@ungap/structured-clone";
 import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy";
 import { isFrost } from "./detect/is-frost-proxy";
@@ -33,7 +33,7 @@ function createDeepFrostProxy<T extends object>(obj: T): T
 				proxy,
 			});
 		},
-	}) as SandboxProxy<T>;
+	}) as Sandbox<T>;
 
 	return proxy as Readonly<T>;
 }

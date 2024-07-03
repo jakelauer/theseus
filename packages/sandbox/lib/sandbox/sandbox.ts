@@ -15,7 +15,7 @@ import { symbolCompare } from "../symbol-compare";
  */
 export function sandbox<T extends object>(originalObject: T, _params?: Partial<SandboxParams>): T 
 {
-	if (isSandbox(originalObject)) 
+	if (isSandbox(originalObject) || !isElligibleForProxy(originalObject)) 
 	{
 		return originalObject;
 	}
@@ -116,7 +116,7 @@ function handleGet<T extends object>(target: T, prop: string | symbol, receiver:
 
 function handleSet(prop: string | symbol, value: any, metadata: any, proxyMap: WeakMap<object, object>) 
 {
-	if (typeof value === "object" && value !== null && !isSandbox(value)) 
+	if (isElligibleForProxy(value) && !isSandbox(value)) 
 	{
 		value = createProxy(value, proxyMap, metadata.params);
 	}
