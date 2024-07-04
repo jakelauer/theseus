@@ -1,3 +1,15 @@
+# [12.0.0](https://github.com/jakelauer/theseus-js/compare/v11.0.2...v12.0.0) (2024-07-04)
+
+
+### Bug Fixes
+
+* **all:** idfk ([cba26e4](https://github.com/jakelauer/theseus-js/commit/cba26e44091294170a87b9e768435df1c7a7d6f6))
+
+
+### BREAKING CHANGES
+
+* **all:** shrug
+
 ## [11.0.2](https://github.com/jakelauer/theseus-js/compare/v11.0.1...v11.0.2) (2024-07-04)
 
 
