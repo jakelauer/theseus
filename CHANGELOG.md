@@ -1,3 +1,10 @@
+## [12.0.1](https://github.com/jakelauer/theseus-js/compare/v12.0.0...v12.0.1) (2024-07-04)
+
+
+### Bug Fixes
+
+* **logger:** publish ([df8d044](https://github.com/jakelauer/theseus-js/commit/df8d044830c74a5c4927a2e42b7ea1ab5f948f6c))
+
 # [12.0.0](https://github.com/jakelauer/theseus-js/compare/v11.0.2...v12.0.0) (2024-07-04)
 
 
