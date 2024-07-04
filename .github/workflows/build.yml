@@ -32,7 +32,7 @@ jobs:
           pnpm --version
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install -r
 
       - name: Run build
         run: pnpm build:ci:pkg  # Assuming pnpm and node_modules are correctly configured to be available
@@ -45,7 +45,7 @@ jobs:
 
       - name: Determine semantic-release command
         id: set-release-command
-        run: echo "::set-output name=command::$(if [[ $GITHUB_REF == 'refs/heads/main' ]]; then echo 'npx semantic-release --debug'; else echo 'npx semantic-release --dry-run'; fi)"
+        run: echo "::set-output name=command::$(if [[ $GITHUB_REF == 'refs/heads/main' ]]; then echo 'pnpm -r --workspace-concurrency=1 exec -- npx semantic-release --debug'; else echo 'pnpm -r --workspace-concurrency=1 exec -- npx semantic-release --dry-run'; fi)"
 
       - name: Determine monorepo semantic-release command
         id: set-monorepo-release-command
