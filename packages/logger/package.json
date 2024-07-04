@@ -9,7 +9,9 @@
         "build": "tsup",
         "test": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs"
     },
-    "keywords": [],
+    "keywords": [
+        "logger"
+    ],
     "author": "",
     "license": "ISC",
     "dependencies": {
