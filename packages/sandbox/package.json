@@ -12,7 +12,11 @@
     "files": [
         "dist"
     ],
-    "keywords": [],
+    "keywords": [
+        "sandbox",
+        "draft",
+        "immutable"
+    ],
     "author": "",
     "license": "ISC",
     "dependencies": {
