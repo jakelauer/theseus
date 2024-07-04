@@ -1,3 +1,10 @@
+## [12.0.2](https://github.com/jakelauer/theseus-js/compare/v12.0.1...v12.0.2) (2024-07-04)
+
+
+### Bug Fixes
+
+* **na:** na ([2515b5c](https://github.com/jakelauer/theseus-js/commit/2515b5cb5bd45bb68622eb41109273fdd5d77c28))
+
 ## [12.0.1](https://github.com/jakelauer/theseus-js/compare/v12.0.0...v12.0.1) (2024-07-04)
 
 
