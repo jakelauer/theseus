@@ -1,3 +1,10 @@
+## [11.0.1](https://github.com/jakelauer/theseus-js/compare/v11.0.0...v11.0.1) (2024-07-04)
+
+
+### Bug Fixes
+
+* **sandbox/frost:** fix frost creating deep proxies of inelligible objects due to incorrect recursion ([171d3da](https://github.com/jakelauer/theseus-js/commit/171d3dacfaff89e13025e70118f701626898cba8))
+
 # [11.0.0](https://github.com/jakelauer/theseus-js/compare/v10.2.3...v11.0.0) (2024-07-03)
 
 
