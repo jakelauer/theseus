@@ -1,0 +1,14 @@
+{
+    "name": "sandbox-constants",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "module": "dist/index.cjs",
+    "scripts": {
+        "test": "echo 'no tests'",
+        "build": "tsup"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}

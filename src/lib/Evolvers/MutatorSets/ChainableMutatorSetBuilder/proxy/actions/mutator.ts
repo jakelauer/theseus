@@ -1,5 +1,5 @@
 import { Theseus } from "@/Theseus";
-import { getTheseusLogger } from "../../../../../Shared";
+import { getTheseusLogger } from "theseus-logger";
 import { ProxyActions, ProxyActionType } from "../proxy-actions";
 import type { ProxyActionMapParameters } from "../proxy-action-map";
 import { cement } from "theseus-sandbox";

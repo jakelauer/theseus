@@ -1,8 +1,7 @@
 import winston from "winston";
-
-import { setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
-import winstonConfigBuilder from "@Shared/Log/winston-config-builder";
-import { theseusArgs } from "@Shared/Log/theseus-args";
+import { theseusArgs } from "./theseus-args";
+import { setTheseusLogLevel } from "./set-theseus-log-level";
+import winstonConfigBuilder from "./winston-config-builder";
 
 const logLevel = theseusArgs["theseus-log-level"];
 

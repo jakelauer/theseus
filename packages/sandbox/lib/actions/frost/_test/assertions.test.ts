@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { CONSTANTS } from "../../../constants";
+import { CONSTANTS } from "sandbox-constants";
 import { assertValidVerificationProperty } from "../assertions";
 
 describe("assertValidVerificationProperty", function() 

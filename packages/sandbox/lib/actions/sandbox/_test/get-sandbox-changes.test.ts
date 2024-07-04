@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { getSandboxChanges } from "../get-sandbox-changes";
-import { CONSTANTS } from "../../../constants";
+import { CONSTANTS } from "sandbox-constants";
 
 describe("getSandboxChanges", function() 
 {

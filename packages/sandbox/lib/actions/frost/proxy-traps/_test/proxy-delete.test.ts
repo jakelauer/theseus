@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 // Mock the assertValidVerificationProperty and extractVerificationPropValues functions
 import sinon from "sinon";
-import { CONSTANTS } from "../../../../constants";
+import { CONSTANTS } from "sandbox-constants";
 import { proxyDelete } from "../proxy-delete";
 import {
 	extractVerificationPropValues, generateVerificationProperty, propertyStartsWith, 

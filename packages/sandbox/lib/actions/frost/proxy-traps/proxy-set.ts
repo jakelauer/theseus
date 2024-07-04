@@ -1,5 +1,5 @@
 import { assertValidVerificationProperty } from "../assertions";
-import { SANDBOX_VERIFIABLE_PROP_SYMBOL, CONSTANTS } from "../../../constants";
+import { SANDBOX_VERIFIABLE_PROP_SYMBOL, CONSTANTS } from "sandbox-constants";
 import type { SandboxSettable } from "../types";
 import { symbolCompare } from "../../../symbols/symbol-compare";
 

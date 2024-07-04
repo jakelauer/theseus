@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { sandbox } from "../sandbox";
 import { isSandbox } from "../detect/is-sandbox-proxy";
-import { CONSTANTS } from "../../../constants";
+import { CONSTANTS } from "sandbox-constants";
 import { cement } from "../../cement/cement";
 
 describe("sandbox", function() 

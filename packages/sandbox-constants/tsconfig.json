@@ -1,0 +1,15 @@
+{
+    "compileOnSave": true,
+    "include": ["./lib/**/*"],
+	"exclude": ["node_modules", "dist", "**/*.test-dep.*"],
+    "compilerOptions": {
+		"esModuleInterop": true,
+		"declaration": true,
+        "allowJs": true,
+		"target": "ES2016",
+		"moduleResolution": "Node",
+        "rootDir": "./lib",
+        "baseUrl": "./lib",
+		"outDir": "./dist",
+    },
+}

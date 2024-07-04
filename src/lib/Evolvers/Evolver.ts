@@ -1,5 +1,4 @@
 import { ChainableMutatorSetBuilder, MutatorSetBuilder } from "@Evolvers/MutatorSets";
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
 
 import type {
 	EvolveObject,
@@ -10,6 +9,7 @@ import type {
 import type { MutatorDefs } from "@Evolvers/Types/MutatorTypes";
 import { normalizeEvolverName, type NormalizedEvolverName } from "@Evolvers/Util/normalizeEvolverName";
 import type { ChainableMutators, FinalMutators } from "./Types/ChainableTypes";
+import { getTheseusLogger } from "theseus-logger";
 const log = getTheseusLogger("Evolver");
 
 /**

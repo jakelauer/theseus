@@ -8,6 +8,8 @@ module.exports = {
 			"./packages/commitlint-config/tsconfig.json",
 			"./packages/sandbox/tsconfig.tsup.json",
 			"./packages/sandbox/tsconfig.json",
+			"./packages/logger/tsconfig.json",
+			"./packages/logger/tsconfig.tsup.json",
 			"./packages/eslint-plugin-theseus/tsconfig.json",
 			"./tsconfig.json"
 		],

@@ -1,4 +1,4 @@
-import { isShallowFrost, isShallowSandbox } from "theseus-sandbox";
+import { CONSTANTS } from "sandbox-constants";
 
 const isPrimitive = (obj: object) =>
 	obj === null || ["string", "number", "boolean", "object"].includes(typeof obj);
@@ -37,3 +37,13 @@ export const stringifier = (obj: object) =>
 		return `CANNOT_STRINGIFY: ${e}`;
 	}
 };
+function isShallowSandbox(obj: object) 
+{
+	return !!obj?.[CONSTANTS.SANDBOX_SYMBOL];
+}
+
+function isShallowFrost(obj: object) 
+{
+	return !!obj?.[CONSTANTS.FROST.BASIS_SYMBOL];
+}
+

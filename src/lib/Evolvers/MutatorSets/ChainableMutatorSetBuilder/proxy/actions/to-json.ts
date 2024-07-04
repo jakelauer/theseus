@@ -1,4 +1,4 @@
-import { getTheseusLogger } from "../../../../../Shared";
+import { getTheseusLogger } from "theseus-logger";
 import type { ProxyActionMapParameters } from "../proxy-action-map";
 import { ProxyActions, ProxyActionType } from "../proxy-actions";
 

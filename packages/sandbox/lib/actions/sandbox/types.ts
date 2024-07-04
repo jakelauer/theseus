@@ -1,4 +1,4 @@
-import type { CONSTANTS } from "../../constants";
+import type { CONSTANTS } from "sandbox-constants";
 
 export type SandboxMode = "copy" | "modify";
 

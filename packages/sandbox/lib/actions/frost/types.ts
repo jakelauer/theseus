@@ -1,4 +1,4 @@
-import type { SANDBOX_VERIFIABLE_PROP_SYMBOL, CONSTANTS } from "../../constants";
+import type { SANDBOX_VERIFIABLE_PROP_SYMBOL, CONSTANTS } from "sandbox-constants";
 
 export interface SandboxSettable
 {

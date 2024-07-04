@@ -7,7 +7,10 @@ import structuredClone from "@ungap/structured-clone";
 import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy";
 import { isFrost } from "./detect/is-frost-proxy";
 import { objectRootIsFrost } from "./detect/root-is-frost";
-import { CONSTANTS } from "../../constants";
+import { CONSTANTS } from "sandbox-constants";
+import { getTheseusLogger } from "theseus-logger";
+
+const log = getTheseusLogger("frost");
 
 function createDeepFrostProxy<T extends object>(obj: T): T 
 {
@@ -56,7 +59,7 @@ function defrostLayer<T extends object>(obj: T): T
 		return obj[CONSTANTS.FROST.ORIGINAL_GETTER_SYMBOL];
 	}
 
-	console.warn("defrost called on non-frost object");
+	log.warn("defrost called on non-frost object");
 
 	return obj;
 }

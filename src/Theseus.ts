@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { getTheseusLogger } from "@Shared/index";
+import { getTheseusLogger } from "theseus-logger";
 
 import { Broadcaster } from "./lib/Broadcast/Broadcaster";
 import TheseusBuilder from "./TheseusBuilder";

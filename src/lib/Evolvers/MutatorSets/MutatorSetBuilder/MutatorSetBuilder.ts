@@ -1,7 +1,7 @@
 import type { FinalMutators } from "@Evolvers/Types/ChainableTypes";
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 import { Theseus } from "@/Theseus";
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
+import { getTheseusLogger } from "theseus-logger";
 
 
 import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";

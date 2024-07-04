@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import TheseusBuilder from "../TheseusBuilder";
-import { getTheseusLogger } from "@Shared/index";
+import { getTheseusLogger } from "theseus-logger";
 
 // Mock external dependencies and types
 // Assuming these mock functions and classes are implemented elsewhere in the test suite

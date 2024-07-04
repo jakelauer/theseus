@@ -2,7 +2,7 @@ import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
 import { ChainableMutatorSetBuilder } from "../ChainableMutatorSetBuilder";
-import { getTheseusLogger } from "../../../../Shared";
+import { getTheseusLogger } from "theseus-logger";
 
 chai.use(chaiAsPromised);
 

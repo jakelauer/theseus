@@ -1,6 +1,6 @@
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 import type { Mutator, GenericMutator } from "@Evolvers/Types/MutatorTypes";
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
+import { getTheseusLogger } from "theseus-logger";
 
 const log = getTheseusLogger("Queue");
 

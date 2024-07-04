@@ -1,7 +1,8 @@
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
+import { getTheseusLogger } from "theseus-logger";
 import type { EvolverInstance } from "./Types/EvolverTypes";
 import type { MutatorDefs } from "./Types/MutatorTypes";
 import type { MacroMutatorsFormatted, MutatorsFormatted } from "@Evolvers/Types/EvolverComplexTypes";
+
 const log = getTheseusLogger("EvolverComplex");
 
 export const generateEvolveMethods = <

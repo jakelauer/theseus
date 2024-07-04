@@ -1,5 +1,5 @@
-import { allTransports } from "@Shared/Log/winston-config-builder";
 import { type ValidLogLevels, DEFAULT_LOG_LEVEL } from "./log-levels";
+import { allTransports } from "./winston-config-builder";
 
 let savedLevel: ValidLogLevels;
 const setAllTransportsLevel = (newLevel?: ValidLogLevels) => 

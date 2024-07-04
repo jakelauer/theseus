@@ -11,7 +11,7 @@
         "forceConsistentCasingInFileNames": true,
         "lib": ["ESNext", "DOM"],
         "module": "ES2020",
-        "moduleResolution": "node",
+        "moduleResolution": "Bundler",
         "noEmit": false,
         "noErrorTruncation": true,
         "noFallthroughCasesInSwitch": true,
@@ -24,6 +24,8 @@
         "target": "ES2020",
     },
 	"references": [
-		{"theseus-sandbox": "./packages/sandbox"}
+		{"theseus-sandbox": "./packages/sandbox"},
+		{"theseus-logger": "./packages/logger"},
+		{"sandbox-constants": "./packages/sandbox-constants"},
 	]
 }

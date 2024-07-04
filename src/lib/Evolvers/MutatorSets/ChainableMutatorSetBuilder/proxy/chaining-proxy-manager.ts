@@ -1,4 +1,4 @@
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
+import { getTheseusLogger } from "theseus-logger";
 import type { SortaPromise } from "../../../Types/EvolverTypes";
 import type { ChainableMutatorSetBuilder } from "../ChainableMutatorSetBuilder";
 import type { ChainableMutatorQueue } from "../ChainableMutatorQueue";

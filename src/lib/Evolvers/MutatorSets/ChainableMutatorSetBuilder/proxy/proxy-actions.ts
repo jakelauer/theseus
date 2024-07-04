@@ -1,4 +1,4 @@
-import { getTheseusLogger } from "../../../../Shared";
+import { getTheseusLogger } from "theseus-logger";
 import { enumValToFlagNames } from "../../../../Shared/Object/Flags";
 import type { ProxyActionMapParameters } from "./proxy-action-map";
 

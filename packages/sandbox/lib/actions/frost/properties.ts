@@ -1,4 +1,4 @@
-import { CONSTANTS } from "../../constants";
+import { CONSTANTS } from "sandbox-constants";
 export function propertyStartsWith(prop: string | symbol, searchString: string): boolean 
 {
 	if (typeof prop === "string") 

@@ -1,4 +1,4 @@
-import { CONSTANTS } from "../../../constants";
+import { CONSTANTS } from "sandbox-constants";
 import { symbolCompare } from "../../../symbols/symbol-compare";
 import { assertValidVerificationProperty } from "../assertions";
 import { objectRootIsFrost } from "../detect/root-is-frost";

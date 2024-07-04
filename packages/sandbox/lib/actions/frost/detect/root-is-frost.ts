@@ -1,4 +1,4 @@
-import { CONSTANTS } from "../../../constants";
+import { CONSTANTS } from "sandbox-constants";
 
 export function objectRootIsFrost(o?: any): boolean 
 {

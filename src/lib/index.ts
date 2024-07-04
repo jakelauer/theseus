@@ -10,4 +10,3 @@ export * from "./Refineries/RefineryComplex";
 export * from "./Refineries/Types";
 export * from "./Types/Modifiers";
 export * from "./Broadcast/Broadcaster";
-export * from "./Shared";

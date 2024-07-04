@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import { ProxyActionType, ProxyActions } from "../proxy-actions";
-import { getTheseusLogger } from "../../../../../Shared";
+import { getTheseusLogger } from "theseus-logger";
 import type { ProxyActionMapParameters } from "../proxy-action-map";
 
 // Create a mock subclass of ProxyActions for testing

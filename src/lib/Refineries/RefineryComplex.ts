@@ -1,4 +1,4 @@
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
+import { getTheseusLogger } from "theseus-logger";
 
 
 

@@ -42,8 +42,7 @@
     "dependencies": {
         "@ungap/structured-clone": "^1.2.0",
         "deep-extend": "^0.6.0",
-        "uuid": "^9.0.1",
-        "winston": "^3.12.0"
+        "uuid": "^9.0.1"
     },
     "devDependencies": {
         "@anolilab/semantic-release-pnpm": "^1.1.0",
@@ -95,6 +94,7 @@
         "sinon-chai": "^3.7.0",
         "theseus-commitlint-config": "workspace:~",
         "theseus-gpt-zip": "workspace:~",
+        "theseus-logger": "workspace:~",
         "theseus-sandbox": "workspace:~",
         "tsup": "^8.1.0",
         "tsx": "^4.11.0",

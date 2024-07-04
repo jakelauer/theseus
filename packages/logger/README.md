@@ -11,7 +11,7 @@ To get started with the Theseus logger, import the `getTheseusLogger` function f
 `get-theseus-logger.ts` file:
 
 ```typescript
-import { getTheseusLogger } from "theseus-js";
+import { getTheseusLogger } from "theseus-logger";
 ```
 
 ### Basic Usage

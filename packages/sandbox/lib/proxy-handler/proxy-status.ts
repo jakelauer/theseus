@@ -1,3 +1,4 @@
+import { getTheseusLogger } from "theseus-logger";
 import isElligibleForProxy from "./validity/is-elligible-for-proxy";
 
 interface ProxyStatusAll {
@@ -17,6 +18,8 @@ type ProxyStatus<TRecursive> =
 interface Params {
 	objectChecker: (obj: any) => boolean;
 }
+
+const log = getTheseusLogger("proxy-status");
 
 function objectPropertiesAreProxy(obj: any, params: Params): ProxyStatus<true>["properties"] 
 {
@@ -95,7 +98,7 @@ export const proxyStatus = <T extends object, TRecursive extends boolean>(
 
 const warnIfPartialSandbox = () => 
 {
-	console.warn(
+	log.warn(
 		"Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.",
 	);
 };

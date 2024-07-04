@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { CONSTANTS } from "../../constants";
+import { CONSTANTS } from "sandbox-constants";
 import type { Metadata, SandboxParams } from "./types";
 import { isSandbox } from "./detect/is-sandbox-proxy";
 import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy";

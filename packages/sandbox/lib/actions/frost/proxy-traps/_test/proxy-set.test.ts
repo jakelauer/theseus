@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
 // Mock the assertValidVerificationProperty function
-import { SANDBOX_VERIFIABLE_PROP_SYMBOL, CONSTANTS } from "../../../../constants";
+import { SANDBOX_VERIFIABLE_PROP_SYMBOL, CONSTANTS } from "sandbox-constants";
 import { proxySet } from "../proxy-set";
 import type { SandboxSettable } from "../../types";
 

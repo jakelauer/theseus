@@ -2,7 +2,7 @@ import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 import type { EvolverComplexInstance } from "@Evolvers/EvolverComplex";
 import { EvolverComplex, EvolversSymbol } from "@Evolvers/EvolverComplex";
 import { RefineryComplex } from "@Refineries/RefineryComplex";
-import { getTheseusLogger } from "@Shared/index";
+import { getTheseusLogger } from "theseus-logger";
 
 import { Theseus } from "./Theseus";
 

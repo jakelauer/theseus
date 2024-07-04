@@ -1,5 +1,5 @@
 import { assertValidVerificationProperty } from "../assertions";
-import { CONSTANTS } from "../../../constants";
+import { CONSTANTS } from "sandbox-constants";
 import { propertyStartsWith, extractVerificationPropValues } from "../properties";
 import { symbolCompare } from "../../../symbols/symbol-compare";
 

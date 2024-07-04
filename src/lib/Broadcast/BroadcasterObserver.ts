@@ -1,4 +1,4 @@
-import { getTheseusLogger } from "@Shared/index";
+import { getTheseusLogger } from "theseus-logger";
 
 const log = getTheseusLogger("BroadcasterObserver");
 

@@ -1,5 +1,5 @@
 import { ChainableMutatorQueue } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/ChainableMutatorQueue";
-import getTheseusLogger from "@Shared/Log/get-theseus-logger";
+import { getTheseusLogger } from "theseus-logger";
 
 import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
 

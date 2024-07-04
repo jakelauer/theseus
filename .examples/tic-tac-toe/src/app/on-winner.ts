@@ -1,4 +1,4 @@
-import { getTheseusLogger } from "theseus-js";
+import { getTheseusLogger } from "theseus-logger";
 import { GameShip } from "../game-ship/game-ship";
 
 const log = getTheseusLogger("OnWinner");

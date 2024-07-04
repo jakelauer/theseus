@@ -1,4 +1,7 @@
+import { getTheseusLogger } from "theseus-logger";
 import { symbolStringUndefined } from "../../symbols/symbol-string";
+
+const log = getTheseusLogger("is-valid-object");
 
 function isPlainObject(obj: any) 
 {
@@ -61,7 +64,7 @@ function passesValidEdgeCases(obj: any)
 
 	if (!passes)
 	{
-		console.warn("Object cannot be a sandbox or frost proxy because it is either an instance of a class or constructor function, or an instance of a native object.");
+		log.warn("Object cannot be a sandbox or frost proxy because it is either an instance of a class or constructor function, or an instance of a native object.", obj);
 	}
 
 	return passes;

@@ -1,4 +1,4 @@
-import { getTheseusLogger } from "../../../../Shared";
+import { getTheseusLogger } from "theseus-logger";
 import type { ChainableMutatorQueue } from "../ChainableMutatorQueue";
 import { ChainHelperAction } from "./actions/chain-helper";
 import { ChainTerminationAction } from "./actions/chain-termination";

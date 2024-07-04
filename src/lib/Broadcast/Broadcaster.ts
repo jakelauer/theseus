@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
-import { getTheseusLogger } from "@Shared/index";
+import { getTheseusLogger } from "theseus-logger";
 
 import type { CustomObserverClass } from "@Broadcast/BroadcasterObserver";
 export type DestroyCallback = () => void;

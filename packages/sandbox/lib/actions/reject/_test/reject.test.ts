@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { reject } from "../reject";
-import { CONSTANTS } from "../../../constants";
+import { CONSTANTS } from "sandbox-constants";
 
 describe("reject", function() 
 {

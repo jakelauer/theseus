@@ -1,4 +1,4 @@
-import { CONSTANTS } from "../../constants";
+import { CONSTANTS } from "sandbox-constants";
 import { isSandbox } from "../sandbox/detect/is-sandbox-proxy";
 
 /**

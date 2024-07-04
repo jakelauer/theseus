@@ -1,11 +1,9 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import * as winston from "winston";
+import { getTheseusLogger, type MockLoggingLib } from "../get-theseus-logger";
+import winstonConfigBuilder from "../winston-config-builder";
 
-import getTheseusLogger from "@Shared/Log/get-theseus-logger"; // Adjust the import path as necessary
-import winstonConfigBuilder from "@Shared/Log/winston-config-builder";
-
-import type { MockLoggingLib } from "@Shared/Log/get-theseus-logger"; // Adjust the import path as necessary
 describe("getLogger", function () 
 {
 	let mockLoggingLib: sinon.SinonStub<[string], MockLoggingLib>;

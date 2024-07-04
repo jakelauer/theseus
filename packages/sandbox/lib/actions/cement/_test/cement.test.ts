@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { cement } from "../cement";
-import { CONSTANTS } from "../../../constants";
+import { CONSTANTS } from "sandbox-constants";
 import {
 	containsSandbox, isSandbox, sandbox, 
 } from "../../sandbox";

@@ -1,0 +1,28 @@
+{
+    "name": "theseus-logger",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
+    "type": "module",
+    "scripts": {
+        "build": "tsup",
+        "test": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "winston": "^3.12.0",
+        "sandbox-constants": "workspace:~"
+    },
+    "devDependencies": {
+        "@types/sinon": "^17.0.3",
+        "@types/sinon-chai": "^3.2.12",
+        "mocha": "^10.3.0",
+        "sinon": "^18.0.0",
+        "sinon-chai": "^3.7.0",
+        "tsx": "4.11.2",
+        "typescript": "^5.4.2"
+    }
+}

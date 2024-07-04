@@ -1,9 +1,9 @@
 import * as winston from "winston";
 
-import { setTheseusLogLevel } from "@Shared/Log/set-theseus-log-level";
-import { stringifier } from "@Shared/Log/stringifier";
 import { theseusArgs } from "./theseus-args";
 import { DEFAULT_LOG_LEVEL, logLevels } from "./log-levels";
+import { setTheseusLogLevel } from "./set-theseus-log-level";
+import { stringifier } from "./stringifier";
 
 const { format, addColors } = winston;
 const {

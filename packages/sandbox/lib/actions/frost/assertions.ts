@@ -1,4 +1,4 @@
-import { CONSTANTS } from "../../constants";
+import { CONSTANTS } from "sandbox-constants";
 import type { SandboxSettable } from "./types";
 
 export const assertValidVerificationProperty = (verificationOwnerObj: any, valueToCheck: any): verificationOwnerObj is SandboxSettable => 

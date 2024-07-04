@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { proxyGet } from "../proxy-get";
-import { CONSTANTS } from "../../../../constants";
+import { CONSTANTS } from "sandbox-constants";
 import { assertValidVerificationProperty } from "../../assertions";
 import { extractVerificationPropValues } from "../../properties";
 

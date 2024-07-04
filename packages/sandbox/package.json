@@ -17,7 +17,9 @@
     "license": "ISC",
     "dependencies": {
         "clone-deep": "^4.0.1",
-        "uuid": "^9.0.1"
+        "uuid": "^9.0.1",
+        "theseus-logger": "workspace:~",
+        "sandbox-constants": "workspace:~"
     },
     "devDependencies": {
         "@types/sinon": "^17.0.3",

@@ -1,4 +1,4 @@
-import { CONSTANTS, SANDBOX_VERIFIABLE_PROP_SYMBOL } from "../../constants";
+import { CONSTANTS, SANDBOX_VERIFIABLE_PROP_SYMBOL } from "sandbox-constants";
 import { frostClone } from "../frost";
 import { generateVerificationProperty, getVerificationValueFromObject } from "../frost/properties";
 import { containsSandbox, type SandboxMode } from "../sandbox";
