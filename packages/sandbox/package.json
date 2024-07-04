@@ -15,7 +15,8 @@
     "keywords": [
         "sandbox",
         "draft",
-        "immutable"
+        "immutable",
+        "freeze"
     ],
     "author": "",
     "license": "ISC",
