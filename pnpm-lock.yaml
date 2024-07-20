@@ -254,10 +254,10 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       sandbox-constants:
-        specifier: workspace:latest
+        specifier: workspace:*
         version: link:../sandbox-constants
       theseus-logger:
-        specifier: workspace:latest
+        specifier: workspace:*
         version: link:../logger
       uuid:
         specifier: ^9.0.1
