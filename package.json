@@ -17,7 +17,7 @@
     "scripts": {
         "prepare": "husky install",
         "reinstall": "npx npkill && pnpm install",
-        "// ==== TESTING ==== //": "",
+        "// ==== TESTING ==== //": " ",
         "commit": "cz",
         "lint": "git add . && pnpm lint-staged",
         "lint-fix": "eslint ./ --fix --resolve-plugins-relative-to=./",
