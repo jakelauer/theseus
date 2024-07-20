@@ -58,7 +58,9 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Run monorepo semantic-release
-        run: ${{ steps.set-monorepo-release-command.outputs.command }}
+        run: |
+          find . -type f -name package.json -exec sed -i 's/workspace://g' '{}' \;
+          ${{ steps.set-monorepo-release-command.outputs.command }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
