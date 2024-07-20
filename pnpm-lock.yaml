@@ -220,7 +220,7 @@ importers:
   packages/logger:
     dependencies:
       sandbox-constants:
-        specifier: workspace:~
+        specifier: workspace:*
         version: link:../sandbox-constants
       winston:
         specifier: ^3.12.0
