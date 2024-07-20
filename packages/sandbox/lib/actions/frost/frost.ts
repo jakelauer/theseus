@@ -6,11 +6,7 @@ import type { Sandbox } from "../sandbox";
 import structuredClone from "@ungap/structured-clone";
 import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy";
 import { isFrost } from "./detect/is-frost-proxy";
-import { objectRootIsFrost } from "./detect/root-is-frost";
 import { CONSTANTS } from "sandbox-constants";
-import { getTheseusLogger } from "theseus-logger";
-
-const log = getTheseusLogger("frost");
 
 function createDeepFrostProxy<T extends object>(obj: T): T 
 {
@@ -52,33 +48,6 @@ export function frost<T extends object>(originalObject: T): Readonly<T>
 	return createDeepFrostProxy(originalObject);
 }
 
-function defrostLayer<T extends object>(obj: T): T 
-{
-	if (objectRootIsFrost(obj))
-	{
-		return obj[CONSTANTS.FROST.ORIGINAL_GETTER_SYMBOL];
-	}
-
-	log.warn("defrost called on non-frost object");
-
-	return obj;
-}
-
-export function defrost<T extends object>(obj: T): T 
-{
-	const root = defrostLayer(obj);
-	
-	for (const key in root)
-	{
-		const innerValue = root[key];
-		if (isElligibleForProxy(innerValue))
-		{
-			root[key] = defrost(innerValue);
-		}
-	}
-
-	return root;
-}
 
 export function frostClone<T extends object>(originalObject: T): Readonly<T> 
 {
