@@ -11,7 +11,9 @@
         "test:watch": "vitest watch",
         "coverage": "vitest run --coverage"
     },
-    "keywords": ["logger"],
+    "keywords": [
+        "logger"
+    ],
     "author": "",
     "license": "ISC",
     "dependencies": {
@@ -20,9 +22,7 @@
     },
     "devDependencies": {
         "@types/sinon": "^17.0.3",
-        "@types/sinon-chai": "^3.2.12",
         "sinon": "^18.0.0",
-        "sinon-chai": "^3.7.0",
         "tsx": "4.11.2",
         "typescript": "^5.4.2",
         "vitest": "^1.0.1",

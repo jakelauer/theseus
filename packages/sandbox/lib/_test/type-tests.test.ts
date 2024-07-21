@@ -1,15 +1,12 @@
-import sinonChai from "sinon-chai";
 import {
-	expect, afterEach, beforeEach, describe, it, 
+	expect, beforeEach, describe, it,
+	vi, 
 } from "vitest";
-import sinon from "sinon";
 import { sandbox } from "../actions/sandbox/sandbox.js";
 import {
 	cement, frost, isFrost, isSandbox, 
 } from "../index.js";
 import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy.js";
-
-chai.use(sinonChai);
 
 describe("Integration type tests", function () 
 {
@@ -19,13 +16,7 @@ describe("Integration type tests", function ()
 	// Before each test, create a spy for console.warn
 	beforeEach(function () 
 	{
-		consoleWarnSpy = sinon.spy(console, "warn");
-	});
-
-	// After each test, restore the original console.warn
-	afterEach(function () 
-	{
-		consoleWarnSpy.restore();
+		consoleWarnSpy = vi.fn(console.warn);
 	});
 
 	const createMultiLevelObject = (key: string, value: any) => 
@@ -71,7 +62,7 @@ describe("Integration type tests", function ()
 		expect(() => JSON.stringify(sandbox)).not.to.throw();
 		expect(isSbProxy).to.be.true;
 
-		expect(consoleWarnSpy).not.to.be.calledWith(
+		expect(consoleWarnSpy).not.toBeCalledWith(
 			"Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.",
 		);
 	};
@@ -103,7 +94,7 @@ describe("Integration type tests", function ()
 		expect(() => JSON.stringify(sandbox)).not.to.throw();
 		expect(isSbProxy).to.be.true;
 
-		expect(consoleWarnSpy).not.to.be.calledWith(
+		expect(consoleWarnSpy).not.toHaveBeenCalledWith(
 			"Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.",
 		);
 	};

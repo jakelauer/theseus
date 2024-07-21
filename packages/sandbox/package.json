@@ -11,8 +11,15 @@
         "test:watch": "vitest watch",
         "coverage": "vitest run --coverage"
     },
-    "files": ["dist"],
-    "keywords": ["sandbox", "draft", "immutable", "freeze"],
+    "files": [
+        "dist"
+    ],
+    "keywords": [
+        "sandbox",
+        "draft",
+        "immutable",
+        "freeze"
+    ],
     "author": "",
     "license": "ISC",
     "dependencies": {
@@ -23,11 +30,9 @@
     },
     "devDependencies": {
         "@types/sinon": "^17.0.3",
-        "@types/sinon-chai": "^3.2.12",
         "cross-env": "^7.0.3",
         "quibble": "0.9.2",
         "sinon": "^18.0.0",
-        "sinon-chai": "^3.7.0",
         "tsup": "^8.1.0",
         "ts-node": "10.9.2",
         "tsconfig-paths": "^4.2.0",

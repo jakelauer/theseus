@@ -1,12 +1,9 @@
-import chaiAsPromised from "chai-as-promised";
 import {
 	expect, beforeEach, describe, it, 
 } from "vitest";
 
 import { ChainableMutatorSetBuilder } from "../ChainableMutatorSetBuilder.js";
 import { getTheseusLogger } from "theseus-logger";
-
-chai.use(chaiAsPromised);
 
 interface TestData {
     value: number;

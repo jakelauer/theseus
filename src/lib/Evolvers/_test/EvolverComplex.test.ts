@@ -1,5 +1,7 @@
 import { Evolver } from "../Evolver.js";
-import { describe, it } from "vitest";
+import {
+	describe, expect, it, 
+} from "vitest";
 import { EvolverComplex } from "../EvolverComplex.js";
 
 interface DataType {
@@ -33,11 +35,7 @@ describe("generateEvolveMethods", function ()
 			})
 				.toEvolve<DataType>()
 				.withMutators({
-					inner: {
-						test: {
-							inner2: ({ data }) => data,
-						},
-					},
+					inner2: ({ data }) => data,
 					syncIncrement: ({ data }) => ({
 						count: data.count + 1,
 					}),
@@ -48,6 +46,15 @@ describe("generateEvolveMethods", function ()
 			count: 0,
 		};
 
-		const result = complex.__evolvers__;
+		console.log(complex.evolve(input));
+
+		const result = complex.evolve(input).evolver2.syncIncrement()
+			.lastly.inner2();
+		
+		
+		
+		expect(result).to.deep.equal({
+			count: 1,
+		});
 	});
 });

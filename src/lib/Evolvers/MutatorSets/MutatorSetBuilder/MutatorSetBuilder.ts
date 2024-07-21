@@ -159,7 +159,7 @@ export class MutatorSetBuilder<
 				}
 				catch (e) 
 				{
-					log.error(`Error in mutator function "${selfPath}"`, e);
+					log.error(`Error in mutator function "${selfPath}"`);
 					throw e;
 				}
 

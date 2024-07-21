@@ -20,7 +20,6 @@ module.exports = {
     extends: [  
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",  
-        "plugin:mocha/recommended",  
         "prettier",
 		"plugin:theseus/recommended",
         "plugin:require-extensions/recommended"
@@ -38,7 +37,6 @@ module.exports = {
         quotes: [2, "double", { avoidEscape: true }],  
         "unused-imports/no-unused-imports": "error",  
         "no-async-promise-executor": "off",  
-        "mocha/no-setup-in-describe": "off",
 		"@stylistic/object-property-newline": ["error"],
 		"@stylistic/object-curly-newline": ["error", {
 			"ObjectExpression": { "multiline": true, "minProperties": 1 },

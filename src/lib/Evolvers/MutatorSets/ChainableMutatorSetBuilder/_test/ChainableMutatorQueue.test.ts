@@ -1,4 +1,3 @@
-import chaiAsPromised from "chai-as-promised";
 import {
 	expect, afterEach, beforeEach, describe, it, 
 } from "vitest";
@@ -7,8 +6,6 @@ import sinon from "sinon";
 import { ChainableMutatorQueue } from "../ChainableMutatorQueue.js";
 
 import type { Mutator } from "@Evolvers/Types/MutatorTypes";
-
-chai.use(chaiAsPromised);
 
 describe("ChainableMutatorQueue", function () 
 {

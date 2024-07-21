@@ -17,6 +17,7 @@ describe("ChainHelperAction", function ()
 			proxy: {} as any,
 			proxyManager: null as any,
 			target: null,
+			queue: null as any,
 		};
 	});
 

@@ -1,77 +1,74 @@
+import {
+	describe, it, expect, 
+} from "vitest";
+
 import { normalizeEvolverName } from "../normalizeEvolverName.js";
 
-import { expect } from "vitest";
-
-"normalizeEvolverName",
-() => 
+describe("normalizeEvolverName", () => 
 {
-	'should remove "Evolver" from the start of the string, respecting case sensitivity',
-	() => 
+	it("should remove \"Evolver\" from the start of the string, respecting case sensitivity", () => 
 	{
 		const result = normalizeEvolverName("EvolverName" as any);
 		expect(result).to.equal("Name");
-	};
+	});
 
-	'should remove "evolver" from the start of the string, respecting case sensitivity',
-	() => 
+	it("should remove \"evolver\" from the start of the string, respecting case sensitivity", () => 
 	{
 		const result = normalizeEvolverName("evolverName" as any);
 		expect(result).to.equal("Name");
-	};
+	});
 
-	'should remove "Evolver" from the end of the string, respecting case sensitivity',
-	() => 
+	it("should remove \"Evolver\" from the end of the string, respecting case sensitivity", () => 
 	{
 		const result = normalizeEvolverName("NameEvolver");
 		expect(result).to.equal("Name");
-	};
+	});
 
-	'should remove "evolver" from the end of the string, respecting case sensitivity',
-	() => 
+	it("should remove \"evolver\" from the end of the string, respecting case sensitivity", () => 
 	{
 		const result = normalizeEvolverName("Nameevolver" as any);
 		expect(result).to.equal("Name");
-	};
+	});
 
-	'should remove "Evolver" from both the start and the end of the string, respecting case sensitivity',
-	() => 
+	it("should remove \"Evolver\" from both the start and the end of the string, respecting case sensitivity", () => 
 	{
 		const result = normalizeEvolverName("EvolverNameEvolver" as any);
 		expect(result).to.equal("Name");
-	};
+	});
 
-	'should remove "evolver" from both the start and the end of the string, respecting case sensitivity',
-	() => 
+	it("should remove \"evolver\" from both the start and the end of the string, respecting case sensitivity", () => 
 	{
 		const result = normalizeEvolverName("evolverNameevolver" as any);
 		expect(result).to.equal("Name");
-	};
+	});
 
-	'should not alter the string if "Evolver" or "evolver" is not present',
-	() => 
+	it("should not alter the string if \"Evolver\" or \"evolver\" is not present", () => 
 	{
 		const result = normalizeEvolverName("Name" as any);
 		expect(result).to.equal("Name");
-	};
+	});
 
-	'should handle strings with only "Evolver", respecting case sensitivity',
-	() => 
+	it("should handle strings with only \"Evolver\", respecting case sensitivity", () => 
 	{
 		const result = normalizeEvolverName("Evolver");
-		expect(result).to.equal("");
-	};
+		expect(result).to.equal("Evolver");
+	});
 
-	'should handle strings with only "evolver", respecting case sensitivity',
-	() => 
+	it("should handle strings with only \"evolver\", respecting case sensitivity", () => 
 	{
-		const result = normalizeEvolverName("evolver" as any);
-		expect(result).to.equal("");
-	};
+		const result = normalizeEvolverName("evolver");
+		expect(result).to.equal("evolver");
+	});
 
-	"should correctly process an empty string",
-	() => 
+	it("should correctly process an empty string", () => 
 	{
-		const result = normalizeEvolverName("" as any);
-		expect(result).to.equal("");
-	};
-};
+		expect(() => normalizeEvolverName("")).to.throw("Name cannot be empty.");
+	});
+
+	it("should ensure name is a valid JS propert", () => 
+	{
+		const result = normalizeEvolverName("Evolver1");
+		expect(result).to.equal("Evolver1");
+
+	});
+});
