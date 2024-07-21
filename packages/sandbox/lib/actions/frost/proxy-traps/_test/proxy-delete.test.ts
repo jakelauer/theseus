@@ -1,7 +1,9 @@
-import { expect } from "chai";
-
 // Mock the assertValidVerificationProperty and extractVerificationPropValues functions
 import sinon from "sinon";
+
+import {
+	expect, describe, it, 
+} from "vitest";
 import { CONSTANTS } from "sandbox-constants";
 import { proxyDelete } from "../proxy-delete.js";
 import {

@@ -1,10 +1,12 @@
-import { expect } from "chai";
-import { describe, it } from "mocha";
 import TypedObject from "../TypedObject.js";
 
-describe("TypedObject", () => 
+import { expect } from "vitest";
+
+"TypedObject",
+() => 
 {
-	it("Ensures .keys matches default Object.keys", () => 
+	"Ensures .keys matches default Object.keys",
+	() => 
 	{
 		const baseObj = {
 			1: 2,
@@ -13,5 +15,5 @@ describe("TypedObject", () =>
 		};
 
 		expect(Object.keys(baseObj)).to.deep.equal(TypedObject.keys(baseObj));
-	});
-});
+	};
+};

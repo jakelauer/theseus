@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import sinon from "sinon";
+import {
+	expect, afterEach, describe, it, 
+} from "vitest";
 import { setTheseusLogLevel } from "../set-theseus-log-level.js";
 import type { logLevels } from "../log-levels.js";
 

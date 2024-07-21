@@ -1,6 +1,8 @@
-import { expect } from "chai";
-
 import { Refinery } from "../Refinery.js";
+
+import {
+	expect, describe, it, 
+} from "vitest";
 
 describe("Refinery Base", function () 
 {

@@ -1,8 +1,6 @@
-import chai, { expect } from "chai";
-import {
-	beforeEach, describe, it, 
-} from "mocha";
 import chaiAsPromised from "chai-as-promised";
+
+import { expect } from "vitest";
 
 import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 
@@ -29,36 +27,42 @@ class MockObserver extends BroadcasterObserver<any>
 	}
 }
 
-describe("Broadcaster", () => 
+"Broadcaster",
+() => 
 {
 	let broadcaster: Broadcaster<any>;
 
-	beforeEach(() => 
+	() => 
 	{
 		broadcaster = new Broadcaster();
-	});
+	};
 
-	describe("constructor", () => 
+	"constructor",
+	() => 
 	{
-		it("initializes with default parameters when none are provided", () => 
+		"initializes with default parameters when none are provided",
+		() => 
 		{
 			expect(broadcaster).to.be.an.instanceOf(Broadcaster);
 			// Assert default parameters if necessary
-		});
+		};
 
-		it("initializes with custom parameters when provided", () => 
+		"initializes with custom parameters when provided",
+		() => 
 		{
 			const customParams: BroadcasterParams<any, any> = {
 				observerClassConstructor: MockObserver,
 			};
 			const customBroadcaster = new Broadcaster(customParams);
 			expect(customBroadcaster).to.be.an.instanceOf(Broadcaster);
-		});
-	});
+		};
+	};
 
-	describe("broadcast", () => 
+	"broadcast",
+	() => 
 	{
-		it("broadcasts data to all registered observers", async () => 
+		"broadcasts data to all registered observers",
+		async () => 
 		{
 			const mockObserver = new MockObserver(() => {});
 			broadcaster.observe(mockObserver.update.bind(mockObserver));
@@ -68,20 +72,23 @@ describe("Broadcaster", () =>
 
 			await broadcaster.broadcast(testData);
 			expect(mockObserver.dataReceived).to.deep.equal(testData);
-		});
+		};
 
-		it("completes broadcast with no observers without error", async () => 
+		"completes broadcast with no observers without error",
+		async () => 
 		{
 			const broadcastPromise = broadcaster.broadcast({
 				key: "value",
 			});
 			await expect(broadcastPromise).to.be.fulfilled;
-		});
-	});
+		};
+	};
 
-	describe("observer management", () => 
+	"observer management",
+	() => 
 	{
-		it("adds observers and receives updates", async () => 
+		"adds observers and receives updates",
+		async () => 
 		{
 			const mockObserver = new MockObserver(() => {});
 			broadcaster.observe(mockObserver.update.bind(mockObserver));
@@ -92,9 +99,10 @@ describe("Broadcaster", () =>
 			await broadcaster.broadcast(testData);
 
 			expect(mockObserver.dataReceived).to.deep.equal(testData);
-		});
+		};
 
-		it("removes observers correctly using destroy callback", async () => 
+		"removes observers correctly using destroy callback",
+		async () => 
 		{
 			const mockObserver = new MockObserver(() => {});
 			const destroy = broadcaster.observe(mockObserver.update.bind(mockObserver));
@@ -107,12 +115,14 @@ describe("Broadcaster", () =>
 			await broadcaster.broadcast(testData);
 
 			expect(mockObserver.dataReceived).to.be.null; // Assuming initial value is null
-		});
-	});
+		};
+	};
 
-	describe("static methods", () => 
+	"static methods",
+	() => 
 	{
-		it("destroyAll removes all observers correctly", () => 
+		"destroyAll removes all observers correctly",
+		() => 
 		{
 			const mockObserver1 = new MockObserver(() => {});
 			const destroy1 = broadcaster.observe(mockObserver1.update.bind(mockObserver1));
@@ -138,8 +148,8 @@ describe("Broadcaster", () =>
 				{
 					console.error("Error broadcasting data:", error);
 				});
-		});
-	});
+		};
+	};
 
 	// Further tests could be added here as necessary, for example, testing edge cases, error handling, etc.
-});
+};

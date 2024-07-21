@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import sinon from "sinon";
+import {
+	expect, beforeEach, describe, it, 
+} from "vitest";
 import type { ProxyActionMapParameters } from "../../../proxy-action-map.js";
 import { ChainTerminationAction } from "../../chain-termination.js";
 

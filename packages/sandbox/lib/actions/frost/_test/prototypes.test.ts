@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import { isSandbox, sandbox } from "../../sandbox/index.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 
 describe("Prototype tests", function () 
 {

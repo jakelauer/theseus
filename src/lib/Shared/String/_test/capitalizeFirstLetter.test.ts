@@ -1,6 +1,8 @@
-import { expect } from "chai";
-
 import { capitalizeFirstLetter } from "../capitalizeFirstLetter.js"; // Adjust the import path as necessary
+
+import {
+	expect, describe, it, 
+} from "vitest";
 
 describe("capitalizeFirstLetter", function () 
 {

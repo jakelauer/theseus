@@ -1,8 +1,5 @@
-import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
-import {
-	beforeEach, describe, it, 
-} from "mocha";
+import { expect } from "vitest";
 import sinon, { type SinonSpy } from "sinon";
 
 import { Theseus } from "@/Theseus";
@@ -10,18 +7,20 @@ import { theseus, Evolver } from "../index.js";
 
 chai.use(chaiAsPromised);
 
-describe("Observation", () => 
+"Observation",
+() => 
 {
 	let observation: Theseus<{ test: string }>;
 
-	beforeEach(() => 
+	() => 
 	{
 		observation = Theseus.__private_create<{ test: string }>({
 			test: "initial",
 		});
-	});
+	};
 
-	it("should initialize with provided initial data", () => 
+	"should initialize with provided initial data",
+	() => 
 	{
 		// JSON.stringify ignores symbols, which helpfully avoids sandbox symbols
 		expect(JSON.stringify(observation.state)).to.equal(
@@ -29,9 +28,10 @@ describe("Observation", () =>
 				test: "initial",
 			}),
 		);
-	});
+	};
 
-	it("should allow observers to subscribe and receive updates", async () => 
+	"should allow observers to subscribe and receive updates",
+	async () => 
 	{
 		const callback = sinon.fake();
 		observation.observe(callback);
@@ -46,9 +46,10 @@ describe("Observation", () =>
 		).to.be.true;
 
 		return;
-	});
+	};
 
-	it("should allow observers to subscribe and receive initial state immediately if requested", async () => 
+	"should allow observers to subscribe and receive initial state immediately if requested",
+	async () => 
 	{
 		const callback = sinon.fake();
 		observation.observe(callback, true);
@@ -63,17 +64,19 @@ describe("Observation", () =>
 		).to.be.true;
 
 		return;
-	});
+	};
 
-	it("should not call observers immediately if updateImmediately is false", () => 
+	"should not call observers immediately if updateImmediately is false",
+	() => 
 	{
 		const callback = sinon.fake();
 		observation.observe(callback, false);
 
 		expect(callback.called).to.be.false;
-	});
+	};
 
-	it("should correctly update the state and notify observers", async () => 
+	"should correctly update the state and notify observers",
+	async () => 
 	{
 		const callback = sinon.fake();
 		observation.observe(callback);
@@ -93,9 +96,10 @@ describe("Observation", () =>
 		).to.be.true;
 
 		return;
-	});
+	};
 
-	it("should correctly handle instance retrieval and updates by ID", async () => 
+	"should correctly handle instance retrieval and updates by ID",
+	async () => 
 	{
 		const id = observation.__uuid;
 		const callback = sinon.fake();
@@ -114,9 +118,10 @@ describe("Observation", () =>
 		).to.be.true;
 
 		return;
-	});
+	};
 
-	it("should correctly return changes made to the state when requested", async () => 
+	"should correctly return changes made to the state when requested",
+	async () => 
 	{
 		const data = {
 			myString: "happy",
@@ -144,9 +149,10 @@ describe("Observation", () =>
 		});
 
 		return;
-	});
+	};
 
-	it("should not broadcast changes when evolver is called from within an evolver", async function () 
+	("should not broadcast changes when evolver is called from within an evolver",
+	async function () 
 	{
 		const data = {
 			myString: "happy",
@@ -207,4 +213,4 @@ describe("Observation", () =>
 
 		expect(callback.callCount).to.be.equal(1);
 	}).timeout(2000); // Ensure the test has enough time to complete
-});
+};

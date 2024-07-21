@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import sinon from "sinon";
+import {
+	expect, describe, it, 
+} from "vitest";
 import { sandboxTransform } from "../sandbox-transform.js";
 
 describe("deepSandboxTransform", function () 

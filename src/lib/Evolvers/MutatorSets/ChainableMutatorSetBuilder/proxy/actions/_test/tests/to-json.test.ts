@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import type { ProxyActionMapParameters } from "../../../proxy-action-map.js";
+import {
+	expect, beforeEach, describe, it, 
+} from "vitest";
 import { ToJsonAction } from "../../to-json.js";
 
 describe("ToJsonAction", function () 

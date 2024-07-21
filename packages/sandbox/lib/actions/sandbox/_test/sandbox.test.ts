@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import { sandbox } from "../sandbox.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 import { isSandbox } from "../detect/is-sandbox-proxy.js";
 import { CONSTANTS } from "sandbox-constants";
 import { cement } from "../../cement/cement.js";

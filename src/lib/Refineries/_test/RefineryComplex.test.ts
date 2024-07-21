@@ -1,6 +1,8 @@
-import { expect } from "chai";
-
 import { Refinery } from "@Refineries/Refinery";
+
+import {
+	expect, describe, it, 
+} from "vitest";
 
 import { RefineryComplex } from "../RefineryComplex.js";
 

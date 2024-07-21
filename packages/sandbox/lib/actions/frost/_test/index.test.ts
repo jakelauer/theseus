@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import { frost } from "../frost.js";
+import {
+	expect, beforeEach, describe, it, 
+} from "vitest";
 import { sandbox } from "../../sandbox/sandbox.js";
 import { cement } from "../../cement/cement.js";
 

@@ -1,6 +1,8 @@
-import { expect } from "chai";
-
 import { MutatorSetBuilder } from "../MutatorSetBuilder.js";
+
+import {
+	expect, beforeEach, describe, it, 
+} from "vitest";
 
 describe("MutatorSetBuilder", function () 
 {

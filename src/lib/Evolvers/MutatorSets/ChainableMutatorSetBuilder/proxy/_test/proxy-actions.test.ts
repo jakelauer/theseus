@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import sinon from "sinon";
+import {
+	expect, afterEach, beforeEach, describe, it, 
+} from "vitest";
 import { ProxyActionType, ProxyActions } from "../proxy-actions.js";
 import { getTheseusLogger } from "theseus-logger";
 import type { ProxyActionMapParameters } from "../proxy-action-map.js";

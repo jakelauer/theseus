@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import { proxyGet } from "../proxy-get.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 import { CONSTANTS } from "sandbox-constants";
 import { assertValidVerificationProperty } from "../../assertions.js";
 import { extractVerificationPropValues } from "../../properties.js";

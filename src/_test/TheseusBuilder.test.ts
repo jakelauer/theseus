@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import sinon from "sinon";
+import {
+	expect, afterEach, beforeEach, describe, it, 
+} from "vitest";
 import TheseusBuilder from "../TheseusBuilder.js";
 import { getTheseusLogger } from "theseus-logger";
 

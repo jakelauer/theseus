@@ -1,9 +1,9 @@
-import { describe } from "mocha";
 import { frost } from "../../frost.js";
+import { expect, it } from "vitest";
 import { containsFrost, isFrost } from "../is-frost-proxy.js";
-import { expect } from "chai";
 
-describe("is-frost-proxy", function () 
+"is-frost-proxy",
+function () 
 {
 	it("should correctly identify a sandbox proxy object", function () 
 	{
@@ -37,4 +37,4 @@ describe("is-frost-proxy", function ()
 		expect(isFrost(original, "every")).to.equal(false);
 		expect(isFrost(original, "some")).to.equal(true);
 	});
-});
+};

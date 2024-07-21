@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import { cement } from "../cement.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 import { CONSTANTS } from "sandbox-constants";
 import {
 	containsSandbox, isSandbox, sandbox, 

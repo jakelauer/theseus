@@ -1,25 +1,25 @@
 {
-	"extends": "./tsconfig.base.json",
-	"include": [ "./src/**/*" ],
-	"exclude": [ "./*.js", "./*.cjs", "dist", "node_modules" ],
-	"compilerOptions": {
-		"rootDir": "./src",
-		"baseUrl": "./src",
-		"outDir": "./dist",
-		"paths": {
-			"@Broadcast/*": [ "./lib/Broadcast/*" ],
-			"@Broadcast": [ "./lib/Broadcast" ],
-			"@Evolvers/*": [ "./lib/Evolvers/*" ],
-			"@Evolvers": [ "./lib/Evolvers" ],
-			"@Observe/*": [ "./lib/Observe/*" ],
-			"@Observe": [ "./lib/Observe" ],
-			"@Refineries/*": [ "./lib/Refineries/*" ],
-			"@Refineries": [ "./lib/Refineries" ],
-			"@Shared/*": [ "./lib/Shared/*" ],
-			"@Shared": [ "./lib/Shared" ],
-			"@Types/*": [ "./lib/Types/*" ],
-			"@Types": [ "./lib/Types" ],
-			"@/*": [ "./*" ]
-		}
-	}
+    "extends": "./tsconfig.base.json",
+    "include": ["./src/**/*"],
+    "exclude": ["./*.js", "./*.cjs", "dist", "node_modules"],
+    "compilerOptions": {
+        "rootDir": "./src",
+        "baseUrl": "./src",
+        "outDir": "./dist",
+        "paths": {
+            "@Broadcast/*": ["./lib/Broadcast/*"],
+            "@Broadcast": ["./lib/Broadcast"],
+            "@Evolvers/*": ["./lib/Evolvers/*"],
+            "@Evolvers": ["./lib/Evolvers"],
+            "@Observe/*": ["./lib/Observe/*"],
+            "@Observe": ["./lib/Observe"],
+            "@Refineries/*": ["./lib/Refineries/*"],
+            "@Refineries": ["./lib/Refineries"],
+            "@Shared/*": ["./lib/Shared/*"],
+            "@Shared": ["./lib/Shared"],
+            "@Types/*": ["./lib/Types/*"],
+            "@Types": ["./lib/Types"],
+            "@/*": ["./*"]
+        }
+    }
 }

@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import { reject } from "../reject.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 import { CONSTANTS } from "sandbox-constants";
 
 describe("reject", function () 

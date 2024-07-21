@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import { stringifier } from "../stringifier.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 import { sandbox } from "theseus-sandbox";
 
 describe("stringifier", function () 

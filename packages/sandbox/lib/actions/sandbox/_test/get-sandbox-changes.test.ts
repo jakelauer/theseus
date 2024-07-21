@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import { getSandboxChanges } from "../get-sandbox-changes.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 import { CONSTANTS } from "sandbox-constants";
 
 describe("getSandboxChanges", function () 

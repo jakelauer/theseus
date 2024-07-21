@@ -1,5 +1,7 @@
-import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
+import {
+	expect, afterEach, beforeEach, describe, it, 
+} from "vitest";
 import sinon from "sinon";
 
 import { ChainableMutatorQueue } from "../ChainableMutatorQueue.js";

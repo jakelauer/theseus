@@ -1,6 +1,8 @@
 import { GetMockGameItem } from "./bad-cards.test-dep.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 import { sandbox } from "../actions/sandbox/index.js";
-import { expect } from "chai";
 import { cement } from "../actions/cement/cement.js";
 import { defrost, frost } from "../actions/frost/index.js";
 import { isFrost } from "../actions/frost/detect/is-frost-proxy.js";

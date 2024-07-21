@@ -1,5 +1,7 @@
-import { expect } from "chai";
 import { extractVerificationPropValues, propertyStartsWith } from "../properties.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 
 describe("propertyStartsWith", function () 
 {

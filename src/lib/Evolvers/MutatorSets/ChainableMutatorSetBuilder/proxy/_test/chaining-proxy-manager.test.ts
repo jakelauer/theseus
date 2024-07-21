@@ -1,6 +1,8 @@
-import { expect } from "chai";
-
 import { createChainingProxy } from "../chaining-proxy-manager.js";
+
+import {
+	expect, beforeEach, describe, it, 
+} from "vitest";
 import { ChainableMutatorQueue } from "../../ChainableMutatorQueue.js";
 
 const makeMutatorQueue = () => 
