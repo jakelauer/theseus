@@ -1,48 +1,60 @@
-import { Evolver } from "../Evolver";
-import { EvolverComplex } from "../EvolverComplex";
+import { Evolver } from "../Evolver.js";
+import {
+	describe, expect, it, 
+} from "vitest";
+import { EvolverComplex } from "../EvolverComplex.js";
 
-interface DataType{
-	count: number;
+interface DataType {
+    count: number;
 }
 
-describe("generateEvolveMethods", function() 
+describe("generateEvolveMethods", function () 
 {
-	it("should support evolvers with both sync and async mutations", function() 
+	it("should support evolvers with both sync and async mutations", function () 
 	{
 		const complex = EvolverComplex.create().withEvolvers(
 			Evolver.create("evolver1", {
 				noun: "data",
-			}).toEvolve<DataType>().withMutators({
-				inner: {
-					test: {
-						inner2: ({ data }) => data,
+			})
+				.toEvolve<DataType>()
+				.withMutators({
+					inner: {
+						test: {
+							inner2: ({ data }) => data,
+						},
 					},
-				},
-				syncIncrement: ({ data }) => ({
-					count: data.count + 1, 
+					syncIncrement: ({ data }) => ({
+						count: data.count + 1,
+					}),
+					asyncIncrement: async ({ data }) => ({
+						count: data.count + 1,
+					}),
 				}),
-				asyncIncrement: async ({ data }) => ({
-					count: data.count + 1, 
-				}),
-			}),
 			Evolver.create("evolver2", {
 				noun: "data",
-			}).toEvolve<DataType>().withMutators({
-				inner: {
-					test: {
-						inner2: ({ data }) => data,
-					},
-				},
-				syncIncrement: ({ data }) => ({
-					count: data.count + 1, 
+			})
+				.toEvolve<DataType>()
+				.withMutators({
+					inner2: ({ data }) => data,
+					syncIncrement: ({ data }) => ({
+						count: data.count + 1,
+					}),
 				}),
-			}),
 		);
 
 		const input = {
-			count: 0, 
+			count: 0,
 		};
+
+		console.log(complex.evolve(input));
+
+		const result = complex.evolve(input).evolver2.syncIncrement()
+			.lastly.inner2();
 		
-		const result = complex.__evolvers__;
+		
+		
+		expect(result).to.deep.equal({
+			count: 1,
+		});
 	});
 });

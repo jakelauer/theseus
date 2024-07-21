@@ -1,9 +1,9 @@
 import { Refinery } from "theseus-js";
 
-import type { Board, GameState } from "../../state/GameState";
+import type { Board, GameState } from "../../state/GameState.js";
 
 export const RenderRefinery = Refinery.create("RenderRefinery", {
-	noun: "gameState", 
+	noun: "gameState",
 })
 	.toRefine<GameState>()
 	.withForges({

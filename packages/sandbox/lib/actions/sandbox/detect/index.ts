@@ -1,2 +1,2 @@
-export * from "./is-sandbox-proxy";
-export * from "./root-is-sandbox";
+export * from "./is-sandbox-proxy.js";
+export * from "./root-is-sandbox.js";

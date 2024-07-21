@@ -1,6 +1,8 @@
-import { expect } from "chai";
+import { normalizeRefineryName } from "../normalizeRefineryName.js";
 
-import { normalizeRefineryName } from "../normalizeRefineryName";
+import {
+	expect, describe, it, 
+} from "vitest";
 
 describe("normalizeRefineryName", function () 
 {

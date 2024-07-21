@@ -1,7 +1,8 @@
-import { expect } from "chai";
-import { describe, it } from "mocha";
+import {
+	describe, it, expect, 
+} from "vitest";
 
-import { normalizeEvolverName } from "../normalizeEvolverName";
+import { normalizeEvolverName } from "../normalizeEvolverName.js";
 
 describe("normalizeEvolverName", () => 
 {
@@ -50,18 +51,24 @@ describe("normalizeEvolverName", () =>
 	it("should handle strings with only \"Evolver\", respecting case sensitivity", () => 
 	{
 		const result = normalizeEvolverName("Evolver");
-		expect(result).to.equal("");
+		expect(result).to.equal("Evolver");
 	});
 
 	it("should handle strings with only \"evolver\", respecting case sensitivity", () => 
 	{
-		const result = normalizeEvolverName("evolver" as any);
-		expect(result).to.equal("");
+		const result = normalizeEvolverName("evolver");
+		expect(result).to.equal("evolver");
 	});
 
 	it("should correctly process an empty string", () => 
 	{
-		const result = normalizeEvolverName("" as any);
-		expect(result).to.equal("");
+		expect(() => normalizeEvolverName("")).to.throw("Name cannot be empty.");
+	});
+
+	it("should ensure name is a valid JS propert", () => 
+	{
+		const result = normalizeEvolverName("Evolver1");
+		expect(result).to.equal("Evolver1");
+
 	});
 });

@@ -1,34 +1,36 @@
-import { expect } from "chai";
-import type { ProxyActionMapParameters } from "../../../proxy-action-map";
-import { ToJsonAction } from "../../to-json";
+import type { ProxyActionMapParameters } from "../../../proxy-action-map.js";
+import {
+	expect, beforeEach, describe, it, 
+} from "vitest";
+import { ToJsonAction } from "../../to-json.js";
 
-describe("ToJsonAction", function() 
+describe("ToJsonAction", function () 
 {
 	let toJsonAction: ToJsonAction;
 	let params: ProxyActionMapParameters;
 
-	beforeEach(function() 
+	beforeEach(function () 
 	{
 		toJsonAction = new ToJsonAction();
 		params = {
 			target: {
-				prop: "value", 
+				prop: "value",
 			},
 			prop: "toJSON",
-			proxy: {}, 
+			proxy: {},
 		} as any;
 	});
 
-	it("should return true for toJSON property in runTest", function() 
+	it("should return true for toJSON property in runTest", function () 
 	{
 		expect(toJsonAction.runTest(params)).to.be.true;
 	});
 
-	it("should return serialized object in process", function() 
+	it("should return serialized object in process", function () 
 	{
 		const result = toJsonAction.process(params);
 		expect(result()).to.deep.equal({
-			prop: "value", 
+			prop: "value",
 		});
 	});
 });

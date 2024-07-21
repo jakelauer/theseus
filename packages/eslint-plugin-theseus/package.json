@@ -5,11 +5,14 @@
     "main": "lib/index.js",
     "scripts": {
         "build": "echo 'no build'",
-        "test": "mocha '**/_test/*.test.js'"
+        "test": "vitest run",
+        "test:watch": "vitest watch",
+        "coverage": "vitest run --coverage"
     },
     "devDependencies": {
         "eslint": "^8.57.0",
-        "mocha": "^10.3.0"
+        "vitest": "^1.0.1",
+        "@vitest/coverage-v8": "^1.0.1"
     },
     "keywords": [],
     "author": "Jake Lauer",

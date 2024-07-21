@@ -37,13 +37,13 @@ export const stringifier = (obj: object) =>
 		return `CANNOT_STRINGIFY: ${e}`;
 	}
 };
-function isShallowSandbox(obj: object) 
+function isShallowSandbox<T extends object>(obj: T) 
 {
-	return !!obj?.[CONSTANTS.SANDBOX_SYMBOL];
+	return !!(obj as any)?.[CONSTANTS.SANDBOX_SYMBOL];
 }
 
-function isShallowFrost(obj: object) 
+function isShallowFrost<T extends object>(obj: T) 
 {
-	return !!obj?.[CONSTANTS.FROST.BASIS_SYMBOL];
+	return !!(obj as any)?.[CONSTANTS.FROST.BASIS_SYMBOL];
 }
 

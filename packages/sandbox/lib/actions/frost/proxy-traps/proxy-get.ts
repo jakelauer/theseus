@@ -1,18 +1,17 @@
 import { CONSTANTS } from "sandbox-constants";
-import { symbolCompare } from "../../../symbols/symbol-compare";
-import { assertValidVerificationProperty } from "../assertions";
-import { objectRootIsFrost } from "../detect/root-is-frost";
-import { extractVerificationPropValues } from "../properties";
+import { symbolCompare } from "../../../symbols/symbol-compare.js";
+import { assertValidVerificationProperty } from "../assertions.js";
+import { objectRootIsFrost } from "../detect/root-is-frost.js";
+import { extractVerificationPropValues } from "../properties.js";
 
-interface FrostGetterParams
-{
-	guid: string;
-	recursor: (value: any) => any;
+interface FrostGetterParams {
+    guid: string;
+    recursor: (value: any) => any;
 }
 
 export function proxyGet(original: any, target: any, prop: string | symbol, params: FrostGetterParams) 
 {
-	if (symbolCompare(prop, CONSTANTS.FROST.ORIGINAL_GETTER_SYMBOL).looseEqual)
+	if (symbolCompare(prop, CONSTANTS.FROST.ORIGINAL_GETTER_SYMBOL).looseEqual) 
 	{
 		return original;
 	}
@@ -23,18 +22,18 @@ export function proxyGet(original: any, target: any, prop: string | symbol, para
 	{
 		return recursor(value);
 	}
-	
-	if (symbolCompare(prop, CONSTANTS.FROST.BASIS_SYMBOL).looseEqual)
+
+	if (symbolCompare(prop, CONSTANTS.FROST.BASIS_SYMBOL).looseEqual) 
 	{
 		return guid;
 	}
 	/**
-	 * To check for valid verification on the proxy, get `proxy[VERIFICATION_CHECK_PROPERTY]`
-	 */
-	if (typeof prop === "string" && prop.startsWith(CONSTANTS.FROST.CHECK_PROP_PREFIX))
+     * To check for valid verification on the proxy, get `proxy[VERIFICATION_CHECK_PROPERTY]`
+     */
+	if (typeof prop === "string" && prop.startsWith(CONSTANTS.FROST.CHECK_PROP_PREFIX)) 
 	{
 		const verificationValues = extractVerificationPropValues(String(prop));
-		if (!verificationValues)
+		if (!verificationValues) 
 		{
 			throw new Error("Invalid verification property");
 		}
@@ -42,7 +41,7 @@ export function proxyGet(original: any, target: any, prop: string | symbol, para
 		return assertValidVerificationProperty(target, verificationValues.verificationValue);
 	}
 
-	if (prop === CONSTANTS.FROST.IS_FROSTY)
+	if (prop === CONSTANTS.FROST.IS_FROSTY) 
 	{
 		return true;
 	}

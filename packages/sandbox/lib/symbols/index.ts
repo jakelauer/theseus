@@ -1,2 +1,2 @@
-export * from "./symbol-compare";
-export * from "./symbol-string";
+export * from "./symbol-compare.js";
+export * from "./symbol-string.js";

@@ -1,8 +1,8 @@
 import { getTheseusLogger } from "theseus-logger";
-import type { SortaPromise } from "../../../Types/EvolverTypes";
-import type { ChainableMutatorSetBuilder } from "../ChainableMutatorSetBuilder";
-import type { ChainableMutatorQueue } from "../ChainableMutatorQueue";
-import { ProxyActionMap } from "./proxy-action-map";
+import type { SortaPromise } from "../../../Types/EvolverTypes.js";
+import type { ChainableMutatorSetBuilder } from "../ChainableMutatorSetBuilder.js";
+import type { ChainableMutatorQueue } from "../ChainableMutatorQueue.js";
+import { ProxyActionMap } from "./proxy-action-map.js";
 
 /**
  * ChainingProxy is a class that enables method chaining and queueing of operations on a proxied object. It
@@ -59,7 +59,7 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 		}
 
 		this.log.debug(`Returning ${isAsync ? "async" : "sync"} result of queued operations`);
-		
+
 		return execResult;
 	}
 
@@ -71,17 +71,17 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 	}
 
 	/**
-	 * Resets the chain if the the property requeseted was a result property, indicating that the chain is
-	 * terminated.
-	 */
-	private resetIfResultReturned(prop: string, result: any)
+     * Resets the chain if the the property requeseted was a result property, indicating that the chain is
+     * terminated.
+     */
+	private resetIfResultReturned(prop: string, result: any) 
 	{
 		if (prop === "end" || prop === "endAsync") 
 		{
-			if (result instanceof Promise)
+			if (result instanceof Promise) 
 			{
 				this.log.verbose("Result is a promise; skipping reset.", {
-					isFinalChainLink: this.isFinalChainLink, 
+					isFinalChainLink: this.isFinalChainLink,
 				});
 			}
 			else 
@@ -91,25 +91,21 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 		}
 	}
 
-	private isBuiltInProp(prop: string)
+	private isBuiltInProp(prop: string) 
 	{
-		const builtInProps = [
-			"constructor",
-			"prototype",
-			"__proto__",
-		];
+		const builtInProps = ["constructor", "prototype", "__proto__"];
 		return builtInProps.includes(prop);
 	}
 
 	/** Intercepts get operations on the proxy object to enable method chaining, queuing, and more. */
 	private getProperty(proxy: any, target: any, prop: string | symbol) 
 	{
-		if (typeof prop === "symbol")
+		if (typeof prop === "symbol") 
 		{
 			return target[prop];
 		}
 
-		if (this.isBuiltInProp(prop))
+		if (this.isBuiltInProp(prop)) 
 		{
 			return target[prop];
 		}
@@ -119,16 +115,19 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 			prop,
 			proxy,
 			proxyManager: this,
-			queue: this.queue, 
+			queue: this.queue,
 		});
 
-		const result = ProxyActionMap.process({
-			target,
-			prop,
-			proxy,
-			proxyManager: this,
-			queue: this.queue, 
-		}, requestType);
+		const result = ProxyActionMap.process(
+			{
+				target,
+				prop,
+				proxy,
+				proxyManager: this,
+				queue: this.queue,
+			},
+			requestType,
+		);
 
 		this.log.verbose(`[${prop}] Returning result`);
 
@@ -144,7 +143,7 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 	public create(): TTarget 
 	{
 		const proxy: any = new Proxy(this.target as any, {
-			get: (target: any, rawProp: string | symbol) => this.getProperty(proxy, target, rawProp), 
+			get: (target: any, rawProp: string | symbol) => this.getProperty(proxy, target, rawProp),
 		});
 
 		return proxy;

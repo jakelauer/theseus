@@ -1,19 +1,19 @@
 import { Evolver, getTheseusLogger } from "theseus-js";
-import type { GameState } from "../../state/GameState";
-import { SquaresRefinery } from "../../refine/refineries/SquaresRefinery";
-import { BoardEvolver } from "./BoardEvolver";
-import { MetaEvolver } from "./MetaEvolver";
+import type { GameState } from "../../state/GameState.js";
+import { SquaresRefinery } from "../../refine/refineries/SquaresRefinery.js";
+import { BoardEvolver } from "./BoardEvolver.js";
+import { MetaEvolver } from "./MetaEvolver.js";
 
 const log = getTheseusLogger("GameTurnEvolver");
 
 export const TurnEvolver = Evolver.create("TurnEvolver", {
-	noun: "gameState", 
+	noun: "gameState",
 })
 	.toEvolve<GameState>()
 	.withMutators({
 		/**
-		 * Set the winner of the game.
-		 */
+         * Set the winner of the game.
+         */
 		setWinner: ({ gameState }, reason: "stalemate" | "winner") => 
 		{
 			log.major(`Game over! ${reason}`);
@@ -21,8 +21,8 @@ export const TurnEvolver = Evolver.create("TurnEvolver", {
 			return gameState;
 		},
 		/**
-		 * Take the next turn at a random available square.
-		 */
+         * Take the next turn at a random available square.
+         */
 		nextTurn: async ({ gameState }): Promise<GameState> => 
 		{
 			const { turns, lastPlayer } = gameState;
@@ -46,8 +46,7 @@ export const TurnEvolver = Evolver.create("TurnEvolver", {
 			}
 
 			// Set the mark on the board
-			BoardEvolver.mutate(gameState)
-				.via.setMark(coords, mark);
+			BoardEvolver.mutate(gameState).via.setMark(coords, mark);
 
 			// Update the game metadata
 			MetaEvolver.evolve(gameState)

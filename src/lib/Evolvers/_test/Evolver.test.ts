@@ -1,7 +1,8 @@
-import { expect } from "chai";
-import { describe, it } from "mocha";
+import {
+	describe, it, expect, 
+} from "vitest";
 
-import { Evolver } from "../Evolver";
+import { Evolver } from "../Evolver.js";
 
 describe("Evolvers", () => 
 {

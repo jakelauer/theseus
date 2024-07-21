@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { CONSTANTS } from "sandbox-constants";
-import type { Metadata, SandboxParams } from "./types";
-import { isSandbox } from "./detect/is-sandbox-proxy";
-import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy";
-import { symbolCompare } from "../../symbols/symbol-compare";
+import type { Metadata, SandboxParams } from "./types.js";
+import { isSandbox } from "./detect/is-sandbox-proxy.js";
+import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy.js";
+import { symbolCompare } from "../../symbols/symbol-compare.js";
 
 /**
  * Creates a sandbox proxy for the given object, allowing changes to be tracked
@@ -28,7 +28,7 @@ export function sandbox<T extends object>(originalObject: T, _params?: Partial<S
 	return createDeepProxy(originalObject, params);
 }
 
-function addToProxyMap<T extends object>(proxyMap: WeakMap<object, object>, obj: object, metadata: Metadata<T>)
+function addToProxyMap<T extends object>(proxyMap: WeakMap<object, object>, obj: object, metadata: Metadata<T>) 
 {
 	const proxy = createProxy(obj, proxyMap, metadata.params);
 	proxyMap.set(obj, proxy);
@@ -45,24 +45,24 @@ function createProxy<T extends object>(obj: T, proxyMap: WeakMap<T, T>, params: 
 {
 	const metadata = createMetadata(obj, params);
 
-	const proxy = proxyMap.has(obj)
-		? proxyMap.get(obj) 
-		: new Proxy<T>(obj, {
-			get(target, prop, receiver) 
-			{
-				return handleGet(target, prop, receiver, metadata, proxyMap);
-			},
-			set(_target, prop, value) 
-			{
-				return handleSet(prop, value, metadata, proxyMap);
-			},
-			deleteProperty(_target, prop) 
-			{
-				return handleDelete(prop, metadata);
-			},
-		});
+	const proxy =
+        proxyMap.get(obj) ??
+        new Proxy<T>(obj, {
+        	get(target, prop, receiver) 
+        	{
+        		return handleGet(target, prop, receiver, metadata, proxyMap);
+        	},
+        	set(_target, prop, value) 
+        	{
+        		return handleSet(prop, value, metadata, proxyMap);
+        	},
+        	deleteProperty(_target, prop) 
+        	{
+        		return handleDelete(prop, metadata);
+        	},
+        });
 
-	if (!proxyMap.has(obj))
+	if (!proxyMap.has(obj)) 
 	{
 		proxyMap.set(obj, proxy);
 	}
@@ -70,7 +70,7 @@ function createProxy<T extends object>(obj: T, proxyMap: WeakMap<T, T>, params: 
 	for (const [key, value] of Object.entries(obj)) 
 	{
 		// Only proxify values which are objects, and only those which are plain objects (not special objects like Date, etc.)
-		if (isElligibleForProxy(value))
+		if (isElligibleForProxy(value)) 
 		{
 			proxy[key] = createProxy(value, proxyMap, params);
 		}
@@ -79,7 +79,7 @@ function createProxy<T extends object>(obj: T, proxyMap: WeakMap<T, T>, params: 
 	return proxy;
 }
 
-function createMetadata<T extends object>(obj: T, params: SandboxParams): Metadata<T>
+function createMetadata<T extends object>(obj: T, params: SandboxParams): Metadata<T> 
 {
 	return {
 		id: uuidv4(),
@@ -89,9 +89,15 @@ function createMetadata<T extends object>(obj: T, params: SandboxParams): Metada
 	};
 }
 
-function handleGet<T extends object>(target: T, prop: string | symbol, receiver: any, metadata: Metadata<T>, proxyMap: WeakMap<object, object>) 
+function handleGet<T extends object>(
+	target: T,
+	prop: string | symbol,
+	receiver: any,
+	metadata: Metadata<T>,
+	proxyMap: WeakMap<object, object>,
+) 
 {
-	if (symbolCompare(prop, CONSTANTS.SANDBOX_SYMBOL).looseEqual)
+	if (symbolCompare(prop, CONSTANTS.SANDBOX_SYMBOL).looseEqual) 
 	{
 		return metadata;
 	}
@@ -130,7 +136,7 @@ function handleSet(prop: string | symbol, value: any, metadata: any, proxyMap: W
 	const isSpecialSymbol = typeof prop === "symbol" && Object.getOwnPropertySymbols(symbolsSkipSet).includes(prop);
 
 	// make sure prop isn't one of the special symbols
-	if (!isSpecialSymbol)
+	if (!isSpecialSymbol) 
 	{
 		metadata.changes[prop] = value;
 	}

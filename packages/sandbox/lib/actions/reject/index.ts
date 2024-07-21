@@ -1,1 +1,1 @@
-export * from "./reject";
+export * from "./reject.js";

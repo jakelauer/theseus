@@ -1,6 +1,6 @@
-import { proxyStatus } from "../../../proxy-handler/proxy-status";
-import type { Sandbox } from "../types";
-import { objectRootIsSandbox } from "./root-is-sandbox";
+import { proxyStatus } from "../../../proxy-handler/proxy-status.js";
+import type { Sandbox } from "../types.js";
+import { objectRootIsSandbox } from "./root-is-sandbox.js";
 
 /**
  * Determines if the given object is a sandbox proxy (deep check, checks the root object and all inner objects).
@@ -11,13 +11,17 @@ import { objectRootIsSandbox } from "./root-is-sandbox";
  */
 export const isDeepSandbox = <T extends object>(obj: T, mode: "some" | "every" = "every"): obj is Sandbox<T> => 
 {
-	const status = proxyStatus(obj, {
-		objectChecker: objectRootIsSandbox,
-	}, true);
+	const status = proxyStatus(
+		obj,
+		{
+			objectChecker: objectRootIsSandbox,
+		},
+		true,
+	);
 
-	return mode === "some" 
-		? Boolean(status.root || status.properties.some) 
-		: Boolean(status.root && status.properties.every);
+	return mode === "some" ?
+		Boolean(status.root || status.properties.some)
+		:   Boolean(status.root && status.properties.every);
 };
 
 /**

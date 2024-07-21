@@ -13,7 +13,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@commitlint/types": "^19.0.3",
+        "@commitlint/types": "19.0.3",
         "typescript": "^5.4.2"
     }
 }

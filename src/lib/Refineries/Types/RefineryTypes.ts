@@ -1,7 +1,7 @@
 import type { FuncMinusFirstArg } from "@Types/Modifiers";
-import type { NormalizedRefineryName } from "../Util/normalizeRefineryName";
+import type { NormalizedRefineryName } from "../Util/normalizeRefineryName.js";
 
-import type { Forge } from "./ForgeTypes";
+import type { Forge } from "./ForgeTypes.js";
 
 /**
  * Defines a dictionary of forge functions, transforming each function to exclude its first argument. This

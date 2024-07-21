@@ -3,8 +3,7 @@ import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 import { Theseus } from "@/Theseus";
 import { getTheseusLogger } from "theseus-logger";
 
-
-import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes";
+import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes.js";
 import {
 	cement, frost, isSandbox, sandbox, 
 } from "theseus-sandbox";
@@ -46,7 +45,7 @@ export class MutatorSetBuilder<
 		return this._data;
 	}
 
-	private setInitialData(data: TData)
+	private setInitialData(data: TData) 
 	{
 		const wrappedInput = this.inputToObject(data);
 		const frosted = frost(wrappedInput);
@@ -66,7 +65,7 @@ export class MutatorSetBuilder<
 
 	public setData(data: TData) 
 	{
-		if (data instanceof Promise)
+		if (data instanceof Promise) 
 		{
 			throw new Error("Cannot set data to a Promise.");
 		}
@@ -75,14 +74,14 @@ export class MutatorSetBuilder<
 		this.cementData();
 	}
 
-	protected augmentData(data: TData)
+	protected augmentData(data: TData) 
 	{
 		const sb = sandbox(this.data);
 		sb[this.paramNoun] = data;
 		return sb;
 	}
 
-	public cementData()
+	public cementData() 
 	{
 		this._data = cement(this.data);
 	}
@@ -140,22 +139,19 @@ export class MutatorSetBuilder<
      * Adds a function to the instance at the specified path. This method is used internally by
      * extendSelfWithMutators to attach mutator functions to the instance.
      */
-	protected addFunctionToSelf(
-		context: any,
-		selfPath: string,
-		mutator: GenericMutator<TData, SortaPromise<TData>>,
-	) 
+	protected addFunctionToSelf(context: any, selfPath: string, mutator: GenericMutator<TData, SortaPromise<TData>>) 
 	{
 		Object.assign(context, {
 			[selfPath]: (...args: any[]) => 
 			{
 				Theseus.incrementStackDepth(this.__theseusId);
-				const draft = isSandbox(this.data[this.paramNoun]) 
-					? this.data 
-					: sandbox(this.data, {
-						mode: "copy", 
-					});
-				
+				const draft =
+                    isSandbox(this.data[this.paramNoun]) ?
+                    	this.data
+                    	:   sandbox(this.data, {
+                    		mode: "copy",
+                    	});
+
 				let funcResult: SortaPromise<TData>;
 				try 
 				{
@@ -163,7 +159,7 @@ export class MutatorSetBuilder<
 				}
 				catch (e) 
 				{
-					log.error(`Error in mutator function "${selfPath}"`, e);
+					log.error(`Error in mutator function "${selfPath}"`);
 					throw e;
 				}
 
@@ -180,7 +176,7 @@ export class MutatorSetBuilder<
 		});
 	}
 
-	protected decrementAfter(outcome: SortaPromise<any>)
+	protected decrementAfter(outcome: SortaPromise<any>) 
 	{
 		const doDecrement = () => 
 		{
@@ -204,14 +200,13 @@ export class MutatorSetBuilder<
 		return result;
 	}
 
-	protected extractDataFromDraftResult(outcomeData: SortaPromise<TData>)
+	protected extractDataFromDraftResult(outcomeData: SortaPromise<TData>) 
 	{
 		const generateOutcome = (generatedData: TData) => 
 		{
-			const finishedDraft = isSandbox(generatedData) 
-				? cement(generatedData) as Record<TParamNoun, TData> 
-				: generatedData;
-				
+			const finishedDraft =
+                isSandbox(generatedData) ? (cement(generatedData) as Record<TParamNoun, TData>) : generatedData;
+
 			if (this.__theseusId && finishedDraft) 
 			{
 				void Theseus.updateInstance(this.__theseusId, finishedDraft);
@@ -219,14 +214,12 @@ export class MutatorSetBuilder<
 			return finishedDraft;
 		};
 
-		return outcomeData instanceof Promise 
-			? outcomeData
-				.then(generateOutcome)
-				.finally(() => this.decrementAfter(outcomeData))
-			: generateOutcome(outcomeData);
-	};
+		return outcomeData instanceof Promise ?
+			outcomeData.then(generateOutcome).finally(() => this.decrementAfter(outcomeData))
+			:   generateOutcome(outcomeData);
+	}
 
-	protected applyResultDataToDraft(draft: TData, result: SortaPromise<TData>)
+	protected applyResultDataToDraft(draft: TData, result: SortaPromise<TData>) 
 	{
 		const generateOutcome = (generatedData: TData) => 
 		{
@@ -237,22 +230,17 @@ export class MutatorSetBuilder<
 			return draft;
 		};
 
-
-		return result instanceof Promise 
-			? result.then(generateOutcome) 
-			: generateOutcome(result);
+		return result instanceof Promise ? result.then(generateOutcome) : generateOutcome(result);
 	}
 
 	/**
      * Transforms the input data into the structured format expected by the mutators, keyed by the parameter
      * name.
      */
-	protected inputToObject<_TData, _TParamNoun extends string>(
-		input: _TData,
-	): { [key in _TParamNoun]: _TData } 
+	protected inputToObject<_TData, _TParamNoun extends string>(input: _TData): { [key in _TParamNoun]: _TData } 
 	{
 		return {
-			[this.paramNoun]: input, 
+			[this.paramNoun]: input,
 		} as {
             [key in _TParamNoun]: _TData;
         };

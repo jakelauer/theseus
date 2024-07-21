@@ -1,16 +1,9 @@
-import chai, { expect } from "chai";
 import {
-	beforeEach, describe, it, 
-} from "mocha";
-import chaiAsPromised from "chai-as-promised";
-
+	beforeEach, describe, it, expect,
+} from "vitest";
 import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
-
-import { Broadcaster } from "../Broadcaster";
-
-import type { BroadcasterParams } from "../Broadcaster";
-
-chai.use(chaiAsPromised);
+import { Broadcaster } from "../Broadcaster.js";
+import type { BroadcasterParams } from "../Broadcaster.js";
 
 // Mock observer class for testing
 class MockObserver extends BroadcasterObserver<any> 
@@ -72,10 +65,9 @@ describe("Broadcaster", () =>
 
 		it("completes broadcast with no observers without error", async () => 
 		{
-			const broadcastPromise = broadcaster.broadcast({
+			expect(broadcaster.broadcast({
 				key: "value", 
-			});
-			await expect(broadcastPromise).to.be.fulfilled;
+			})).resolves;
 		});
 	});
 

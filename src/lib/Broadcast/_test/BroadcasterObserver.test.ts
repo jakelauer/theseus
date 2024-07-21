@@ -1,7 +1,6 @@
-import { expect } from "chai";
 import {
-	beforeEach, describe, it, 
-} from "mocha";
+	beforeEach, describe, it, expect,
+} from "vitest";
 import sinon from "sinon";
 
 import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";

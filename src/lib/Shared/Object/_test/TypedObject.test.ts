@@ -1,17 +1,20 @@
-import { expect } from "chai";
-import { describe, it } from "mocha";
-import TypedObject from "../TypedObject";
+import TypedObject from "../TypedObject.js";
 
-describe("TypedObject", () => 
-{
-	it("Ensures .keys matches default Object.keys", () => 
+import {
+	describe, expect, it, 
+} from "vitest";
+
+describe("TypedObject",
+	() => 
 	{
-		const baseObj = {
-			1: 2,
-			3: 4,
-			5: 6, 
-		};
+		it("Ensures .keys matches default Object.keys", () => 
+		{
+			const baseObj = {
+				1: 2,
+				3: 4,
+				5: 6,
+			};
 
-		expect(Object.keys(baseObj)).to.deep.equal(TypedObject.keys(baseObj));
+			expect(Object.keys(baseObj)).to.deep.equal(TypedObject.keys(baseObj));
+		});
 	});
-});

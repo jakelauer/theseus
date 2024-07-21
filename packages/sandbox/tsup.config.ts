@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 import * as glob from "glob";
 
 const entries = glob.sync("lib/**/*.ts", {
-	ignore: ["**/*.test.ts", "**/*.spec.ts"],
+	ignore: ["**/*.spec.ts", "**/*.test.ts"],
 });
 
 export default defineConfig({

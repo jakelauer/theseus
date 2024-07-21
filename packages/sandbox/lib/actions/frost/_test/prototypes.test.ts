@@ -1,15 +1,17 @@
-import { expect } from "chai";
-import { isSandbox, sandbox } from "../../sandbox";
+import { isSandbox, sandbox } from "../../sandbox/index.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 
-describe("Prototype tests", function()
+describe("Prototype tests", function () 
 {
-	class TestClass
+	class TestClass 
 	{
 		public a: number = 1;
 		public b: number = 2;
 	}
 
-	it("should not sandbox objects which are instances of a class", function()
+	it("should not sandbox objects which are instances of a class", function () 
 	{
 		const original = new TestClass();
 		const sb = sandbox(original);

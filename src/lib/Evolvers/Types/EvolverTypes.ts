@@ -1,5 +1,5 @@
-import type { ChainableMutators } from "./ChainableTypes";
-import type { MutatorDefs } from "./MutatorTypes";
+import type { ChainableMutators } from "./ChainableTypes.js";
+import type { MutatorDefs } from "./MutatorTypes.js";
 export interface TypeAccess<
     TData extends object,
     TEvolverName extends string,
@@ -103,10 +103,9 @@ export interface EvolverOptions<TParamNoun extends string = "input"> {
  */
 export type SortaPromise<T> = T | Promise<T>;
 
-
 /**
  * Represents a dictionary of evolvers, mapping the evolver name to the evolver instance.
  */
 export type EvolversToDictionary<T extends EvolverInstance<any, string, any, any>[]> = {
-    [K in T[number]["evolverName"]]: Extract<T[number], { evolverName: K }>
+    [K in T[number]["evolverName"]]: Extract<T[number], { evolverName: K }>;
 };

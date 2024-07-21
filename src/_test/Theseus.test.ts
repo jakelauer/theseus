@@ -1,14 +1,10 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
 import {
-	beforeEach, describe, it, 
-} from "mocha";
+	beforeEach, describe, it, expect,
+} from "vitest";
 import sinon, { type SinonSpy } from "sinon";
 
 import { Theseus } from "@/Theseus";
-import { theseus, Evolver } from "..";
-
-chai.use(chaiAsPromised);
+import { theseus, Evolver } from "../index.js";
 
 describe("Observation", () => 
 {
@@ -190,5 +186,5 @@ describe("Observation", () =>
 		});
 
 		expect(callback.callCount).to.be.equal(1);
-	  }).timeout(2000); // Ensure the test has enough time to complete
+	  });
 });

@@ -1,2 +1,2 @@
-export * from "./is-frost-proxy";
-export * from "./root-is-frost";
+export * from "./is-frost-proxy.js";
+export * from "./root-is-frost.js";

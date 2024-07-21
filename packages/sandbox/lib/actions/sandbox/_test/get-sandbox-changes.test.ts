@@ -1,13 +1,15 @@
-import { expect } from "chai";
-import { getSandboxChanges } from "../get-sandbox-changes";
+import { getSandboxChanges } from "../get-sandbox-changes.js";
+import {
+	expect, describe, it, 
+} from "vitest";
 import { CONSTANTS } from "sandbox-constants";
 
-describe("getSandboxChanges", function() 
+describe("getSandboxChanges", function () 
 {
-	it("should return changes when input is a sandbox proxy", function() 
+	it("should return changes when input is a sandbox proxy", function () 
 	{
 		const changes = {
-			some: "changes", 
+			some: "changes",
 		};
 		const sandbox = {
 			some: "unchanged",
@@ -21,7 +23,7 @@ describe("getSandboxChanges", function()
 		expect(result).to.deep.equal(changes);
 	});
 
-	it("should throw an error when input is not a sandbox proxy", function() 
+	it("should throw an error when input is not a sandbox proxy", function () 
 	{
 		const nonSandboxObject = {};
 

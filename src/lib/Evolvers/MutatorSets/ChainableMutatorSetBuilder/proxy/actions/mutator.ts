@@ -1,13 +1,12 @@
 import { Theseus } from "@/Theseus";
 import { getTheseusLogger } from "theseus-logger";
-import { ProxyActions, ProxyActionType } from "../proxy-actions";
-import type { ProxyActionMapParameters } from "../proxy-action-map";
+import { ProxyActions, ProxyActionType } from "../proxy-actions.js";
+import type { ProxyActionMapParameters } from "../proxy-action-map.js";
 import { cement } from "theseus-sandbox";
-
 
 const log = getTheseusLogger("mutator-proxy-action");
 
-export class MutatorAction extends ProxyActions
+export class MutatorAction extends ProxyActions 
 {
 	public override type: ProxyActionType = ProxyActionType.mutator;
 
@@ -15,7 +14,7 @@ export class MutatorAction extends ProxyActions
 	{
 		return typeof target.mutatorsForProxy?.[prop] === "function";
 	}
-	
+
 	public override process(params: ProxyActionMapParameters) 
 	{
 		return this.handleMutatorCall(params);
@@ -45,9 +44,7 @@ export class MutatorAction extends ProxyActions
 					return proxyManager.finalizeAndReset(cementedResult);
 				};
 
-				return queueResult instanceof Promise 
-					? queueResult.then(complete) 
-					: complete(queueResult);
+				return queueResult instanceof Promise ? queueResult.then(complete) : complete(queueResult);
 			}
 
 			return proxy;

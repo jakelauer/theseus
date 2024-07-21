@@ -1,15 +1,15 @@
 {
-    "compileOnSave": true,
-    "include": ["./lib/**/*"],
-	"exclude": ["node_modules", "dist", "**/*.test-dep.*"],
-    "compilerOptions": {
+	"compileOnSave": true,
+	"include": [ "./lib/**/*" ],
+	"exclude": [ "node_modules", "dist", "**/*.test-dep.*" ],
+	"compilerOptions": {
 		"esModuleInterop": true,
 		"declaration": true,
-        "allowJs": true,
+		"allowJs": true,
 		"target": "ES2016",
 		"moduleResolution": "Bundler",
-        "rootDir": "./lib",
-        "baseUrl": "./lib",
+		"rootDir": "./lib",
+		"baseUrl": "./lib",
 		"outDir": "./dist",
-    }
+	}
 }

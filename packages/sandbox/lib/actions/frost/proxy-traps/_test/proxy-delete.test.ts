@@ -1,39 +1,41 @@
-import { expect } from "chai";
-
 // Mock the assertValidVerificationProperty and extractVerificationPropValues functions
 import sinon from "sinon";
+
+import {
+	expect, describe, it, 
+} from "vitest";
 import { CONSTANTS } from "sandbox-constants";
-import { proxyDelete } from "../proxy-delete";
+import { proxyDelete } from "../proxy-delete.js";
 import {
 	extractVerificationPropValues, generateVerificationProperty, propertyStartsWith, 
-} from "../../properties";
-import { assertValidVerificationProperty } from "../../assertions";
+} from "../../properties.js";
+import { assertValidVerificationProperty } from "../../assertions.js";
 
-describe("proxyDelete", function() 
+describe("proxyDelete", function () 
 {
-	it("should delete the verification property", function() 
+	it("should delete the verification property", function () 
 	{
 		const target = {
-			[CONSTANTS.FROST.BASIS_SYMBOL]: "123", 
+			[CONSTANTS.FROST.BASIS_SYMBOL]: "123",
 		};
 
 		proxyDelete(target, CONSTANTS.FROST.BASIS_SYMBOL, {
-			proxy: target, 
+			proxy: target,
 		});
 		expect(target[CONSTANTS.FROST.BASIS_SYMBOL]).to.be.undefined;
 	});
 
-	it("should delete the sandbox property with valid verification", function() 
+	it("should delete the sandbox property with valid verification", function () 
 	{
 		const target = {
 			key: "value",
-			[CONSTANTS.FROST.BASIS_SYMBOL]: "123", 
+			[CONSTANTS.FROST.BASIS_SYMBOL]: "123",
 		};
 		const ostensibleProp = generateVerificationProperty(target, "key");
 
 		const propValues = {
 			verificationValue: "123",
-			propertyName: "key", 
+			propertyName: "key",
 		};
 
 		// Directly stub the functions without using withArgs
@@ -48,27 +50,31 @@ describe("proxyDelete", function()
 		(global as any).propertyStartsWith = propertyStub;
 		(global as any).extractVerificationPropValues = extractStub;
 		(global as any).assertValidVerificationProperty = assertStub;
-	
-		expect(() => proxyDelete(target, ostensibleProp, {
-			proxy: target, 
-		})).not.to.throw();
+
+		expect(() =>
+			proxyDelete(target, ostensibleProp, {
+				proxy: target,
+			}),
+		).not.to.throw();
 		expect(target.key).to.be.undefined;
-	
+
 		// Restore the original functions
 		(global as any).propertyStartsWith = originalPropertyStartsWith;
 		(global as any).extractVerificationPropValues = originalExtractVerificationPropValues;
 		(global as any).assertValidVerificationProperty = originalAssertValidVerificationProperty;
 	});
 
-	it("should throw an error for other properties", function() 
+	it("should throw an error for other properties", function () 
 	{
 		const target = {
-			key: "value", 
+			key: "value",
 		};
 		const ostensibleProp = "key";
 
-		expect(() => proxyDelete(target, ostensibleProp, {
-			proxy: target, 
-		})).to.throw("Cannot modify property \"key\" of the original object.");
+		expect(() =>
+			proxyDelete(target, ostensibleProp, {
+				proxy: target,
+			}),
+		).to.throw('Cannot modify property "key" of the original object.');
 	});
 });

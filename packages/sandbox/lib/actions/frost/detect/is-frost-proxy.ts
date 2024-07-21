@@ -1,6 +1,6 @@
-import { proxyStatus } from "../../../proxy-handler/proxy-status";
-import type { FrostProxy } from "../types";
-import { objectRootIsFrost } from "./root-is-frost";
+import { proxyStatus } from "../../../proxy-handler/proxy-status.js";
+import type { FrostProxy } from "../types.js";
+import { objectRootIsFrost } from "./root-is-frost.js";
 
 /**
  * Determines if the given object is a sandbox proxy (deep check, checks the root object and all inner objects).
@@ -10,13 +10,17 @@ import { objectRootIsFrost } from "./root-is-frost";
  */
 export const isDeepFrost = <T extends object>(obj: T, mode: "some" | "every" = "every"): obj is FrostProxy<T> => 
 {
-	const status = proxyStatus(obj, {
-		objectChecker: objectRootIsFrost,
-	}, true);
+	const status = proxyStatus(
+		obj,
+		{
+			objectChecker: objectRootIsFrost,
+		},
+		true,
+	);
 
-	return mode === "some" 
-		? Boolean(status.root || status.properties.some) 
-		: Boolean(status.root && status.properties.every);
+	return mode === "some" ?
+		Boolean(status.root || status.properties.some)
+		:   Boolean(status.root && status.properties.every);
 };
 
 /**

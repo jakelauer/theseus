@@ -1,12 +1,12 @@
 import { CONSTANTS, SANDBOX_VERIFIABLE_PROP_SYMBOL } from "sandbox-constants";
-import { frostClone } from "../frost";
-import { generateVerificationProperty, getVerificationValueFromObject } from "../frost/properties";
-import { containsSandbox, type SandboxMode } from "../sandbox";
+import { frostClone } from "../frost/index.js";
+import { generateVerificationProperty, getVerificationValueFromObject } from "../frost/properties.js";
+import { containsSandbox, type SandboxMode } from "../sandbox/index.js";
 import structuredClone from "@ungap/structured-clone";
-import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy";
-import { sandboxTransform } from "../sandbox/sandbox-transform";
-import { isFrost } from "../frost/detect/is-frost-proxy";
-import { symbolCompare } from "../../symbols/symbol-compare";
+import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy.js";
+import { sandboxTransform } from "../sandbox/sandbox-transform.js";
+import { isFrost } from "../frost/detect/is-frost-proxy.js";
+import { symbolCompare } from "../../symbols/symbol-compare.js";
 
 /**
  * Finalizes the changes made in a sandbox proxy object and returns a new object with those changes applied.
@@ -22,29 +22,35 @@ export function cement<T extends object>(obj: T): T
 
 	// If the object is a sandbox proxy at the root level, apply the changes
 	const rootCemented = cementAtRoot(obj);
-	if (rootCemented !== undefined)
+	if (rootCemented !== undefined) 
 	{
-		finalResult = rootCemented;
+		finalResult = rootCemented as T;
 	}
 
 	// If the object contains nested sandbox proxies, apply the changes recursively.
 	// We don't need to check for situations where there are non-sandbox-proxies between
 	// a sb-root and a sb-nested, because sb-root objects are recursively sandboxed, so
 	// any changes to nested objects will also be sandboxed if the root is sandboxed.
-	if (containsSandbox(finalResult))
+	if (containsSandbox(finalResult)) 
 	{
-		finalResult = sandboxTransform(finalResult, (val) => 
-		{
-			return cement(val);
-		}, isElligibleForProxy);
+		finalResult = sandboxTransform(
+			finalResult,
+			(val) => 
+			{
+				return cement(val);
+			},
+			isElligibleForProxy,
+		);
 	}
 
 	return finalResult;
 }
 
-function cementAtRoot<T extends object>(obj: T): T 
+function cementAtRoot<T extends object>(obj: T) 
 {
-	let original: T, changes: Record<string | symbol, any>, mode: SandboxMode, isSandbox = false;
+	let original: T,
+		changes: Record<string | symbol, any>,
+		mode: SandboxMode;
 	try 
 	{
 		// If this errors, the object is not a sandbox proxy
@@ -52,34 +58,31 @@ function cementAtRoot<T extends object>(obj: T): T
 		original = sbMetadata.original;
 		changes = sbMetadata.changes;
 		mode = sbMetadata.params.mode;
-		isSandbox = true;
+
+		const toModify = getModifiableObject(original, mode);
+
+		return applyChanges(toModify, changes);
 	}
 	catch 
 	{
 		// Not really an error case, just means the object is not a sandbox proxy
 	}
-
-	if (isSandbox) 
-	{
-		const toModify = getModifiableObject(original, mode);
-	
-		return applyChanges(toModify, changes);
-	}
 }
 
-function getModifiableObject<T extends object>(obj: T, mode: SandboxMode): T
+function getModifiableObject<T extends object>(obj: T, mode: SandboxMode): T 
 {
 	// modify mode, non-frost-proxy
 	let result = obj;
 
-	if (mode === "copy")
+	if (mode === "copy") 
 	{
 		// if the object is a frost proxy, clone it and frost it, otherwise structured clone it
-		result = isFrost(obj) 
-			? frostClone(obj) 
-			: structuredClone(obj, {
-				lossy: false, 
-			});
+		result =
+            isFrost(obj) ?
+            	frostClone(obj)
+            	:   structuredClone(obj, {
+            		lossy: false,
+            	});
 	}
 
 	return result;
@@ -104,7 +107,7 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 		const newValue = changes[key];
 
 		// If the key is not in the target object, add it
-		if (!Object.prototype.hasOwnProperty.call(target, key))
+		if (!Object.prototype.hasOwnProperty.call(target, key)) 
 		{
 			const newValue = changes[key];
 			const setValue = isElligibleForProxy(newValue) ? cement(newValue) : newValue;
@@ -117,12 +120,12 @@ function applyChanges<T extends object>(target: any, changes: Record<string | sy
 			handleSet(target, key, cemented, targetIsFrost);
 		}
 		// If the value is a deletion symbol, delete the property
-		else if (symbolCompare(newValue, CONSTANTS.FROST.DELETION_SYMBOL).looseEqual)
+		else if (symbolCompare(newValue, CONSTANTS.FROST.DELETION_SYMBOL).looseEqual) 
 		{
 			handleDeletion(target, key, targetIsFrost);
 		}
 		// if the key is in changes, apply the change
-		else if (Object.prototype.hasOwnProperty.call(changes, key))
+		else if (Object.prototype.hasOwnProperty.call(changes, key)) 
 		{
 			handleSet(target, key, newValue, targetIsFrost);
 		}

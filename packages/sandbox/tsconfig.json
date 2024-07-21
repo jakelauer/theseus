@@ -1,4 +1,5 @@
 {
+	"extends": "../../tsconfig.base.json",
 	"compileOnSave": true,
 	"include": [ "./lib/**/*" ],
 	"exclude": [ "node_modules", "dist", "**/*.test-dep.*" ],
@@ -6,8 +7,9 @@
 		"esModuleInterop": true,
 		"declaration": true,
 		"allowJs": true,
-		"target": "ES2016",
-		"moduleResolution": "Bundler",
+		"module": "ESNext",
+		"target": "ESNext",
+		"moduleResolution": "node",
 		"rootDir": "./lib",
 		"baseUrl": "./lib",
 		"outDir": "./dist",

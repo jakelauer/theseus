@@ -1,6 +1,6 @@
 import {
 	Evolver, EvolverComplex, Refinery, RefineryComplex, 
-} from "../lib";
+} from "../lib/index.js";
 
 export interface MockData {
     touched: boolean;
@@ -8,7 +8,7 @@ export interface MockData {
 
 export const mockRefineryComplex = RefineryComplex.create().withRefineries(
 	Refinery.create("mockRefinery", {
-		noun: "mockData", 
+		noun: "mockData",
 	})
 		.toRefine<MockData>()
 		.withForges({
@@ -20,18 +20,19 @@ export const mockRefineryComplex = RefineryComplex.create().withRefineries(
 );
 
 const mockEvolver = Evolver.create("mock", {
-	noun: "mockData", 
-}).toEvolve<MockData>().withMutators({
-	toggleTouch: ({ mockData }) => 
-	{
-		mockData.touched = !mockData.touched;
+	noun: "mockData",
+})
+	.toEvolve<MockData>()
+	.withMutators({
+		toggleTouch: ({ mockData }) => 
+		{
+			mockData.touched = !mockData.touched;
 
-		return mockData;
-	},
-});
+			return mockData;
+		},
+	});
 
 export const mockEvolverComplex = EvolverComplex.create<MockData>().withEvolvers(mockEvolver);
-
 
 export const mockEvolverKeyMap = {
 	mock: {

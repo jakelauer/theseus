@@ -1,5 +1,5 @@
-import { type ValidLogLevels, DEFAULT_LOG_LEVEL } from "./log-levels";
-import { allTransports } from "./winston-config-builder";
+import { type ValidLogLevels, DEFAULT_LOG_LEVEL } from "./log-levels.js";
+import { allTransports } from "./winston-config-builder.js";
 
 let savedLevel: ValidLogLevels;
 const setAllTransportsLevel = (newLevel?: ValidLogLevels) => 
@@ -15,13 +15,13 @@ const setAllTransportsLevel = (newLevel?: ValidLogLevels) =>
 	// Set the level and silent flag for all transports
 	for (const transport of allTransports) 
 	{
-		if (level !== transport.level)
+		if (level !== transport.level) 
 		{
 			transport.level = level;
 			changed = true;
 		}
 
-		if (level === "silent" && !transport.silent)
+		if (level === "silent" && !transport.silent) 
 		{
 			transport.silent = level === "silent";
 			changed = true;
@@ -30,7 +30,6 @@ const setAllTransportsLevel = (newLevel?: ValidLogLevels) =>
 
 	return changed;
 };
-	
 
 /**
  * Set the log level for the specified transport.
@@ -46,7 +45,7 @@ export const setTheseusLogLevel = (level: ValidLogLevels = lastLogLevel) =>
 
 	const changed = setAllTransportsLevel(level);
 
-	if (changed)
+	if (changed) 
 	{
 		console.log("Set Theseus log level to", level); // eslint-disable-line no-console
 	}

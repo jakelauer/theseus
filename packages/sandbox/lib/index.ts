@@ -1,3 +1,3 @@
-export * from "./actions";
-export * from "./proxy-handler";
-export * from "./symbols";
+export * from "./actions/index.js";
+export * from "./proxy-handler/index.js";
+export * from "./symbols/index.js";

@@ -1,6 +1,6 @@
 import { getTheseusLogger } from "theseus-logger";
-import { enumValToFlagNames } from "../../../../Shared/Object/Flags";
-import type { ProxyActionMapParameters } from "./proxy-action-map";
+import { enumValToFlagNames } from "../../../../Shared/Object/Flags.js";
+import type { ProxyActionMapParameters } from "./proxy-action-map.js";
 
 export enum ProxyActionType {
     none = 0 << 0,
@@ -17,31 +17,28 @@ const log = getTheseusLogger("proxy-actions");
 
 export abstract class ProxyActions 
 {
-	constructor()
-	{
-		
-	}
+	constructor() {}
 
-	public abstract readonly type: ProxyActionType;
+    public abstract readonly type: ProxyActionType;
 
-	public test(params: ProxyActionMapParameters, matchingRequestTypes: ProxyActionType)
-	{
-		const outcome = this.runTest(params, matchingRequestTypes);
+    public test(params: ProxyActionMapParameters, matchingRequestTypes: ProxyActionType) 
+    {
+    	const outcome = this.runTest(params, matchingRequestTypes);
 
-		if (outcome)
-		{
-			log.verbose(`[${params.prop}] type: ${ProxyActionType[this.type]}`);
-		}
+    	if (outcome) 
+    	{
+    		log.verbose(`[${params.prop}] type: ${ProxyActionType[this.type]}`);
+    	}
 
-		return outcome;
-	}
+    	return outcome;
+    }
 
-	public abstract runTest(params: ProxyActionMapParameters, matchedRequestTypes: ProxyActionType): boolean;
+    public abstract runTest(params: ProxyActionMapParameters, matchedRequestTypes: ProxyActionType): boolean;
 
-	public abstract process(params: ProxyActionMapParameters, requestType: ProxyActionType): any;
+    public abstract process(params: ProxyActionMapParameters, requestType: ProxyActionType): any;
 
-	public static flagNames(type: ProxyActionType)
-	{
-		return enumValToFlagNames(type, ProxyActionType);
-	}
+    public static flagNames(type: ProxyActionType) 
+    {
+    	return enumValToFlagNames(type, ProxyActionType);
+    }
 }

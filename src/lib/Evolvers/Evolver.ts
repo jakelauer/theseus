@@ -1,14 +1,11 @@
 import { ChainableMutatorSetBuilder, MutatorSetBuilder } from "@Evolvers/MutatorSets";
 
 import type {
-	EvolveObject,
-	EvolverOptions,
-	MutateObject,
-	TypeAccess,
+	EvolveObject, EvolverOptions, MutateObject, TypeAccess, 
 } from "@Evolvers/Types/EvolverTypes";
 import type { MutatorDefs } from "@Evolvers/Types/MutatorTypes";
 import { normalizeEvolverName, type NormalizedEvolverName } from "@Evolvers/Util/normalizeEvolverName";
-import type { ChainableMutators, FinalMutators } from "./Types/ChainableTypes";
+import type { ChainableMutators, FinalMutators } from "./Types/ChainableTypes.js";
 import { getTheseusLogger } from "theseus-logger";
 const log = getTheseusLogger("Evolver");
 
@@ -125,16 +122,14 @@ export class Evolver<
 		}
 
 		const mutatorSetGetter = () => mutatorSet;
-		const result = Object.defineProperties<
-            MutateObject<TData, TEvolverName, TParamNoun, TMutators>
-        >({} as any, {
-        	getMutators: {
-        		get: () => mutatorSetGetter,
-        	},
-        	via: {
-        		get: mutatorSetGetter,
-        	},
-        });
+		const result = Object.defineProperties<MutateObject<TData, TEvolverName, TParamNoun, TMutators>>({} as any, {
+			getMutators: {
+				get: () => mutatorSetGetter,
+			},
+			via: {
+				get: mutatorSetGetter,
+			},
+		});
 
 		return result;
 	}
@@ -164,19 +159,16 @@ export class Evolver<
 			(mutatorSet as ChainableMutatorSetBuilder<any, any, any>).reset(input);
 		}
 
-
 		const mutatorSetGetter = () => mutatorSet;
 
-		const result = Object.defineProperties<
-            EvolveObject<TData, TEvolverName, TParamNoun, TMutators>
-        >({} as any, {
-        	getMutators: {
-        		get: () => mutatorSetGetter,
-        	},
-        	via: {
-        		get: mutatorSetGetter,
-        	},
-        });
+		const result = Object.defineProperties<EvolveObject<TData, TEvolverName, TParamNoun, TMutators>>({} as any, {
+			getMutators: {
+				get: () => mutatorSetGetter,
+			},
+			via: {
+				get: mutatorSetGetter,
+			},
+		});
 
 		return result;
 	}
@@ -201,15 +193,9 @@ export class Evolver<
 		options?: EvolverOptions<_TParamNoun>,
 	) => ({
 		toEvolve: <_TData extends object>() => ({
-			withMutators: <_TMutators extends MutatorDefs<_TData, _TParamNoun>>(
-				mutators: _TMutators,
-			) => 
+			withMutators: <_TMutators extends MutatorDefs<_TData, _TParamNoun>>(mutators: _TMutators) => 
 			{
-				const evolver = new Evolver<_TData, _TEvolverName, _TParamNoun, _TMutators>(
-					name,
-					mutators,
-					options,
-				);
+				const evolver = new Evolver<_TData, _TEvolverName, _TParamNoun, _TMutators>(name, mutators, options);
 
 				log.verbose(`Created evolver: ${evolver.evolverName} with mutators:`, {
 					mutators: Object.keys(mutators),

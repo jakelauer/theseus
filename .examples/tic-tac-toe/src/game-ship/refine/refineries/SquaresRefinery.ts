@@ -1,11 +1,11 @@
 import { getTheseusLogger, Refinery } from "theseus-js";
 
-import type { CoordsArray, GameState } from "../../state/GameState";
+import type { CoordsArray, GameState } from "../../state/GameState.js";
 
 const log = getTheseusLogger("SquaresRefinery");
 
 export const SquaresRefinery = Refinery.create("SquaresRefinery", {
-	noun: "gameState", 
+	noun: "gameState",
 })
 	.toRefine<GameState>()
 	.withForges({
@@ -18,9 +18,9 @@ export const SquaresRefinery = Refinery.create("SquaresRefinery", {
 		},
 		getAvailableSquares: ({ gameState }): CoordsArray => 
 		{
-			return gameState.board.flatMap((row, rowIndex) => 
-            	row.map((square, colIndex) => !square ? [rowIndex, colIndex] : null),
-			).filter(Boolean) as CoordsArray;
+			return gameState.board
+				.flatMap((row, rowIndex) => row.map((square, colIndex) => (!square ? [rowIndex, colIndex] : null)))
+				.filter(Boolean) as CoordsArray;
 		},
 		getRandomAvailableSquare: ({ gameState }) => 
 		{
@@ -32,12 +32,12 @@ export const SquaresRefinery = Refinery.create("SquaresRefinery", {
 			{
 				const unusedIndex = Math.floor(Math.random() * availableSquaresCount);
 				const randomAvailableSquare = availableSquares[unusedIndex];
-	
+
 				log.info(`Got random available square at ${randomAvailableSquare}`);
-	
+
 				result = randomAvailableSquare;
 			}
-			else
+			else 
 			{
 				log.warn("No available squares left");
 			}

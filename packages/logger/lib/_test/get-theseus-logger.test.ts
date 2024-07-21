@@ -1,8 +1,10 @@
-import { expect } from "chai";
+import {
+	expect, describe, beforeEach, it, 
+} from "vitest";
 import sinon from "sinon";
 import * as winston from "winston";
-import { getTheseusLogger, type MockLoggingLib } from "../get-theseus-logger";
-import winstonConfigBuilder from "../winston-config-builder";
+import { getTheseusLogger, type MockLoggingLib } from "../get-theseus-logger.js";
+import winstonConfigBuilder from "../winston-config-builder.js";
 
 describe("getLogger", function () 
 {

@@ -1,19 +1,21 @@
-import { expect } from "chai";
 import sinon from "sinon";
-import { sandboxTransform } from "../sandbox-transform";
+import {
+	expect, describe, it, 
+} from "vitest";
+import { sandboxTransform } from "../sandbox-transform.js";
 
-describe("deepSandboxTransform", function() 
+describe("deepSandboxTransform", function () 
 {
     interface TestObject {
         [key: string]: any;
     }
 
-    it("should apply transform to values that match the predicate", function() 
+    it("should apply transform to values that match the predicate", function () 
     {
     	const obj: TestObject = {
     		a: 1,
     		b: 2,
-    		c: 3, 
+    		c: 3,
     	};
     	const transform = sinon.spy((val: any) => val * 2);
     	const predicate = (val: any) => val > 1;
@@ -23,19 +25,19 @@ describe("deepSandboxTransform", function()
     	expect(result).to.deep.equal({
     		a: 1,
     		b: 4,
-    		c: 6, 
+    		c: 6,
     	});
     	expect(transform.calledTwice).to.be.true;
     	expect(transform.firstCall.calledWith(2)).to.be.true;
     	expect(transform.secondCall.calledWith(3)).to.be.true;
     });
 
-    it("should not apply transform to values that do not match the predicate", function() 
+    it("should not apply transform to values that do not match the predicate", function () 
     {
     	const obj: TestObject = {
     		a: 1,
     		b: 2,
-    		c: 3, 
+    		c: 3,
     	};
     	const transform = sinon.spy((val: any) => val * 2);
     	const predicate = (val: any) => val > 3;
@@ -45,17 +47,17 @@ describe("deepSandboxTransform", function()
     	expect(result).to.deep.equal({
     		a: 1,
     		b: 2,
-    		c: 3, 
+    		c: 3,
     	});
     	expect(transform.notCalled).to.be.true;
     });
 
-    it("should apply transform to all values if no predicate is provided", function() 
+    it("should apply transform to all values if no predicate is provided", function () 
     {
     	const obj: TestObject = {
     		a: 1,
     		b: 2,
-    		c: 3, 
+    		c: 3,
     	};
     	const transform = sinon.spy((val: any) => val * 2);
 
@@ -64,7 +66,7 @@ describe("deepSandboxTransform", function()
     	expect(result).to.deep.equal({
     		a: 2,
     		b: 4,
-    		c: 6, 
+    		c: 6,
     	});
     	expect(transform.calledThrice).to.be.true;
     	expect(transform.firstCall.calledWith(1)).to.be.true;
@@ -72,14 +74,14 @@ describe("deepSandboxTransform", function()
     	expect(transform.thirdCall.calledWith(3)).to.be.true;
     });
 
-    it("should not handle nested objects", function() 
+    it("should not handle nested objects", function () 
     {
     	const obj: TestObject = {
     		a: {
-    			d: 1, 
+    			d: 1,
     		},
     		b: 2,
-    		c: 3, 
+    		c: 3,
     	};
     	const transform = sinon.spy((val: any) => (typeof val === "number" ? val * 2 : val));
     	const predicate = (val: any) => typeof val === "number";
@@ -88,17 +90,17 @@ describe("deepSandboxTransform", function()
 
     	expect(result).to.deep.equal({
     		a: {
-    			d: 1, 
+    			d: 1,
     		},
     		b: 4,
-    		c: 6, 
+    		c: 6,
     	});
     	expect(transform.calledTwice).to.be.true;
     	expect(transform.firstCall.calledWith(2)).to.be.true;
     	expect(transform.secondCall.calledWith(3)).to.be.true;
     });
 
-    it("should handle empty objects", function() 
+    it("should handle empty objects", function () 
     {
     	const obj: TestObject = {};
     	const transform = sinon.spy((val: any) => val * 2);
