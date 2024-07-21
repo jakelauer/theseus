@@ -8,7 +8,7 @@
 <img src="./.assets/logo.png" alt="Theseus Logo">
 </div>
 
-# Theseus 
+# Theseus  
 
 Welcome to Theseus, a robust solution for managing application state with clarity and efficiency. Designed
 with modern JavaScript applications in mind, Theseus stands out for its fluent state manipulation, ease of
