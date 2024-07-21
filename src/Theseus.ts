@@ -22,7 +22,7 @@ export class Theseus<
 	implements ITheseus<TData>
 {
 	private internalState: TData;
-	#uuid: string;
+	#id: string;
 
 	public static instancesById: Record<string, Theseus<any, any>> = {};
 	public static stackDepthsById: Record<string, number> = {};
@@ -37,9 +37,9 @@ export class Theseus<
 	{
 		super(params?.broadcasterParams);
 
-		this.#uuid = uuidv4();
+		this.#id = uuidv4();
 		this.setData(data);
-		Theseus.instancesById[this.#uuid] = this;
+		Theseus.instancesById[this.#id] = this;
 	}
 
 	public static __private_create<
@@ -52,7 +52,7 @@ export class Theseus<
 
 	public get __uuid() 
 	{
-		return this.#uuid;
+		return this.#id;
 	}
 
 	public get state() 
