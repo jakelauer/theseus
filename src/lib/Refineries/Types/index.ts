@@ -1,2 +1,2 @@
-export * from "./ForgeTypes";
-export * from "./RefineryTypes";
+export * from "./ForgeTypes.js";
+export * from "./RefineryTypes.js";

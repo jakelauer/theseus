@@ -1,5 +1,5 @@
 import type { FuncMinusFirstArg } from "@Types/Modifiers";
-import type { SortaPromise } from "./EvolverTypes";
+import type { SortaPromise } from "./EvolverTypes.js";
 
 /**
  * Defines the structure and expected behavior of a mutator function. Mutators are functions that receive an
@@ -7,11 +7,10 @@ import type { SortaPromise } from "./EvolverTypes";
  * must return either the mutated state data directly or a promise that resolves to it, encapsulated by
  * `SortaPromise`.
  */
-export type Mutator<
-    TData extends object,
-    TParamNoun extends string,
-    TReturnData extends SortaPromise<TData>,
-> = (input: ParamNameData<TData, TParamNoun>, ...args: any[]) => TReturnData;
+export type Mutator<TData extends object, TParamNoun extends string, TReturnData extends SortaPromise<TData>> = (
+    input: ParamNameData<TData, TParamNoun>,
+    ...args: any[]
+) => TReturnData;
 
 /**
  * Matches the signature of a mutator function, without requiring specific arguments. This is useful for
@@ -48,7 +47,6 @@ export type MutatorDict<
     TParamNoun extends string,
     TDict extends MutatorDefs<TData, TParamNoun>,
 > = {
-    [K in keyof TDict]: TDict[K] extends (...args: any) => any ?
-        FuncMinusFirstArg<TDict[K], SortaPromise<TData>>
-    : never;
+    [K in keyof TDict]: TDict[K] extends (...args: any) => any ? FuncMinusFirstArg<TDict[K], SortaPromise<TData>>
+    :   never;
 };

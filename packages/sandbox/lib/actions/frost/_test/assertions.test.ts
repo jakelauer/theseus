@@ -1,10 +1,10 @@
 import { expect } from "chai";
 import { CONSTANTS } from "sandbox-constants";
-import { assertValidVerificationProperty } from "../assertions";
+import { assertValidVerificationProperty } from "../assertions.js";
 
-describe("assertValidVerificationProperty", function() 
+describe("assertValidVerificationProperty", function () 
 {
-	it("should return true if the verification property matches the value", function() 
+	it("should return true if the verification property matches the value", function () 
 	{
 		const verificationOwnerObj = {
 			prop: "testProp",
@@ -16,7 +16,7 @@ describe("assertValidVerificationProperty", function()
 		expect(assertValidVerificationProperty(verificationOwnerObj, valueToCheck)).to.be.true;
 	});
 
-	it("should throw an error if the verification property does not match the value", function() 
+	it("should throw an error if the verification property does not match the value", function () 
 	{
 		const verificationOwnerObj = {
 			prop: "testProp",
@@ -25,6 +25,8 @@ describe("assertValidVerificationProperty", function()
 		};
 
 		const valueToCheck = 456;
-		expect(() => assertValidVerificationProperty(verificationOwnerObj, valueToCheck)).to.throw("Invalid verification property.");
+		expect(() => assertValidVerificationProperty(verificationOwnerObj, valueToCheck)).to.throw(
+			"Invalid verification property.",
+		);
 	});
 });

@@ -5,7 +5,7 @@ module.exports = {
     // Search the whole tree
     recursive: true,
     // Match the following extensions
-    extension: ["js"],
+    extension: ["ts"],
     // Skip over shit
     ignore: ["**/node_modules/**/*", "**/dist/**/*"],
     // TBH I don't know why this is required, but removing it breaks things and it's not in the docs for Mocha.

@@ -1,5 +1,5 @@
 import { getTheseusLogger } from "theseus-logger";
-import { GameShip } from "../game-ship/game-ship";
+import { GameShip } from "../game-ship/game-ship.js";
 
 const log = getTheseusLogger("OnGameUpdated");
 

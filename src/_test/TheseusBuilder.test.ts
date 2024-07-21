@@ -1,13 +1,13 @@
 import { expect } from "chai";
 import sinon from "sinon";
-import TheseusBuilder from "../TheseusBuilder";
+import TheseusBuilder from "../TheseusBuilder.js";
 import { getTheseusLogger } from "theseus-logger";
 
 // Mock external dependencies and types
 // Assuming these mock functions and classes are implemented elsewhere in the test suite
 import {
 	mockEvolverComplex, mockRefineryComplex, type MockData, 
-} from "./mocks";
+} from "./mocks.js";
 
 describe("TheseusBuilder", function () 
 {
@@ -27,7 +27,7 @@ describe("TheseusBuilder", function ()
 	it("extends a Theseus instance with evolvers correctly", function () 
 	{
 		const theseusInstance = TheseusBuilder<MockData>({
-			touched: false, 
+			touched: false,
 		}).maintainWith({
 			evolvers: mockEvolverComplex,
 		});
@@ -54,7 +54,7 @@ describe("TheseusBuilder", function ()
 	it("extends a Theseus instance with evolvers and refineries correctly", function () 
 	{
 		const theseusInstance = TheseusBuilder<MockData>({
-			touched: false, 
+			touched: false,
 		}).maintainWith({
 			evolvers: mockEvolverComplex,
 			refineries: mockRefineryComplex,

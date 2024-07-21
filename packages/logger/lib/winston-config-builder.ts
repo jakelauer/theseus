@@ -1,9 +1,9 @@
 import * as winston from "winston";
 
-import { theseusArgs } from "./theseus-args";
-import { DEFAULT_LOG_LEVEL, logLevels } from "./log-levels";
-import { setTheseusLogLevel } from "./set-theseus-log-level";
-import { stringifier } from "./stringifier";
+import { theseusArgs } from "./theseus-args.js";
+import { DEFAULT_LOG_LEVEL, logLevels } from "./log-levels.js";
+import { setTheseusLogLevel } from "./set-theseus-log-level.js";
+import { stringifier } from "./stringifier.js";
 
 const { format, addColors } = winston;
 const {
@@ -14,35 +14,35 @@ const logFilter = theseusArgs["theseus-log-filter"];
 
 const filterLogs = format((info) => 
 {
-	if (info.message.includes("toJSON"))
+	if (info.message.includes("toJSON")) 
 	{
 		return false;
 	}
 
-	if (logFilter && !info.message.match(logFilter))
+	if (logFilter && !info.message.match(logFilter)) 
 	{
 		return false;
 	}
-	
+
 	return info;
 });
 
 export const theseusLogFormat = () =>
 	combine(
 		errors({
-			stack: true, 
+			stack: true,
 		}),
 		colorize({
-			all: true, 
+			all: true,
 		}),
 		splat(),
 		json({
 			space: 2,
-			circularValue: undefined, 
+			circularValue: undefined,
 		}),
 		prettyPrint(),
 		timestamp({
-			format: "HH:mm:ss:SS", 
+			format: "HH:mm:ss:SS",
 		}),
 		filterLogs(),
 		printf((info) => 

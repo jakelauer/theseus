@@ -2,11 +2,11 @@ import { v4 as uuidv4 } from "uuid";
 
 import { getTheseusLogger } from "theseus-logger";
 
-import { Broadcaster } from "./lib/Broadcast/Broadcaster";
-import TheseusBuilder from "./TheseusBuilder";
+import { Broadcaster } from "./lib/Broadcast/Broadcaster.js";
+import TheseusBuilder from "./TheseusBuilder.js";
 
 import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
-import type { DestroyCallback } from "./lib/Broadcast/Broadcaster";
+import type { DestroyCallback } from "./lib/Broadcast/Broadcaster.js";
 import type { BaseParams, ITheseus } from "@Types/Theseus";
 import {
 	cement, frost, sandbox, 
@@ -19,7 +19,7 @@ export class Theseus<
         TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
     >
 	extends Broadcaster<TData, TObserverType>
-	implements ITheseus<TData> 
+	implements ITheseus<TData>
 {
 	private internalState: TData;
 	#uuid: string;
@@ -43,9 +43,9 @@ export class Theseus<
 	}
 
 	public static __private_create<
-		TData extends object,
-		TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
-	>(data: TData, params?: BaseParams<TData, TObserverType>) 
+        TData extends object,
+        TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
+    >(data: TData, params?: BaseParams<TData, TObserverType>) 
 	{
 		return new Theseus(data, params);
 	}
@@ -63,7 +63,7 @@ export class Theseus<
 	private setData = (data: TData) => 
 	{
 		this.internalState = sandbox(frost(data), {
-			mode: "copy", 
+			mode: "copy",
 		});
 	};
 
@@ -81,7 +81,7 @@ export class Theseus<
 
 		log.verbose(`Updated state for instance ${this.__uuid}`);
 		await this.broadcast(this.internalState);
-		
+
 		log.verbose(`Broadcasted state for instance ${this.__uuid}`);
 
 		return true;
@@ -94,7 +94,7 @@ export class Theseus<
 		void Promise.allSettled(pendingUpdatePromises).finally(callback);
 	}
 
-	public static incrementStackDepth(theseusId: string | undefined)
+	public static incrementStackDepth(theseusId: string | undefined) 
 	{
 		if (theseusId) 
 		{
@@ -110,7 +110,7 @@ export class Theseus<
 		}
 	}
 
-	public static decrementStackDepth(theseusId: string | undefined)
+	public static decrementStackDepth(theseusId: string | undefined) 
 	{
 		if (theseusId) 
 		{
@@ -158,14 +158,16 @@ export class Theseus<
 	{
 		log.verbose(`Updating instance ${theseusId}`);
 		const stackDepth = Theseus.stackDepthsById[theseusId] ?? 0;
-		if (stackDepth === 0)
+		if (stackDepth === 0) 
 		{
 			const instance = Theseus.getInstance(theseusId);
 			return await instance.update(data);
 		}
 		else 
 		{
-			log.verbose(`Instance ${theseusId} is currently being updated. Skipping. Current stack depth: ${this.stackDepthsById[theseusId]}`);
+			log.verbose(
+				`Instance ${theseusId} is currently being updated. Skipping. Current stack depth: ${this.stackDepthsById[theseusId]}`,
+			);
 		}
 	}
 }

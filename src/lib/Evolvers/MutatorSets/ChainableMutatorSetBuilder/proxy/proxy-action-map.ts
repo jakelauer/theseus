@@ -1,28 +1,27 @@
 import { getTheseusLogger } from "theseus-logger";
-import type { ChainableMutatorQueue } from "../ChainableMutatorQueue";
-import { ChainHelperAction } from "./actions/chain-helper";
-import { ChainTerminationAction } from "./actions/chain-termination";
-import { FunctionAction } from "./actions/function";
-import { MutatorAction } from "./actions/mutator";
-import { PropertyAction } from "./actions/property";
-import { ToJsonAction } from "./actions/to-json";
-import { UpdateDataAction } from "./actions/update-data";
-import type { ChainingProxyManager } from "./chaining-proxy-manager";
-import { ProxyActions } from "./proxy-actions";
-import { ProxyActionType } from "./proxy-actions";
+import type { ChainableMutatorQueue } from "../ChainableMutatorQueue.js";
+import { ChainHelperAction } from "./actions/chain-helper.js";
+import { ChainTerminationAction } from "./actions/chain-termination.js";
+import { FunctionAction } from "./actions/function.js";
+import { MutatorAction } from "./actions/mutator.js";
+import { PropertyAction } from "./actions/property.js";
+import { ToJsonAction } from "./actions/to-json.js";
+import { UpdateDataAction } from "./actions/update-data.js";
+import type { ChainingProxyManager } from "./chaining-proxy-manager.js";
+import { ProxyActions } from "./proxy-actions.js";
+import { ProxyActionType } from "./proxy-actions.js";
 
 const log = getTheseusLogger("proxy-action-map");
 
-export interface ProxyActionMapParameters
-{
-	target: any, 
-	prop: string, 
-	proxyManager: ChainingProxyManager<any>,
-	proxy: ChainingProxyManager<any>,
-	queue: ChainableMutatorQueue<any, any>
+export interface ProxyActionMapParameters {
+    target: any;
+    prop: string;
+    proxyManager: ChainingProxyManager<any>;
+    proxy: ChainingProxyManager<any>;
+    queue: ChainableMutatorQueue<any, any>;
 }
 
-export class ProxyActionMap
+export class ProxyActionMap 
 {
 	private static actions: ProxyActions[] = [
 		new ChainHelperAction(),
@@ -34,7 +33,7 @@ export class ProxyActionMap
 		new PropertyAction(),
 	];
 
-	public static determineAction(params: ProxyActionMapParameters): ProxyActionType
+	public static determineAction(params: ProxyActionMapParameters): ProxyActionType 
 	{
 		const requestType = this.actions.reduce((acc, action) => 
 		{
@@ -48,7 +47,7 @@ export class ProxyActionMap
 		return requestType;
 	}
 
-	public static process(params: ProxyActionMapParameters, requestType: ProxyActionType)
+	public static process(params: ProxyActionMapParameters, requestType: ProxyActionType) 
 	{
 		const { prop } = params;
 		let toReturn: any = undefined; // Initial value is undefined to indicate "not set"
@@ -69,7 +68,6 @@ export class ProxyActionMap
 				}
 			}
 		});
-
 
 		// If after checking all bits toReturn is still undefined, it means no valid action was matched.
 		if (typeof toReturn === "undefined") 

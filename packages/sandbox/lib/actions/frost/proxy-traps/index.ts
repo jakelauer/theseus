@@ -1,3 +1,3 @@
-export * from "./proxy-delete";
-export * from "./proxy-get";
-export * from "./proxy-set";
+export * from "./proxy-delete.js";
+export * from "./proxy-get.js";
+export * from "./proxy-set.js";

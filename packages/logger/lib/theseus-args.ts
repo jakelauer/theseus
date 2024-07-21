@@ -1,18 +1,15 @@
-import { logLevels, type ValidLogLevels } from "./log-levels";
+import { logLevels, type ValidLogLevels } from "./log-levels.js";
 
-const argNames = [
-	"theseus-log-level",
-	"theseus-log-filter",
-] as const;
+const argNames = ["theseus-log-level", "theseus-log-filter"] as const;
 
 const argDictTypes = {
 	"theseus-log-level": "silent" as ValidLogLevels,
-	"theseus-log-filter": undefined as (RegExp | undefined),
+	"theseus-log-filter": undefined as RegExp | undefined,
 } as const;
 
 // Create a mapped type to remove readonly and define ArgDict
 type ArgDict = {
-    -readonly [K in keyof typeof argDictTypes]: typeof argDictTypes[K]
+    -readonly [K in keyof typeof argDictTypes]: (typeof argDictTypes)[K];
 };
 
 const isBrowserContext = typeof window !== "undefined";
@@ -32,45 +29,48 @@ function stringToRegExp(input: string)
 	}
 }
 
-
-const getArgValueDictionary = (argv: string[]) => argNames.reduce((acc, flagName) => 
-{
-	const flagIndex = argv.indexOf(`--${flagName}`);
-	if (flagIndex !== -1) 
+const getArgValueDictionary = (argv: string[]) =>
+	argNames.reduce((acc, flagName) => 
 	{
-		let result = argv[flagIndex + 1] as ArgDict[typeof flagName];
-		switch (flagName)
+		const flagIndex = argv.indexOf(`--${flagName}`);
+		if (flagIndex !== -1) 
 		{
-			case "theseus-log-level":
-				if (!(argv[flagIndex + 1] as ValidLogLevels in logLevels))
-				{
-					throw new Error(`Invalid log level: ${argv[flagIndex + 1]}. Must be one of ${Object.keys(logLevels).join(", ")}.`);
-				}
+			let result = argv[flagIndex + 1] as ArgDict[typeof flagName];
+			switch (flagName) 
+			{
+				case "theseus-log-level":
+					if (!((argv[flagIndex + 1] as ValidLogLevels) in logLevels)) 
+					{
+						throw new Error(
+							`Invalid log level: ${argv[flagIndex + 1]}. Must be one of ${Object.keys(logLevels).join(", ")}.`,
+						);
+					}
 
-				if (isBrowserContext)
-				{
-					throw new Error("Log level flag is not supported in browser context");
-				}
-				break;
-			case "theseus-log-filter":
-				try 
-				{
-					result = new RegExp(stringToRegExp(argv[flagIndex + 1]));
-				}
-				catch (_e)
-				{
-					throw new Error(`Invalid log filter: ${argv[flagIndex + 1]}. Must be a valid regular expression.`);
-				}
-				break;
-			default:break;
+					if (isBrowserContext) 
+					{
+						throw new Error("Log level flag is not supported in browser context");
+					}
+					break;
+				case "theseus-log-filter":
+					try 
+					{
+						result = new RegExp(stringToRegExp(argv[flagIndex + 1]));
+					}
+					catch (_e) 
+					{
+						throw new Error(
+							`Invalid log filter: ${argv[flagIndex + 1]}. Must be a valid regular expression.`,
+						);
+					}
+					break;
+				default:
+					break;
+			}
+
+			// @ts-expect-error - This is a safe cast because we've already checked the value is in the logLevels object
+			acc[flagName] = result;
 		}
-
-		// @ts-expect-error - This is a safe cast because we've already checked the value is in the logLevels object
-		acc[flagName] = result;
-	}
-	return acc;
-}, {} as Partial<ArgDict>);
-
+		return acc;
+	}, {} as Partial<ArgDict>);
 
 export const theseusArgs = getArgValueDictionary(process.argv);
-

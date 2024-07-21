@@ -4,7 +4,7 @@ import { EvolverComplex, EvolversSymbol } from "@Evolvers/EvolverComplex";
 import { RefineryComplex } from "@Refineries/RefineryComplex";
 import { getTheseusLogger } from "theseus-logger";
 
-import { Theseus } from "./Theseus";
+import { Theseus } from "./Theseus.js";
 
 import type { MacroMutatorsFormatted, MutatorsFormatted } from "@Evolvers/Types/EvolverComplexTypes";
 import type { EvolverInstance } from "@Evolvers/Types/EvolverTypes";
@@ -60,7 +60,7 @@ export default <TData extends object>(data: TData) => ({
         TMutators extends MutatorDefs<TData, TParamNoun>,
         TEvolvers extends EvolverInstance<TData, string, TParamNoun, TMutators>[],
         TForges extends ForgeDefs<TData, TParamNoun>,
-		TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
+        TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
         TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
     >(
 		params: TheseusParams<TData, TParamNoun, TMutators, TEvolvers, TForges, TRefineries, TObserverType>,
@@ -71,15 +71,7 @@ export default <TData extends object>(data: TData) => ({
 		} = params;
 		const theseusInstance = Theseus.__private_create<TData, TObserverType>(data, rest);
 
-        type ParamsAbbrev = TheseusParams<
-            TData,
-            TParamNoun,
-            TMutators,
-            TEvolvers,
-            TForges,
-            TRefineries,
-            TObserverType
-        >;
+        type ParamsAbbrev = TheseusParams<TData, TParamNoun, TMutators, TEvolvers, TForges, TRefineries, TObserverType>;
 
         type RefineExtension = {
             refine?: RefineriesRemapped<TData, TParamNoun, TForges, TRefineries>;
@@ -105,7 +97,7 @@ export default <TData extends object>(data: TData) => ({
 
         	// set theseus id for each evolver, so that we can track which theseus is being used
         	Object.values(evolverComplex[EvolversSymbol]).forEach(
-        		(evolver: EvolverInstance<TData, string,  TParamNoun, TMutators>) =>
+        		(evolver: EvolverInstance<TData, string, TParamNoun, TMutators>) =>
         			evolver.__setTheseusId(innerInstance.__uuid),
         	);
 
@@ -123,9 +115,7 @@ export default <TData extends object>(data: TData) => ({
 
         	if (refineries) 
         	{
-        		log.verbose(
-        			`Refineries found, adding to extension for Theseus instance ${innerInstance.__uuid}`,
-        		);
+        		log.verbose(`Refineries found, adding to extension for Theseus instance ${innerInstance.__uuid}`);
         		const complex: RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries> =
                     "refine" in refineries ?
                     	(refineries as RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries>)
@@ -134,7 +124,7 @@ export default <TData extends object>(data: TData) => ({
         		extension = Object.defineProperties<BaseExtension>(
                     {
                     	...extension,
-                    	refine: undefined, 
+                    	refine: undefined,
                     } as any,
                     {
                     	refine: {
@@ -147,10 +137,7 @@ export default <TData extends object>(data: TData) => ({
                     },
         		) as Extension;
 
-        		log.verbose(
-        			`Added refineries to extension for Theseus instance ${innerInstance.__uuid}`,
-        			extension,
-        		);
+        		log.verbose(`Added refineries to extension for Theseus instance ${innerInstance.__uuid}`, extension);
         	}
 
         	return extension as Extension;

@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { Refinery } from "../Refinery";
+import { Refinery } from "../Refinery.js";
 
 describe("Refinery Base", function () 
 {
@@ -36,7 +36,7 @@ describe("Refinery Base", function ()
     			}),
     		});
     	const testData: TestData = {
-    		field: "test", 
+    		field: "test",
     	};
     	const result = testRefinery.refine(testData).forge1(); // Assuming `applyForges` is a method to apply forges
     	expect(result.field).to.equal("TEST");
@@ -53,7 +53,7 @@ describe("Refinery Base", function ()
     			}),
     		});
     	const testData: TestData = {
-    		field: "test", 
+    		field: "test",
     	};
     	const result = testRefinery.refine(testData).forge1();
     	expect(result.field).to.equal("TEST");

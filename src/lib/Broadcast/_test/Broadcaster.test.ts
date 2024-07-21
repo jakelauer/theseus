@@ -6,9 +6,9 @@ import chaiAsPromised from "chai-as-promised";
 
 import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 
-import { Broadcaster } from "../Broadcaster";
+import { Broadcaster } from "../Broadcaster.js";
 
-import type { BroadcasterParams } from "../Broadcaster";
+import type { BroadcasterParams } from "../Broadcaster.js";
 
 chai.use(chaiAsPromised);
 
@@ -63,7 +63,7 @@ describe("Broadcaster", () =>
 			const mockObserver = new MockObserver(() => {});
 			broadcaster.observe(mockObserver.update.bind(mockObserver));
 			const testData = {
-				key: "value", 
+				key: "value",
 			};
 
 			await broadcaster.broadcast(testData);
@@ -73,7 +73,7 @@ describe("Broadcaster", () =>
 		it("completes broadcast with no observers without error", async () => 
 		{
 			const broadcastPromise = broadcaster.broadcast({
-				key: "value", 
+				key: "value",
 			});
 			await expect(broadcastPromise).to.be.fulfilled;
 		});
@@ -87,7 +87,7 @@ describe("Broadcaster", () =>
 			broadcaster.observe(mockObserver.update.bind(mockObserver));
 
 			const testData = {
-				key: "value", 
+				key: "value",
 			};
 			await broadcaster.broadcast(testData);
 
@@ -102,7 +102,7 @@ describe("Broadcaster", () =>
 			destroy();
 
 			const testData = {
-				key: "value", 
+				key: "value",
 			};
 			await broadcaster.broadcast(testData);
 
@@ -124,7 +124,7 @@ describe("Broadcaster", () =>
 
 			// Attempt to broadcast data and verify that observers do not receive it
 			const testData = {
-				key: "value", 
+				key: "value",
 			};
 
 			broadcaster

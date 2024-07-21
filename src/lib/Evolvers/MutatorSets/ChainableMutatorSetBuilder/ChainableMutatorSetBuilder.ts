@@ -1,15 +1,15 @@
 import { ChainableMutatorQueue } from "@Evolvers/MutatorSets/ChainableMutatorSetBuilder/ChainableMutatorQueue";
 import { getTheseusLogger } from "theseus-logger";
 
-import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder";
+import { MutatorSetBuilder } from "../MutatorSetBuilder/MutatorSetBuilder.js";
 
 import type { Chainable, ChainableMutators } from "@Evolvers/Types/ChainableTypes";
 import type { SortaPromise } from "@Evolvers/Types/EvolverTypes";
 
-import type { MutatorDefs } from "../../Types/MutatorTypes";
-import { createChainingProxy } from "./proxy/chaining-proxy-manager";
+import type { MutatorDefs } from "../../Types/MutatorTypes.js";
+import { createChainingProxy } from "./proxy/chaining-proxy-manager.js";
 import {
-	cement, frost, getSandboxChanges, isFrost,
+	cement, frost, getSandboxChanges, isFrost, 
 } from "theseus-sandbox";
 import { containsSandbox } from "theseus-sandbox";
 /**
@@ -29,7 +29,7 @@ export class ChainableMutatorSetBuilder<
         TMutators extends MutatorDefs<TData, TParamNoun>,
     >
 	extends MutatorSetBuilder<TData, TParamNoun, TMutators>
-	implements Chainable<TData> 
+	implements Chainable<TData>
 {
 	private mutatorQueue: ChainableMutatorQueue<TData, TParamNoun>;
 
@@ -66,9 +66,9 @@ export class ChainableMutatorSetBuilder<
 	}
 
 	/**
-	 * Get the changes that have been made to the store since the last time this method was called.
-	 */
-	public getChanges(): Partial<TData>
+     * Get the changes that have been made to the store since the last time this method was called.
+     */
+	public getChanges(): Partial<TData> 
 	{
 		log.verbose("Getting changes for instance");
 		return getSandboxChanges(this.data[this.paramNoun]);
@@ -81,35 +81,37 @@ export class ChainableMutatorSetBuilder<
 
 	public override setData(data: TData): void 
 	{
-		if (data instanceof Promise)
+		if (data instanceof Promise) 
 		{
 			throw new Error("Cannot set data to a Promise.");
 		}
-	
+
 		this._data = this.augmentData(data);
 	}
 
 	public end() 
 	{
-		if ((this.resultBase instanceof Promise))
+		if (this.resultBase instanceof Promise) 
 		{
-			throw new Error("Cannot call end() on a chain that has encountered an async operation. Use endAsync() instead.");
+			throw new Error(
+				"Cannot call end() on a chain that has encountered an async operation. Use endAsync() instead.",
+			);
 		}
-		
+
 		let result = this.resultBase;
-		if (containsSandbox(result))
+		if (containsSandbox(result)) 
 		{
 			result = cement(result);
 		}
 
-		if (!isFrost(result))
+		if (!isFrost(result)) 
 		{
 			result = frost(result);
 		}
 
 		this.setData(result as TData);
 		this.cementData();
-		
+
 		return result as TData;
 	}
 
@@ -124,10 +126,10 @@ export class ChainableMutatorSetBuilder<
 		return this.mutatorsForProxy;
 	}
 
-	protected override extractDataFromDraftResult(funcResult: SortaPromise<TData>)
+	protected override extractDataFromDraftResult(funcResult: SortaPromise<TData>) 
 	{
 		return funcResult;
-	};
+	}
 
 	/**
      * Factory method to create an instance of ChainableMutatorSet with specified initial data, argument name,

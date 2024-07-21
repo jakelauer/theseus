@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
-import { setTheseusLogLevel } from "../set-theseus-log-level";
-import type { logLevels } from "../log-levels";
+import { setTheseusLogLevel } from "../set-theseus-log-level.js";
+import type { logLevels } from "../log-levels.js";
 
 describe("Set Theseus Log Level", function () 
 {

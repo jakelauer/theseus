@@ -1,36 +1,38 @@
 import { expect } from "chai";
-import type { ProxyActionMapParameters } from "../../../proxy-action-map";
-import { MutatorAction } from "../../mutator";
+import type { ProxyActionMapParameters } from "../../../proxy-action-map.js";
+import { MutatorAction } from "../../mutator.js";
 
-describe("MutatorAction", function() 
+describe("MutatorAction", function () 
 {
 	let mutatorAction: MutatorAction;
 	let params: ProxyActionMapParameters;
 
-	beforeEach(function() 
+	beforeEach(function () 
 	{
 		mutatorAction = new MutatorAction();
 		params = {
 			target: {
 				mutatorsForProxy: {
-					mutate: () => {}, 
-				}, 
+					mutate: () => {},
+				},
 			},
 			prop: "mutate",
-			proxy: {}, 
+			proxy: {},
 		} as any;
 	});
 
-	it("should return true for mutation properties in runTest", function() 
+	it("should return true for mutation properties in runTest", function () 
 	{
 		expect(mutatorAction.runTest(params)).to.be.true;
 	});
 
-	it("should return false for non-mutation properties in runTest", function() 
+	it("should return false for non-mutation properties in runTest", function () 
 	{
-		expect(mutatorAction.runTest({
-			...params,
-			target: {},
-		})).to.be.false;
+		expect(
+			mutatorAction.runTest({
+				...params,
+				target: {},
+			}),
+		).to.be.false;
 	});
 });

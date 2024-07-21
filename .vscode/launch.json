@@ -1,68 +1,68 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Debug ESLint",
-            "program": "${workspaceFolder}/node_modules/eslint/bin/eslint.js",
-            "args": ["--no-ignore", "packages/eslint-plugin-theseus/lib/_test/break-on-chainable.sandbox.js"], // Adjust this to point to your JavaScript files
-            "stopOnEntry": false,
-            "cwd": "${workspaceFolder}",
-            "runtimeArgs": ["--nolazy", "--inspect-brk"],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "skipFiles": ["<node_internals>/**"]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Run All Tests",
-            "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["test", "--"],//, "--grep", "\"should process synchronous mutators in sequence\""],
-            "internalConsoleOptions": "openOnSessionStart",
-            "cwd": "${workspaceFolder}",
-            "outputCapture": "std"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Run Base Tests",
-            "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["test:base", "--timeout", "60000"],
-            "internalConsoleOptions": "openOnSessionStart",
-            "cwd": "${workspaceFolder}",
-            "outputCapture": "std"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Run Base Test (single)",
-            "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["test:base", "--timeout", "60000", "--", "--grep", "\"should not break when dates are present\""],
-            "internalConsoleOptions": "openOnSessionStart",
-            "cwd": "${workspaceFolder}",
-            "outputCapture": "std"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Run Sandbox Tests",
-            "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["--prefix","./packages/sandbox", "test", "--", "--timeout", "60000", "--grep", "\"should not be able to create a sandbox proxy of type int32array directly\""],
-            "internalConsoleOptions": "openOnSessionStart",
-            "cwd": "${workspaceFolder}",
-            "outputCapture": "std"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Run tic-tac-toe",
-            "runtimeExecutable": "pnpm",
-            "runtimeArgs": ["--prefix", ".examples/tic-tac-toe", "start-raw"],
-            "internalConsoleOptions": "openOnSessionStart",
-            "cwd": "${workspaceFolder}",
-            "outputCapture": "std"
-        }
-    ]
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Debug ESLint",
+			"program": "${workspaceFolder}/node_modules/eslint/bin/eslint.js",
+			"args": [ "--no-ignore", "packages/eslint-plugin-theseus/lib/_test/break-on-chainable.sandbox.js" ], // Adjust this to point to your JavaScript files
+			"stopOnEntry": false,
+			"cwd": "${workspaceFolder}",
+			"runtimeArgs": [ "--nolazy", "--inspect-brk" ],
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen",
+			"skipFiles": [ "<node_internals>/**" ]
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Run All Tests",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": [ "test", "--" ], //, "--grep", "\"should process synchronous mutators in sequence\""],
+			"internalConsoleOptions": "openOnSessionStart",
+			"cwd": "${workspaceFolder}",
+			"outputCapture": "std"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Run Base Tests",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": [ "test:base", "--timeout", "60000" ],
+			"internalConsoleOptions": "openOnSessionStart",
+			"cwd": "${workspaceFolder}",
+			"outputCapture": "std"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Run Base Test (single)",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": [ "test:base", "--timeout", "60000", "--", "--grep", "\"should not break when dates are present\"" ],
+			"internalConsoleOptions": "openOnSessionStart",
+			"cwd": "${workspaceFolder}",
+			"outputCapture": "std"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Run Sandbox Tests",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": [ "--prefix", "./packages/sandbox", "test", "--", "--timeout", "60000", "--grep", "\"fail function\"" ],
+			"internalConsoleOptions": "openOnSessionStart",
+			"cwd": "${workspaceFolder}",
+			"outputCapture": "std"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Run tic-tac-toe",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": [ "--prefix", ".examples/tic-tac-toe", "start-raw" ],
+			"internalConsoleOptions": "openOnSessionStart",
+			"cwd": "${workspaceFolder}",
+			"outputCapture": "std"
+		}
+	]
 }

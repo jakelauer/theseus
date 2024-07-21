@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
 
-import { Evolver } from "../Evolver";
+import { Evolver } from "../Evolver.js";
 
 describe("Evolvers", () => 
 {
@@ -14,10 +14,10 @@ describe("Evolvers", () =>
     	.toEvolve<TestData>()
     	.withMutators({
     		increment: ({ input }) => ({
-    			value: input.value + 1, 
+    			value: input.value + 1,
     		}),
     		decrement: ({ input }) => ({
-    			value: input.value - 1, 
+    			value: input.value - 1,
     		}),
     	});
 
@@ -26,10 +26,10 @@ describe("Evolvers", () =>
 
     const testMutators = {
     	increment: ({ input }) => ({
-    		value: input.value + 1, 
+    		value: input.value + 1,
     	}),
     	decrement: ({ input }) => ({
-    		value: input.value - 1, 
+    		value: input.value - 1,
     	}),
     } satisfies MutatorType;
 
@@ -80,7 +80,7 @@ describe("Evolvers", () =>
         		// Assuming there's some form of validation on mutators, which there might not be.
         		// This is speculative and should be adapted to the actual error handling strategy of Evolver.
         		const invalidMutators: any = {
-        			brokenMutator: null, 
+        			brokenMutator: null,
         		}; // Intentionally incorrect
 
         		expect(() =>
@@ -96,16 +96,16 @@ describe("Evolvers", () =>
         		const testEvolver = Evolver.create("testEvolver")
         			.toEvolve<TestData>()
         			.withMutators({
-        				increment: ({ input }, by: number) =>
-        				{ 
+        				increment: ({ input }, by: number) => 
+        				{
         					return {
-        						value: input.value + by, 
+        						value: input.value + by,
         					};
         				},
         			});
 
         		const initialData = {
-        			value: 1, 
+        			value: 1,
         		};
 
         		const initialDataEvolver = testEvolver.evolve(initialData);
@@ -124,7 +124,7 @@ describe("Evolvers", () =>
         		expect(() => 
         		{
         			reEvolvedData.value = 5;
-        		}).to.throw("Cannot modify property \"value\" of the original object."); // The new evolved data should remain unchanged
+        		}).to.throw('Cannot modify property "value" of the original object.'); // The new evolved data should remain unchanged
         	});
         });
 
@@ -136,7 +136,7 @@ describe("Evolvers", () =>
         			.toEvolve<AnotherTestData>()
         			.withMutators({
         				rename: ({ input }) => ({
-        					name: `New ${input.name}`, 
+        					name: `New ${input.name}`,
         				}),
         			});
 
@@ -216,7 +216,7 @@ describe("Evolvers", () =>
         			});
 
         		const resultA = await AsyncEvolver.evolve({
-        			name: "1234", 
+        			name: "1234",
         		})
         			.via.asyncMakeNameLowerCase()
         			.and.asyncMakeNameUpperCase()
@@ -225,7 +225,7 @@ describe("Evolvers", () =>
         		expect(resultA.name).to.equal("4321");
 
         		const resultB = await AsyncEvolver.evolve({
-        			name: "test", 
+        			name: "test",
         		})
         			.via.syncReplaceVowels()
         			.and.asyncMakeNameUpperCase()

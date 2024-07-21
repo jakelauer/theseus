@@ -1,14 +1,14 @@
 import { getTheseusLogger } from "theseus-logger";
-import { GameShip } from "../game-ship/game-ship";
-import { onWinner } from "./on-winner";
-import { onGameUpdated } from "./on-game-updated";
+import { GameShip } from "../game-ship/game-ship.js";
+import { onWinner } from "./on-winner.js";
+import { onGameUpdated } from "./on-game-updated.js";
 
 const log = getTheseusLogger("Observe");
 
-export default function()
+export default function () 
 {
 	GameShip.observe(async (state) => 
-	{		
+	{
 		switch (state.winner) 
 		{
 			case "stalemate":
@@ -25,4 +25,3 @@ export default function()
 		}
 	}, false);
 }
-

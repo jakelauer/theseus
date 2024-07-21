@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { ForgeSet } from "../ForgeSet";
+import { ForgeSet } from "../ForgeSet.js";
 
 describe("ForgeSet", function () 
 {

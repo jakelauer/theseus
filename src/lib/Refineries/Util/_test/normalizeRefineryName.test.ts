@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { normalizeRefineryName } from "../normalizeRefineryName";
+import { normalizeRefineryName } from "../normalizeRefineryName.js";
 
 describe("normalizeRefineryName", function () 
 {

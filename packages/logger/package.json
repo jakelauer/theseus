@@ -7,7 +7,7 @@
     "type": "module",
     "scripts": {
         "build": "tsup",
-        "test": "node --import=tsx ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs"
+        "test": "tsx --tsconfig=tsconfig.test.json ./node_modules/mocha/bin/mocha.js --exit --config ./.mocharc.cjs"
     },
     "keywords": [
         "logger"

@@ -1,12 +1,12 @@
 import { expect } from "chai";
 
-import { createChainingProxy } from "../chaining-proxy-manager";
-import { ChainableMutatorQueue } from "../../ChainableMutatorQueue";
+import { createChainingProxy } from "../chaining-proxy-manager.js";
+import { ChainableMutatorQueue } from "../../ChainableMutatorQueue.js";
 
 const makeMutatorQueue = () => 
 {
 	let dataReference = {
-		value: 0, 
+		value: 0,
 	};
 	return ChainableMutatorQueue.create({
 		paramNoun: "data",
@@ -19,7 +19,7 @@ const makeMutatorQueue = () =>
 			dataReference = data;
 		},
 		getData: () => ({
-			data: dataReference, 
+			data: dataReference,
 		}),
 	});
 };
@@ -132,8 +132,8 @@ describe("createChainingProxy", function ()
 	{
 		const dataOrig = {
 			data: {
-				a: 1, 
-			}, 
+				a: 1,
+			},
 		};
 		const order: number[] = [];
 		const target = {
@@ -157,13 +157,11 @@ describe("createChainingProxy", function ()
 			queue: makeMutatorQueue(),
 		});
 
-		proxy
-			.first(dataOrig)
-			.second({
-				data: {
-					a: 1, 
-				}, 
-			});
+		proxy.first(dataOrig).second({
+			data: {
+				a: 1,
+			},
+		});
 		expect(order).to.deep.equal([1, 2]);
 	});
 
@@ -178,8 +176,7 @@ describe("createChainingProxy", function ()
 			queue: makeMutatorQueue(),
 		});
 
-		const result = proxy
-			.lastly.calculate();
+		const result = proxy.lastly.calculate();
 		expect(result).to.equal(expectedResult);
 	});
 
@@ -201,8 +198,7 @@ describe("createChainingProxy", function ()
 			queue: makeMutatorQueue(),
 		});
 
-		await proxy
-			.lastly.asyncMethod();
+		await proxy.lastly.asyncMethod();
 		expect(asyncOperationCompleted).to.be.true;
 	});
 });

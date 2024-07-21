@@ -1,6 +1,6 @@
-import "../set-log-level";
-import { GameShip } from "../game-ship/game-ship";
-import observeGameUpdates from "./observe-game-updates";
+import "../set-log-level.js";
+import { GameShip } from "../game-ship/game-ship.js";
+import observeGameUpdates from "./observe-game-updates.js";
 
 observeGameUpdates();
 

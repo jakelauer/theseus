@@ -6,7 +6,7 @@ import {
 import sinon, { type SinonSpy } from "sinon";
 
 import { Theseus } from "@/Theseus";
-import { theseus, Evolver } from "..";
+import { theseus, Evolver } from "../index.js";
 
 chai.use(chaiAsPromised);
 
@@ -17,16 +17,18 @@ describe("Observation", () =>
 	beforeEach(() => 
 	{
 		observation = Theseus.__private_create<{ test: string }>({
-			test: "initial", 
+			test: "initial",
 		});
 	});
 
 	it("should initialize with provided initial data", () => 
 	{
 		// JSON.stringify ignores symbols, which helpfully avoids sandbox symbols
-		expect(JSON.stringify(observation.state)).to.equal(JSON.stringify({
-			test: "initial", 
-		}));
+		expect(JSON.stringify(observation.state)).to.equal(
+			JSON.stringify({
+				test: "initial",
+			}),
+		);
 	});
 
 	it("should allow observers to subscribe and receive updates", async () => 
@@ -35,11 +37,13 @@ describe("Observation", () =>
 		observation.observe(callback);
 
 		await observation["update"]({
-			test: "updated", 
+			test: "updated",
 		});
-		expect(callback.calledWith({
-			test: "updated", 
-		})).to.be.true;
+		expect(
+			callback.calledWith({
+				test: "updated",
+			}),
+		).to.be.true;
 
 		return;
 	});
@@ -52,9 +56,11 @@ describe("Observation", () =>
 		await new Promise((resolve) => setTimeout(resolve, 100));
 
 		expect(callback.calledOnce).to.be.true;
-		expect(callback.calledWith({
-			test: "initial", 
-		})).to.be.true;
+		expect(
+			callback.calledWith({
+				test: "initial",
+			}),
+		).to.be.true;
 
 		return;
 	});
@@ -73,14 +79,18 @@ describe("Observation", () =>
 		observation.observe(callback);
 
 		await observation["update"]({
-			test: "new value", 
+			test: "new value",
 		});
-		expect(JSON.stringify(observation.state)).to.deep.equal(JSON.stringify({
-			test: "new value", 
-		}));
-		expect(callback.calledWith({
-			test: "new value", 
-		})).to.be.true;
+		expect(JSON.stringify(observation.state)).to.deep.equal(
+			JSON.stringify({
+				test: "new value",
+			}),
+		);
+		expect(
+			callback.calledWith({
+				test: "new value",
+			}),
+		).to.be.true;
 
 		return;
 	});
@@ -92,14 +102,16 @@ describe("Observation", () =>
 		observation.observe(callback);
 
 		await Theseus.updateInstance(id, {
-			test: "static update", 
+			test: "static update",
 		});
 
 		// Since updateInstance is async, we may need to wait or use fake timers
 		// This example assumes immediate update for simplicity
-		expect(callback.calledWith({
-			test: "static update", 
-		})).to.be.true;
+		expect(
+			callback.calledWith({
+				test: "static update",
+			}),
+		).to.be.true;
 
 		return;
 	});
@@ -107,63 +119,67 @@ describe("Observation", () =>
 	it("should correctly return changes made to the state when requested", async () => 
 	{
 		const data = {
-			myString: "happy", 
+			myString: "happy",
 		};
 		const instance = theseus(data).maintainWith({
 			evolvers: [
 				Evolver.create("TestEvolver", {
-					noun: "data", 
-				}).toEvolve<{ myString: string }>().withMutators({
-					reverse: ({ data }) => 
-					{
-						data.myString = data.myString.split("").reverse().join("");
-						return data;
-					},
-				}),
+					noun: "data",
+				})
+					.toEvolve<{ myString: string }>()
+					.withMutators({
+						reverse: ({ data }) => 
+						{
+							data.myString = data.myString.split("").reverse().join("");
+							return data;
+						},
+					}),
 			],
 		});
 		instance.evolve.Test.reverse();
 
 		const changes = instance.evolve.Test.getChanges();
 		expect(changes).to.deep.equal({
-			myString: "yppah", 
+			myString: "yppah",
 		});
 
 		return;
 	});
 
-	it("should not broadcast changes when evolver is called from within an evolver", async function() 
+	it("should not broadcast changes when evolver is called from within an evolver", async function () 
 	{
 		const data = {
-			myString: "happy", 
+			myString: "happy",
 		};
 		const instance = theseus(data).maintainWith({
 			evolvers: [
 				Evolver.create("TestEvolver", {
-					noun: "data", 
-				}).toEvolve<{ myString: string }>().withMutators({
-					reverse: ({ data }) => 
-					{
-						data.myString = data.myString.split("").reverse().join("");
-						return data;
-					},
-					doubleReverse: ({ data }) => 
-					{
-						instance.mutate.Test.reverse();
-						instance.mutate.Test.reverse();
-						return data;
-					},
-				}),
+					noun: "data",
+				})
+					.toEvolve<{ myString: string }>()
+					.withMutators({
+						reverse: ({ data }) => 
+						{
+							data.myString = data.myString.split("").reverse().join("");
+							return data;
+						},
+						doubleReverse: ({ data }) => 
+						{
+							instance.mutate.Test.reverse();
+							instance.mutate.Test.reverse();
+							return data;
+						},
+					}),
 			],
 		});
-	
+
 		const callback: SinonSpy = sinon.spy();
 
 		instance.observe(() => 
 		{
 			callback();
 		});
-	
+
 		instance.mutate.Test.doubleReverse();
 
 		// Use a promise to wait until the callback is called or the timeout is reached
@@ -174,21 +190,21 @@ describe("Observation", () =>
 				if (callback.callCount > 0) 
 				{
 					clearInterval(interval);
-					callback.callCount === 1 
-						? resolve() 
-						: reject(new Error(`Callback was called ${callback.callCount} times`));
+					callback.callCount === 1 ?
+						resolve()
+						:   reject(new Error(`Callback was called ${callback.callCount} times`));
 				}
 			}, 50);
 
 			setTimeout(() => 
 			{
 				clearInterval(interval);
-				callback.callCount === 1 
-					? resolve()
-					: reject(new Error(`Callback was called ${callback.callCount} times`));
+				callback.callCount === 1 ?
+					resolve()
+					:   reject(new Error(`Callback was called ${callback.callCount} times`));
 			}, 1000);
 		});
 
 		expect(callback.callCount).to.be.equal(1);
-	  }).timeout(2000); // Ensure the test has enough time to complete
+	}).timeout(2000); // Ensure the test has enough time to complete
 });

@@ -1,5 +1,5 @@
 import { CONSTANTS } from "sandbox-constants";
-import { isSandbox } from "./detect/is-sandbox-proxy";
+import { isSandbox } from "./detect/is-sandbox-proxy.js";
 
 /**
  * Returns the changes made to the object if it is a sandbox proxy.
@@ -24,7 +24,7 @@ export function getSandboxChanges<T extends object>(potentialSandbox: T): Partia
  * @param {object} changes - The changes object to process.
  * @returns {object} - The processed changes with nested changes included.
  */
-function getRecursiveChanges<T extends object>(potentialSandbox: T): Partial<T>
+function getRecursiveChanges<T extends object>(potentialSandbox: T): Partial<T> 
 {
 	const result = getChangesForObj(potentialSandbox);
 
@@ -45,7 +45,7 @@ function getRecursiveChanges<T extends object>(potentialSandbox: T): Partial<T>
 	};
 }
 
-function getChangesForObj<T extends object>(obj: T): Partial<T>
+function getChangesForObj<T extends object>(obj: T): Partial<T> 
 {
-	return  obj[CONSTANTS.SANDBOX_SYMBOL]?.changes;
+	return obj[CONSTANTS.SANDBOX_SYMBOL]?.changes;
 }

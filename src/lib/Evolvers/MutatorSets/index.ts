@@ -1,2 +1,2 @@
-export * from "./ChainableMutatorSetBuilder/ChainableMutatorSetBuilder";
-export * from "./MutatorSetBuilder/MutatorSetBuilder";
+export * from "./ChainableMutatorSetBuilder/ChainableMutatorSetBuilder.js";
+export * from "./MutatorSetBuilder/MutatorSetBuilder.js";

@@ -22,7 +22,8 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",  
         "plugin:mocha/recommended",  
         "prettier",
-		"plugin:theseus/recommended"
+		"plugin:theseus/recommended",
+        "plugin:require-extensions/recommended"
     ],  
 	settings: {
 		'import/resolver': {
@@ -31,7 +32,7 @@ module.exports = {
 			}
 		  }
 	},
-    plugins: ["unused-imports", "@stylistic"],  
+    plugins: ["unused-imports", "@stylistic", "require-extensions"],  
     rules: {  
 		"indent": ["error", "tab", { "SwitchCase": 1 }],
         quotes: [2, "double", { avoidEscape: true }],  

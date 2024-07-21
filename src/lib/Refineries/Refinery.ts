@@ -1,10 +1,9 @@
-
 import { getTheseusLogger } from "theseus-logger";
-import { ForgeSet } from "./ForgeSets/ForgeSet";
-import { normalizeRefineryName, type NormalizedRefineryName } from "./Util/normalizeRefineryName";
+import { ForgeSet } from "./ForgeSets/ForgeSet.js";
+import { normalizeRefineryName, type NormalizedRefineryName } from "./Util/normalizeRefineryName.js";
 import type {
 	ForgeDefs, RefineObject, RefineryDefinition as RefineryOptions, 
-} from "./Types/RefineryTypes";
+} from "./Types/RefineryTypes.js";
 import { sandbox } from "theseus-sandbox";
 
 const log = getTheseusLogger("Refinery");
@@ -32,7 +31,7 @@ export class Refinery<
     TRefineryName extends string,
     TParamNoun extends string,
     TForges extends ForgeDefs<TData, TParamNoun>,
->
+> 
 {
 	public readonly refineryName: NormalizedRefineryName<TRefineryName>;
 	public readonly paramNoun: TParamNoun;
@@ -43,7 +42,7 @@ export class Refinery<
 		const normalizedName = this.normalizeName(name);
 
 		this.refineryName = normalizedName;
-		this.paramNoun = options.noun ?? ("input" as TParamNoun);;
+		this.paramNoun = options.noun ?? ("input" as TParamNoun);
 		this.forges = forges;
 	}
 
@@ -78,15 +77,11 @@ export class Refinery<
 	public refine(input: TData) 
 	{
 		const clone = sandbox(input, {
-			mode: "copy", 
+			mode: "copy",
 		});
 
 		// Create the actions which will be available when `for()` is called.
-		const forgeSet = ForgeSet.create<TData, TParamNoun, TForges>(
-			clone as TData,
-			this.paramNoun,
-			this.forges,
-		);
+		const forgeSet = ForgeSet.create<TData, TParamNoun, TForges>(clone as TData, this.paramNoun, this.forges);
 
 		/**
          * Save memory by not duplicating forgeSet on both `into` and `forges`. Why both? Depends on the
@@ -154,13 +149,9 @@ export class Refinery<
          * if the name is "shoppingCart", each action will receive an argument entitled "shoppingCart"
          */
 		toRefine: <_TData extends object>() => ({
-			withForges: <_TForges extends ForgeDefs<_TData, _TParamNoun>>(forges: _TForges) =>
+			withForges: <_TForges extends ForgeDefs<_TData, _TParamNoun>>(forges: _TForges) => 
 			{
-				const refinery = new Refinery<_TData, _TRefineryName, _TParamNoun, _TForges>(
-					name,
-					forges,
-					options,
-				);
+				const refinery = new Refinery<_TData, _TRefineryName, _TParamNoun, _TForges>(name, forges, options);
 
 				return refinery;
 			},

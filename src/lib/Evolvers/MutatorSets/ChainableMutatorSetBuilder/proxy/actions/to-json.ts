@@ -1,10 +1,10 @@
 import { getTheseusLogger } from "theseus-logger";
-import type { ProxyActionMapParameters } from "../proxy-action-map";
-import { ProxyActions, ProxyActionType } from "../proxy-actions";
+import type { ProxyActionMapParameters } from "../proxy-action-map.js";
+import { ProxyActions, ProxyActionType } from "../proxy-actions.js";
 
 const log = getTheseusLogger("to-json-proxy-action");
 
-export class ToJsonAction extends ProxyActions
+export class ToJsonAction extends ProxyActions 
 {
 	public override type: ProxyActionType = ProxyActionType.toJSON;
 
@@ -12,7 +12,7 @@ export class ToJsonAction extends ProxyActions
 	{
 		return prop === "toJSON";
 	}
-	
+
 	public override process({ target }: ProxyActionMapParameters) 
 	{
 		return this.toJson(target);
@@ -25,7 +25,7 @@ export class ToJsonAction extends ProxyActions
 		return () => 
 		{
 			const copy = {
-				...target, 
+				...target,
 			};
 			delete copy.chainingProxy; // Remove the circular reference when serializing
 			return copy;

@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { MutatorSetBuilder } from "../MutatorSetBuilder";
+import { MutatorSetBuilder } from "../MutatorSetBuilder.js";
 
 describe("MutatorSetBuilder", function () 
 {
@@ -8,7 +8,7 @@ describe("MutatorSetBuilder", function ()
     const paramNoun = "testProp";
 
     let initialData: TestData = {
-    	testProp: 42, 
+    	testProp: 42,
     };
     const makeBuilder = () =>
     	MutatorSetBuilder.create(initialData, paramNoun, {
@@ -23,7 +23,7 @@ describe("MutatorSetBuilder", function ()
     beforeEach(function () 
     {
     	initialData = {
-    		testProp: 42, 
+    		testProp: 42,
     	};
     	builder = makeBuilder();
     });
@@ -33,7 +33,7 @@ describe("MutatorSetBuilder", function ()
     	expect(builder)
     		.to.have.property("data")
     		.that.deep.includes({
-    			[paramNoun]: initialData, 
+    			[paramNoun]: initialData,
     		});
     });
 
@@ -41,7 +41,7 @@ describe("MutatorSetBuilder", function ()
     {
     	const structuredData = (builder as any)["inputToObject"](initialData);
     	expect(structuredData).to.deep.equal({
-    		[paramNoun]: initialData, 
+    		[paramNoun]: initialData,
     	});
     });
 
@@ -51,7 +51,7 @@ describe("MutatorSetBuilder", function ()
     	expect(builder)
     		.to.have.property("data")
     		.that.deep.includes({
-    			[paramNoun]: initialData, 
+    			[paramNoun]: initialData,
     		});
     });
 
@@ -63,11 +63,11 @@ describe("MutatorSetBuilder", function ()
     	expect(builder.increase(0)).to.deep.include(initialData);
 
     	// Dynamically check if the 'increase' mutator is applied and works as expected
-    	// This will invoke the 'increase' function directly on the builder, demonstrating 
+    	// This will invoke the 'increase' function directly on the builder, demonstrating
     	// its presence and functionality
     	const result = builder.increase(10);
     	expect(result).to.deep.equal({
-    		testProp: 52, 
+    		testProp: 52,
     	});
     });
 });

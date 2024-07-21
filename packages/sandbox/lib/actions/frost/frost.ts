@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from "uuid";
 import {
 	proxyDelete, proxyGet, proxySet, 
-} from "./proxy-traps";
-import type { Sandbox } from "../sandbox";
+} from "./proxy-traps/index.js";
+import type { Sandbox } from "../sandbox/index.js";
 import structuredClone from "@ungap/structured-clone";
-import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy";
-import { isFrost } from "./detect/is-frost-proxy";
+import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy.js";
+import { isFrost } from "./detect/is-frost-proxy.js";
 import { CONSTANTS } from "sandbox-constants";
 
 function createDeepFrostProxy<T extends object>(obj: T): T 
@@ -15,9 +15,9 @@ function createDeepFrostProxy<T extends object>(obj: T): T
 	const proxy = new Proxy<T>(obj, {
 		get(target, prop) 
 		{
-			return proxyGet(obj, target, prop, { 
-				guid, 
-				recursor: (value: any) => frost(value), 
+			return proxyGet(obj, target, prop, {
+				guid,
+				recursor: (value: any) => frost(value),
 			});
 		},
 		set(target, prop, value) 
@@ -37,10 +37,9 @@ function createDeepFrostProxy<T extends object>(obj: T): T
 	return proxy as Readonly<T>;
 }
 
-
-export function frost<T extends object>(originalObject: T): Readonly<T>
+export function frost<T extends object>(originalObject: T): Readonly<T> 
 {
-	if (isFrost(originalObject, "every") || !isElligibleForProxy(originalObject))
+	if (isFrost(originalObject, "every") || !isElligibleForProxy(originalObject)) 
 	{
 		return originalObject;
 	}
@@ -48,13 +47,12 @@ export function frost<T extends object>(originalObject: T): Readonly<T>
 	return createDeepFrostProxy(originalObject);
 }
 
-
 export function frostClone<T extends object>(originalObject: T): Readonly<T> 
 {
 	const clone = structuredClone(originalObject, {
-		lossy: false, 
+		lossy: false,
 	});
-	
+
 	// This is just a getter in the original object, which means it appears in the clone
 	// as a normal property. We need to remove it.
 	delete (clone as any)[CONSTANTS.FROST.BASIS_SYMBOL];

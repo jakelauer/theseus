@@ -1,4 +1,4 @@
-import type { RemoveWordAndValidate } from "../../Types/Modifiers";
+import type { RemoveWordAndValidate } from "../../Types/Modifiers.js";
 
 export type NormalizedEvolverName<T extends string> = RemoveWordAndValidate<T, "evolver">;
 export const normalizeEvolverName = <T extends string>(name: T): NormalizedEvolverName<T> => 
@@ -7,4 +7,3 @@ export const normalizeEvolverName = <T extends string>(name: T): NormalizedEvolv
 	const regex = /^(Evolver|evolver)?(.*?)(Evolver|evolver)?$/;
 	return name.replace(regex, "$2") as NormalizedEvolverName<T>;
 };
-

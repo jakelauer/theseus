@@ -1,10 +1,8 @@
 import { getTheseusLogger } from "theseus-logger";
 
-
-
-import type { Refinery } from "./Refinery";
-import type { ForgeDefs } from "./Types/RefineryTypes";
-import type { NormalizedRefineryName } from "./Util/normalizeRefineryName";
+import type { Refinery } from "./Refinery.js";
+import type { ForgeDefs } from "./Types/RefineryTypes.js";
+import type { NormalizedRefineryName } from "./Util/normalizeRefineryName.js";
 import type { RefineriesRemapped } from "@Refineries/Types/RefineryComplexTypes";
 
 const log = getTheseusLogger("RefineryComplex");
@@ -48,7 +46,7 @@ const create = <TData extends object>() => ({
 	withRefineries: <
         TParamNoun extends string,
         TForges extends ForgeDefs<TData, TParamNoun>,
-		TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
+        TRefineries extends Refinery<TData, string, TParamNoun, TForges>[],
     >(
 		...refineries: TRefineries
 	): RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries> =>
@@ -65,8 +63,7 @@ const innerWithRefineries = <
 	) => 
 {
 	const result = {
-		refine: (input: TData) =>
-			refine<TData, TParamNoun, TForges, TRefineries>(input).withRefineries(refineries),
+		refine: (input: TData) => refine<TData, TParamNoun, TForges, TRefineries>(input).withRefineries(refineries),
 	} as const;
 
 	log.verbose("Creating refinery complex with refineries", {

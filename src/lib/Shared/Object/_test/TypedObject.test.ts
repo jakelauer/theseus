@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import TypedObject from "../TypedObject";
+import TypedObject from "../TypedObject.js";
 
 describe("TypedObject", () => 
 {
@@ -9,7 +9,7 @@ describe("TypedObject", () =>
 		const baseObj = {
 			1: 2,
 			3: 4,
-			5: 6, 
+			5: 6,
 		};
 
 		expect(Object.keys(baseObj)).to.deep.equal(TypedObject.keys(baseObj));

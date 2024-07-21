@@ -1,4 +1,4 @@
-import theseus from "./Theseus";
+import theseus from "./Theseus.js";
 
-export * from "./lib";
+export * from "./lib/index.js";
 export { theseus };

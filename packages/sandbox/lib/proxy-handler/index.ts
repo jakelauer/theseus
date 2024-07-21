@@ -1,2 +1,2 @@
-export * from "./proxy-status";
-export * from "./validity";
+export * from "./proxy-status.js";
+export * from "./validity/index.js";

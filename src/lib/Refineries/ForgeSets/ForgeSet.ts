@@ -1,5 +1,4 @@
-
-import type { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
+import type { ExposeForges, ForgeDefs } from "../Types/RefineryTypes.js";
 
 //const log = getTheseusLogger("ForgeSet");
 
@@ -8,11 +7,7 @@ import type { ExposeForges, ForgeDefs } from "../Types/RefineryTypes";
  * or transforming the data in a specific way. This class facilitates the organizati execution of these forge
  * functions.
  */
-export class ForgeSet<
-    TData extends object,
-    TParamNoun extends string,
-    TForges extends ForgeDefs<TData, TParamNoun>,
-> 
+export class ForgeSet<TData extends object, TParamNoun extends string, TForges extends ForgeDefs<TData, TParamNoun>> 
 {
 	protected readonly paramNoun: TParamNoun;
 	protected data: { [key in TParamNoun]: TData };
@@ -78,7 +73,7 @@ export class ForgeSet<
 	protected inputToObject<TData, TParamNoun extends string>(input: TData): { [key in TParamNoun]: TData } 
 	{
 		return {
-			[this.paramNoun]: input, 
+			[this.paramNoun]: input,
 		} as {
             [key in TParamNoun]: TData;
         };
@@ -93,11 +88,11 @@ export class ForgeSet<
      * @param forges The definitions of forge functions to apply to the data.
      * @returns An instance of `ForgeSet` configured with the provided parameters.
      */
-	public static create<
-        TData extends object,
-        TParamNoun extends string,
-        TForges extends ForgeDefs<TData, TParamNoun>,
-    >(data: TData, paramNoun: TParamNoun, forges: TForges): ExposeForges<TData, TParamNoun, TForges> 
+	public static create<TData extends object, TParamNoun extends string, TForges extends ForgeDefs<TData, TParamNoun>>(
+		data: TData,
+		paramNoun: TParamNoun,
+		forges: TForges,
+	): ExposeForges<TData, TParamNoun, TForges> 
 	{
 		return new ForgeSet(data, paramNoun, forges) as ExposeForges<TData, TParamNoun, TForges>;
 	}

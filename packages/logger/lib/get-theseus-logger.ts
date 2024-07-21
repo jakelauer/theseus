@@ -1,7 +1,7 @@
 import winston from "winston";
-import { theseusArgs } from "./theseus-args";
-import { setTheseusLogLevel } from "./set-theseus-log-level";
-import winstonConfigBuilder from "./winston-config-builder";
+import { theseusArgs } from "./theseus-args.js";
+import { setTheseusLogLevel } from "./set-theseus-log-level.js";
+import winstonConfigBuilder from "./winston-config-builder.js";
 
 const logLevel = theseusArgs["theseus-log-level"];
 
@@ -12,9 +12,10 @@ const rootLogger = winston.createLogger({
 });
 
 export type TheseusLogParams = Parameters<typeof winston.createLogger>[0];
-const buildLogger = (label: string) => rootLogger.child({
-	label, 
-});
+const buildLogger = (label: string) =>
+	rootLogger.child({
+		label,
+	});
 
 /**
  * Returns a logger with the given name.
@@ -23,10 +24,7 @@ const buildLogger = (label: string) => rootLogger.child({
  * @param _mockLoggingLib - For testing purposes only. If provided, the mock library will be used instead of
  *   the real one.
  */
-export function getTheseusLogger(
-	label: string,
-	_mockLoggingLib?: (label: string) => MockLoggingLib,
-): TheseusLogger 
+export function getTheseusLogger(label: string, _mockLoggingLib?: (label: string) => MockLoggingLib): TheseusLogger 
 {
 	const logger: winston.Logger = (_mockLoggingLib?.(label) as any) ?? buildLogger(label);
 
@@ -44,18 +42,16 @@ export function getTheseusLogger(
 				{
 					const stack = new Error(message).stack?.replace(/Error: /gi, "Trace: ");
 					// Filter out theseus-logger and stack variable from the stack trace
-					const filtered = stack
-						?.split("\n")
-						.reduce((acc, line) => 
+					const filtered = stack?.split("\n").reduce((acc, line) => 
+					{
+						const lineLongEnough = line.trim().length > 2;
+						const isLineFromTheseusLogger = /theseus-logger|const stack = /.test(line);
+						if (!isLineFromTheseusLogger && lineLongEnough) 
 						{
-							const lineLongEnough = line.trim().length > 2;
-							const isLineFromTheseusLogger = /theseus-logger|const stack = /.test(line);
-							if (!isLineFromTheseusLogger && lineLongEnough) 
-							{
-								acc += line + "\n";
-							}
-							return acc;
-						}, "");
+							acc += line + "\n";
+						}
+						return acc;
+					}, "");
 					return logger.log("debug", filtered, ...args);
 				};
 			},

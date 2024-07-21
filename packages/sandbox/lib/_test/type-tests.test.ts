@@ -1,31 +1,30 @@
 import { expect } from "chai";
 import sinonChai from "sinon-chai";
 import sinon from "sinon";
-import { sandbox } from "../actions/sandbox/sandbox";
+import { sandbox } from "../actions/sandbox/sandbox.js";
 import chai from "chai";
 import {
-	cement, frost, isFrost,
-	isSandbox, 
-} from "..";
-import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy";
+	cement, frost, isFrost, isSandbox, 
+} from "../index.js";
+import isElligibleForProxy from "../proxy-handler/validity/is-elligible-for-proxy.js";
 
 chai.use(sinonChai);
 
-describe("Integration type tests", function() 
-{ 
+describe("Integration type tests", function () 
+{
 	// Define the spy variable
 	let consoleWarnSpy;
-  
+
 	// Before each test, create a spy for console.warn
-	beforeEach(function() 
+	beforeEach(function () 
 	{
-	  consoleWarnSpy = sinon.spy(console, "warn");
+		consoleWarnSpy = sinon.spy(console, "warn");
 	});
-  
+
 	// After each test, restore the original console.warn
-	afterEach(function() 
+	afterEach(function () 
 	{
-	  consoleWarnSpy.restore();
+		consoleWarnSpy.restore();
 	});
 
 	const createMultiLevelObject = (key: string, value: any) => 
@@ -44,9 +43,12 @@ describe("Integration type tests", function()
 		};
 
 		const keyCount = Math.floor(Math.random() * 10) + 1;
-		const keys = Array.from({
-			length: keyCount, 
-		}, (_, i) => `${key}-${i}`);
+		const keys = Array.from(
+			{
+				length: keyCount,
+			},
+			(_, i) => `${key}-${i}`,
+		);
 
 		const obj = keys.reduce((acc, cur) => 
 		{
@@ -68,7 +70,9 @@ describe("Integration type tests", function()
 		expect(() => JSON.stringify(sandbox)).not.to.throw();
 		expect(isSbProxy).to.be.true;
 
-		expect(consoleWarnSpy).not.to.be.calledWith("Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.");
+		expect(consoleWarnSpy).not.to.be.calledWith(
+			"Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.",
+		);
 	};
 
 	const cementSandbox = (key: string, value: any) => 
@@ -98,7 +102,9 @@ describe("Integration type tests", function()
 		expect(() => JSON.stringify(sandbox)).not.to.throw();
 		expect(isSbProxy).to.be.true;
 
-		expect(consoleWarnSpy).not.to.be.calledWith("Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.");
+		expect(consoleWarnSpy).not.to.be.calledWith(
+			"Root object is a sandbox proxy, but it contains non-sandboxed objects as properties. This may cause unexpected behavior.",
+		);
 	};
 
 	const multiLayerCement = (key: string, value: any) => 
@@ -118,85 +124,81 @@ describe("Integration type tests", function()
 	};
 
 	const propValuesByType = {
-		"string": "string",
-		"number": 1,
+		string: "string",
+		number: 1,
 		"number-decimal": 1.1,
-		"boolean": true,
-		"null": null,
-		"undefined": undefined,
-		"object": {},
-		"array": [],
+		boolean: true,
+		null: null,
+		undefined: undefined,
+		object: {},
+		array: [],
 		"array-with-objects": [{}, null, {}],
-		"function": new Function(),
+		function: new Function(),
 		"lambda-function": () => {},
-		"date": new Date(),
-		"regexp": new RegExp(""),
-		"error": new Error(""),
-		"map": new Map(),
-		"set": new Set(),
-		"promise": new Promise(() => {}),
-		"weakmap": new WeakMap(),
-		"weakset": new WeakSet(),
-		"arraybuffer": new ArrayBuffer(1),
-		"sharedarraybuffer": new SharedArrayBuffer(1),
-		"dataview": new DataView(new ArrayBuffer(1)),
-		"int8array": new Int8Array(1),
-		"uint8array": new Uint8Array(1),
-		"uint8clampedarray": new Uint8ClampedArray(1),
-		"int16array": new Int16Array(1),
-		"uint16array": new Uint16Array(1),
-		"int32array": new Int32Array(1),
-		"uint32array": new Uint32Array(1),
-		"float32array": new Float32Array(1),
-		"float64array": new Float64Array(1),
-		"bigint64array": new BigInt64Array(1),
-		"biguint64array": new BigUint64Array(1),
-		"bigint": BigInt(1),
+		date: new Date(),
+		regexp: new RegExp(""),
+		error: new Error(""),
+		map: new Map(),
+		set: new Set(),
+		promise: new Promise(() => {}),
+		weakmap: new WeakMap(),
+		weakset: new WeakSet(),
+		arraybuffer: new ArrayBuffer(1),
+		sharedarraybuffer: new SharedArrayBuffer(1),
+		dataview: new DataView(new ArrayBuffer(1)),
+		int8array: new Int8Array(1),
+		uint8array: new Uint8Array(1),
+		uint8clampedarray: new Uint8ClampedArray(1),
+		int16array: new Int16Array(1),
+		uint16array: new Uint16Array(1),
+		int32array: new Int32Array(1),
+		uint32array: new Uint32Array(1),
+		float32array: new Float32Array(1),
+		float64array: new Float64Array(1),
+		bigint64array: new BigInt64Array(1),
+		biguint64array: new BigUint64Array(1),
+		bigint: BigInt(1),
 	} as const;
-	
-	const unserializableKeys = [
-		"bigint64array",
-		"biguint64array",
-		"bigint",
-	];
 
-	for (const key in propValuesByType)
+	const unserializableKeys = ["bigint64array", "biguint64array", "bigint"];
+
+	for (const key in propValuesByType) 
 	{
-		if (!unserializableKeys.includes(key))
+		if (!unserializableKeys.includes(key)) 
 		{
-			describe("Integration testing for " + key, function() 
+			describe("Integration testing for " + key, function () 
 			{
-				it(`should be able to create a sandbox proxy for ${key}`, function() 
+				it(`should be able to create a sandbox proxy for ${key}`, function () 
 				{
 					const val = propValuesByType[key as keyof typeof propValuesByType];
 
 					validateSandbox(key, val);
 				});
 
-				it(`should be able to cement a sandbox proxy for ${key}`, function()
+				it(`should be able to cement a sandbox proxy for ${key}`, function () 
 				{
 					const val = propValuesByType[key as keyof typeof propValuesByType];
 
 					cementSandbox(key, val);
 				});
 
-				it(`should be able to create a multi-nested sandbox proxy for ${key}`, function()
+				it(`should be able to create a multi-nested sandbox proxy for ${key}`, function () 
 				{
 					const val = propValuesByType[key as keyof typeof propValuesByType];
 
 					multiLayerSandbox(key, val);
 				});
 
-				it(`should be able to cement a multi-nested sandbox proxy for ${key}`, function()
+				it(`should be able to cement a multi-nested sandbox proxy for ${key}`, function () 
 				{
 					const val = propValuesByType[key as keyof typeof propValuesByType];
 
 					multiLayerCement(key, val);
 				});
 
-				if (key === "array-with-objects" || key === "array")
+				if (key === "array-with-objects" || key === "array") 
 				{
-					it(`should be able to create a sandbox proxy of inner values for ${key}`, function() 
+					it(`should be able to create a sandbox proxy of inner values for ${key}`, function () 
 					{
 						const val = propValuesByType[key as keyof typeof propValuesByType];
 
@@ -210,9 +212,9 @@ describe("Integration type tests", function()
 						expect(isFrost(f)).to.be.true;
 					});
 				}
-				else if (key === "object")
+				else if (key === "object") 
 				{
-					it(`should be able to create a sandbox proxy of type ${key} directly`, function() 
+					it(`should be able to create a sandbox proxy of type ${key} directly`, function () 
 					{
 						const val = propValuesByType[key as keyof typeof propValuesByType];
 
@@ -228,11 +230,14 @@ describe("Integration type tests", function()
 				}
 				else 
 				{
-					it(`should not be able to create a sandbox proxy of type ${key} directly`, function() 
+					it(`should not be able to create a sandbox proxy of type ${key} directly`, function () 
 					{
 						const val = propValuesByType[key as keyof typeof propValuesByType];
 
-						expect(isElligibleForProxy(val)).to.equal(false, `Expected ${key} not to be elligible for proxy`);
+						expect(isElligibleForProxy(val)).to.equal(
+							false,
+							`Expected ${key} not to be elligible for proxy`,
+						);
 
 						const sb = sandbox(val);
 						const f = frost(val);
