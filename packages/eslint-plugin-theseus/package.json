@@ -5,7 +5,7 @@
     "main": "lib/index.js",
     "scripts": {
         "build": "echo 'no build'",
-        "test": "mocha '**/_test/*.test.js'"
+        "test": "mocha --exit --config ./.mocharc.cjs"
     },
     "devDependencies": {
         "eslint": "^8.57.0",

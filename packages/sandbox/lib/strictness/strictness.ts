@@ -25,11 +25,11 @@ export const fail = (opts: StrictnessOptions | undefined, ...args: ErrorParams |
 			log.warn(message, ...rest);
 			break;
 		case true:
-			if (rest.length > 1) 
+			if (rest.length > 0) 
 			{
 				log.error(message, ...rest);
 			}
-			throw new Error(rest[0]);
+			throw new Error(message);
 		default:
 			log.debug(message, ...rest);
 			break;

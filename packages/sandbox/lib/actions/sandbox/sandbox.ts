@@ -46,22 +46,21 @@ function createProxy<T extends object>(obj: T, proxyMap: WeakMap<T, T>, params: 
 	const metadata = createMetadata(obj, params);
 
 	const proxy =
-        proxyMap.has(obj) ?
-        	proxyMap.get(obj)
-        	:   new Proxy<T>(obj, {
-        		get(target, prop, receiver) 
-        		{
-        			return handleGet(target, prop, receiver, metadata, proxyMap);
-        		},
-        		set(_target, prop, value) 
-        		{
-        			return handleSet(prop, value, metadata, proxyMap);
-        		},
-        		deleteProperty(_target, prop) 
-        		{
-        			return handleDelete(prop, metadata);
-        		},
-        	});
+        proxyMap.get(obj) ??
+        new Proxy<T>(obj, {
+        	get(target, prop, receiver) 
+        	{
+        		return handleGet(target, prop, receiver, metadata, proxyMap);
+        	},
+        	set(_target, prop, value) 
+        	{
+        		return handleSet(prop, value, metadata, proxyMap);
+        	},
+        	deleteProperty(_target, prop) 
+        	{
+        		return handleDelete(prop, metadata);
+        	},
+        });
 
 	if (!proxyMap.has(obj)) 
 	{

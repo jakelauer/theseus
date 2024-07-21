@@ -24,7 +24,7 @@ export function cement<T extends object>(obj: T): T
 	const rootCemented = cementAtRoot(obj);
 	if (rootCemented !== undefined) 
 	{
-		finalResult = rootCemented;
+		finalResult = rootCemented as T;
 	}
 
 	// If the object contains nested sandbox proxies, apply the changes recursively.
@@ -46,12 +46,11 @@ export function cement<T extends object>(obj: T): T
 	return finalResult;
 }
 
-function cementAtRoot<T extends object>(obj: T): T 
+function cementAtRoot<T extends object>(obj: T) 
 {
 	let original: T,
 		changes: Record<string | symbol, any>,
-		mode: SandboxMode,
-		isSandbox = false;
+		mode: SandboxMode;
 	try 
 	{
 		// If this errors, the object is not a sandbox proxy
@@ -59,18 +58,14 @@ function cementAtRoot<T extends object>(obj: T): T
 		original = sbMetadata.original;
 		changes = sbMetadata.changes;
 		mode = sbMetadata.params.mode;
-		isSandbox = true;
+
+		const toModify = getModifiableObject(original, mode);
+
+		return applyChanges(toModify, changes);
 	}
 	catch 
 	{
 		// Not really an error case, just means the object is not a sandbox proxy
-	}
-
-	if (isSandbox) 
-	{
-		const toModify = getModifiableObject(original, mode);
-
-		return applyChanges(toModify, changes);
 	}
 }
 

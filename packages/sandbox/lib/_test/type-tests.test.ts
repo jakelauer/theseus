@@ -202,10 +202,12 @@ describe("Integration type tests", function ()
 					{
 						const val = propValuesByType[key as keyof typeof propValuesByType];
 
-						expect(val[Symbol.toStringTag]).to.be.undefined;
+						expect(val?.[Symbol.toStringTag]).to.be.undefined;
 						expect(isElligibleForProxy(val)).to.be.true;
 
+						// @ts-expect-error - known possible undefined value
 						const sb = sandbox(val);
+						// @ts-expect-error - known possible undefined value
 						const f = frost(val);
 
 						expect(isSandbox(sb)).to.be.true;
@@ -218,10 +220,12 @@ describe("Integration type tests", function ()
 					{
 						const val = propValuesByType[key as keyof typeof propValuesByType];
 
-						expect(val[Symbol.toStringTag]).to.be.undefined;
+						expect(val?.[Symbol.toStringTag]).to.be.undefined;
 						expect(isElligibleForProxy(val)).to.be.true;
 
+						// @ts-expect-error - known possible undefined value
 						const sb = sandbox(val);
+						// @ts-expect-error - known possible undefined value
 						const f = frost(val);
 
 						expect(isSandbox(sb)).to.be.true;
@@ -239,7 +243,9 @@ describe("Integration type tests", function ()
 							`Expected ${key} not to be elligible for proxy`,
 						);
 
+						// @ts-expect-error - known possible undefined value
 						const sb = sandbox(val);
+						// @ts-expect-error - known possible undefined value
 						const f = frost(val);
 
 						expect(isSandbox(sb)).to.equal(false, `Expected ${key} to not be a sandbox`);
