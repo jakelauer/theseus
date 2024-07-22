@@ -4,10 +4,6 @@
     ],
     "plugins": [
         "@semantic-release/commit-analyzer",
-        "@anolilab/semantic-release-pnpm",
-        "@semantic-release/release-notes-generator",
-        "@semantic-release/changelog",
-        "@semantic-release/git",
-        "@semantic-release/github"
+        "@anolilab/semantic-release-pnpm"
     ]
 }

@@ -1,0 +1,7 @@
+{
+    "ignorePrivate": true,
+    "tagFormat": "${name}-${version}",
+    "deps": {
+        "bump": "inherit"
+    }
+}

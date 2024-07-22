@@ -49,7 +49,7 @@ jobs:
 
       - name: Determine monorepo semantic-release command
         id: set-monorepo-release-command
-        run: echo "::set-output name=command::$(if [[ $GITHUB_REF == 'refs/heads/main' ]]; then echo 'pnpm -r --workspace-concurrency=1 exec -- npx --no-install semantic-release -e semantic-release-monorepo'; else echo 'pnpm -r --workspace-concurrency=1 exec -- npx --no-install semantic-release -e semantic-release-monorepo --dry-run'; fi)"
+        run: echo "::set-output name=command::$(if [[ $GITHUB_REF == 'refs/heads/main' ]]; then echo 'pnpm exec multi-semantic-release --debug'; else echo 'pnpm multi-semantic-release --debug --dry-run'; fi)"
 
       - name: Run semantic-release
         run: ${{ steps.set-release-command.outputs.command }}
