@@ -71,7 +71,7 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 	}
 
 	/**
-     * Resets the chain if the the property requeseted was a result property, indicating that the chain is
+     * Resets the chain if the the property requested was a result property, indicating that the chain is
      * terminated.
      */
 	private resetIfResultReturned(prop: string, result: any) 

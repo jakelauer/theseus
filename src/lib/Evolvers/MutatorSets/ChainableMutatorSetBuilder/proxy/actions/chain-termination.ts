@@ -37,9 +37,9 @@ export class ChainTerminationAction extends ProxyActions
 		}
 
 		const toReturn =
-            proxyManager.queue.asyncEncountered ?
-            	() => proxyManager.queue.queue
-            	:   () => proxyManager.params.target.end();
+			proxyManager.queue.asyncEncountered
+				? () => (proxyManager.queue.queue as Promise<any>).then(() => proxyManager.params.target.endAsync())
+            	: () => proxyManager.params.target.end();
 
 		const asyncLabel = proxyManager.queue.asyncEncountered ? "🕐ASYNC" : "";
 

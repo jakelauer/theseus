@@ -1,5 +1,5 @@
-import { getTheseusLogger, Refinery } from "theseus-js";
-
+import { Refinery } from "theseus-js";
+import { getTheseusLogger } from "theseus-logger";
 import type { CoordsArray, GameState } from "../../state/GameState.js";
 
 const log = getTheseusLogger("SquaresRefinery");

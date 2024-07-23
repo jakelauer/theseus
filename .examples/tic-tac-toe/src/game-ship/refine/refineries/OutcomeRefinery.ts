@@ -1,7 +1,8 @@
-import { getTheseusLogger, Refinery } from "theseus-js";
+import { Refinery } from "theseus-js";
 
 import type { GameState } from "../../state/GameState.js";
 import { SquaresRefinery } from "./SquaresRefinery.js";
+import { getTheseusLogger } from "theseus-logger";
 
 type TripleType = "row" | "column" | "diagonalLR" | "diagonalRL";
 export type Triple = {

@@ -233,6 +233,15 @@ describe("Evolvers", () =>
         			.lastly.asyncReverseName();
 
         		expect(resultB.name).to.equal("TS*T");
+				
+
+        		const resultC = await AsyncEvolver.evolve({
+        			name: "jake", 
+        		})
+        			.via.asyncReverseName()
+        			.endAsync();
+
+        		expect(resultC.name).to.equal("ekaj", "Works with .endAsync()");
 
         		return;
         	});

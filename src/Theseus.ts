@@ -157,11 +157,14 @@ export class Theseus<
 	public static async updateInstance(theseusId: string, data: any) 
 	{
 		log.verbose(`Updating instance ${theseusId}`);
-		const stackDepth = Theseus.stackDepthsById[theseusId] ?? 0;
-		if (stackDepth === 0) 
+		if (theseusId) 
 		{
-			const instance = Theseus.getInstance(theseusId);
-			return await instance.update(data);
+			const stackDepth = Theseus.stackDepthsById[theseusId] ?? 0;
+			if (stackDepth === 0) 
+			{
+				const instance = Theseus.getInstance(theseusId);
+				return await instance.update(data);
+			}
 		}
 		else 
 		{

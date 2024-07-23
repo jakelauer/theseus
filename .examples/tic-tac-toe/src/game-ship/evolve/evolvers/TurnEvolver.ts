@@ -1,8 +1,9 @@
-import { Evolver, getTheseusLogger } from "theseus-js";
+import { Evolver } from "theseus-js";
 import type { GameState } from "../../state/GameState.js";
 import { SquaresRefinery } from "../../refine/refineries/SquaresRefinery.js";
 import { BoardEvolver } from "./BoardEvolver.js";
 import { MetaEvolver } from "./MetaEvolver.js";
+import { getTheseusLogger } from "theseus-logger";
 
 const log = getTheseusLogger("GameTurnEvolver");
 

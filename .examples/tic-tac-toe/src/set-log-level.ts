@@ -1,3 +1,3 @@
-import { setTheseusLogLevel } from "theseus-js";
+import { setTheseusLogLevel } from "theseus-logger";
 
 setTheseusLogLevel("major");

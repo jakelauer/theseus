@@ -5,3 +5,5 @@ packages:
     - "../../packages/publisher"
     - "../../packages/commitlint-config"
     - "../../packages/sandbox"
+    - "../../packages/sandbox-constants"
+    - "../../packages/logger"
