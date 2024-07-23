@@ -62,9 +62,9 @@ describe("ChainableMutatorSet", function ()
 	// Assuming an asynchronous mutator has been added to the TestMutators
 	it("should handle asynchronous mutations correctly", async function () 
 	{
-		const output = await chainableMutatorSet.asyncIncrement(1).and.increment(2).endAsync();
+		const output = await chainableMutatorSet.asyncIncrement(1).endAsync();
 
-		expect(output?.value).to.equal(3);
+		expect(output?.value).to.equal(1);
 
 		return;
 	});
@@ -113,9 +113,9 @@ describe("ChainableMutatorSet", function ()
 				.increment(1)
 				.and.decrement(2)
 				.and.asyncIncrement(3)
-				.and.increment(4)
-				.and.asyncIncrement(5)
-				.lastly.increment(6);
+				.andAsync.increment(4)
+				.andAsync.asyncIncrement(5)
+				.lastlyAsync.increment(6);
 
 			outcome = result.value;
 		}

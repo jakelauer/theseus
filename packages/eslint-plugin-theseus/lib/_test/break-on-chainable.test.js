@@ -24,11 +24,12 @@ ruleTester.run("break-on-chainable", rule, {
 			code: "obj.via.thing().end()",
 		},
 		{
-			code: "obj.via.thing().endAsync()",
-		},
-		{
 			// If no `.via` is present, we're not interested in the chain
 			code: "obj.thing().and.anotherThing().lastly.thing();",
+		},
+		{
+			// Properly handling async methods
+			code: "async () => { await obj.via.thing().endAsync(); }",
 		},
 	],
 	invalid: [
@@ -62,6 +63,9 @@ ruleTester.run("break-on-chainable", rule, {
 				{
 					message: "Expected line break before `.and`.", 
 				},
+				// {
+				// 	message: "Detected floating promise for `.endAsync`. Await or handle the promise properly.", 
+				// },
 				{
 					message: "Expected line break before `.endAsync`.", 
 				},
@@ -80,5 +84,41 @@ ruleTester.run("break-on-chainable", rule, {
 			],
 			output: "GameMeta.evolve.iterateTurnCount()\n.and.updateLastPlayer(mark)\n.and.updateLastPlayedCoords(coords);",
 		},
+		// {
+		// 	code: "obj.via.thing()\n.andAsync();",
+		// 	errors: [
+		// 		{
+		// 			message: "Detected floating promise for `.andAsync`. Await or handle the promise properly.", 
+		// 		},
+		// 	],
+		// },
+		// {
+		// 	code: "obj.via.thing().lastlyAsync();",
+		// 	errors: [
+		// 		{
+		// 			message: "Detected floating promise for `.lastlyAsync`. Await or handle the promise properly.", 
+		// 		},
+		// 		{
+		// 			message: "Expected line break before `.lastlyAsync`.", 
+		// 		},
+		// 	],
+		// 	output: "obj.via.thing()\n.lastlyAsync();",
+		// },
+		// {
+		// 	code: "obj.via.thing()\n.lastlyAsync();",
+		// 	errors: [
+		// 		{
+		// 			message: "Detected floating promise for `.lastlyAsync`. Await or handle the promise properly.", 
+		// 		},
+		// 	],
+		// },
+		// {
+		// 	code: "evolver2.evolve(input).via.double()\n.andAsync.double();",
+		// 	errors: [
+		// 		{
+		// 			message: "Detected floating promise for `.andAsync`. Await or handle the promise properly.", 
+		// 		},
+		// 	],
+		// },
 	],
 });

@@ -7,7 +7,7 @@ export class ChainHelperAction extends ProxyActions
 
 	public override runTest({ prop }: ProxyActionMapParameters): boolean 
 	{
-		const matchedProps = new Set(["and", "lastly"]);
+		const matchedProps = new Set(["and", "lastly", "andAsync", "lastlyAsync"]);
 
 		return matchedProps.has(prop);
 	}

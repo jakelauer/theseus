@@ -115,6 +115,7 @@ export class ChainableMutatorSetBuilder<
 		return result as TData;
 	}
 
+	// eslint-disable-next-line theseus/break-on-chainable
 	public async endAsync(): Promise<TData> 
 	{
 		await (this.resultBase as Promise<TData>);

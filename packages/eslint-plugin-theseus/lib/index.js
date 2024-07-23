@@ -10,6 +10,9 @@ module.exports = {
 			],
 			rules: {
 				"theseus/break-on-chainable": "error",
+				"@typescript-eslint/no-floating-promises": ["error", {
+					checkThenables: true, 
+				}],
 			},
 		},
 	},

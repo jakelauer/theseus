@@ -11,26 +11,15 @@ describe("Evolvers", () =>
         value: number;
     }
 
-    const testEvolver = Evolver.create("testEvolver")
-    	.toEvolve<TestData>()
-    	.withMutators({
-    		increment: ({ input }) => ({
-    			value: input.value + 1, 
-    		}),
-    		decrement: ({ input }) => ({
-    			value: input.value - 1, 
-    		}),
-    	});
-
     const preMutatorTestEvolver = Evolver.create("testEvolver").toEvolve<TestData>();
     type MutatorType = Parameters<(typeof preMutatorTestEvolver)["withMutators"]>[0];
 
     const testMutators = {
     	increment: ({ input }) => ({
-    		value: input.value + 1, 
+    		value: input.value + 1,
     	}),
     	decrement: ({ input }) => ({
-    		value: input.value - 1, 
+    		value: input.value - 1,
     	}),
     } satisfies MutatorType;
 
@@ -81,7 +70,7 @@ describe("Evolvers", () =>
         		// Assuming there's some form of validation on mutators, which there might not be.
         		// This is speculative and should be adapted to the actual error handling strategy of Evolver.
         		const invalidMutators: any = {
-        			brokenMutator: null, 
+        			brokenMutator: null,
         		}; // Intentionally incorrect
 
         		expect(() =>
@@ -97,16 +86,16 @@ describe("Evolvers", () =>
         		const testEvolver = Evolver.create("testEvolver")
         			.toEvolve<TestData>()
         			.withMutators({
-        				increment: ({ input }, by: number) =>
-        				{ 
+        				increment: ({ input }, by: number) => 
+        				{
         					return {
-        						value: input.value + by, 
+        						value: input.value + by,
         					};
         				},
         			});
 
         		const initialData = {
-        			value: 1, 
+        			value: 1,
         		};
 
         		const initialDataEvolver = testEvolver.evolve(initialData);
@@ -125,7 +114,7 @@ describe("Evolvers", () =>
         		expect(() => 
         		{
         			reEvolvedData.value = 5;
-        		}).to.throw("Cannot modify property \"value\" of the original object."); // The new evolved data should remain unchanged
+        		}).to.throw('Cannot modify property "value" of the original object.'); // The new evolved data should remain unchanged
         	});
         });
 
@@ -137,7 +126,7 @@ describe("Evolvers", () =>
         			.toEvolve<AnotherTestData>()
         			.withMutators({
         				rename: ({ input }) => ({
-        					name: `New ${input.name}`, 
+        					name: `New ${input.name}`,
         				}),
         			});
 
@@ -147,6 +136,60 @@ describe("Evolvers", () =>
 
         describe("Complex Mutator Functions", () => 
         {
+        	it("should automatically end any unfinished evolvers upon return", async () => 
+        	{
+        		const evolver1 = Evolver.create("testEvolver")
+        			.toEvolve<TestData>()
+        			.withMutators({
+        				increment: ({ input }) => ({
+        					value: input.value + 1,
+        				}),
+        			});
+
+        		const evolver2 = Evolver.create("testEvolver")
+        			.toEvolve<TestData>()
+        			.withMutators({
+        				double: async ({ input }) => 
+        				{
+        					const result = await new Promise<number>((resolve) => 
+        					{
+        						setTimeout(() => 
+        						{
+        							resolve(input.value * 2);
+        						}, 100);
+        					});
+
+        					input.value = result;
+
+        					return input;
+        				},
+        			});
+
+        		const evolver3 = Evolver.create("testEvolver")
+        			.toEvolve<TestData>()
+        			.withMutators({
+        				addAndDouble: async ({ input }) => 
+        				{
+        					evolver1.evolve(input).via.increment();
+        					await evolver2.evolve(input).via.double()
+        						.endAsync();
+							
+        					return input;
+        				},
+        			});
+
+        		const initialData = {
+        			value: 1,
+        		};
+
+        		const result = await evolver3.evolve(initialData)
+        			.via.addAndDouble()
+        			.endAsync();
+
+        		expect(result).to.deep.equal({
+        			value: 4,
+        		});
+        	});
         	// Testing with more complex mutator functions that might involve asynchronous operations,
         	// side effects, etc.
         	it("should support complex mutator definitions", async () => 
@@ -217,26 +260,25 @@ describe("Evolvers", () =>
         			});
 
         		const resultA = await AsyncEvolver.evolve({
-        			name: "1234", 
+        			name: "1234",
         		})
         			.via.asyncMakeNameLowerCase()
-        			.and.asyncMakeNameUpperCase()
-        			.and.asyncReverseName()
-        			.lastly.syncReplaceVowels();
+        			.andAsync.asyncMakeNameUpperCase()
+        			.andAsync.asyncReverseName()
+        			.lastlyAsync.syncReplaceVowels();
         		expect(resultA.name).to.equal("4321");
 
         		const resultB = await AsyncEvolver.evolve({
-        			name: "test", 
+        			name: "test",
         		})
         			.via.syncReplaceVowels()
         			.and.asyncMakeNameUpperCase()
-        			.lastly.asyncReverseName();
+        			.lastlyAsync.asyncReverseName();
 
         		expect(resultB.name).to.equal("TS*T");
-				
 
         		const resultC = await AsyncEvolver.evolve({
-        			name: "jake", 
+        			name: "jake",
         		})
         			.via.asyncReverseName()
         			.endAsync();

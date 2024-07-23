@@ -42,27 +42,26 @@ describe("generateEvolveMethods", function ()
 				}),
 		);
 
-		const input = {
-			count: 0,
-		};
-
-		const result = complex.evolve({
-			count: 0,
-		}).evolver2.syncIncrement()
+		const result = complex
+			.evolve({
+				count: 0,
+			})
+			.evolver2.syncIncrement()
 			.lastly.inner2();
-		
+
 		expect(result).to.deep.equal({
 			count: 1,
 		});
 
-		const result2 = await complex.evolve({
-			count: 0,
-		})
+		const result2 = await complex
+			.evolve({
+				count: 0,
+			})
 			.evolver1.asyncIncrement()
 			.endAsync();
-		
+
 		expect(result2).to.deep.eq({
-			count: 1, 
+			count: 1,
 		});
 	});
 });

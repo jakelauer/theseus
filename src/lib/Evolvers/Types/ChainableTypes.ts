@@ -60,7 +60,7 @@ export type FinishChain<
     TMutators extends MutatorDefChild<TData, TParamNoun>,
     IsAsync extends AsyncTracker,
 > = Record<"endAsync", () => Promise<TData>> &
-    Record<"lastly", ChainableMutators<TData, TParamNoun, TMutators, "final", IsAsync>>;
+    Record<"lastlyAsync", ChainableMutators<TData, TParamNoun, TMutators, "final", IsAsync>>;
 
 type AsyncChainable<
     TData extends object,
@@ -72,9 +72,17 @@ type AsyncChainable<
 > = MutatorCallable<
     TMutator,
     IsFinal extends "final" ? TData
-    :   Record<"and", ChainableMutators<TData, TParamNoun, TMutators, IsFinal, IsAsync>> &
+    :   Record<"andAsync", ThenableStub<IsAsync> & ChainableMutators<TData, TParamNoun, TMutators, IsFinal, IsAsync>> &
             FinishChain<TData, TParamNoun, TMutators, IsAsync>
->;
+	>;
+
+type ThenableStub<IsAsync extends AsyncTracker> = IsAsync extends "async" ? {
+	/**
+	 * @deprecated This method is not intended for direct use. It allows ESLint to recognize the `then` method
+	 * in order to allow detection of floating promises.
+	 */
+	then: PromiseLike<any>["then"];
+}: unknown;
 
 /**
  * Determines if a set of mutators includes any asynchronous operations, affecting whether the chain is
@@ -141,6 +149,7 @@ export type ChainableMutators<
 // Interface defining the capability to retrieve the final form of the mutated data.
 export interface Chainable<TData extends object> {
     end: () => TData;
+    // eslint-disable-next-line theseus/break-on-chainable
     endAsync: () => Promise<TData>;
 }
 
