@@ -1,3 +1,10 @@
+## [13.0.1](https://github.com/jakelauer/theseus-js/compare/v13.0.0...v13.0.1) (2024-07-23)
+
+
+### Bug Fixes
+
+* **evolver:** fix endAsync() not triggering true end functionality when triggered via EvolverComplex ([3123088](https://github.com/jakelauer/theseus-js/commit/3123088e46c141ef728ee54fcf9c5b7e5231e403))
+
 # [13.0.0](https://github.com/jakelauer/theseus-js/compare/v12.0.11...v13.0.0) (2024-07-23)
 
 
