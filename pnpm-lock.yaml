@@ -251,11 +251,11 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       sandbox-constants:
-        specifier: workspace:*
-        version: link:../sandbox-constants
+        specifier: '*'
+        version: 1.0.1
       theseus-logger:
-        specifier: workspace:*
-        version: link:../logger
+        specifier: '*'
+        version: 2.0.0
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -3881,6 +3881,9 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
+  sandbox-constants@1.0.1:
+    resolution: {integrity: sha512-oJw3/wr1AUEJcGKFK7LCP3rUW9t0u08Qiaw13qJOh+MM97bjVI6rgQk9Tmz2WoHbhE+bYJWEHpfL5uX+Ui4GNA==}
+
   semantic-release-monorepo@8.0.2:
     resolution: {integrity: sha512-TQC6KKIA0ATjii1OT0ZmQqcVzBJoaetJaJBC8FmKkg1IbDR4wBsuX6gl6UHDdijRDl8YyXqahj2hkJNyV6m9Jg==}
     peerDependencies:
@@ -4188,6 +4191,9 @@ packages:
 
   thenify@3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
+
+  theseus-logger@2.0.0:
+    resolution: {integrity: sha512-Ddh/QtIsLZmCvZHoqVIQvSL8x4IqsDo+1WTbDRXuZjHJ5NH5jIzyxKQ3LnBwof7l+7lduoTepaU3vp9rA7ePiw==}
 
   through2@2.0.5:
     resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
@@ -8384,6 +8390,8 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
+  sandbox-constants@1.0.1: {}
+
   semantic-release-monorepo@8.0.2(semantic-release@23.1.1(typescript@5.4.5)):
     dependencies:
       debug: 4.3.5
@@ -8774,6 +8782,11 @@ snapshots:
   thenify@3.3.1:
     dependencies:
       any-promise: 1.3.0
+
+  theseus-logger@2.0.0:
+    dependencies:
+      sandbox-constants: 1.0.1
+      winston: 3.13.0
 
   through2@2.0.5:
     dependencies:
