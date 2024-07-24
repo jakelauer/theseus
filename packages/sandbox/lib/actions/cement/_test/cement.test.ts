@@ -7,6 +7,7 @@ import {
 	containsSandbox, isSandbox, sandbox, 
 } from "../../sandbox/index.js";
 import structuredClone from "@ungap/structured-clone";
+import { frost } from "../../frost/index.js";
 
 describe("cement", function () 
 {
@@ -203,5 +204,47 @@ describe("cement", function ()
 		});
 
 		expect(containsSandbox(result)).to.be.false;
+	});
+
+	it("should modify original object when cementing without using return", function () 
+	{
+		const obj = {
+			a: 1,
+			b: {
+				c: 2,
+			},
+		};
+		const frosted = frost(obj);
+		const sb = sandbox(frosted);
+
+		sb.a = 2;
+		sb.b.c = 3;
+
+		cement(sb);
+
+		expect(obj).to.deep.equal({
+			a: 2,
+			b: {
+				c: 3,
+			},
+		});
+
+		expect(JSON.stringify(obj)).to.equal(JSON.stringify(frosted));
+		expect(JSON.stringify(obj)).to.equal(JSON.stringify(sb));
+	});
+
+	it("should error after editing a cemented frosted object", function () 
+	{
+		const frostedObj = frost({
+			a: 1,
+		});
+		const sb = sandbox(frostedObj);
+		sb.a = 2;
+		cement(sb);
+		expect(() => 
+		{
+			// @ts-expect-error - This is a test
+			frostedObj.a = 3;
+		}).to.throw("Cannot modify property \"a\" of the original object.");
 	});
 });

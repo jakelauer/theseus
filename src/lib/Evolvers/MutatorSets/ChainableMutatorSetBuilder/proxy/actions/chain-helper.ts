@@ -1,6 +1,9 @@
 import type { ProxyActionMapParameters } from "../proxy-action-map.js";
 import { ProxyActions, ProxyActionType } from "../proxy-actions.js";
 
+/**
+ * A helper action that is used to chain multiple actions together, but does nothing else
+ */
 export class ChainHelperAction extends ProxyActions 
 {
 	public override type: ProxyActionType = ProxyActionType.chainHelper;

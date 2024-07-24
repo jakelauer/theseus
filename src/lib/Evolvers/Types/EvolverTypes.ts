@@ -1,3 +1,4 @@
+import type { SandboxParams } from "theseus-sandbox";
 import type { ChainableMutators } from "./ChainableTypes.js";
 import type { MutatorDefs } from "./MutatorTypes.js";
 export interface TypeAccess<
@@ -92,7 +93,18 @@ export type EvolveObject<
 > = ReturnType<EvolverInstance<TData, TEvolverName, TParamNoun, TMutators>["evolve"]>;
 
 export interface EvolverOptions<TParamNoun extends string = "input"> {
-    noun?: TParamNoun;
+	/**
+	 * The noun used to name the data parameter in each mutator.
+	 */
+	noun?: TParamNoun;
+	/**
+	 * Configuration for sandboxing the data object.
+	 */
+	sandbox?: Partial<SandboxParams>;
+	/**
+	 * Whether to frost the data object before applying mutations.
+	 */
+	frost?: boolean;
 }
 
 /**

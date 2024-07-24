@@ -33,8 +33,14 @@ export abstract class ProxyActions
     	return outcome;
     }
 
+    /**
+	 * Determines whether the action should be run based on the parameters
+	 */
     public abstract runTest(params: ProxyActionMapParameters, matchedRequestTypes: ProxyActionType): boolean;
 
+    /**
+	 * The action's main processing function
+	 */
     public abstract process(params: ProxyActionMapParameters, requestType: ProxyActionType): any;
 
     public static flagNames(type: ProxyActionType) 

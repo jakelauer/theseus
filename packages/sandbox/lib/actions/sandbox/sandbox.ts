@@ -5,6 +5,8 @@ import { isSandbox } from "./detect/is-sandbox-proxy.js";
 import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy.js";
 import { symbolCompare } from "../../symbols/symbol-compare.js";
 
+type Writable<T> = { -readonly [K in keyof T]: T[K] }; 
+
 /**
  * Creates a sandbox proxy for the given object, allowing changes to be tracked
  * without modifying the original object.
@@ -13,7 +15,7 @@ import { symbolCompare } from "../../symbols/symbol-compare.js";
  * @param {T} originalObject - The object to create a sandbox proxy for.
  * @returns {T} - The sandbox proxy object.
  */
-export function sandbox<T extends object>(originalObject: T, _params?: Partial<SandboxParams>): T 
+export function sandbox<T extends object>(originalObject: T, _params?: Partial<SandboxParams>): Writable<T>
 {
 	if (isSandbox(originalObject) || !isElligibleForProxy(originalObject)) 
 	{
