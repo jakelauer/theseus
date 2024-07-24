@@ -1,6 +1,6 @@
 {
     "name": "theseus-sandbox",
-    "version": "1.0.3",
+    "version": "6.0.1",
     "description": "",
     "main": "dist/index.cjs",
     "module": "dist/index.js",
@@ -25,8 +25,8 @@
     "dependencies": {
         "clone-deep": "^4.0.1",
         "uuid": "^9.0.1",
-        "theseus-logger": "workspace:*",
-        "sandbox-constants": "workspace:*"
+        "theseus-logger": "*",
+        "sandbox-constants": "*"
     },
     "devDependencies": {
         "@types/sinon": "^17.0.3",
