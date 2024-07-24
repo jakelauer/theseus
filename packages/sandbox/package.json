@@ -1,10 +1,14 @@
 {
     "name": "theseus-sandbox",
     "version": "6.0.1",
-    "description": "",
+    "description": "A flexible immutability library for controlled object modifications using frost, sandbox, and cement concepts.",
     "main": "dist/index.cjs",
     "module": "dist/index.js",
     "type": "module",
+    "repository": {
+        "url": "https://github.com/jakelauer/theseus-js/tree/main/packages/sandbox",
+        "type": "git"
+    },
     "scripts": {
         "build": "tsup",
         "test": "vitest run",

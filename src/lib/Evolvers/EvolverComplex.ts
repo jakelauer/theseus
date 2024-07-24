@@ -24,8 +24,6 @@ export const generateEvolveMethods = <
 		{
 			const mutators = macro ? evolver.evolve(input).getMutators() : evolver.mutate(input).getMutators();
 
-			console.log(evolver.evolverName);
-
 			(acc as Record<string, any>)[evolver.evolverName] = mutators;
 
 			return acc;
