@@ -1,3 +1,10 @@
+## [14.0.1](https://github.com/jakelauer/theseus-js/compare/v14.0.0...v14.0.1) (2024-07-24)
+
+
+### Bug Fixes
+
+* **sandbox:** fix sandbox return type when input is readonly ([f354056](https://github.com/jakelauer/theseus-js/commit/f3540560fc28f06ebea7a356bf208f3179caab19))
+
 # [14.0.0](https://github.com/jakelauer/theseus-js/compare/v13.0.1...v14.0.0) (2024-07-23)
 
 
