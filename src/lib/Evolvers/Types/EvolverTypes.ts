@@ -95,14 +95,14 @@ export type EvolveObject<
 export interface EvolverOptions<TParamNoun extends string = "input"> {
 	/**
 	 * The noun used to name the data parameter in each mutator.
-	 */
+	 */ 
 	noun?: TParamNoun;
 	/**
 	 * Configuration for sandboxing the data object.
 	 */
 	sandbox?: Partial<SandboxParams>;
 	/**
-	 * Whether to frost the data object before applying mutations.
+	 * Whether to frost the data object before applying any mutations.
 	 */
 	frost?: boolean;
 }
