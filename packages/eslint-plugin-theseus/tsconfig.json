@@ -1,11 +1,10 @@
 {
-    "compileOnSave": false,
-    "include": ["./lib/rules/*"],
-    "exclude": ["./lib/_test/*.js"],
-    "compilerOptions": {
-        "allowJs": true,
-        "rootDir": "./lib",
-        "baseUrl": "./lib",
-        "noEmit": true
-    }
+	"compileOnSave": false,
+	"include": [ "./lib/rules/*", "lib/rules/no-floating-chainable/no-floating-chainable.js" ],
+	"compilerOptions": {
+		"allowJs": true,
+		"rootDir": "./lib",
+		"baseUrl": "./lib",
+		"noEmit": true
+	}
 }

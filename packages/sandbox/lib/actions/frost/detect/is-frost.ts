@@ -8,7 +8,7 @@ import { objectRootIsFrost } from "./root-is-frost.js";
  * @template T - The type of the object.
  * @param {T} obj - The object to check.
  */
-export const isDeepFrost = <T extends object>(obj: T, mode: "some" | "every" = "every"): obj is FrostProxy<T> => 
+const isDeepFrost = <T extends object>(obj: T, mode: "some" | "every" = "every"): obj is FrostProxy<T> => 
 {
 	const status = proxyStatus(
 		obj,
@@ -24,22 +24,6 @@ export const isDeepFrost = <T extends object>(obj: T, mode: "some" | "every" = "
 };
 
 /**
- * Determines if the given object is a sandbox proxy (shallow check, only checks the root object).
- */
-export const isShallowFrost = <T extends object>(obj?: T): obj is FrostProxy<T> => 
-{
-	return objectRootIsFrost(obj);
-};
-
-/**
  * Determines if the given object is a sandbox proxy (deep check).
  */
 export const isFrost = isDeepFrost;
-
-/**
- * Determines if the given object contains a sandbox proxy at any level.
- */
-export const containsFrost = <T extends object>(obj: T): boolean => 
-{
-	return isDeepFrost(obj, "some");
-};

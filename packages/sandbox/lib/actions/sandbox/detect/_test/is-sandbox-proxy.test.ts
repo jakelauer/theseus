@@ -1,9 +1,10 @@
 import { sandbox } from "../../sandbox.js";
-import { expect, it } from "vitest";
+import {
+	describe, expect, it, 
+} from "vitest";
 import { containsSandbox, isSandbox } from "../is-sandbox-proxy.js";
 
-"is-sandbox-proxy",
-function () 
+describe("is-sandbox-proxy", function () 
 {
 	it("should correctly identify a sandbox proxy object", function () 
 	{
@@ -35,4 +36,4 @@ function ()
 		};
 		expect(containsSandbox(original)).to.equal(true);
 	});
-};
+});

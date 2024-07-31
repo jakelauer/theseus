@@ -1,7 +1,11 @@
 {
     "name": "theseus-logger",
     "version": "1.0.0",
-    "description": "",
+    "description": "A flexible logging utility for Theseus JS projects",
+    "repository": {
+        "url": "https://github.com/jakelauer/theseus-js.git",
+        "type": "git"
+    },
     "main": "dist/index.cjs",
     "module": "dist/index.js",
     "type": "module",
@@ -12,17 +16,18 @@
         "coverage": "vitest run --coverage"
     },
     "keywords": [
-        "logger"
+        "logger",
+        "theseus",
+        "logging",
+        "debug"
     ],
-    "author": "",
-    "license": "ISC",
+    "author": "Jake Lauer",
+    "license": "MIT",
     "dependencies": {
         "winston": "^3.12.0",
         "sandbox-constants": "workspace:*"
     },
     "devDependencies": {
-        "@types/sinon": "^17.0.3",
-        "sinon": "^18.0.0",
         "tsx": "4.11.2",
         "typescript": "^5.4.2",
         "vitest": "^1.0.1",

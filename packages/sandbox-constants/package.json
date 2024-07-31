@@ -1,14 +1,30 @@
 {
     "name": "sandbox-constants",
     "version": "1.0.0",
-    "description": "",
-    "main": "dist/index.js",
-    "module": "dist/index.cjs",
+    "description": "Constants used in the Theseus sandbox and frost libraries",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
+    "type": "module",
     "scripts": {
-        "test": "echo 'no tests'",
-        "build": "tsup"
+        "build": "tsup",
+        "test": "vitest run",
+        "test:watch": "vitest watch",
+        "coverage": "vitest run --coverage"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC"
+    "keywords": [
+        "sandbox",
+        "frost",
+        "constants",
+        "theseus"
+    ],
+    "author": "Jake Lauer",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jakelauer/theseus-js.git"
+    },
+    "devDependencies": {
+        "tsup": "^8.0.2",
+        "typescript": "^5.4.2"
+    }
 }

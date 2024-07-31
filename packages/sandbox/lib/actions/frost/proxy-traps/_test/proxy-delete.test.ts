@@ -1,15 +1,10 @@
 // Mock the assertValidVerificationProperty and extractVerificationPropValues functions
-import sinon from "sinon";
-
 import {
-	expect, describe, it, 
+	expect, describe, it, vi, 
 } from "vitest";
 import { CONSTANTS } from "sandbox-constants";
 import { proxyDelete } from "../proxy-delete.js";
-import {
-	extractVerificationPropValues, generateVerificationProperty, propertyStartsWith, 
-} from "../../properties.js";
-import { assertValidVerificationProperty } from "../../assertions.js";
+import { generateVerificationProperty } from "../../properties.js";
 
 describe("proxyDelete", function () 
 {
@@ -38,15 +33,10 @@ describe("proxyDelete", function ()
 			propertyName: "key",
 		};
 
-		// Directly stub the functions without using withArgs
-		const propertyStub = sinon.stub().returns(true);
-		const extractStub = sinon.stub().returns(propValues);
-		const assertStub = sinon.stub().returns(true);
+		const propertyStub = vi.fn().mockReturnValue(true);
+		const extractStub = vi.fn().mockReturnValue(propValues);
+		const assertStub = vi.fn().mockReturnValue(true);
 
-		// Replace the actual functions with the stubs
-		const originalPropertyStartsWith = propertyStartsWith;
-		const originalExtractVerificationPropValues = extractVerificationPropValues;
-		const originalAssertValidVerificationProperty = assertValidVerificationProperty;
 		(global as any).propertyStartsWith = propertyStub;
 		(global as any).extractVerificationPropValues = extractStub;
 		(global as any).assertValidVerificationProperty = assertStub;
@@ -59,9 +49,7 @@ describe("proxyDelete", function ()
 		expect(target.key).to.be.undefined;
 
 		// Restore the original functions
-		(global as any).propertyStartsWith = originalPropertyStartsWith;
-		(global as any).extractVerificationPropValues = originalExtractVerificationPropValues;
-		(global as any).assertValidVerificationProperty = originalAssertValidVerificationProperty;
+		vi.restoreAllMocks();
 	});
 
 	it("should throw an error for other properties", function () 

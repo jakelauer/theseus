@@ -5,7 +5,7 @@ import {
 import { sandbox } from "../../sandbox/sandbox.js";
 import { cement } from "../../cement/cement.js";
 import { isSandbox } from "../../sandbox/index.js";
-import { isFrost } from "../detect/is-frost-proxy.js";
+import { isFrost } from "../detect/is-frost.js";
 import { defrost } from "../defrost.js";
 
 function expectAllLayersToBeFrostProxies(obj) 

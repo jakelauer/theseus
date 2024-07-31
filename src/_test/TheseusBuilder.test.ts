@@ -1,6 +1,5 @@
-import sinon from "sinon";
 import {
-	expect, afterEach, beforeEach, describe, it, 
+	expect, afterEach, beforeEach, describe, it, vi,
 } from "vitest";
 import TheseusBuilder from "../TheseusBuilder.js";
 import { getTheseusLogger } from "theseus-logger";
@@ -13,17 +12,17 @@ import {
 
 describe("TheseusBuilder", function () 
 {
-	let loggerSpy: sinon.SinonSpy;
+	let loggerSpy: ReturnType<typeof vi.spyOn>;
 
 	beforeEach(function () 
 	{
 		// Mock the logger to observe logging operations
-		loggerSpy = sinon.spy(getTheseusLogger("test"), "debug");
+		loggerSpy = vi.spyOn(getTheseusLogger("test"), "debug");
 	});
 
 	afterEach(function () 
 	{
-		sinon.restore(); // Reset all mocks and spies
+		vi.restoreAllMocks(); // Reset all mocks and spies
 	});
 
 	it("extends a Theseus instance with evolvers correctly", function () 

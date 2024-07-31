@@ -1,26 +1,25 @@
 import {
-	beforeEach, describe, it, expect,
+	beforeEach, describe, it, expect, vi,
 } from "vitest";
-import sinon from "sinon";
 
 import { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 
 describe("BroadcasterObserver", () => 
 {
 	let observer: BroadcasterObserver<any>;
-	let callback: sinon.SinonSpy;
+	let callback: ReturnType<typeof vi.fn>;
 
 	beforeEach(() => 
 	{
-		callback = sinon.spy();
+		callback = vi.fn();
 		observer = new BroadcasterObserver<any>(callback);
 	});
 
 	it("initializes with a callback function", () => 
 	{
 		// Ensure the observer is instantiated with the callback
-		expect(observer).to.be.an.instanceOf(BroadcasterObserver);
-		expect(callback.called).to.be.false; // Callback should not be called on instantiation
+		expect(observer).toBeInstanceOf(BroadcasterObserver);
+		expect(callback).not.toHaveBeenCalled(); // Callback should not be called on instantiation
 	});
 
 	it("calls the callback with provided data asynchronously", async () => 
@@ -30,8 +29,8 @@ describe("BroadcasterObserver", () =>
 		};
 		await observer.update(testData);
 
-		sinon.assert.calledOnce(callback);
-		sinon.assert.calledWith(callback, testData);
+		expect(callback).toHaveBeenCalledOnce();
+		expect(callback).toHaveBeenCalledWith(testData);
 
 		// To validate asynchronous execution, you might check for behavior that can only result 
 		// from asynchronous execution. This might involve checking states before and after promises 
@@ -46,16 +45,6 @@ describe("BroadcasterObserver", () =>
 			throw new Error(errorMessage);
 		});
 
-		try 
-		{
-			await errorThrowingObserver.update({});
-			// If the update does not throw, force the test to fail
-			expect.fail("Expected update to throw an error.");
-		}
-		catch (error) 
-		{
-			expect(error).to.be.an("error");
-			expect(error.message).to.equal(errorMessage);
-		}
+		await expect(errorThrowingObserver.update({})).rejects.toThrow(errorMessage);
 	});
 });

@@ -1,6 +1,6 @@
-import sinon from "sinon";
 import {
-	expect, afterEach, beforeEach, describe, it, 
+	expect, afterEach, beforeEach, describe, it, vi,
+	type MockInstance,
 } from "vitest";
 import { ProxyActionType, ProxyActions } from "../proxy-actions.js";
 import { getTheseusLogger } from "theseus-logger";
@@ -23,17 +23,17 @@ class MockProxyActions extends ProxyActions
 describe("ProxyActions", function () 
 {
 	let mockProxyActions: MockProxyActions;
-	let logDebugStub: sinon.SinonSpy;
+	let logDebugSpy: MockInstance<any, any>;
 
 	beforeEach(function () 
 	{
 		mockProxyActions = new MockProxyActions();
-		logDebugStub = sinon.spy(getTheseusLogger("proxy-actions"), "debug");
+		logDebugSpy = vi.spyOn(getTheseusLogger("proxy-actions"), "debug");
 	});
 
 	afterEach(function () 
 	{
-		sinon.restore();
+		vi.restoreAllMocks();
 	});
 
 	describe("test", function () 
@@ -45,12 +45,13 @@ describe("ProxyActions", function ()
 			} as any;
 			const matchingRequestTypes = ProxyActionType.function;
 
-			const runTestStub = sinon.stub(mockProxyActions, "runTest").returns(true);
+			const runTestStub = vi.spyOn(mockProxyActions, "runTest").mockReturnValue(true);
 
 			const result = mockProxyActions.test(params, matchingRequestTypes);
 
-			expect(runTestStub.calledOnceWithExactly(params, matchingRequestTypes)).to.be.true;
-			expect(result).to.be.true;
+			expect(runTestStub).toHaveBeenCalledOnce();
+			expect(runTestStub).toHaveBeenCalledWith(params, matchingRequestTypes);
+			expect(result).toBe(true);
 		});
 
 		it("should call runTest with correct parameters and not log any message when outcome is false", function () 
@@ -60,13 +61,14 @@ describe("ProxyActions", function ()
 			} as any;
 			const matchingRequestTypes = ProxyActionType.function;
 
-			const runTestStub = sinon.stub(mockProxyActions, "runTest").returns(false);
+			const runTestStub = vi.spyOn(mockProxyActions, "runTest").mockReturnValue(false);
 
 			const result = mockProxyActions.test(params, matchingRequestTypes);
 
-			expect(result).to.be.false;
-			expect(runTestStub.calledOnceWithExactly(params, matchingRequestTypes)).to.be.true;
-			expect(logDebugStub.called).to.be.false;
+			expect(result).toBe(false);
+			expect(runTestStub).toHaveBeenCalledOnce();
+			expect(runTestStub).toHaveBeenCalledWith(params, matchingRequestTypes);
+			expect(logDebugSpy).not.toHaveBeenCalled();
 		});
 	});
 });

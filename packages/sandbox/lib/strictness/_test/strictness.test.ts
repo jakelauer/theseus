@@ -1,67 +1,71 @@
-import sinon from "sinon";
-import { expect } from "vitest";
-import quibble from "quibble";
+import {
+	afterAll, beforeEach, describe, expect, it, vi,
+} from "vitest";
+import type * as theseusLoggerModule from "theseus-logger";
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-type LoggerMock = typeof import("theseus-logger");
-
-const logSpy = {
-	warn: sinon.spy(),
-	error: sinon.spy(),
-	debug: sinon.spy(),
-};
-
-await quibble.esm<LoggerMock>("theseus-logger", {
-	getTheseusLogger: (name: string) => 
-	{
-		console.log("Mock getTheseusLogger called with name:", name);
-		return logSpy as any;
-	},
+const createLogSpy = () => ({
+	warn: vi.fn(),
+	error: vi.fn(),
+	debug: vi.fn(),
 });
 
-const { fail } = await import("../strictness.js");
+let logSpy: ReturnType<typeof createLogSpy>;
 
-"fail function",
-() => 
+vi.mock("theseus-logger", async () => 
 {
-	() => 
-	{
-		sinon.restore();
-		logSpy.warn.resetHistory();
-		logSpy.error.resetHistory();
-		logSpy.debug.resetHistory();
+	const actual = await vi.importActual<typeof theseusLoggerModule>("theseus-logger");
+	return {
+		...actual,
+		getTheseusLogger: () => logSpy,
 	};
+});
 
-	"calls log.debug when strict is undefined or false",
-	() => 
+describe("fail function", () => 
+{
+	beforeEach(() => 
 	{
+		vi.resetModules();
+		logSpy = createLogSpy();
+	});
+
+	afterAll(() => 
+	{
+		vi.resetAllMocks();
+	});
+
+	it("calls log.debug when strict is undefined or false", async () => 
+	{
+		const { fail } = await import("../strictness.js");
+		const { getTheseusLogger } = await import("theseus-logger");
+
 		fail(undefined, "Test message");
-		expect(logSpy.debug.calledOnceWith("Test message")).to.be.true;
+		expect(logSpy.debug).toHaveBeenCalledWith("Test message");
 
-		fail(
-			{
-				strict: false,
-			},
-			"Test message",
-		);
-		expect(logSpy.debug).to.be.calledTwice;
-	};
+		fail({
+			strict: false, 
+		}, "Test message");
+		expect(logSpy.debug).toHaveBeenCalledTimes(2);
+	});
 
-	"calls log.warn when strict is 'warn'",
-	() => 
+	it("calls log.warn when strict is 'warn'", async () => 
 	{
+		const { fail } = await import("../strictness.js");
+		const { getTheseusLogger } = await import("theseus-logger");
+
 		fail(
 			{
 				strict: "warn",
 			},
 			"Warning message",
 		);
-		expect(logSpy.warn.calledOnceWith("Warning message")).to.be.true;
-	};
+		expect(logSpy.warn).toHaveBeenCalledWith("Warning message");
+	});
 
-	"throws an error and calls log.error when strict is true and multiple parameters are provided",
-	() => 
+	it("throws an error and calls log.error when strict is true and multiple parameters are provided", async () => 
 	{
+		const { fail } = await import("../strictness.js");
+		const { getTheseusLogger } = await import("theseus-logger");
+
 		expect(() =>
 			fail(
 				{
@@ -70,13 +74,15 @@ const { fail } = await import("../strictness.js");
 				"Error message",
 				"Extra info",
 			),
-		).to.throw("Error message");
-		expect(logSpy.error.calledOnceWith("Error message", "Extra info")).to.be.true;
-	};
+		).toThrow("Error message");
+		expect(logSpy.error).toHaveBeenCalledWith("Error message", "Extra info");
+	});
 
-	"throws an error with the correct message when strict is true and only one parameter is provided",
-	() => 
+	it("throws an error with the correct message when strict is true and only one parameter is provided", async () => 
 	{
+		const { fail } = await import("../strictness.js");
+		const { getTheseusLogger } = await import("theseus-logger");
+
 		expect(() =>
 			fail(
 				{
@@ -84,6 +90,6 @@ const { fail } = await import("../strictness.js");
 				},
 				"Error message",
 			),
-		).to.throw("Error message");
-	};
-};
+		).toThrow("Error message");
+	});
+});

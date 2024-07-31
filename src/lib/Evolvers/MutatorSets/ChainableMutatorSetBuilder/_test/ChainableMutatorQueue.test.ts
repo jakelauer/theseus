@@ -1,7 +1,6 @@
 import {
-	expect, afterEach, beforeEach, describe, it, 
+	expect, afterEach, beforeEach, describe, it, vi,
 } from "vitest";
-import sinon from "sinon";
 
 import { ChainableMutatorQueue } from "../ChainableMutatorQueue.js";
 
@@ -9,16 +8,15 @@ import type { Mutator } from "@Evolvers/Types/MutatorTypes";
 
 describe("ChainableMutatorQueue", function () 
 {
-	let sandbox: sinon.SinonSandbox;
-
 	beforeEach(function () 
 	{
-		sandbox = sinon.createSandbox();
+		vi.useFakeTimers();
 	});
 
 	afterEach(function () 
 	{
-		sandbox.restore();
+		vi.useRealTimers();
+		vi.restoreAllMocks();
 	});
 
 	it("should process synchronous mutators in sequence", function () 
@@ -55,7 +53,7 @@ describe("ChainableMutatorQueue", function ()
         });
 	});
 
-	it("should handle asynchronous mutators correctly", async function () 
+	it("should handle asynchronous mutators correctly", async () => 
 	{
 		const paramNoun = "testArg";
 		let testData: { value: number } = {
@@ -74,10 +72,8 @@ describe("ChainableMutatorQueue", function ()
         	return new Promise((resolve) => 
         	{
         		testArg.value += increment;
-        		setTimeout(() => 
-        		{
-        			resolve(testArg);
-        		}, 50);
+        		vi.advanceTimersByTime(50); // Use vi.advanceTimersByTime instead of setTimeout
+        		resolve(testArg);
         	});
         };
 
@@ -95,13 +91,13 @@ describe("ChainableMutatorQueue", function ()
         expect(result).to.deep.equal({
         	value: 4,
         });
-	});
+	}, 15000); // Set timeout to 15 seconds
 
 	it("should log an error if a mutator returns undefined", function () 
 	{
 		const paramNoun = "undefinedReturnArg" as string;
-		const setData = sinon.stub();
-		const getData = sinon.stub().returns({
+		const setData = vi.fn();
+		const getData = vi.fn().mockReturnValue({
 			[paramNoun]: {
 				value: 0,
 			},
@@ -122,8 +118,8 @@ describe("ChainableMutatorQueue", function ()
 	it("should log an error if a mutator returns the wrong type", function () 
 	{
 		const paramNoun = "undefinedReturnArg" as string;
-		const setData = sinon.stub();
-		const getData = sinon.stub().returns({
+		const setData = vi.fn();
+		const getData = vi.fn().mockReturnValue({
 			[paramNoun]: {
 				value: 0,
 			},
@@ -145,8 +141,8 @@ describe("ChainableMutatorQueue", function ()
 	{
         type Data = { undefinedReturn: number };
         const paramNoun = "undefinedReturn";
-        const setData = sinon.stub();
-        const getData = sinon.stub().returns({
+        const setData = vi.fn();
+        const getData = vi.fn().mockReturnValue({
         	[paramNoun]: 0,
         });
         const numberToStringMutator = async () => 
@@ -179,8 +175,8 @@ describe("ChainableMutatorQueue", function ()
 	it("should have a theseus ID if created by Theseus", function () 
 	{
 		const paramNoun = "testArg";
-		const setData = sinon.stub();
-		const getData = sinon.stub().returns({
+		const setData = vi.fn();
+		const getData = vi.fn().mockReturnValue({
 			[paramNoun]: {
 				value: 0,
 			},

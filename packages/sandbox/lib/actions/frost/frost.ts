@@ -3,11 +3,39 @@ import {
 	proxyDelete, proxyGet, proxySet, 
 } from "./proxy-traps/index.js";
 import type { Sandbox } from "../sandbox/index.js";
-import structuredClone from "@ungap/structured-clone";
 import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy.js";
-import { isFrost } from "./detect/is-frost-proxy.js";
-import { CONSTANTS } from "sandbox-constants";
+import { isFrost } from "./detect/is-frost.js";
 
+/**
+ * Any attempt to set a value on the original object is blocked, unless it is set using frost's required setter symbol.
+ * This is to prevent the original object from being modified in any way by normal means, while still allowing sandbox
+ * to modify it via cementing.
+ *
+ * The pattern is as such:
+ *
+ * == Normal development (blocked) ==
+ *
+ * const original = { a: 1 };
+ * const frosty = frost(original);
+ * frosty.a = 2; // Error
+ *
+ * == Sandbox/cement development (allowed) ==
+ *
+ * const original = { a: 1 };
+ * const frosty = frost(original);
+ * const sandbox = createSandbox(frosty);
+ *
+ * console.log(original.a, frosty.a, sandbox.a); // 1, 1, 1
+ *
+ * // Allowed, but only affects the sandboxed object
+ * sandbox.a = 2;
+ * console.log(original.a, frosty.a, sandbox.a); // 1, 1, 2
+ *
+ * // Allowed, but only affects the sandboxed object
+ * cement(sandbox);
+ * console.log(original.a, frosty.a, sandbox.a); // 2, 2, 2
+ *
+ */
 function createDeepFrostProxy<T extends object>(obj: T): T 
 {
 	const guid = uuidv4();
@@ -45,17 +73,4 @@ export function frost<T extends object>(originalObject: T): Readonly<T>
 	}
 
 	return createDeepFrostProxy(originalObject);
-}
-
-export function frostClone<T extends object>(originalObject: T): Readonly<T> 
-{
-	const clone = structuredClone(originalObject, {
-		lossy: false,
-	});
-
-	// This is just a getter in the original object, which means it appears in the clone
-	// as a normal property. We need to remove it.
-	delete (clone as any)[CONSTANTS.FROST.BASIS_SYMBOL];
-
-	return frost(clone);
 }

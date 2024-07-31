@@ -1,13 +1,14 @@
 import { proxyGet } from "../proxy-get.js";
 import {
-	expect, describe, it, 
+	expect, describe, it, vi,
 } from "vitest";
 import { CONSTANTS } from "sandbox-constants";
 import { assertValidVerificationProperty } from "../../assertions.js";
 import { extractVerificationPropValues } from "../../properties.js";
 
 // Mock the assertValidVerificationProperty and extractVerificationPropValues functions
-import sinon from "sinon";
+vi.mock("../../assertions.js");
+vi.mock("../../properties.js");
 
 describe("proxyGet", function () 
 {
@@ -19,18 +20,12 @@ describe("proxyGet", function ()
 			[CONSTANTS.FROST.BASIS_SYMBOL]: verificationValue,
 		};
 
-		// Create stubs for the external functions
-		const extractStub = sinon.stub().returns({
+		// Create mocks for the external functions
+		vi.mocked(extractVerificationPropValues).mockReturnValue({
 			verificationValue,
 			propertyName: "propName",
 		});
-		const assertStub = sinon.stub().returns(true);
-
-		// Replace the actual functions with the stubs
-		const originalExtract = extractVerificationPropValues;
-		const originalAssert = assertValidVerificationProperty;
-		(global as any).extractVerificationPropValues = extractStub;
-		(global as any).assertValidVerificationProperty = assertStub;
+		vi.mocked(assertValidVerificationProperty).mockReturnValue(true);
 
 		const result = proxyGet({}, target, prop, {
 			guid: "123",
@@ -38,9 +33,9 @@ describe("proxyGet", function ()
 		});
 		expect(result).to.be.true;
 
-		// Restore the original functions
-		(global as any).extractVerificationPropValues = originalExtract;
-		(global as any).assertValidVerificationProperty = originalAssert;
+		// Verify that the mocked functions were called
+		expect(extractVerificationPropValues).toHaveBeenCalled();
+		expect(assertValidVerificationProperty).toHaveBeenCalled();
 	});
 
 	it("should return true for IS_FROSTY", function () 

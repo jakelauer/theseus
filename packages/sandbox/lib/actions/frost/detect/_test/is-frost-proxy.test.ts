@@ -1,9 +1,10 @@
 import { frost } from "../../frost.js";
-import { expect, it } from "vitest";
-import { containsFrost, isFrost } from "../is-frost-proxy.js";
+import {
+	describe, expect, it, 
+} from "vitest";
+import { isFrost } from "../is-frost.js";
 
-"is-frost-proxy",
-function () 
+describe("is-frost-proxy", function () 
 {
 	it("should correctly identify a sandbox proxy object", function () 
 	{
@@ -33,8 +34,7 @@ function ()
 				d: 4,
 			}),
 		};
-		expect(containsFrost(original)).to.equal(true);
 		expect(isFrost(original, "every")).to.equal(false);
 		expect(isFrost(original, "some")).to.equal(true);
 	});
-};
+});

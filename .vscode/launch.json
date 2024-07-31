@@ -5,11 +5,10 @@
 			"type": "node",
 			"request": "launch",
 			"name": "Debug ESLint",
-			"program": "${workspaceFolder}/node_modules/eslint/bin/eslint.js",
-			"args": [ "--no-ignore", "packages/eslint-plugin-theseus/lib/_test/break-on-chainable.sandbox.js" ], // Adjust this to point to your JavaScript files
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": [ "--prefix", "./packages/eslint-plugin-theseus", "test" ], //, "--grep", "\"should process synchronous mutators in sequence\""],
 			"stopOnEntry": false,
 			"cwd": "${workspaceFolder}",
-			"runtimeArgs": [ "--nolazy", "--inspect-brk" ],
 			"console": "integratedTerminal",
 			"internalConsoleOptions": "neverOpen",
 			"skipFiles": [ "<node_internals>/**" ]

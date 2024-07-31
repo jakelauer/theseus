@@ -1,7 +1,6 @@
 import {
-	beforeEach, describe, it, expect,
+	beforeEach, describe, it, expect, vi,
 } from "vitest";
-import sinon, { type SinonSpy } from "sinon";
 
 import { Theseus } from "@/Theseus";
 import { theseus, Evolver } from "../index.js";
@@ -27,56 +26,56 @@ describe("Observation", () =>
 
 	it("should allow observers to subscribe and receive updates", async () => 
 	{
-		const callback = sinon.fake();
+		const callback = vi.fn();
 		observation.observe(callback);
 
 		await observation["update"]({
 			test: "updated", 
 		});
-		expect(callback.calledWith({
+		expect(callback).toHaveBeenCalledWith({
 			test: "updated", 
-		})).to.be.true;
+		});
 
 		return;
 	});
 
 	it("should allow observers to subscribe and receive initial state immediately if requested", async () => 
 	{
-		const callback = sinon.fake();
+		const callback = vi.fn();
 		observation.observe(callback, true);
 
 		await new Promise((resolve) => setTimeout(resolve, 100));
 
-		expect(callback.calledOnce).to.be.true;
-		expect(callback.calledWith({
+		expect(callback).toHaveBeenCalledTimes(1);
+		expect(callback).toHaveBeenCalledWith({
 			test: "initial", 
-		})).to.be.true;
+		});
 
 		return;
 	});
 
 	it("should not call observers immediately if updateImmediately is false", () => 
 	{
-		const callback = sinon.fake();
+		const callback = vi.fn();
 		observation.observe(callback, false);
 
-		expect(callback.called).to.be.false;
+		expect(callback).not.toHaveBeenCalled();
 	});
 
 	it("should correctly update the state and notify observers", async () => 
 	{
-		const callback = sinon.fake();
+		const callback = vi.fn();
 		observation.observe(callback);
 
 		await observation["update"]({
 			test: "new value", 
 		});
-		expect(JSON.stringify(observation.state)).to.deep.equal(JSON.stringify({
+		expect(JSON.stringify(observation.state)).toEqual(JSON.stringify({
 			test: "new value", 
 		}));
-		expect(callback.calledWith({
+		expect(callback).toHaveBeenCalledWith({
 			test: "new value", 
-		})).to.be.true;
+		});
 
 		return;
 	});
@@ -84,7 +83,7 @@ describe("Observation", () =>
 	it("should correctly handle instance retrieval and updates by ID", async () => 
 	{
 		const id = observation.__uuid;
-		const callback = sinon.fake();
+		const callback = vi.fn();
 		observation.observe(callback);
 
 		await Theseus.updateInstance(id, {
@@ -93,9 +92,9 @@ describe("Observation", () =>
 
 		// Since updateInstance is async, we may need to wait or use fake timers
 		// This example assumes immediate update for simplicity
-		expect(callback.calledWith({
+		expect(callback).toHaveBeenCalledWith({
 			test: "static update", 
-		})).to.be.true;
+		});
 
 		return;
 	});
@@ -153,7 +152,7 @@ describe("Observation", () =>
 			],
 		});
 	
-		const callback: SinonSpy = sinon.spy();
+		const callback = vi.fn();
 
 		instance.observe(() => 
 		{
@@ -167,24 +166,24 @@ describe("Observation", () =>
 		{
 			const interval = setInterval(() => 
 			{
-				if (callback.callCount > 0) 
+				if (callback.mock.calls.length > 0) 
 				{
 					clearInterval(interval);
-					callback.callCount === 1 
+					callback.mock.calls.length === 1 
 						? resolve() 
-						: reject(new Error(`Callback was called ${callback.callCount} times`));
+						: reject(new Error(`Callback was called ${callback.mock.calls.length} times`));
 				}
 			}, 50);
 
 			setTimeout(() => 
 			{
 				clearInterval(interval);
-				callback.callCount === 1 
+				callback.mock.calls.length === 1 
 					? resolve()
-					: reject(new Error(`Callback was called ${callback.callCount} times`));
+					: reject(new Error(`Callback was called ${callback.mock.calls.length} times`));
 			}, 1000);
 		});
 
-		expect(callback.callCount).to.be.equal(1);
+		expect(callback).toHaveBeenCalledTimes(1);
 	  });
 });

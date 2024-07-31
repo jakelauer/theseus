@@ -5,7 +5,7 @@ import { containsSandbox, type SandboxMode } from "../sandbox/index.js";
 import structuredClone from "@ungap/structured-clone";
 import isElligibleForProxy from "../../proxy-handler/validity/is-elligible-for-proxy.js";
 import { sandboxTransform } from "../sandbox/sandbox-transform.js";
-import { isFrost } from "../frost/detect/is-frost-proxy.js";
+import { isFrost } from "../frost/detect/is-frost.js";
 import { symbolCompare } from "../../symbols/symbol-compare.js";
 
 /**

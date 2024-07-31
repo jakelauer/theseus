@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-env node */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const RuleTester = require("eslint").RuleTester;
 const rule = require("../rules/break-on-chainable");
@@ -84,41 +84,5 @@ ruleTester.run("break-on-chainable", rule, {
 			],
 			output: "GameMeta.evolve.iterateTurnCount()\n.and.updateLastPlayer(mark)\n.and.updateLastPlayedCoords(coords);",
 		},
-		// {
-		// 	code: "obj.via.thing()\n.andAsync();",
-		// 	errors: [
-		// 		{
-		// 			message: "Detected floating promise for `.andAsync`. Await or handle the promise properly.", 
-		// 		},
-		// 	],
-		// },
-		// {
-		// 	code: "obj.via.thing().lastlyAsync();",
-		// 	errors: [
-		// 		{
-		// 			message: "Detected floating promise for `.lastlyAsync`. Await or handle the promise properly.", 
-		// 		},
-		// 		{
-		// 			message: "Expected line break before `.lastlyAsync`.", 
-		// 		},
-		// 	],
-		// 	output: "obj.via.thing()\n.lastlyAsync();",
-		// },
-		// {
-		// 	code: "obj.via.thing()\n.lastlyAsync();",
-		// 	errors: [
-		// 		{
-		// 			message: "Detected floating promise for `.lastlyAsync`. Await or handle the promise properly.", 
-		// 		},
-		// 	],
-		// },
-		// {
-		// 	code: "evolver2.evolve(input).via.double()\n.andAsync.double();",
-		// 	errors: [
-		// 		{
-		// 			message: "Detected floating promise for `.andAsync`. Await or handle the promise properly.", 
-		// 		},
-		// 	],
-		// },
 	],
 });

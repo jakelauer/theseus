@@ -1,7 +1,7 @@
 {
     "name": "eslint-plugin-theseus",
     "version": "3.0.0",
-    "description": "",
+    "description": "ESLint plugin for Theseus JS projects",
     "main": "lib/index.js",
     "scripts": {
         "build": "echo 'no build'",
@@ -10,11 +10,29 @@
         "coverage": "vitest run --coverage"
     },
     "devDependencies": {
+        "@typescript-eslint/parser": "^6.11.0",
+        "@typescript-eslint/rule-tester": "^7.17.0",
+        "@typescript-eslint/utils": "^7.17.0",
+        "@vitest/coverage-v8": "^1.0.1",
         "eslint": "^8.57.0",
-        "vitest": "^1.0.1",
-        "@vitest/coverage-v8": "^1.0.1"
+        "theseus-js": "^14.0.1",
+        "tsup": "^8.0.2",
+        "typescript": "^5.4.2",
+        "vitest": "^1.0.1"
     },
-    "keywords": [],
+    "peerDependencies": {
+        "eslint": ">=8.0.0"
+    },
+    "keywords": [
+        "eslint",
+        "eslintplugin",
+        "theseus",
+        "typescript"
+    ],
     "author": "Jake Lauer",
-    "license": "MIT"
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jakelauer/theseus-js.git"
+    }
 }

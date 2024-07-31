@@ -1,6 +1,5 @@
-import sinon from "sinon";
 import {
-	expect, beforeEach, describe, it, 
+	expect, beforeEach, describe, it, vi,
 } from "vitest";
 import type { ProxyActionMapParameters } from "../../../proxy-action-map.js";
 import { ChainTerminationAction } from "../../chain-termination.js";
@@ -47,7 +46,7 @@ describe("ChainTerminationAction", function ()
 	it("should call onChainEnd and return the appropriate value in process", function () 
 	{
 		const proxyManager = {
-			onChainEnd: sinon.spy(),
+			onChainEnd: vi.fn(),
 			queue: {
 				asyncEncountered: false,
 				queue: [],
@@ -61,6 +60,6 @@ describe("ChainTerminationAction", function ()
 		params.proxyManager = proxyManager as any;
 		const processResult = chainTerminationAction.process(params) as any;
 		expect(processResult()).to.equal("resultValue");
-		sinon.assert.calledOnce(proxyManager.onChainEnd);
+		expect(proxyManager.onChainEnd).toHaveBeenCalledTimes(1);
 	});
 });

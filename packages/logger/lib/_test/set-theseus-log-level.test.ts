@@ -1,18 +1,15 @@
-import sinon from "sinon";
 import {
-	expect, afterEach, describe, it, 
+	expect, afterEach, describe, it, vi,
 } from "vitest";
 import { setTheseusLogLevel } from "../set-theseus-log-level.js";
 import type { logLevels } from "../log-levels.js";
 
 describe("Set Theseus Log Level", function () 
 {
-	let levelSetCall: sinon.SinonStub;
-
 	afterEach(function () 
 	{
-		// Restore the original console transport behavior
-		sinon.restore();
+		// Restore all mocks
+		vi.restoreAllMocks();
 	});
 
 	it("should not throw an error for an unrecognized log level", function () 

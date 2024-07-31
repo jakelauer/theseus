@@ -8,5 +8,8 @@ export default defineConfig({
 		passWithNoTests: true,
 		testTimeout: 10_000,
 		restoreMocks: true,
+		deps: {
+			inline: ["testdouble-vitest"],
+		},
 	},
 });

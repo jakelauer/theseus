@@ -6,7 +6,7 @@
 ![test](https://github.com/jakelauer/theseus-js/actions/workflows/test.yml/badge.svg?branch=main)
 
 <a href="https://www.npmjs.com/package/theseus-sandbox"><img src="https://badgen.net/npm/v/theseus-sandbox?color=red" alt="npm version" height="18"></a>
-<img src="https://badgen.net/github/license/jakelauer/theseus-sandbox" alt="npm version" height="18">
+<img src="https://badgen.net/github/license/jakelauer/theseus" alt="npm version" height="18">
 
 `theseus-sandbox` provides a unique approach to immutability that allows objects to be made immutable while still
 permitting controlled modifications. Unlike other immutability libraries like [Immer](https://immerjs.github.io/immer/),

@@ -1,6 +1,5 @@
-import sinon from "sinon";
 import {
-	expect, describe, it, 
+	expect, describe, it, vi,
 } from "vitest";
 import { sandboxTransform } from "../sandbox-transform.js";
 
@@ -17,7 +16,7 @@ describe("deepSandboxTransform", function ()
     		b: 2,
     		c: 3,
     	};
-    	const transform = sinon.spy((val: any) => val * 2);
+    	const transform = vi.fn((val: any) => val * 2);
     	const predicate = (val: any) => val > 1;
 
     	const result = sandboxTransform(obj, transform, predicate);
@@ -27,9 +26,9 @@ describe("deepSandboxTransform", function ()
     		b: 4,
     		c: 6,
     	});
-    	expect(transform.calledTwice).to.be.true;
-    	expect(transform.firstCall.calledWith(2)).to.be.true;
-    	expect(transform.secondCall.calledWith(3)).to.be.true;
+    	expect(transform).toHaveBeenCalledTimes(2);
+    	expect(transform).toHaveBeenNthCalledWith(1, 2);
+    	expect(transform).toHaveBeenNthCalledWith(2, 3);
     });
 
     it("should not apply transform to values that do not match the predicate", function () 
@@ -39,7 +38,7 @@ describe("deepSandboxTransform", function ()
     		b: 2,
     		c: 3,
     	};
-    	const transform = sinon.spy((val: any) => val * 2);
+    	const transform = vi.fn((val: any) => val * 2);
     	const predicate = (val: any) => val > 3;
 
     	const result = sandboxTransform(obj, transform, predicate);
@@ -49,7 +48,7 @@ describe("deepSandboxTransform", function ()
     		b: 2,
     		c: 3,
     	});
-    	expect(transform.notCalled).to.be.true;
+    	expect(transform).not.toHaveBeenCalled();
     });
 
     it("should apply transform to all values if no predicate is provided", function () 
@@ -59,7 +58,7 @@ describe("deepSandboxTransform", function ()
     		b: 2,
     		c: 3,
     	};
-    	const transform = sinon.spy((val: any) => val * 2);
+    	const transform = vi.fn((val: any) => val * 2);
 
     	const result = sandboxTransform(obj, transform);
 
@@ -68,10 +67,10 @@ describe("deepSandboxTransform", function ()
     		b: 4,
     		c: 6,
     	});
-    	expect(transform.calledThrice).to.be.true;
-    	expect(transform.firstCall.calledWith(1)).to.be.true;
-    	expect(transform.secondCall.calledWith(2)).to.be.true;
-    	expect(transform.thirdCall.calledWith(3)).to.be.true;
+    	expect(transform).toHaveBeenCalledTimes(3);
+    	expect(transform).toHaveBeenNthCalledWith(1, 1);
+    	expect(transform).toHaveBeenNthCalledWith(2, 2);
+    	expect(transform).toHaveBeenNthCalledWith(3, 3);
     });
 
     it("should not handle nested objects", function () 
@@ -83,7 +82,7 @@ describe("deepSandboxTransform", function ()
     		b: 2,
     		c: 3,
     	};
-    	const transform = sinon.spy((val: any) => (typeof val === "number" ? val * 2 : val));
+    	const transform = vi.fn((val: any) => (typeof val === "number" ? val * 2 : val));
     	const predicate = (val: any) => typeof val === "number";
 
     	const result = sandboxTransform(obj, transform, predicate);
@@ -95,19 +94,19 @@ describe("deepSandboxTransform", function ()
     		b: 4,
     		c: 6,
     	});
-    	expect(transform.calledTwice).to.be.true;
-    	expect(transform.firstCall.calledWith(2)).to.be.true;
-    	expect(transform.secondCall.calledWith(3)).to.be.true;
+    	expect(transform).toHaveBeenCalledTimes(2);
+    	expect(transform).toHaveBeenNthCalledWith(1, 2);
+    	expect(transform).toHaveBeenNthCalledWith(2, 3);
     });
 
     it("should handle empty objects", function () 
     {
     	const obj: TestObject = {};
-    	const transform = sinon.spy((val: any) => val * 2);
+    	const transform = vi.fn((val: any) => val * 2);
 
     	const result = sandboxTransform(obj, transform);
 
     	expect(result).to.deep.equal({});
-    	expect(transform.notCalled).to.be.true;
+    	expect(transform).not.toHaveBeenCalled();
     });
 });

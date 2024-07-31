@@ -5,7 +5,7 @@ import {
 import { sandbox } from "../actions/sandbox/index.js";
 import { cement } from "../actions/cement/cement.js";
 import { defrost, frost } from "../actions/frost/index.js";
-import { isFrost } from "../actions/frost/detect/is-frost-proxy.js";
+import { isFrost } from "../actions/frost/detect/is-frost.js";
 import { isSandbox } from "../actions/sandbox/index.js";
 
 describe("Bad Cards", function () 
