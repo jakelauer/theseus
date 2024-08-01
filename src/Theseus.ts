@@ -9,7 +9,7 @@ import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 import type { DestroyCallback } from "./lib/Broadcast/Broadcaster.js";
 import type { BaseParams, ITheseus } from "@Types/Theseus";
 import {
-	defrost, frost, sandbox, 
+	cement, frost, sandbox, 
 } from "theseus-sandbox";
 
 const log = getTheseusLogger("Observation");
@@ -82,9 +82,7 @@ export class Theseus<
 	private async update(data: TData) 
 	{
 		Object.assign(this.internalState, data);
-		const newState = this.options?.frost?.autoDefrost
-			? defrost(this.internalState)
-			: this.internalState;
+		const newState = cement(this.internalState);
 
 		this.setData(newState);
 

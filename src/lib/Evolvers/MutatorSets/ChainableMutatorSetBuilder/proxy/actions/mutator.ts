@@ -2,7 +2,7 @@ import { Theseus } from "@/Theseus";
 import { getTheseusLogger } from "theseus-logger";
 import { ProxyActions, ProxyActionType } from "../proxy-actions.js";
 import type { ProxyActionMapParameters } from "../proxy-action-map.js";
-import { defrost } from "theseus-sandbox";
+import { cement } from "theseus-sandbox";
 
 const log = getTheseusLogger("mutator-proxy-action");
 
@@ -37,9 +37,7 @@ export class MutatorAction extends ProxyActions
 			{
 				const complete = (execResult: any) => 
 				{
-					const cementedResult = proxyManager.params.sandboxableOptions?.frost?.autoDefrost
-						? defrost(execResult)
-						: execResult;
+					const cementedResult = cement(execResult);
 
 					if (proxyManager.params.observationId) 
 					{
