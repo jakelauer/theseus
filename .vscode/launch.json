@@ -38,7 +38,8 @@
 			"request": "launch",
 			"name": "Run Base Test (single)",
 			"runtimeExecutable": "pnpm",
-			"runtimeArgs": [ "test:base", "--timeout", "60000", "--", "--grep", "\"should not break when dates are present\"" ],
+			//"runtimeArgs": [ "test", "--", "-t", "\"should return an equal object when using modify mode\"", "--testTimeout", "60000" ],
+			"runtimeArgs": [ "test", "--", "Evolver.test.ts", "--maxWorkers=1" ],
 			"internalConsoleOptions": "openOnSessionStart",
 			"cwd": "${workspaceFolder}",
 			"outputCapture": "std"
@@ -48,7 +49,7 @@
 			"request": "launch",
 			"name": "Run Sandbox Tests",
 			"runtimeExecutable": "pnpm",
-			"runtimeArgs": [ "--prefix", "./packages/sandbox", "test", "--", "--timeout", "60000", "--grep", "\"fail function\"" ],
+			"runtimeArgs": [ "--prefix", "./packages/sandbox", "test", "--", "--testTimeout", "60000", "-t", "\"fail function\"" ],
 			"internalConsoleOptions": "openOnSessionStart",
 			"cwd": "${workspaceFolder}",
 			"outputCapture": "std"

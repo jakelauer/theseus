@@ -38,7 +38,7 @@ export class Evolver<
      * Constructor for Evolver. Initializes the evolver with a name, set of mutators, and optional
      * configuration.
      */
-	protected constructor(name: TEvolverName, mutators: TMutators, options?: EvolverOptions<TParamNoun>) 
+	protected constructor(name: TEvolverName, mutators: TMutators, protected options?: EvolverOptions<TParamNoun>) 
 	{
 		const normalizedName = this.normalizeName(name);
 		this.paramNoun = options?.noun ?? ("input" as TParamNoun);
@@ -148,6 +148,7 @@ export class Evolver<
             	this.paramNoun,
             	this.mutators,
             	this.#theseusId,
+            	this.options,
             );
 
 		if (!this.cachedChainableMutatorSet) 

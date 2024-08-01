@@ -6,6 +6,7 @@ import type { MutatorDefs } from "@Evolvers/Types/MutatorTypes";
 import type { Refinery } from "@Refineries/Refinery";
 import type { RefineryComplexInstance } from "@Refineries/RefineryComplex";
 import type { ForgeDefs } from "@Refineries/Types";
+import type { SandboxableParams } from "../Evolvers/Types/SandboxParams.js";
 
 
 export type BuildFromEvolvers<
@@ -34,7 +35,7 @@ export type BaseParams<
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
 > = {
     broadcasterParams?: BroadcasterParams<TData, TObserverType>;
-};
+} & SandboxableParams;
 
 export type TheseusParams<
     TData extends object,
@@ -46,5 +47,5 @@ export type TheseusParams<
     TObserverType extends BroadcasterObserver<TData> = BroadcasterObserver<TData>,
 > = BaseParams<TData, TObserverType> & {
     evolvers: TEvolvers | EvolverComplexInstance<TData, TParamNoun, TMutators, TEvolvers>;
-    refineries?: TRefineries | RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries>;
+	refineries?: TRefineries | RefineryComplexInstance<TData, TParamNoun, TForges, TRefineries>;
 };

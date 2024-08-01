@@ -7,6 +7,7 @@ import type { GenericMutator, MutatorDefs } from "../../Types/MutatorTypes.js";
 import {
 	cement, frost, isSandbox, sandbox, 
 } from "theseus-sandbox";
+import type { SandboxableParams } from "../../Types/SandboxParams.js";
 /**
  * Represents a set of mutators that can be applied to an evolver's data. It provides the infrastructure for
  * adding mutator functions to the evolver and executing these functions to mutate the evolver's state.
@@ -33,6 +34,7 @@ export class MutatorSetBuilder<
         protected readonly paramNoun: TParamNoun,
         protected readonly mutators: TMutators,
         theseusId?: string,
+        protected readonly sandboxableOptions?: SandboxableParams,
 	) 
 	{
 		this.__theseusId = theseusId;
@@ -48,7 +50,9 @@ export class MutatorSetBuilder<
 	private setInitialData(data: TData) 
 	{
 		const wrappedInput = this.inputToObject(data);
-		const frosted = frost(wrappedInput);
+		const frosted = !this.sandboxableOptions?.frost?.manual
+			? frost(wrappedInput)
+			: wrappedInput;
 		this._data = frosted as Record<TParamNoun, TData>;
 	}
 
@@ -76,7 +80,11 @@ export class MutatorSetBuilder<
 
 	protected augmentData(data: TData) 
 	{
-		const sb = sandbox(this.data);
+		const dataInput = this.sandboxableOptions?.frost?.manual
+			? this.data
+			: frost(this.data);
+
+		const sb = sandbox(dataInput, this.sandboxableOptions?.sandbox);
 		sb[this.paramNoun] = data;
 		return sb;
 	}
@@ -145,12 +153,16 @@ export class MutatorSetBuilder<
 			[selfPath]: (...args: any[]) => 
 			{
 				Theseus.incrementStackDepth(this.__theseusId);
+				
 				const draft =
                     isSandbox(this.data[this.paramNoun]) ?
                     	this.data
-                    	:   sandbox(this.data, {
-                    		mode: "copy",
-                    	});
+                    	:   sandbox(
+                    		this.data,
+                    		this.sandboxableOptions?.sandbox ?? {
+                    			mode: "copy",
+                    		},
+                    	);
 
 				let funcResult: SortaPromise<TData>;
 				try 
@@ -225,7 +237,7 @@ export class MutatorSetBuilder<
 		{
 			Object.assign(draft, generatedData);
 
-			draft = sandbox(draft);
+			draft = sandbox(draft, this.sandboxableOptions?.sandbox);
 
 			return draft;
 		};

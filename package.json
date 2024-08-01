@@ -23,6 +23,7 @@
         "lint-fix": "eslint ./ --fix --resolve-plugins-relative-to=./",
         "test:pkg": "pnpm -r run test",
         "test:pkg:sandbox": "pnpm -r run test",
+        "test:watch": "vitest watch",
         "test": "vitest run",
         "// ==== BUILD ==== //": "",
         "build:base": "tsup && resolve-tspaths",
@@ -37,7 +38,6 @@
         "ex:ttt": "pnpm --prefix ./.examples/tic-tac-toe start",
         "// === HELPERS === //": "",
         "package": "sh -c 'pnpm --prefix ./packages/$0 run $1'",
-        "test:watch": "vitest watch",
         "coverage": "vitest run --coverage"
     },
     "dependencies": {

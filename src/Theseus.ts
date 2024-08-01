@@ -9,7 +9,7 @@ import type { BroadcasterObserver } from "@Broadcast/BroadcasterObserver";
 import type { DestroyCallback } from "./lib/Broadcast/Broadcaster.js";
 import type { BaseParams, ITheseus } from "@Types/Theseus";
 import {
-	cement, frost, sandbox, 
+	defrost, frost, sandbox, 
 } from "theseus-sandbox";
 
 const log = getTheseusLogger("Observation");
@@ -33,9 +33,9 @@ export class Theseus<
      * @param initialData The starting data (can be null)
      * @param params
      */
-	private constructor(data: TData, params?: BaseParams<TData, TObserverType>) 
+	private constructor(data: TData, protected options?: BaseParams<TData, TObserverType>) 
 	{
-		super(params?.broadcasterParams);
+		super(options?.broadcasterParams);
 
 		this.#id = uuidv4();
 		this.setData(data);
@@ -62,9 +62,16 @@ export class Theseus<
 
 	private setData = (data: TData) => 
 	{
-		this.internalState = sandbox(frost(data), {
-			mode: "copy",
-		});
+		const dataInput = this.options?.frost?.manual
+			? data
+			: frost(data);
+		
+		this.internalState = sandbox(
+			dataInput,
+			this.options?.sandbox ?? {
+				mode: "copy",
+			},
+		);
 	};
 
 	/**
@@ -75,7 +82,9 @@ export class Theseus<
 	private async update(data: TData) 
 	{
 		Object.assign(this.internalState, data);
-		const newState = cement(this.internalState);
+		const newState = this.options?.frost?.autoDefrost
+			? defrost(this.internalState)
+			: this.internalState;
 
 		this.setData(newState);
 

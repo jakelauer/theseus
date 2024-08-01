@@ -12,6 +12,7 @@ import {
 	cement, frost, getSandboxChanges, isFrost, 
 } from "theseus-sandbox";
 import { containsSandbox } from "theseus-sandbox";
+import type { SandboxableParams } from "../../Types/SandboxParams.js";
 /**
  * Extends MutatorSet to provide chainable mutation operations on evolver data. This class allows mutations to
  * be chained together in a fluent manner, enhancing the clarity and expressiveness of state evolution logic.
@@ -36,9 +37,15 @@ export class ChainableMutatorSetBuilder<
 	// Created by createChainingProxy; always matches the type of the current instance
 	private chainingProxy: typeof this;
 
-	constructor(inputData: TData, paramNoun: TParamNoun, mutators: TMutators, theseusId?: string) 
+	constructor(
+		inputData: TData, 
+		paramNoun: TParamNoun, 
+		mutators: TMutators, 
+		theseusId?: string,
+		sandboxableOptions?: SandboxableParams,
+	) 
 	{
-		super(inputData, paramNoun, mutators, theseusId);
+		super(inputData, paramNoun, mutators, theseusId, sandboxableOptions);
 
 		this.mutatorQueue = ChainableMutatorQueue.create({
 			paramNoun,
@@ -51,6 +58,7 @@ export class ChainableMutatorSetBuilder<
 			target: this,
 			observationId: this.__theseusId as string,
 			queue: this.mutatorQueue,
+			sandboxableOptions,
 		});
 	}
 
@@ -104,7 +112,7 @@ export class ChainableMutatorSetBuilder<
 			result = cement(result);
 		}
 
-		if (!isFrost(result)) 
+		if (!isFrost(result) && !this.sandboxableOptions?.frost?.manual) 
 		{
 			result = frost(result);
 		}
@@ -145,9 +153,9 @@ export class ChainableMutatorSetBuilder<
         TData extends object,
         TParamNoun extends string,
         TMutators extends MutatorDefs<TData, TParamNoun>,
-    >(data: TData, paramNoun: TParamNoun, mutators: TMutators, theseusId?: string) 
+    >(data: TData, paramNoun: TParamNoun, mutators: TMutators, theseusId?: string, sandboxableOptions?: SandboxableParams) 
 	{
-		const chain = new ChainableMutatorSetBuilder(data, paramNoun, mutators, theseusId);
+		const chain = new ChainableMutatorSetBuilder(data, paramNoun, mutators, theseusId, sandboxableOptions);
 		const proxy = chain.chainingProxy;
 		return this.castToChainableMutators(proxy);
 	}

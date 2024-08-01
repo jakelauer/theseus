@@ -3,6 +3,7 @@ import type { SortaPromise } from "../../../Types/EvolverTypes.js";
 import type { ChainableMutatorSetBuilder } from "../ChainableMutatorSetBuilder.js";
 import type { ChainableMutatorQueue } from "../ChainableMutatorQueue.js";
 import { ProxyActionMap } from "./proxy-action-map.js";
+import type { SandboxableParams } from "../../../Types/SandboxParams.js";
 
 /**
  * ChainingProxy is a class that enables method chaining and queueing of operations on a proxied object. It
@@ -24,7 +25,8 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
         public readonly params: {
             target: TTarget;
             observationId?: string;
-            queue: ChainableMutatorQueue<any, any>;
+			queue: ChainableMutatorQueue<any, any>;
+			sandboxableOptions?: SandboxableParams;
         },
 	) 
 	{
@@ -154,7 +156,8 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 export function createChainingProxy<TTarget extends ChainableMutatorSetBuilder<any, any, any>>(params: {
     target: TTarget;
     observationId?: string;
-    queue: ChainableMutatorQueue<any, any>;
+	queue: ChainableMutatorQueue<any, any>;
+	sandboxableOptions?: SandboxableParams;
 }): TTarget 
 {
 	const chainingProxy = new ChainingProxyManager(params);
