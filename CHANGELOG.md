@@ -1,3 +1,21 @@
+# [15.0.0](https://github.com/jakelauer/theseus-js/compare/v14.1.0...v15.0.0) (2024-08-01)
+
+
+### Bug Fixes
+
+* **frost:** fix for old reference to renamed prop ([6ba951e](https://github.com/jakelauer/theseus-js/commit/6ba951ebf1c64d0f3e74c7fa42cb113c46e16412))
+* **proxy action map:** fix requests to properties which exist on the target which have undefined values ([a4e6988](https://github.com/jakelauer/theseus-js/commit/a4e6988ecbeb2ff9b00b9e0c8e6af0b515462261))
+
+
+### Features
+
+* **evolver:** add frost and sandbox options to allow control over behavior of input data with respect to output ([59a2bb8](https://github.com/jakelauer/theseus-js/commit/59a2bb89abbcfe094da7ac3400903db18ef4d090))
+
+
+### BREAKING CHANGES
+
+* **evolver:** by default, output is frozen and sandbox mode is copy
+
 # [14.1.0](https://github.com/jakelauer/theseus-js/compare/v14.0.1...v14.1.0) (2024-07-31)
 
 
