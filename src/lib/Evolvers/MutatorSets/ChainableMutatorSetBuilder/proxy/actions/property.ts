@@ -5,12 +5,18 @@ export class PropertyAction extends ProxyActions
 {
 	public override type: ProxyActionType = ProxyActionType.property;
 
+	public static propInTarget({ prop, target }: ProxyActionMapParameters)
+	{
+		return prop in target;
+	}
+
 	public override runTest(
-		{ target, prop }: ProxyActionMapParameters,
+		params: ProxyActionMapParameters,
 		matchingRequestTypes: ProxyActionType,
 	): boolean 
 	{
-		return matchingRequestTypes === ProxyActionType.none && prop in target;
+		return matchingRequestTypes === ProxyActionType.none
+			&& PropertyAction.propInTarget(params);
 	}
 
 	public override process({ target, prop }: ProxyActionMapParameters) 

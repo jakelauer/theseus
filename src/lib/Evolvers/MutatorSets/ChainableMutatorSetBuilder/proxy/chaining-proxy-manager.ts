@@ -120,16 +120,13 @@ export class ChainingProxyManager<TTarget extends ChainableMutatorSetBuilder<any
 			queue: this.queue,
 		});
 
-		const result = ProxyActionMap.process(
-			{
-				target,
-				prop,
-				proxy,
-				proxyManager: this,
-				queue: this.queue,
-			},
-			requestType,
-		);
+		const result = ProxyActionMap.process({
+			target,
+			prop,
+			proxy,
+			proxyManager: this,
+			queue: this.queue,
+		},requestType);
 
 		this.log.verbose(`[${prop}] Returning result`);
 

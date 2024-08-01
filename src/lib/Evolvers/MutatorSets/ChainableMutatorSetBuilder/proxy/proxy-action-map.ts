@@ -47,6 +47,18 @@ export class ProxyActionMap
 		return requestType;
 	}
 
+	/**
+	 * Sometimes it's valid for a property action to return undefined.
+	 * This method checks if that's the case.
+	 */
+	private static isValidUndefinedReturn(params: ProxyActionMapParameters, requestType: ProxyActionType)
+	{
+		const isPropertyRequest = (requestType & ProxyActionType.property) !== 0;
+		const isValidProperty = PropertyAction.propInTarget(params);
+
+		return isPropertyRequest && isValidProperty;
+	}
+
 	public static process(params: ProxyActionMapParameters, requestType: ProxyActionType) 
 	{
 		const { prop } = params;
@@ -54,7 +66,8 @@ export class ProxyActionMap
 
 		this.actions.forEach((action) => 
 		{
-			if (action.type & requestType) 
+			const actionTypeMatchesRequestType = action.type & requestType; // equals 0 if no match
+			if (actionTypeMatchesRequestType !== 0) 
 			{
 				const forType = action.type & requestType;
 
@@ -69,8 +82,12 @@ export class ProxyActionMap
 			}
 		});
 
+		// If the request type is a property request and the property is valid, but the value of the property is undefined,
+		// then we can return undefined.
+		const isValidUndefinedReturn = typeof toReturn === "undefined" && this.isValidUndefinedReturn(params, requestType);
+
 		// If after checking all bits toReturn is still undefined, it means no valid action was matched.
-		if (typeof toReturn === "undefined") 
+		if (typeof toReturn === "undefined" && !isValidUndefinedReturn) 
 		{
 			log.trace(`Property or action "${prop}" not found in target or not supported`);
 			throw new Error(`Property or action "${prop}" not found in target or not supported`);
