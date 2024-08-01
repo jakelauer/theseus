@@ -1,3 +1,10 @@
+## [15.0.1](https://github.com/jakelauer/theseus-js/compare/v15.0.0...v15.0.1) (2024-08-01)
+
+
+### Bug Fixes
+
+* **packed:** remove tests from built files ([c1f4a38](https://github.com/jakelauer/theseus-js/commit/c1f4a380e2f9b12455b200ac003f6f5e85398584))
+
 # [15.0.0](https://github.com/jakelauer/theseus-js/compare/v14.1.0...v15.0.0) (2024-08-01)
 
 
