@@ -176,7 +176,7 @@ describe("Evolvers", () =>
         	});
         });
 
-        describe.only("Frost mode", () => 
+        describe("Frost mode", () => 
         {
         	it("should return an equal object when using modify mode and manual frost without defrosting", () => 
         	{
