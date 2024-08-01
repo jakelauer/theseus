@@ -1,7 +1,7 @@
 {
     "private": false,
     "name": "theseus-js",
-    "version": "15.0.1",
+    "version": "15.0.2",
     "type": "module",
     "description": "Functionality to create and modify data fluently and narratively",
     "author": "Jake Lauer",

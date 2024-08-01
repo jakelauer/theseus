@@ -1,3 +1,10 @@
+## [15.0.2](https://github.com/jakelauer/theseus-js/compare/v15.0.1...v15.0.2) (2024-08-01)
+
+
+### Bug Fixes
+
+* **mutators:** fix mutator frost behavior ([d66960b](https://github.com/jakelauer/theseus-js/commit/d66960b6940dbe22c43400fce374191977d811ef))
+
 ## [15.0.1](https://github.com/jakelauer/theseus-js/compare/v15.0.0...v15.0.1) (2024-08-01)
 
 
