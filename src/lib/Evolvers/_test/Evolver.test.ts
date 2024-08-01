@@ -210,9 +210,6 @@ describe("Evolvers", () =>
         			sandbox: {
         				mode: "modify",
         			},
-        			frost: {
-        				manual: false,
-        			},
         		})
         			.toEvolve<AnotherTestData>()
         			.withMutators({
@@ -228,6 +225,34 @@ describe("Evolvers", () =>
         		const cemented = cement(evolved);
         		expect(cemented).to.deep.equal(original, "The evolved data should hold the same data as the original");
         		expect(cemented).not.to.equal(original, "The evolved data should not be the same object");
+        	});
+			
+        	it("should allow multiple evolutions with auto-frost", () => 
+        	{
+        		const stringEvolver = Evolver.create("string", {
+        			sandbox: {
+        				mode: "modify",
+        			},
+        		})
+        			.toEvolve<AnotherTestData>()
+        			.withMutators({
+        				rename: ({ input }) => ({
+        					name: `New ${input.name}`,
+        				}),
+        			});
+
+        		const original: AnotherTestData = {
+        			name: "Jake",
+        		};
+        		const evolved = stringEvolver.evolve(original).via.rename().end();
+        		const evolved2 = stringEvolver.evolve(evolved).via.rename().end();
+        		const cemented = cement(evolved);
+        		const cemented2 = cement(evolved2);
+        		expect(cemented2.name).to.equal("New New Jake");
+        		expect(cemented).to.deep.equal(original, "The evolved data should hold the same data as the original");
+        		expect(cemented).not.to.equal(original, "The evolved data should not be the same object");
+        		expect(cemented2).to.deep.equal(original, "The evolved data should hold the same data as the original");
+        		expect(cemented2).not.to.equal(original, "The evolved data should not be the same object");
         	});
         });
 

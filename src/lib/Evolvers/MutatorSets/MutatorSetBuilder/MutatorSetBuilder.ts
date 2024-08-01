@@ -80,11 +80,7 @@ export class MutatorSetBuilder<
 
 	protected augmentData(data: TData) 
 	{
-		const dataInput = this.sandboxableOptions?.frost?.manual
-			? this.data
-			: frost(this.data);
-
-		const sb = sandbox(dataInput, this.sandboxableOptions?.sandbox);
+		const sb = sandbox(this.data, this.sandboxableOptions?.sandbox);
 		sb[this.paramNoun] = data;
 		return sb;
 	}
