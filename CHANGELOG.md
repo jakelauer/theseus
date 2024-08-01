@@ -1,3 +1,10 @@
+# [14.1.0](https://github.com/jakelauer/theseus-js/compare/v14.0.1...v14.1.0) (2024-07-31)
+
+
+### Features
+
+* **evolver:** add sandbox and frost parameters to evolver creation ([34fa279](https://github.com/jakelauer/theseus-js/commit/34fa279f1b1fcda147ac6f93815a84bef7da2a7e))
+
 ## [14.0.1](https://github.com/jakelauer/theseus-js/compare/v14.0.0...v14.0.1) (2024-07-24)
 
 
